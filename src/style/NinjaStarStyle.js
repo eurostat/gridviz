@@ -30,11 +30,12 @@ export class NinjaStarStyle extends Style {
 
     /**
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import('../core/Dataset.js').Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
+
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 

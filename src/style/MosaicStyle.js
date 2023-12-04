@@ -36,6 +36,7 @@ export class MosaicStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
+
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 

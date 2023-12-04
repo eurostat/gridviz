@@ -1,22 +1,19 @@
 v3: focus on (main) API changes.
 
+review scale.js
+upgrade style examples
 legends
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
-review scale.js
-colorRamp to colorScale (?)
-upgrade style examples
 legends - see legend update on layer style change
-style filter ?
-reorganise map - simplify constructor
 population.csv files: make 2021 ones
 PUBLISH v3.0.0
 use/test in observablehq
 upgrade modules
 use/test modules
-doc: revamp. only basic CSV and tiled multiscale
 
 Done:
+style filtering
 lego tanaka: coming soon
 core folder
 change in legends. With examples.
@@ -47,7 +44,7 @@ get rid of "map.addXXXLayer" methods
 getGeoCenter setGeoCenter replaced by getView setView
 style: draw(cells, canvas, resolution)
 
-
+doc v3
 upgrade demos to v3
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
@@ -55,6 +52,8 @@ hillshading style
 contour style
 lego style
 tanaka style
+example for style level cells filtering
+reorganise map - simplify constructor
 
 extract modules ?
 style value by alpha: Document

@@ -36,10 +36,9 @@ export class JoyPlotStyle extends Style {
      * @override
      */
     draw(cells, geoCanvas, resolution) {
+
         //filter
         if (this.filter) cells = cells.filter(this.filter)
-
-        geoCanvas.ctx.lineJoin = 'round'
 
         //
         const z = geoCanvas.view.z
@@ -71,6 +70,7 @@ export class JoyPlotStyle extends Style {
         const ys = { min: yMin, max: yMax }
 
         //draw lines, row by row, stating from the top
+        geoCanvas.ctx.lineJoin = 'round'
         for (let y = yMax; y >= yMin; y -= resolution) {
             //get row
             const row = ind[y]

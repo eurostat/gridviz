@@ -55,6 +55,7 @@ export class IsoFenceStyle extends Style {
      * @override
      */
     draw(cells, geoCanvas, resolution) {
+
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 

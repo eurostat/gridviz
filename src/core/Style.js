@@ -18,7 +18,7 @@ import { Drawable } from "./Drawable.js"
 export class Style extends Drawable {
     /**
      * @abstract
-     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,drawFun?:function,viewScale?:ViewScale}} opts
+     * @param {{filter?:function(import('./Dataset').Cell):boolean, offset?:function(import('./Dataset').Cell, number, number):{dx:number,dy:number}, visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,drawFun?:function,viewScale?:ViewScale}} opts
      */
     constructor(opts) {
         super(opts)
