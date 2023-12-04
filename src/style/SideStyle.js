@@ -49,8 +49,6 @@ export class SideStyle extends Style {
         const sides = SideStyle.buildSides(cells, resolution)
         if (sides.length == 0) return
 
-        console.log(sides)
-
         //get side view scale
         const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
 
