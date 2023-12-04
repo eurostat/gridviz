@@ -1,12 +1,10 @@
 v3: focus on (main) API changes.
 
-review scale.js
 upgrade style examples
 legends
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
 legends - see legend update on layer style change
-population.csv files: make 2021 ones
 PUBLISH v3.0.0
 use/test in observablehq
 upgrade modules
@@ -54,6 +52,7 @@ lego style
 tanaka style
 example for style level cells filtering
 reorganise map - simplify constructor
+population.csv files: make 2021 ones
 
 extract modules ?
 style value by alpha: Document
