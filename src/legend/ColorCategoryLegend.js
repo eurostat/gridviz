@@ -44,8 +44,6 @@ export class ColorCategoryLegend extends Legend {
 
         //build
 
-        console.log(this.colorLabel)
-
         //title
         if (this.title)
             this.div
