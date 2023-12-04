@@ -1,7 +1,8 @@
 v3: focus on (main) API changes.
 
-legend segment size
+legend segment size: copy width legend as size legend
 legends - see legend update on layer style change
+
 PUBLISH v3.0.0
 use/test in observablehq
 upgrade modules
