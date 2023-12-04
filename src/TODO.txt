@@ -1,6 +1,5 @@
 v3: focus on (main) API changes.
 
-IsoFenceStyle: extent sidestyle
 lego tanaka
 legends
 legends: test all. based on c2021 example - add legends
