@@ -19,8 +19,8 @@ export class SquareColorCatWGLStyle extends Style {
         opts = opts || {}
 
         /**
-         * The name of the column/attribute of the tabular data where to retrieve the category code of the cell, for coloring.
-         * @type {string} */
+         * Or: A function that returns the category code of a cell, for coloring.
+         * @type {function(import('../core/Dataset').Cell, number, number):string} */
         this.code = opts.code
 
         /**
@@ -71,7 +71,7 @@ export class SquareColorCatWGLStyle extends Style {
         const iBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-            const cat = c[this.code]
+            const cat = this.code(c, resolution, z)
             if (cat == undefined) {
                 console.log('Unexpected category: ' + cat)
                 continue

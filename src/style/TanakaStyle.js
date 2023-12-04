@@ -1,25 +1,28 @@
 //@ts-check
 'use strict'
 
-import { SquareColorWGLStyle } from './SquareColorWGLStyle.js'
 import { SideStyle } from './SideStyle.js'
+import { SquareColorCatWGLStyle } from './SquareColorCatWGLStyle.js'
 
 /**
- *
  * @see https://manifold.net/doc/mfd9/example__tanaka_contours.htm
  *
  * @author Julien Gaffuri
  */
 export class TanakaStyle {
     /**
-     * @param {string} col
+     * @param {function(import('../core/Dataset.js').Cell):number} color
      * @param {object} opts
      * @returns {Array.<import("../core/Style").Style>}
      */
-    static get(col, opts) {
+    static get(color, opts) {
         opts = opts || {}
 
-        //get colors from d3 ramps, if 'nb' is specified
+        /** @type { function(import('../core/Dataset.js').Cell, number, number, object):string }         */
+        color = color || ((cell, resolution, z, viewScale) => "purple")
+
+
+        /*/get colors from d3 ramps, if 'nb' is specified
         if (opts.nb != undefined) {
             if (opts.nb < 2) {
                 console.error('unexpected number of colors in tanaka (<2): ' + opts.nb)
@@ -36,34 +39,30 @@ export class TanakaStyle {
         /**
          * The colors.
          * @type {Array.<string>} */
-        opts.colors = opts.colors || ['#a9bb9e', '#c9dcaa', '#fde89f', '#f9a579', '#eb444b']
-        const nb = opts.colors.length
-
-        /** A function to compute 't' from the value v
-         * @type {function(number,number,import("../core/Style").Stat):number} */
-        opts.tFun = opts.tFun || ((v, r, s) => (v - s.min) / (s.max - s.min))
+        /*opts.colors = opts.colors || ['#a9bb9e', '#c9dcaa', '#fde89f', '#f9a579', '#eb444b']
+        const nb = opts.colors.length*/
 
         //shadow colors
-        opts.colDark = opts.colDark || '#111'
-        opts.colBright = opts.colBright || '#ddd'
+        opts.colorDark = opts.colorDark || '#111'
+        opts.colorBright = opts.colorBright || '#ddd'
 
-        //width of the segment (share of the resolution)
-        opts.widthFactor = opts.widthFactor || 0.08
+        /** @type { function(number, number):number }         */
+        opts.width = opts.width || ((resolution, z) => 2 * z)
 
         //shading
-        opts.newShading = opts.newShading
-        opts.newShadingWidthPix = opts.newShadingWidthPix || 2
+        //opts.newShading = opts.newShading
+        //opts.newShadingWidthPix = opts.newShadingWidthPix || 2
         //transparency value, within [0,1]
-        opts.newShadingTr =
+        /*opts.newShadingTr =
             opts.newShadingTr ||
             ((sideValue, sideStat) =>
-                Math.abs(sideValue) / Math.max(Math.abs(sideStat.min), Math.abs(sideStat.max)))
+                Math.abs(sideValue) / Math.max(Math.abs(sideStat.min), Math.abs(sideStat.max)))*/
 
         /**
          * @param {number} t A cell t value, within [0,1].
          * @returns the class number for the value
          */
-        const getClass = (t) => {
+        /*const getClass = (t) => {
             if (isNaN(t) || t == undefined) {
                 console.error('Unexpected t value 1: ' + t)
                 return -9
@@ -71,10 +70,9 @@ export class TanakaStyle {
             for (let i = 0; i < nb; i++) if (t <= (i + 1) / nb) return i
             console.error('Unexpected t value 2: ' + t)
             return -9
-        }
+        }*/
 
-        const colStyle = new SquareColorWGLStyle({
-            colorCol: col,
+        /*const colStyle = new SquareColorWGLStyle({
             colors: opts.colors,
             tFun: (v, r, s) => {
                 const t = opts.tFun(v, r, s)
@@ -84,7 +82,14 @@ export class TanakaStyle {
             //stretching: { fun: "log", alpha: -7 },
             size: (r, z) => r + 0.5 * z, //that is to ensure no gap between same class cells is visible
             filter: opts.filter,
-        })
+        })*/
+
+        const colStyle = new SquareColorCatWGLStyle{
+            {
+                
+            }
+        }
+
 
         /*
         if no web gl:    
@@ -129,28 +134,28 @@ export class TanakaStyle {
 
             color: opts.newShading
                 ? //black with transparency depending on difference
-                  (side, r, s, z) => {
-                      const tr = opts.newShadingTr(side.value, s)
-                      return (side.value > 0 && side.or === 'h') || (side.value < 0 && side.or === 'v')
-                          ? 'rgba(255,255,100,' + tr + ')'
-                          : 'rgba(0,0,0,' + tr + ')'
-                  }
+                (side, r, s, z) => {
+                    const tr = opts.newShadingTr(side.value, s)
+                    return (side.value > 0 && side.or === 'h') || (side.value < 0 && side.or === 'v')
+                        ? 'rgba(255,255,100,' + tr + ')'
+                        : 'rgba(0,0,0,' + tr + ')'
+                }
                 : //white or black, depending on orientation and value
-                  (side, r, s, z) => {
-                      if (side.value === 0) return
-                      //return "gray"
-                      if (side.or === 'v') return side.value < 0 ? opts.colBright : opts.colDark
-                      return side.value < 0 ? opts.colDark : opts.colBright
-                  },
+                (side, r, s, z) => {
+                    if (side.value === 0) return
+                    //return "gray"
+                    if (side.or === 'v') return side.value < 0 ? opts.colBright : opts.colDark
+                    return side.value < 0 ? opts.colDark : opts.colBright
+                },
 
             width: opts.newShading
                 ? //fill size
-                  (side, r, s, z) => {
-                      return opts.newShadingWidthPix * z
-                  }
+                (side, r, s, z) => {
+                    return opts.newShadingWidthPix * z
+                }
                 : //width depends on the value, that is the number of classes of difference
-                  (side, r, s, z) =>
-                      opts.widthFactor * r * Math.abs(side.value) * (side.or === 'v' ? 0.5 : 1),
+                (side, r, s, z) =>
+                    opts.widthFactor * r * Math.abs(side.value) * (side.or === 'v' ? 0.5 : 1),
 
             filter: opts.filter,
         })
