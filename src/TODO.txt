@@ -5,13 +5,16 @@ legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
 review scale.js
 colorRamp to colorScale (?)
-
 upgrade style examples
 legends - see legend update on layer style change
 style filter ?
 reorganise map - simplify constructor
 population.csv files: make 2021 ones
-doc: only basic CSV and tiled multiscale
+PUBLISH v3
+use/test in observablehq
+upgrade modules
+use/test modules
+doc: revamp. only basic CSV and tiled multiscale
 
 Done:
 lego tanaka: coming soon
