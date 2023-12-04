@@ -4,7 +4,7 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4200000, y: 2600000, z: 300, backgroundColor:"#EADDCA" })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4200000, y: 2600000, z: 300, backgroundColor: "#EADDCA" })
 
     //define dataset
     const dataset = new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/500m/', {
@@ -13,7 +13,7 @@
     })
 
     //define color style
-    const style = new gridviz.SquareColorCatWGLStyle({ colorCol: 'clc', color: { 41: 'blue' } })
+    const style = new gridviz.SquareColorCatWGLStyle({ colorCol: (cell) => cell.clc, color: { 41: 'blue' } })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]

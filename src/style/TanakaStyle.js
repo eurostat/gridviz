@@ -21,7 +21,6 @@ export class TanakaStyle {
         /** @type { function(import('../core/Dataset.js').Cell, number, number, object):string }         */
         color = color || ((cell, resolution, z, viewScale) => "purple")
 
-
         /*/get colors from d3 ramps, if 'nb' is specified
         if (opts.nb != undefined) {
             if (opts.nb < 2) {
@@ -84,11 +83,10 @@ export class TanakaStyle {
             filter: opts.filter,
         })*/
 
-        const colStyle = new SquareColorCatWGLStyle(
-            {
-
-            }
-        )
+        
+        const colStyle = new SquareColorCatWGLStyle({
+            
+        })
 
 
         /*
