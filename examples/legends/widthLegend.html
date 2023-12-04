@@ -14,10 +14,17 @@
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define style
-    const style = new gridviz.ShapeColorSizeStyle({
-        size: (cell) => 20 * Math.sqrt(cell.population),
+    const style = new gridviz.SegmentStyle({
+        width: (cell, resolution, z) => {
+            if (!cell.population) return 0
+            let t = cell.population / 1000000
+            t = t > 1 ? 1 : t
+            t = gridviz.logarithmicScale(-5)(t)
+            return t * resolution * 0.95
+        },
+        orientation: () => 0,
         color: () => "black",
-        orientation: () => 0
+        length: (cell, resolution) => resolution
     })
 
     /*/define legends
