@@ -15,8 +15,8 @@
 
     //define classifier, using d3 scaleThreshold
     const breaks = [5000, 25000, 100000, 200000, 500000]
-    const sizes = [1000, 2000, 4000, 6000, 7000, 9000]
-    const classifier = d3.scaleThreshold(breaks, sizes)
+    const widths = [1000, 2000, 4000, 6000, 7000, 9000]
+    const classifier = d3.scaleThreshold(breaks, widths)
 
     //define style, based on the classifier
     const style = new gridviz.SegmentStyle({
@@ -26,15 +26,16 @@
         length: (cell, resolution) => resolution
     })
 
-    /*/define legends
-    style.legends = gridviz.sizeDiscreteLegend(
+    //define legends
+    style.legends = gridviz.widthDiscreteLegend(
         breaks,
-        sizes,
+        widths,
         {
             title: "Population",
             labelFormat: d3.format(',.2r'),
-            fillColor: "black"
-        })*/
+            color: "black",
+            length: (resolution) => 2 * resolution
+        })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]

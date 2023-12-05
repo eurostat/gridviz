@@ -111,20 +111,20 @@ function sizeWidthDiscreteLegend(factory, breaks, sizesWidths, type, opts = {}) 
     const legends = []
     for (let i = sizesWidths.length - 1; i >= 0; i--) {
         opts.title = i == sizesWidths.length - 1 ? opts.title : undefined
-        if(type == "size") opts.size= () => sizesWidths[i]
-        if(type == "width") opts.segmentWidth= () => sizesWidths[i]
+        if (type == "size") opts.size = () => sizesWidths[i]
+        if (type == "width") opts.segmentWidth = () => sizesWidths[i]
         opts.label = () => labelText(breaks[i - 1], breaks[i]),
-        legends.push(factory(opts))
+            legends.push(factory(opts))
     }
-/*        legends.push(
-            new SizeLegend({
-                title: i == sizes.length - 1 ? opts.title : undefined,
-                size: () => sizes[i],
-                label: () => labelText(breaks[i - 1], breaks[i]),
-                fillColor: opts.fillColor || "white",
-                shape: opts.shape
-            })
-        )*/
+    /*        legends.push(
+                new SizeLegend({
+                    title: i == sizes.length - 1 ? opts.title : undefined,
+                    size: () => sizes[i],
+                    label: () => labelText(breaks[i - 1], breaks[i]),
+                    fillColor: opts.fillColor || "white",
+                    shape: opts.shape
+                })
+            )*/
     return legends
 }
 
@@ -135,6 +135,10 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
     return sizeWidthDiscreteLegend(factory, breaks, sizes, "size", opts)
 }
 
+export function widthDiscreteLegend(breaks, widths, opts = {}) {
+    const factory = (opts) => new WidthLegend(opts)
+    return sizeWidthDiscreteLegend(factory, breaks, widths, "width", opts)
+}
 
 
 
