@@ -24,22 +24,12 @@ export class WidthLegend extends Legend {
           *  @type { function(object):number } */
         this.segmentWidth = opts.segmentWidth || undefined
 
-        //title
-        this.title = opts.title
-        this.titleFontSize = opts.titleFontSize || '0.8em'
-        this.titleFontWeight = opts.titleFontWeight || 'bold'
-
         //orientation TODO
         //this.orientation = opts.orientation || 0
         //color
         this.color = opts.color || 'gray'
         //length
         this.length = opts.length || ((resolution, z, viewScale) => resolution)
-
-        //label
-        this.labelFontSize = opts.labelFontSize || '0.8em'
-        this.labelUnitText = opts.labelUnitText || ''
-        this.labelFormat = opts.labelFormat
     }
 
     /**
@@ -49,6 +39,9 @@ export class WidthLegend extends Legend {
 
         //clear
         this.div.selectAll('*').remove()
+
+        //title
+        this.makeTitle()
 
         //get label. May not be a number (!)
         let label = this.label(opts.viewScale, opts.cells)
@@ -69,15 +62,6 @@ export class WidthLegend extends Legend {
         lengthPix /= opts.z
 
         const d = this.div.append('div')
-
-        //title
-        if (this.title) {
-            d.append('div')
-                .attr('class', 'title')
-                .style('font-size', this.titleFontSize)
-                .style('font-weight', this.titleFontWeight)
-                .text(this.title)
-        }
 
         const svg = d.append('svg').attr('width', lengthPix).attr('height', widthPix).style('', 'inline-block')
 

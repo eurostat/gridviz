@@ -23,14 +23,9 @@ export class ColorDiscreteLegend extends Legend {
         this.width = opts.width || 300
         this.height = opts.height || 15
 
-        this.title = opts.title
-        this.titleFontSize = opts.titleFontSize || '0.8em'
-        this.titleFontWeight = opts.titleFontWeight || 'bold'
-
         this.tickSize = opts.tickSize || 3
 
         //label
-        this.labelFontSize = opts.labelFontSize || '0.8em'
         this.invert = opts.invert
     }
 
@@ -38,19 +33,12 @@ export class ColorDiscreteLegend extends Legend {
      * @param {{viewScale:import('../core/Style').ViewScale} } opts
      */
     update(opts) {
+
         //clear
         this.div.selectAll('*').remove()
 
-        //build
-
         //title
-        if (this.title)
-            this.div
-                .append('div')
-                .style('font-size', this.titleFontSize)
-                .style('font-weight', this.titleFontWeight)
-                .style('margin-bottom', '7px')
-                .text(this.title)
+        this.makeTitle()
 
         //get colors and breaks
         const colors = this.colors(opts.viewScale)

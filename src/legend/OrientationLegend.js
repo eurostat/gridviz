@@ -14,11 +14,6 @@ export class OrientationLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        //title
-        this.title = opts.title
-        this.titleFontSize = opts.titleFontSize || '0.8em'
-        this.titleFontWeight = opts.titleFontWeight || 'bold'
-
         //orientation
         this.orientation = opts.orientation || 0
         //color
@@ -27,10 +22,6 @@ export class OrientationLegend extends Legend {
         this.width = opts.width || ((resolution, z, viewScale) => 3 * z)
         //length
         this.length = opts.length || ((resolution, z, viewScale) => resolution)
-
-        //label
-        this.label = opts.label || ''
-        this.labelFontSize = opts.labelFontSize || '0.8em'
     }
 
     /**
@@ -41,16 +32,10 @@ export class OrientationLegend extends Legend {
         //clear
         this.div.selectAll('*').remove()
 
-        const d = this.div.append('div')
-
         //title
-        if (this.title) {
-            d.append('div')
-                .attr('class', 'title')
-                .style('font-size', this.titleFontSize)
-                .style('font-weight', this.titleFontWeight)
-                .text(this.title)
-        }
+        this.makeTitle()
+
+        const d = this.div.append('div')
 
         //compute segment color, width and length
         const color = this.color(opts.resolution, opts.z, opts.viewScale)

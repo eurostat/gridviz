@@ -63,7 +63,30 @@ export class Legend {
 
         if (this.width) this.div.style('width', this.width)
         if (this.height) this.div.style('height', this.height)
+
+
+        //title
+        this.title = opts.title
+        this.titleFontSize = opts.titleFontSize || '0.8em'
+        this.titleFontWeight = opts.titleFontWeight || 'bold'
+
+        //label
+        this.labelFontSize = opts.labelFontSize || '0.8em'
+        this.labelUnitText = opts.labelUnitText || ''
+        this.labelFormat = opts.labelFormat
     }
+
+
+    makeTitle() {
+        if (!this.title) return
+        this.div
+            .append('div')
+            .style('font-size', this.titleFontSize)
+            .style('font-weight', this.titleFontWeight)
+            .style('margin-bottom', '7px')
+            .text(this.title)
+    }
+
 
     /**
      * Apply a style to the legend div.
@@ -80,7 +103,7 @@ export class Legend {
      * @param {Object} opts
      * @abstract
      */
-    update(opts={}) {
+    update(opts = {}) {
         console.error('Legend update not implemented yet.')
     }
 }

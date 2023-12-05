@@ -22,11 +22,6 @@ export class SizeLegend extends Legend {
          *  @type { function(object):number } */
         this.size = opts.size || undefined
 
-        //title
-        this.title = opts.title
-        this.titleFontSize = opts.titleFontSize || '0.8em'
-        this.titleFontWeight = opts.titleFontWeight || 'bold'
-
         //symbol
         /**
          * @private
@@ -35,11 +30,6 @@ export class SizeLegend extends Legend {
         this.fillColor = opts.fillColor || 'none'
         this.strokeColor = opts.strokeColor || 'gray'
         this.strokeWidth = opts.strokeWidth || 1
-
-        //label
-        this.labelFontSize = opts.labelFontSize || '0.8em'
-        this.labelUnitText = opts.labelUnitText || ''
-        this.labelFormat = opts.labelFormat
     }
 
     /**
@@ -49,6 +39,9 @@ export class SizeLegend extends Legend {
 
         //clear
         this.div.selectAll('*').remove()
+
+        //title
+        this.makeTitle()
 
         //get label. May not be a number (!)
         let label = this.label(opts.viewScale, opts.cells)
@@ -67,15 +60,6 @@ export class SizeLegend extends Legend {
         const d = this.div.append('div')
         //to enable vertical centering
         //.style("position", "relative")
-
-        //title
-        if (this.title) {
-            d.append('div')
-                .attr('class', 'title')
-                .style('font-size', this.titleFontSize)
-                .style('font-weight', this.titleFontWeight)
-                .text(this.title)
-        }
 
         //shape
         const svg = d

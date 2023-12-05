@@ -27,31 +27,17 @@ export class ColorCategoryLegend extends Legend {
         this.dimension = opts.dimension || { r: 8 }
         this.strokeColor = opts.strokeColor || 'gray'
         this.strokeWidth = opts.strokeWidth || 1
-
-        this.title = opts.title
-        this.titleFontSize = opts.titleFontSize || '0.8em'
-        this.titleFontWeight = opts.titleFontWeight || 'bold'
-
-        //label
-        this.labelFontSize = opts.labelFontSize || '0.8em'
     }
 
     /**
      */
     update() {
+
         //clear
         this.div.selectAll('*').remove()
 
-        //build
-
         //title
-        if (this.title)
-            this.div
-                .append('div')
-                .style('font-size', this.titleFontSize)
-                .style('font-weight', this.titleFontWeight)
-                .style('margin-bottom', '7px')
-                .text(this.title)
+        this.makeTitle()
 
         //categories
         const nb = this.colorLabel.length

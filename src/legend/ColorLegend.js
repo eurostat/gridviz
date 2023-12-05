@@ -22,7 +22,6 @@ export class ColorLegend extends Legend {
         //function (t[0,1]) -> value (for label text)
         this.textScale = opts.textScale || (t => t)
 
-        this.title = opts.title
         this.tickSize = opts.tickSize || 6
         this.width = opts.width || 300
         this.height = opts.height || 15
@@ -39,33 +38,21 @@ export class ColorLegend extends Legend {
      * @param {{viewScale:import('../core/Style').ViewScale} } opts
      */
     update(opts) {
-        //could happen when data is still loading
-        //if (!opts.sColor) return
 
         //clear
         this.div.selectAll('*').remove()
 
-        const titleHeight = 12
+        //title
+        this.makeTitle()
 
         const svgW = this.width + 2 * this.margin
-        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 10
+        const svgH = this.height + 3 * this.margin + this.tickSize + 10
         const svg = this.div.append('svg').attr('width', svgW).attr('height', svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
-        //title
-        svg.append('text')
-            .attr('x', this.margin)
-            .attr('y', this.margin)
-            .style('font-size', '0.8em')
-            .style('font-weight', 'bold')
-            .style('alignment-baseline', 'top')
-            .style('dominant-baseline', 'hanging')
-            .style('pointer-events', 'none')
-            .text(this.title)
-
         const g = svg
             .append('g')
-            .attr('transform', 'translate(' + this.margin + ' ' + (2 * this.margin + titleHeight) + ')')
+            .attr('transform', 'translate(' + this.margin + ' ' + (2 * this.margin) + ')')
 
         //draw color bar
         const w = this.width,
