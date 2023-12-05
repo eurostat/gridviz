@@ -157,7 +157,7 @@ export function sizeLegend(values, size, opts = {}) {
 /**
  * 
  * @param {function(import('../core/Dataset.js').Cell):number} value 
- * @param {*} opts 
+ * @param {{ k?:Array.<number>, title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
  * @returns {Array.<SizeLegend>}
  */
 export function sizeLegendViewScale(value, opts = {}) {
@@ -179,9 +179,9 @@ export function sizeLegendViewScale(value, opts = {}) {
 
 /**
  * A function which return a stack of size legends for a discrete classification.
- * @param {*} breaks 
- * @param {*} sizes 
- * @param {*} opts 
+ * @param { Array.<number> } breaks 
+ * @param { Array.<number> } sizes 
+ * @param {{ title?:string, fillColor?:string, shape?:string, labelText?:function(number|undefined, number|undefined): string, labelFormat?:function(number):string }} opts 
  * @returns {Array.<SizeLegend>}
  */
 export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
@@ -203,7 +203,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
 
 /**
  * A function which return a stack of size legends for a discrete classification using a viewscale.
- * @param {number} classNumber 
+ * @param { number } classNumber 
  * @param {*} opts 
  * @returns {Array.<SizeLegend>}
  */
@@ -228,7 +228,7 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
 
 /**
  * A function that returns a function to format laberls for discrete scale legends.
- * @param {function(number):string} format 
+ * @param { function(number):string } format 
  * @returns { function(number|undefined, number|undefined): string }
  */
 function defaultLabelText(format) {
