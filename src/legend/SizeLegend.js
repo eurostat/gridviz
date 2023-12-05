@@ -135,17 +135,17 @@ export class SizeLegend extends Legend {
 /**
  * 
  * @param {Array.<number>} values 
- * @param {function(number):number} size 
+ * @param {function(number):number} sizeWidth 
  * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
- * @returns {Array.<SizeLegend>}
+ * @returns {Array.<Legend>}
  */
-export function sizeLegend(values, size, opts = {}) {
+export function sizeWidthLegend(factory, values, sizeWidth, opts = {}) {
     const legends = []
     for (let value of values)
         legends.push(
-            new SizeLegend({
+            factory({
                 title: value == values[0] ? opts.title : undefined,
-                size: () => size(value),
+                size: () => sizeWidth(value),
                 label: () => value,
                 labelFormat: opts.labelFormat,
                 fillColor: opts.fillColor || "white"
@@ -153,6 +153,21 @@ export function sizeLegend(values, size, opts = {}) {
         )
     return legends
 }
+
+
+/**
+ * 
+ * @param {Array.<number>} values 
+ * @param {function(number):number} size 
+ * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
+ * @returns {Array.<SizeLegend>}
+ */
+export function sizeLegend(values, size, opts = {}) {
+    const factory = (opts) => new SizeLegend(opts)
+    return sizeWidthLegend(factory, values, size, opts)
+}
+
+
 
 
 /**
