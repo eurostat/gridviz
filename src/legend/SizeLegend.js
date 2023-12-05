@@ -58,7 +58,7 @@ export class SizeLegend extends Legend {
         //compute size of symbol, in pix
         let sizePix
         if (this.size)
-            sizePix = this.size(opts.viewScale, opts.z) / opts.z
+            sizePix = this.size(opts.viewScale) / opts.z
         else
             sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
@@ -145,7 +145,7 @@ export function sizeLegend(values, size, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: value == values[0] ? opts.title : undefined,
-                size: (vs, z) => size(value),
+                size: (vs) => size(value),
                 label: () => value,
                 labelFormat: opts.labelFormat,
                 fillColor: opts.fillColor || "white"
@@ -157,7 +157,7 @@ export function sizeLegend(values, size, opts = {}) {
 
 /**
  * 
- * @param {function} value 
+ * @param {function(import('../core/Dataset.js').Cell):number} value 
  * @param {*} opts 
  * @returns 
  */
@@ -193,7 +193,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: i == sizes.length - 1 ? opts.title : undefined,
-                size: (vs, z) => sizes[i],
+                size: (vs) => sizes[i],
                 label: () => labelText(breaks[i - 1], breaks[i]),
                 fillColor: opts.fillColor || "white",
                 shape: opts.shape
@@ -216,7 +216,7 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: i == classNumber - 1 ? opts.title : undefined,
-                size: (viewScale, z) => viewScale.values[i],
+                size: (viewScale) => viewScale.values[i],
                 label: (viewScale) => labelText(viewScale.breaks[i - 1], viewScale.breaks[i]),
                 fillColor: opts.fillColor || "white",
                 shape: opts.shape
