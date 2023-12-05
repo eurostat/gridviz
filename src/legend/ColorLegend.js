@@ -22,16 +22,19 @@ export class ColorLegend extends Legend {
         //function (t[0,1]) -> value (for label text)
         this.textScale = opts.textScale || (t => t)
 
-        this.tickSize = opts.tickSize || 6
-        this.width = opts.width || 300
-        this.height = opts.height || 15
         this.margin = opts.margin || 5
+
+        //replace with labels ?
+        this.tickSize = opts.tickSize || 6
         this.ticks = opts.ticks || Math.floor(this.width / 50)
         this.tickFormat = opts.tickFormat
         this.tickUnit = opts.tickUnit
 
         this.fontSize = opts.fontSize || '0.8em'
         this.invert = opts.invert
+
+        this.width = opts.width || 300
+        this.height = opts.height || 15
     }
 
     /**
