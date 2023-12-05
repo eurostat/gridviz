@@ -97,21 +97,26 @@ export function widthLegendViewScale(value, opts = {}) {
 
 
 
-
-
 /**
- * A function which return a stack of size legends for a discrete classification.
+ * 
  * @param { Array.<number> } breaks 
- * @param { Array.<number> } sizes 
- * @param {{ title?:string, fillColor?:string, shape?:string, labelText?:function(number|undefined, number|undefined): string, labelFormat?:function(number):string }} opts 
- * @returns {Array.<SizeLegend>}
+ * @param { Array.<number> } sizesWidths 
+ * @param { string } type size or width
+ * @param { object } opts 
+ * @returns {Array.<Legend>}
  */
-export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
+function sizeWidthDiscreteLegend(factory, breaks, sizesWidths, type, opts = {}) {
     const f = opts.labelFormat || (x => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
-    for (let i = sizes.length - 1; i >= 0; i--)
-        legends.push(
+    for (let i = sizesWidths.length - 1; i >= 0; i--) {
+        opts.title = i == sizesWidths.length - 1 ? opts.title : undefined
+        if(type == "size") opts.size= () => sizesWidths[i]
+        if(type == "width") opts.segmentWidth= () => sizesWidths[i]
+        opts.label = () => labelText(breaks[i - 1], breaks[i]),
+        legends.push(factory(opts))
+    }
+/*        legends.push(
             new SizeLegend({
                 title: i == sizes.length - 1 ? opts.title : undefined,
                 size: () => sizes[i],
@@ -119,9 +124,20 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
                 fillColor: opts.fillColor || "white",
                 shape: opts.shape
             })
-        )
+        )*/
     return legends
 }
+
+
+//A function which return a stack of size legends for a discrete classification.
+export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
+    const factory = (opts) => new SizeLegend(opts)
+    return sizeWidthDiscreteLegend(factory, breaks, sizes, "size", opts)
+}
+
+
+
+
 
 /**
  * A function which return a stack of size legends for a discrete classification using a viewscale.
