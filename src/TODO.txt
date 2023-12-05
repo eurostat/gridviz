@@ -1,5 +1,6 @@
 v3: focus on (main) API changes.
 
+review size legend
 legend segment size: copy width legend as size legend
 legends - see legend update on layer style change
 

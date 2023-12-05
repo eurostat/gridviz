@@ -58,7 +58,7 @@ export class SizeLegend extends Legend {
         //compute size of symbol, in pix
         let sizePix
         if (this.sizePix)
-            sizePix = this.sizePix(opts.viewScale, opts.z)
+            sizePix = this.sizePix(opts.viewScale, opts.z) / opts.z
         else
             sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
@@ -145,7 +145,7 @@ export function sizeLegend(values, size, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: value == values[0] ? opts.title : undefined,
-                sizePix: (vs, z) => size(value) / z,
+                size: (vs, z) => size(value),
                 label: () => value,
                 labelFormat: opts.labelFormat,
                 fillColor: opts.fillColor || "white"
@@ -193,7 +193,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: i == sizes.length - 1 ? opts.title : undefined,
-                sizePix: (vs, z) => sizes[i] / z,
+                size: (vs, z) => sizes[i],
                 label: () => labelText(breaks[i - 1], breaks[i]),
                 fillColor: opts.fillColor || "white",
                 shape: opts.shape
@@ -216,7 +216,7 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: i == classNumber - 1 ? opts.title : undefined,
-                sizePix: (viewScale, z) => viewScale.values[i] / z,
+                size: (viewScale, z) => viewScale.values[i],
                 label: (viewScale) => labelText(viewScale.breaks[i - 1], viewScale.breaks[i]),
                 fillColor: opts.fillColor || "white",
                 shape: opts.shape
