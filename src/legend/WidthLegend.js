@@ -2,9 +2,6 @@
 'use strict'
 
 import { Legend } from '../core/Legend.js'
-import { nice } from '../utils/utils.js'
-import { max } from 'd3-array'
-import { sizeWidthLegend } from './SizeLegend.js'
 
 /**
  * A legend element for segment width.
