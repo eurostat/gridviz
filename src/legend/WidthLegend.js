@@ -4,6 +4,7 @@
 import { Legend } from '../core/Legend.js'
 import { nice } from '../utils/utils.js'
 import { max } from 'd3-array'
+import { sizeWidthLegend } from './SizeLegend.js'
 
 /**
  * A legend element for segment width.
@@ -99,3 +100,18 @@ export class WidthLegend extends Legend {
             .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }
+
+
+
+/**
+ * 
+ * @param {Array.<number>} values 
+ * @param {function(number):number} width 
+ * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
+ * @returns {Array.<WidthLegend>}
+ */
+export function sizeLegend(values, width, opts = {}) {
+    const factory = (opts) => new WidthLegend(opts)
+    return sizeWidthLegend(factory, values, width, opts)
+}
+
