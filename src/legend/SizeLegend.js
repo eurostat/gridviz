@@ -19,7 +19,7 @@ export class SizeLegend extends Legend {
         //if label is to be shown
         this.label = opts.label || undefined
         //if size corresponding to the value
-        this.sizePix = opts.sizePix || undefined
+        this.size = opts.size || undefined
 
         //title
         this.title = opts.title
