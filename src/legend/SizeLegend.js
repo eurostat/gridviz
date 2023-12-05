@@ -134,9 +134,9 @@ export class SizeLegend extends Legend {
 /**
  * 
  * @param {Array.<number>} values 
- * @param {function} size 
- * @param {*} opts 
- * @returns 
+ * @param {function(number):number} size 
+ * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
+ * @returns {Array.<SizeLegend>}
  */
 export function sizeLegend(values, size, opts = {}) {
     const legends = []
@@ -158,7 +158,7 @@ export function sizeLegend(values, size, opts = {}) {
  * 
  * @param {function(import('../core/Dataset.js').Cell):number} value 
  * @param {*} opts 
- * @returns 
+ * @returns {Array.<SizeLegend>}
  */
 export function sizeLegendViewScale(value, opts = {}) {
     const k = opts.k || [0.9, 0.5, 0.2, 0.05]
@@ -182,7 +182,7 @@ export function sizeLegendViewScale(value, opts = {}) {
  * @param {*} breaks 
  * @param {*} sizes 
  * @param {*} opts 
- * @returns 
+ * @returns {Array.<SizeLegend>}
  */
 export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
     const f = opts.labelFormat || (x => x)
@@ -205,7 +205,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
  * A function which return a stack of size legends for a discrete classification using a viewscale.
  * @param {number} classNumber 
  * @param {*} opts 
- * @returns 
+ * @returns {Array.<SizeLegend>}
  */
 export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
     const f = opts.labelFormat || (x => x)
@@ -226,11 +226,16 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
 }
 
 
-function defaultLabelText(f) {
+/**
+ * A function that returns a function to format laberls for discrete scale legends.
+ * @param {function(number):string} format 
+ * @returns { function(number|undefined, number|undefined): string }
+ */
+function defaultLabelText(format) {
     return (v0, v1) => {
         if (v0 == undefined && v1 == undefined) return ""
-        if (v1 == undefined) return "> " + f(v0)
-        if (v0 == undefined) return "< " + f(v1)
-        return f(v0) + " - " + f(v1)
+        if (v1 == undefined) return "> " + format(v0)
+        if (v0 == undefined) return "< " + format(v1)
+        return format(v0) + " - " + format(v1)
     }
 }
