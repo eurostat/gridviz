@@ -13,9 +13,8 @@ import { sizeWidthLegend } from './SizeLegend.js'
  */
 export class WidthLegend extends Legend {
     /** @param {Object} opts */
-    constructor(opts) {
+    constructor(opts = {}) {
         super(opts)
-        opts = opts || {}
 
         /** A function returning the text label
          *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
@@ -23,7 +22,7 @@ export class WidthLegend extends Legend {
 
         /** A function returning the legend segment width
           *  @type { function(object):number } */
-        this.segmentWidth = opts.width || undefined
+        this.segmentWidth = opts.segmentWidth || undefined
 
         //title
         this.title = opts.title
@@ -112,6 +111,5 @@ export class WidthLegend extends Legend {
  */
 export function widthLegend(values, width, opts = {}) {
     const factory = (opts) => new WidthLegend(opts)
-    return sizeWidthLegend(factory, values, width, opts)
+    return sizeWidthLegend(factory, "width", values, width, opts)
 }
-
