@@ -100,16 +100,3 @@ export class WidthLegend extends Legend {
     }
 }
 
-
-
-/**
- * 
- * @param {Array.<number>} values 
- * @param {function(number):number} width 
- * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
- * @returns {Array.<WidthLegend>}
- */
-export function widthLegend(values, width, opts = {}) {
-    const factory = (opts) => new WidthLegend(opts)
-    return sizeWidthLegend(factory, "width", values, width, opts)
-}

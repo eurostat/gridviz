@@ -30,23 +30,6 @@ export function nice(v, multiples = [8, 6, 5, 4, 2.5, 2]) {
 
 
 
-/**
- * A function that returns a function to format laberls for discrete scale legends.
- * @param { function(number):string } format 
- * @returns { function(number|undefined, number|undefined): string }
- */
-export function defaultLabelText(format) {
-    return (v0, v1) => {
-        if (v0 == undefined && v1 == undefined) return ""
-        if (v1 == undefined) return "> " + format(v0)
-        if (v0 == undefined) return "< " + format(v1)
-        return format(v0) + " - " + format(v1)
-    }
-}
-
-
-
-
 
 export let monitor = false
 
