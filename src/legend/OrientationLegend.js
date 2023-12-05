@@ -22,11 +22,11 @@ export class OrientationLegend extends Legend {
         //orientation
         this.orientation = opts.orientation || 0
         //color
-        this.color = opts.color || ((resolution, z) => 'gray')
+        this.color = opts.color || ((resolution, z, viewScale) => 'gray')
         //width
-        this.width = opts.width || ((resolution, z) => 3 * z)
+        this.width = opts.width || ((resolution, z, viewScale) => 3 * z)
         //length
-        this.length = opts.length || ((resolution, z) => resolution)
+        this.length = opts.length || ((resolution, z, viewScale) => resolution)
 
         //label
         this.label = opts.label || ''
@@ -52,9 +52,10 @@ export class OrientationLegend extends Legend {
                 .text(this.title)
         }
 
-        //compute segment width and length, in pix
-        const widthPix = this.width(opts.resolution, opts.z) / opts.z
-        const lengthPix = this.length(opts.resolution, opts.z) / opts.z
+        //compute segment color, width and length
+        const color = this.color(opts.resolution, opts.z, opts.viewScale)
+        const widthPix = this.width(opts.resolution, opts.z, opts.viewScale) / opts.z
+        const lengthPix = this.length(opts.resolution, opts.z, opts.viewScale) / opts.z
 
         //draw SVG segment
         const svgS = Math.max(lengthPix, widthPix)
@@ -69,7 +70,7 @@ export class OrientationLegend extends Legend {
             .attr('y1', dc - sin * l2)
             .attr('x2', dc + cos * l2)
             .attr('y2', dc + sin * l2)
-            .style('stroke', this.color)
+            .style('stroke', color)
             .style('stroke-width', widthPix)
 
         //text label
