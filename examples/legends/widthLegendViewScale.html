@@ -23,14 +23,15 @@
         length: (cell, resolution) => resolution
     })
 
-    /*style.legends = gridviz.sizeLegendViewScale(
+    style.legends = gridviz.widthLegendViewScale(
         cell => +cell.TOT_P_2021,
         {
             k: [0.8, 0.2, 0.01, 0.002],
             title: "Population",
             labelFormat: d3.format(',.2r'),
-            fillColor: "black"
-        })*/
+            color: "black",
+            length: (resolution) => 2 * resolution
+        })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
