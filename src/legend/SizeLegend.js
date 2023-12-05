@@ -57,8 +57,6 @@ export class SizeLegend extends Legend {
 
         //get label. May not be a number (!)
         let label = this.label(opts.viewScale, opts.cells)
-        //format, if specified and possible
-        if (this.labelFormat && !isNaN(+label)) label = this.labelFormat(label)
 
         //compute size of symbol, in pix
         let sizePix
@@ -68,6 +66,8 @@ export class SizeLegend extends Legend {
             sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
 
+        //format label, if specified and possible
+        if (this.labelFormat && !isNaN(+label)) label = this.labelFormat(label)
 
         const d = this.div.append('div')
         //to enable vertical centering
