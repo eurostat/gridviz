@@ -16,9 +16,12 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        //if label is to be shown
+        /** if label is to be shown
+         *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
         this.label = opts.label || undefined
-        //if size corresponding to the value
+
+        /** if size corresponding to the value
+         *  @type { function(object):number } */
         this.size = opts.size || undefined
 
         //title
@@ -145,7 +148,7 @@ export function sizeLegend(values, size, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: value == values[0] ? opts.title : undefined,
-                size: (vs) => size(value),
+                size: () => size(value),
                 label: () => value,
                 labelFormat: opts.labelFormat,
                 fillColor: opts.fillColor || "white"
@@ -193,7 +196,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: i == sizes.length - 1 ? opts.title : undefined,
-                size: (vs) => sizes[i],
+                size: () => sizes[i],
                 label: () => labelText(breaks[i - 1], breaks[i]),
                 fillColor: opts.fillColor || "white",
                 shape: opts.shape
