@@ -4,6 +4,7 @@
 import { Legend } from '../core/Legend.js'
 import { nice } from '../utils/utils.js'
 import { max } from 'd3-array'
+import { defaultLabelText } from '../utils/utils.js'
 
 /**
  * A legend element for proportional symbols.
@@ -223,19 +224,4 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
         )
     }
     return legends
-}
-
-
-/**
- * A function that returns a function to format laberls for discrete scale legends.
- * @param { function(number):string } format 
- * @returns { function(number|undefined, number|undefined): string }
- */
-function defaultLabelText(format) {
-    return (v0, v1) => {
-        if (v0 == undefined && v1 == undefined) return ""
-        if (v1 == undefined) return "> " + format(v0)
-        if (v0 == undefined) return "< " + format(v1)
-        return format(v0) + " - " + format(v1)
-    }
 }
