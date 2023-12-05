@@ -110,7 +110,7 @@ export class WidthLegend extends Legend {
  * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
  * @returns {Array.<WidthLegend>}
  */
-export function sizeLegend(values, width, opts = {}) {
+export function widthLegend(values, width, opts = {}) {
     const factory = (opts) => new WidthLegend(opts)
     return sizeWidthLegend(factory, values, width, opts)
 }

@@ -98,12 +98,7 @@ export class SegmentStyle extends Style {
             geoCanvas.ctx.stroke()
         }
 
-        //update legend, if any
-        this.updateLegends({
-            style: this,
-            resolution: resolution,
-            z: z,
-            viewScale: viewScale
-        })
+        //update legends
+        this.updateLegends({ viewScale: viewScale, z: z, cells: cells, resolution: resolution })
     }
 }
