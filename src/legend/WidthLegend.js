@@ -2,6 +2,8 @@
 'use strict'
 
 import { Legend } from '../core/Legend.js'
+import { nice } from '../utils/utils.js'
+import { max } from 'd3-array'
 
 /**
  * A legend element for segment width.
@@ -14,36 +16,57 @@ export class WidthLegend extends Legend {
         super(opts)
         opts = opts || {}
 
+        /** A function returning the text label
+         *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
+        this.label = opts.label || undefined
+
+        /** A function returning the legend segment width
+          *  @type { function(object):number } */
+        this.segmentWidth = opts.width || undefined
+
         //title
         this.title = opts.title
         this.titleFontSize = opts.titleFontSize || '0.8em'
         this.titleFontWeight = opts.titleFontWeight || 'bold'
 
-        //exageration
-        //if set to 1, the segment width in the legend will be the one of the maximum width on the map
-        this.exaggerationFactor = opts.exaggerationFactor || 0.5
-
-        //color of the segment in the legend
+        //orientation TODO
+        //this.orientation = opts.orientation || 0
+        //color
         this.color = opts.color || 'gray'
-        //orientation of the segment in the legend
-        this.orientation = opts.orientation || 0
+        //length
+        this.length = opts.length || ((resolution, z, viewScale) => resolution)
 
         //label
         this.labelFontSize = opts.labelFontSize || '0.8em'
         this.labelUnitText = opts.labelUnitText || ''
         this.labelFormat = opts.labelFormat
-
-        //segment length in geo unit - a function of the resolution r and zoom level z
-        this.lengthFun = opts.lengthExaggerationFactor || ((r, z) => r)
     }
 
     /**
-     * @param {{  }} opts
+     * @param {{ viewScale:object, resolution: number, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
      */
     update(opts) {
 
         //clear
         this.div.selectAll('*').remove()
+
+        //get label. May not be a number (!)
+        let label = this.label(opts.viewScale, opts.cells)
+
+        //compute size of symbol, in pix
+        let widthPix
+        if (this.segmentWidth)
+            widthPix = this.segmentWidth(opts.viewScale) / opts.z
+        else
+            widthPix = opts.viewScale(+label) / opts.z
+        if (!widthPix) return
+
+        //format label, if specified and possible
+        if (this.labelFormat && !isNaN(+label)) label = this.labelFormat(label)
+
+        //get segment length
+        let lengthPix = this.length ? this.length(opts.resolution, opts.z, opts.viewScale) : opts.resolution
+        lengthPix /= opts.z
 
         const d = this.div.append('div')
 
@@ -56,45 +79,23 @@ export class WidthLegend extends Legend {
                 .text(this.title)
         }
 
-        //get segment max value
-        const value_ = opts.sWidth.max * this.exaggerationFactor
-        //TODO use gridviz.nice function
-        //make 'nice' value (power of ten, or multiple)
-        let pow10 = Math.log10(value_)
-        pow10 = Math.floor(pow10)
-        let value = Math.pow(10, pow10)
-        if (value * 8 <= value_) value *= 8
-        else if (value * 6 <= value_) value *= 6
-        else if (value * 5 <= value_) value *= 5
-        else if (value * 4 <= value_) value *= 4
-        else if (value * 2.5 <= value_) value *= 2.5
-        else if (value * 2 <= value_) value *= 2
-        else if (value * 1.5 <= value_) value *= 1.5
-
-        //compute segment width and length, in pix
-        const sWidth = opts.widthFun(value, opts.r, opts.sWidth, opts.z) / opts.z
-        const sLength = this.lengthFun(opts.r, opts.z) / opts.z
-
-        //TODO use orientation
-
-        const svg = d.append('svg').attr('width', sLength).attr('height', sWidth).style('', 'inline-block')
+        const svg = d.append('svg').attr('width', lengthPix).attr('height', widthPix).style('', 'inline-block')
 
         //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
         svg.append('line')
             .attr('x1', 0)
-            .attr('y1', sWidth / 2)
-            .attr('x2', sLength)
-            .attr('y2', sWidth / 2)
+            .attr('y1', widthPix / 2)
+            .attr('x2', lengthPix)
+            .attr('y2', widthPix / 2)
             .style('stroke', this.color)
-            .style('stroke-width', sWidth)
+            .style('stroke-width', widthPix)
 
-        const valueT = this.labelFormat ? this.labelFormat(value) : value
         d.append('div')
             //show on right of graphic
             .style('display', 'inline')
             .style('padding-left', '5px')
             .style('font-size', this.labelFontSize)
             //.style("font-weight", "bold")
-            .text(valueT + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
+            .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

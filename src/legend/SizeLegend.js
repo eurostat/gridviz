@@ -16,11 +16,11 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        /** if label is to be shown
+        /** A function returning the text label
          *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
         this.label = opts.label || undefined
 
-        /** if size corresponding to the value
+        /** A function returning the size of the legend symbol
          *  @type { function(object):number } */
         this.size = opts.size || undefined
 
@@ -42,9 +42,6 @@ export class SizeLegend extends Legend {
         this.labelFontSize = opts.labelFontSize || '0.8em'
         this.labelUnitText = opts.labelUnitText || ''
         this.labelFormat = opts.labelFormat
-
-        //
-        //this.div.style("text-align", "center")
     }
 
     /**
