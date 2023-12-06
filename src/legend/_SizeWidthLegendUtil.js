@@ -24,6 +24,11 @@ export function sizeLegend(values, size, opts = {}) {
     return legends
 }
 
+/**
+ * @param { function(import('../core/Dataset.js').Cell):number } value 
+ * @param {*} opts 
+ * @returns 
+ */
 export function sizeLegendViewScale(value, opts = {}) {
     const k = opts.k || [0.9, 0.5, 0.2, 0.05]
     const legends = []
