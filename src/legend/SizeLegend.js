@@ -23,13 +23,18 @@ export class SizeLegend extends Legend {
         this.size = opts.size || undefined
 
         //symbol
-        /**
-         * @private
-         * @type {import("../core/Style").Shape} */
+        /**  @type {(import("../core/Style").Shape)|"line"} */
         this.shape = opts.shape || 'circle'
+
+        //general case
         this.fillColor = opts.fillColor || 'none'
         this.strokeColor = opts.strokeColor || 'gray'
         this.strokeWidth = opts.strokeWidth || 1
+
+        //for line shape
+        //TODO this.orientation = opts.orientation || 0
+        this.color = opts.color || 'gray'
+        this.length = opts.length || ((resolution, z, viewScale) => resolution)
     }
 
     /**
