@@ -1,6 +1,5 @@
 v3: focus on (main) API changes.
 
-orientation legend: no labels
 legends/colorLegendViewScale: invert error message
 legends - see legend update on layer style change
 
