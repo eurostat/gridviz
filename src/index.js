@@ -48,9 +48,9 @@ export { ColorLegend } from './legend/ColorLegend.js'
 export { ColorDiscreteLegend } from './legend/ColorDiscreteLegend.js'
 export { ColorCategoryLegend } from './legend/ColorCategoryLegend.js'
 export { SizeLegend } from './legend/SizeLegend.js'
-export { WidthLegend } from './legend/WidthLegend.js'
+//export { WidthLegend } from './legend/WidthLegend.js'
 export { OrientationLegend } from './legend/OrientationLegend.js'
-export { sizeLegend, sizeLegendViewScale, sizeDiscreteLegend, sizeDiscreteViewScaleLegend, widthLegend, widthLegendViewScale, widthDiscreteLegend } from './legend/_SizeWidthLegendUtil.js'
+export { sizeLegend, sizeLegendViewScale, sizeDiscreteLegend, sizeDiscreteViewScaleLegend } from './legend/_SizeWidthLegendUtil.js'
 
 // export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from './utils/stretching.js'
