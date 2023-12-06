@@ -27,7 +27,7 @@ export function sizeLegend(values, size, opts = {}) {
 /**
  * @param { function(import('../core/Dataset.js').Cell):number } value 
  * @param {*} opts 
- * @returns 
+ * @returns {Array.<SizeLegend>}
  */
 export function sizeLegendViewScale(value, opts = {}) {
     const k = opts.k || [0.9, 0.5, 0.2, 0.05]
@@ -40,50 +40,28 @@ export function sizeLegendViewScale(value, opts = {}) {
     return legends
 }
 
-
-
-
-
-
-
-
 /**
+ * A function which return a stack of size legends for a discrete classification.
  * 
  * @param { Array.<number> } breaks 
- * @param { Array.<number> } sizesWidths 
- * @param { string } type size or width
+ * @param { Array.<number> } sizes 
  * @param { object } opts 
- * @returns {Array.<Legend>}
+ * @returns {Array.<SizeLegend>}
  */
-function sizeWidthDiscreteLegend(factory, breaks, sizesWidths, type, opts = {}) {
+export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
     const f = opts.labelFormat || (x => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
-    for (let i = sizesWidths.length - 1; i >= 0; i--) {
-        opts.title = i == sizesWidths.length - 1 ? opts.title : undefined
-        if (type == "size") opts.size = () => sizesWidths[i]
-        if (type == "width") opts.segmentWidth = () => sizesWidths[i]
-        opts.label = () => labelText(breaks[i - 1], breaks[i]),
-            legends.push(factory(opts))
+    for (let i = sizes.length - 1; i >= 0; i--) {
+        opts.title = i == sizes.length - 1 ? opts.title : undefined
+        opts.size = () => sizes[i]
+        opts.label = () => labelText(breaks[i - 1], breaks[i])
+        legends.push(new SizeLegend(opts))
     }
-    /*        legends.push(
-                new SizeLegend({
-                    title: i == sizes.length - 1 ? opts.title : undefined,
-                    size: () => sizes[i],
-                    label: () => labelText(breaks[i - 1], breaks[i]),
-                    fillColor: opts.fillColor || "white",
-                    shape: opts.shape
-                })
-            )*/
     return legends
 }
 
 
-//A function which return a stack of size legends for a discrete classification.
-export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
-    const factory = (opts) => new SizeLegend(opts)
-    return sizeWidthDiscreteLegend(factory, breaks, sizes, "size", opts)
-}
 
 
 
