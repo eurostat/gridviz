@@ -15,7 +15,7 @@ export class SideCategoryStyle extends SideStyle {
         opts = opts || {}
 
         /** A function returning the category code of a cell.
-         * @type {function(import('../core/Dataset').Cell, number, number):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number):string} */
         this.code = opts.code
 
         /**
@@ -26,8 +26,8 @@ export class SideCategoryStyle extends SideStyle {
     }
 
     /**
-     * @param {Array.<import("../core/Dataset").Cell>} cells
-     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

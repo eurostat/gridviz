@@ -12,7 +12,7 @@ import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvance
  *
  * @author Julien Gaffuri
  */
-export class SquareColorWGLStyle extends Style {
+export class SquareColorWebGLStyle extends Style {
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
@@ -65,8 +65,8 @@ export class SquareColorWGLStyle extends Style {
     }
 
     /**
-     * @param {Array.<import("../core/Dataset").Cell>} cells
-     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
