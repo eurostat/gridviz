@@ -1,5 +1,6 @@
 
 review
+LineLayer -> geojsonlayer
 (v3: focus on (main) API changes)
 
 PUBLISH v3.0.0
