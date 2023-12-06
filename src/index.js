@@ -41,7 +41,7 @@ export { GridLayer } from './layer/GridLayer.js'
 export { BackgroundLayer } from './layer/BackgroundLayer.js'
 export { BackgroundLayerWMS } from './layer/BackgroundLayerWMS.js'
 export { LabelLayer } from './layer/LabelLayer.js'
-export { LineLayer as BoundaryLayer } from './layer/LineLayer.js'
+export { GeoJSONLayer } from './layer/GeoJSONLayer.js'
 
 // export legends
 export { ColorLegend } from './legend/ColorLegend.js'

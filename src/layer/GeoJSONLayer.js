@@ -7,7 +7,7 @@ import { json } from 'd3-fetch'
 /**
  * @author Joseph Davies, Julien Gaffuri
  */
-export class LineLayer extends Layer {
+export class GeoJSONLayer extends Layer {
     /**
      * @param {object} opts
      */
@@ -54,7 +54,7 @@ export class LineLayer extends Layer {
 
     /**
      * Draw the layer.
-     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @returns {void}
      */
     draw(geoCanvas) {
