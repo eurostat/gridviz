@@ -13,12 +13,13 @@
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define color style
+    const scale = gridviz.logarithmicScale(-7)
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (c, r, z, [min, max]) => d3.interpolateYlOrRd((c.population - min) / (max - min)),
+        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
         viewScale: (cells) => {
             let max, min
             for (let cell of cells) {
-                const v = cell.population
+                const v = +cell.population
                 if (max == undefined || max < v) max = v
                 if (min == undefined || min > v) min = v
             }
