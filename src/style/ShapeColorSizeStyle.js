@@ -98,6 +98,6 @@ export class ShapeColorSizeStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ viewScale: viewScale, z: z, cells: cells, resolution: resolution })
+        this.updateLegends({ viewScale: viewScale, resolution: resolution, z: z, cells: cells })
     }
 }

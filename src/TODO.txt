@@ -1,5 +1,6 @@
 v3: focus on (main) API changes.
 
+cat category
 finalise width legends
 merge/integrate size and width legends !?
 legend segment size: copy width legend as size legend

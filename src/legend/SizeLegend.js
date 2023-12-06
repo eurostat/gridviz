@@ -102,16 +102,17 @@ export class SizeLegend extends Legend {
             let lengthPix = this.length ? this.length(opts.resolution, opts.z, opts.viewScale) : opts.resolution
             lengthPix /= opts.z
 
-            const svg = d.append('svg').attr('width', lengthPix).attr('height', widthPix).style('', 'inline-block')
+            const svg = d.append('svg').attr('width', lengthPix).attr('height', sizePix).style('', 'inline-block')
 
+            //TODO orientation
             //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
             svg.append('line')
                 .attr('x1', 0)
-                .attr('y1', widthPix / 2)
+                .attr('y1', sizePix / 2)
                 .attr('x2', lengthPix)
-                .attr('y2', widthPix / 2)
+                .attr('y2', sizePix / 2)
                 .style('stroke', this.color)
-                .style('stroke-width', widthPix)
+                .style('stroke-width', sizePix)
         } else {
             throw new Error('Unexpected shape:' + this.shape)
         }
