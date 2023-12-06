@@ -21,22 +21,14 @@
         width: (cell, resolution, z) => resolution * 0.25
     })
 
-    //define legend
-    const makeLegend = (title, orientation, label) => new gridviz.OrientationLegend({
-        title: title,
-        label: label,
-        orientation: orientation,
+    //link legend to style
+    style.legends = gridviz.orientationLegend(
+        [60, 40, 20, 0],
+        ["Very high", "High", "Low", "Very low"], {
+        title: "Population density",
         color: () => "black",
         width: (resolution) => resolution * 0.25
     })
-
-    //link legend to style
-    style.legends = [
-        makeLegend("Population density", 60, "Very high"),
-        makeLegend(undefined, 40, "High"),
-        makeLegend(undefined, 20, "Low"),
-        makeLegend(undefined, 0, "Very low"),
-    ]
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]

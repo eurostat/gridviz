@@ -70,3 +70,21 @@ export class OrientationLegend extends Legend {
             .text(this.label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }
+
+/**
+ * 
+ * @param {Array.<number>} orientations 
+ * @param {Array.<string>} labels 
+ * @param {object} opts 
+ * @returns  { Array.<OrientationLegend> }
+ */
+export function orientationLegend(orientations, labels, opts = {}) {
+    const legends = []
+    for (let i = 0; i < orientations.length; i++) {
+        opts.title = i == 0 ? opts.title : undefined;
+        opts.orientation = orientations[i]
+        opts.label = labels[i]
+        legends.push(new OrientationLegend(opts))
+    }
+    return legends
+}
