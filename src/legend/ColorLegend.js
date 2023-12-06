@@ -49,13 +49,13 @@ export class ColorLegend extends Legend {
         this.makeTitle()
 
         const svgW = this.width + 2 * this.margin
-        const svgH = this.height + 3 * this.margin + this.tickSize + 10
+        const svgH = this.height + this.margin + this.tickSize + 10
         const svg = this.div.append('svg').attr('width', svgW).attr('height', svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
         const g = svg
             .append('g')
-            .attr('transform', 'translate(' + this.margin + ' ' + (2 * this.margin) + ')')
+            .attr('transform', 'translate(' + this.margin + ' ' + 0 + ')')
 
         //draw color bar
         const w = this.width,
