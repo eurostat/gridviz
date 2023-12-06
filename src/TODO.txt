@@ -1,5 +1,4 @@
 
-PUBLISH v3.0.0
 upgrade modules: gridviz-eurostat gridviz-smoothing gridviz-parquet
 use/test in observablehq
 use/test modules
