@@ -2,6 +2,7 @@
 
 ## Version 3
 
+LineLayer -> geojsonlayer
 legend: no more segment width. size with shape set to "line"
 style filtering
 lego tanaka: coming soon

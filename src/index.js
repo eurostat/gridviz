@@ -9,11 +9,9 @@ export { Layer } from './core/Layer.js'
 export { MultiResolutionDataset } from './core/MultiResolutionDataset.js'
 
 // export dataset types
-//export { Dataset } from './Dataset.js'
 export { TiledGrid } from './dataset/TiledGrid.js'
 export { CSVGrid } from './dataset/CSVGrid.js'
 export { JSGrid } from './dataset/JSGrid.js'
-//export { GeoTIFF } from "./dataset/GeoTIFF"
 
 // export styles
 export { ShapeColorSizeStyle } from './style/ShapeColorSizeStyle.js'
