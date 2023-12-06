@@ -20,6 +20,7 @@ reorganise map - simplify constructor
 population.csv files: make 2021 ones
 legends: add scale.invert everywhere ?
 function and value ***
+example for javascript generated dataset
 
 extract modules ?
 style value by alpha: Document
