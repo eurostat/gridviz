@@ -1,6 +1,6 @@
-v3: focus on (main) API changes.
 
-legends - see legend update on layer style change
+review
+(v3: focus on (main) API changes)
 
 PUBLISH v3.0.0
 upgrade modules: gridviz-eurostat gridviz-smoothing gridviz-parquet
