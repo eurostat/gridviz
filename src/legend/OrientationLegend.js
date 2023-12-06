@@ -22,6 +22,9 @@ export class OrientationLegend extends Legend {
         this.width = opts.width || ((resolution, z, viewScale) => 3 * z)
         //length
         this.length = opts.length || ((resolution, z, viewScale) => resolution)
+
+        //label
+        this.label = opts.label || "-"
     }
 
     /**
@@ -58,13 +61,12 @@ export class OrientationLegend extends Legend {
             .style('stroke', color)
             .style('stroke-width', widthPix)
 
-        //text label
+
+        //label
         d.append('div')
-            //show on right of svg
             .style('display', 'inline')
             .style('padding-left', '5px')
             .style('font-size', this.labelFontSize)
-            //.style("font-weight", "bold")
-            .text(this.label)
+            .text(this.label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

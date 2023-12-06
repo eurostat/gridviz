@@ -119,15 +119,9 @@ export class SizeLegend extends Legend {
             throw new Error('Unexpected shape:' + this.shape)
         }
 
-
         //label
         d.append('div')
-            //show on right of graphic
             .style('display', 'inline')
-
-            //center vertically
-            //.style("position", "absolute").style("top", "0").style("bottom", "0")
-
             .style('padding-left', '5px')
             .style('font-size', this.labelFontSize)
             .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
@@ -194,11 +188,6 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
     return legends
 }
 
-
-
-
-
-
 /**
  * A function which return a stack of size legends for a discrete classification using a viewscale.
  * @param { number } classNumber 
@@ -213,21 +202,10 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
         opts.title = i == classNumber - 1 ? opts.title : undefined
         opts.size = (viewScale) => viewScale.values[i]
         opts.label = (viewScale) => labelText(viewScale.breaks[i - 1], viewScale.breaks[i])
-        /*{
-            title: i == classNumber - 1 ? opts.title : undefined,
-                size: (viewScale) => viewScale.values[i],
-                    label: (viewScale) => labelText(viewScale.breaks[i - 1], viewScale.breaks[i]),
-                        fillColor: opts.fillColor || "white",
-                            shape: opts.shape
-        }*/
         legends.push(new SizeLegend(opts))
     }
     return legends
 }
-
-
-
-
 
 /**
  * A function that returns a function to format laberls for discrete scale legends.
@@ -242,4 +220,3 @@ function defaultLabelText(format) {
         return format(v0) + " - " + format(v1)
     }
 }
-
