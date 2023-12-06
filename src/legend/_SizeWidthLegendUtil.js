@@ -6,7 +6,6 @@ import { max } from 'd3-array'
 
 import { Legend } from '../core/Legend.js';
 import { SizeLegend } from './SizeLegend.js';
-import { WidthLegend } from './WidthLegend.js';
 
 /**
  * Generic function to build a size of width legend.
@@ -40,19 +39,6 @@ export function sizeLegend(values, size, opts = {}) {
     return sizeWidthLegend(factory, "size", values, size, opts)
 }
 
-/**
- * @param {Array.<number>} values 
- * @param {function(number):number} width 
- * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
- * @returns {Array.<WidthLegend>}
- */
-export function widthLegend(values, width, opts = {}) {
-    const factory = (opts) => new WidthLegend(opts)
-    return sizeWidthLegend(factory, "width", values, width, opts)
-}
-
-
-
 
 
 
@@ -77,16 +63,6 @@ function sizeWidthLegendViewScale(factory, value, opts = {}) {
  */
 export function sizeLegendViewScale(value, opts = {}) {
     const factory = (opts) => new SizeLegend(opts)
-    return sizeWidthLegendViewScale(factory, value, opts)
-}
-
-/**
- * @param {function(import('../core/Dataset.js').Cell):number} value 
- * @param {{ k?:Array.<number>, title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
- * @returns {Array.<WidthLegend>}
- */
-export function widthLegendViewScale(value, opts = {}) {
-    const factory = (opts) => new WidthLegend(opts)
     return sizeWidthLegendViewScale(factory, value, opts)
 }
 
@@ -133,11 +109,6 @@ function sizeWidthDiscreteLegend(factory, breaks, sizesWidths, type, opts = {}) 
 export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
     const factory = (opts) => new SizeLegend(opts)
     return sizeWidthDiscreteLegend(factory, breaks, sizes, "size", opts)
-}
-
-export function widthDiscreteLegend(breaks, widths, opts = {}) {
-    const factory = (opts) => new WidthLegend(opts)
-    return sizeWidthDiscreteLegend(factory, breaks, widths, "width", opts)
 }
 
 
