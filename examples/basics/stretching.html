@@ -45,7 +45,7 @@ font-family: Arial, Helvetica, sans-serif;
         resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
     )
 
-    const s = new gridviz.SquareColorWGLStyle({
+    const s = new gridviz.SquareColorWebGLStyle({
         viewScale: (cells) => d3.extent(cells, c => +c.TOT_P_2021),
         tFun: (c, r, z, [min, max]) => (+c.TOT_P_2021 - min) / (max - min),
         color: d3.interpolateMagma,

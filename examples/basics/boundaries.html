@@ -7,7 +7,7 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
 
     //make boundary layer, with a different style depending on the zoom level and line type.
-    const boundaryLayer = new gridviz.BoundaryLayer({
+    const boundaryLayer = new gridviz.GeoJSONLayer({
         url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json',
         color: (f, zoom) => {
             const p = f.properties
