@@ -341,7 +341,7 @@ export class Map {
     }
 
     /**
-     * Adds a set of zoom buttons to the app
+     * Adds a set of zoom buttons to the map
      *
      * @param {object} opts
      * @returns {this}
@@ -354,7 +354,7 @@ export class Map {
         // * opts.delta - zoom delta applied on each click
 
         this.zoomButtons = new ZoomButtons({
-            app: this,
+            map: this,
             id: opts?.id || 'gridviz-zoom-buttons',
             class: opts?.class,
             x: opts?.x,
@@ -379,7 +379,7 @@ export class Map {
         // * opts.y
 
         this.fullscreenButton = new FullscreenButton({
-            app: this,
+            map: this,
             id: opts?.id || 'gridviz-fullscreen-button',
             class: opts?.class,
             x: opts?.x,

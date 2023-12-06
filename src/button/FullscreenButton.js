@@ -77,10 +77,10 @@ export class FullscreenButton extends Button {
             //resize canvas to default
             this.map.h = this.defaultHeight
             this.map.w = this.defaultWidth
-            this.map.cg.h = this.defaultHeight
-            this.map.cg.w = this.defaultWidth
-            this.map.cg.canvas.setAttribute('width', '' + this.defaultWidth)
-            this.map.cg.canvas.setAttribute('height', '' + this.defaultHeight)
+            this.map.geoCanvas.h = this.defaultHeight
+            this.map.geoCanvas.w = this.defaultWidth
+            this.map.geoCanvas.canvas.setAttribute('width', '' + this.defaultWidth)
+            this.map.geoCanvas.canvas.setAttribute('height', '' + this.defaultHeight)
             this.map.redraw()
             this.isFullscreen = false
         } else {
