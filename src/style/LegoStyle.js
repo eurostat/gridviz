@@ -3,7 +3,7 @@
 
 import { TanakaStyle } from './TanakaStyle.js'
 import { StrokeStyle } from './StrokeStyle.js'
-import { SquareColorCatWGLStyle } from './SquareColorCatWGLStyle.js'
+import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
 import { Style } from '../core/Style.js'
 
 /**
@@ -67,7 +67,7 @@ export class LegoStyle {
         opts.colBright = opts.colBright || '#aaa'
 
         //
-        const s = new SquareColorCatWGLStyle({ colorCol: col, color: opts.color })
+        const s = new SquareColorCategoryWebGLStyle({ colorCol: col, color: opts.color })
         //style to show limits between pieces
         const sst = new StrokeStyle({ strokeColor: () => '#666', strokeWidth: (v, r, s, z) => 0.2 * z })
 
