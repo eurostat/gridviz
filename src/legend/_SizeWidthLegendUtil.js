@@ -24,31 +24,15 @@ export function sizeLegend(values, size, opts = {}) {
     return legends
 }
 
-
-
-
-
-
-
-function sizeWidthLegendViewScale(factory, value, opts = {}) {
+export function sizeLegendViewScale(value, opts = {}) {
     const k = opts.k || [0.9, 0.5, 0.2, 0.05]
     const legends = []
     for (let k_ of k) {
         opts.title = k_ == k[0] ? opts.title : undefined
         opts.label = (viewScale, cells) => nice(k_ * max(cells, value))
-        legends.push(factory(opts))
+        legends.push(new SizeLegend(opts))
     }
     return legends
-}
-
-/**
- * @param {function(import('../core/Dataset.js').Cell):number} value 
- * @param {{ k?:Array.<number>, title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
- * @returns {Array.<SizeLegend>}
- */
-export function sizeLegendViewScale(value, opts = {}) {
-    const factory = (opts) => new SizeLegend(opts)
-    return sizeWidthLegendViewScale(factory, value, opts)
 }
 
 
