@@ -27,15 +27,15 @@
     })
 
     //define legends
-    style.legends = gridviz.widthDiscreteLegend(
+    style.legends = gridviz.sizeDiscreteLegend(
         breaks,
-        widths,
-        {
-            title: "Population",
-            labelFormat: d3.format(',.2r'),
-            color: "black",
-            length: (resolution) => 2 * resolution
-        })
+        widths, {
+        title: "Population",
+        shape: "line",
+        color: "black",
+        length: (resolution) => 15000,
+        labelFormat: d3.format(',.2r'),
+    })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
