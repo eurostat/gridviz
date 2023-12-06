@@ -25,14 +25,15 @@
         length: (cell, resolution) => resolution
     })
 
-    /*/define legends
+    //define legends
     style.legends = gridviz.sizeDiscreteViewScaleLegend(
-        classNumber,
-        {
-            title: "Population",
-            labelFormat: Math.round,
-            fillColor: "black"
-        })*/
+        classNumber, {
+        title: "Population",
+        shape: "line",
+        color: "black",
+        length: (resolution) => 2 * resolution,
+        labelFormat: Math.round,
+    })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
