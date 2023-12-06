@@ -221,13 +221,7 @@ export class TimeSeriesStyle extends Style {
         }
 
         //update legend, if any
-        this.updateLegends({
-            style: this,
-            resolution: resolution,
-            z: z,
-            viewScale: viewScale
-        })
-
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 
 }

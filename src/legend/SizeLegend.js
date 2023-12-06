@@ -38,7 +38,7 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ viewScale:object, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
+     * @param {{ viewScale:object, resolution: number, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
      */
     update(opts) {
 
@@ -66,15 +66,15 @@ export class SizeLegend extends Legend {
         //to enable vertical centering
         //.style("position", "relative")
 
-        //shape
-        const svg = d
+        //default svg construction, for square and circle
+        const svg = () => d
             .append('svg')
             .attr('width', sizePix + this.strokeWidth + 2)
             .attr('height', sizePix + this.strokeWidth + 2)
             .style('', 'inline-block')
 
         if (this.shape === 'square') {
-            svg.append('rect')
+            svg().append('rect')
                 .attr('x', 0)
                 .attr('y', 0)
                 .attr('width', sizePix)
@@ -82,11 +82,10 @@ export class SizeLegend extends Legend {
                 .style('fill', this.fillColor)
                 .style('stroke', this.strokeColor)
                 .style('stroke-width', this.strokeWidth)
-            //TODO test
         } else if (this.shape === 'circle') {
             // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
             const r = (sizePix + this.strokeWidth) * 0.5
-            svg.append('circle')
+            svg().append('circle')
                 .attr('cx', r + 1)
                 .attr('cy', r + 1)
                 .attr('r', r)
@@ -97,9 +96,26 @@ export class SizeLegend extends Legend {
             //TODO
         } else if (this.shape === 'diamond') {
             //TODO
+        } else if (this.shape === 'line') {
+
+            //get segment length
+            let lengthPix = this.length ? this.length(opts.resolution, opts.z, opts.viewScale) : opts.resolution
+            lengthPix /= opts.z
+
+            const svg = d.append('svg').attr('width', lengthPix).attr('height', widthPix).style('', 'inline-block')
+
+            //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+            svg.append('line')
+                .attr('x1', 0)
+                .attr('y1', widthPix / 2)
+                .attr('x2', lengthPix)
+                .attr('y2', widthPix / 2)
+                .style('stroke', this.color)
+                .style('stroke-width', widthPix)
         } else {
             throw new Error('Unexpected shape:' + this.shape)
         }
+
 
         //label
         d.append('div')

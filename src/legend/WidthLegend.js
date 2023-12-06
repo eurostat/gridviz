@@ -54,11 +54,15 @@ export class WidthLegend extends Legend {
         //format label, if specified and possible
         if (this.labelFormat && !isNaN(+label)) label = this.labelFormat(label)
 
+
+        const d = this.div.append('div')
+
+
+
+
         //get segment length
         let lengthPix = this.length ? this.length(opts.resolution, opts.z, opts.viewScale) : opts.resolution
         lengthPix /= opts.z
-
-        const d = this.div.append('div')
 
         const svg = d.append('svg').attr('width', lengthPix).attr('height', widthPix).style('', 'inline-block')
 
@@ -71,6 +75,9 @@ export class WidthLegend extends Legend {
             .style('stroke', this.color)
             .style('stroke-width', widthPix)
 
+
+
+
         d.append('div')
             //show on right of graphic
             .style('display', 'inline')
@@ -78,6 +85,7 @@ export class WidthLegend extends Legend {
             .style('font-size', this.labelFontSize)
             //.style("font-weight", "bold")
             .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
+
     }
 }
 

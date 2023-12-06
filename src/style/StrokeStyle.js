@@ -99,6 +99,6 @@ export class StrokeStyle extends Style {
         }
 
         //update legends
-        //TODO
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
