@@ -8,35 +8,20 @@ import { Legend } from '../core/Legend.js';
 import { SizeLegend } from './SizeLegend.js';
 
 /**
- * Generic function to build a size of width legend.
- * 
- * @param {Array.<number>} values 
- * @param { string } type size or width
- * @param {function(number):number} sizeWidth 
- * @param { object } opts 
- * @returns {Array.<Legend>}
- */
-function sizeWidthLegend(factory, type, values, sizeWidth, opts = {}) {
-    const legends = []
-    for (let value of values) {
-        opts.title = value == values[0] ? opts.title : undefined;
-        if (type == "size") opts.size = () => sizeWidth(value)
-        if (type == "width") opts.segmentWidth = () => sizeWidth(value)
-        opts.label = () => value
-        legends.push(factory(opts))
-    }
-    return legends
-}
-
-/**
  * @param {Array.<number>} values 
  * @param {function(number):number} size 
- * @param {{ title?:string, fillColor?:string, labelFormat?:function(number):string }} opts 
+ * @param { object } opts 
  * @returns {Array.<SizeLegend>}
  */
 export function sizeLegend(values, size, opts = {}) {
-    const factory = (opts) => new SizeLegend(opts)
-    return sizeWidthLegend(factory, "size", values, size, opts)
+    const legends = []
+    for (let value of values) {
+        opts.title = value == values[0] ? opts.title : undefined;
+        opts.size = () => size(value)
+        opts.label = () => value
+        legends.push(new SizeLegend(opts))
+    }
+    return legends
 }
 
 
