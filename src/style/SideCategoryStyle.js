@@ -8,7 +8,7 @@ import { SideStyle } from './SideStyle.js'
  *
  * @author Julien Gaffuri
  */
-export class SideCatStyle extends SideStyle {
+export class SideCategoryStyle extends SideStyle {
     /** @param {object} opts */
     constructor(opts) {
         super(opts)

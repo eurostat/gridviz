@@ -1,9 +1,7 @@
 v3: focus on (main) API changes.
 
-finalise width legends
-merge/integrate size and width legends !?
-legend segment size: copy width legend as size legend
-move legend title to legend.js
+orientation legend: no labels
+legends/colorLegendViewScale: invert error message
 legends - see legend update on layer style change
 cat category
 
