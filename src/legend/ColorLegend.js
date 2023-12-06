@@ -107,6 +107,7 @@ export class ColorLegend extends Legend {
 
             const v = this.textScale(t, opts.viewScale)
             const text = (v ? f(v) : '0') + (this.tickUnit ? this.tickUnit : '')
+            if (text == undefined) continue
 
             //tick label
             this.div.select('#' + 'ticklabel_' + i).text(text)

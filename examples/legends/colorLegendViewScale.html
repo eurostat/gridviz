@@ -26,7 +26,7 @@
         title: "Population",
         colorScale: d3.interpolateYlOrRd,
         ticks: 4,
-        textScale: (t, vs) => vs.invert(t),
+        textScale: (t, vs) => vs?.invert(t),
         tickFormat: Math.round
     })
 
