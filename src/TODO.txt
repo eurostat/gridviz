@@ -1,12 +1,9 @@
 
-run all tests
-(v3: focus on (main) API changes)
-
 PUBLISH v3.0.0
 upgrade modules: gridviz-eurostat gridviz-smoothing gridviz-parquet
 use/test in observablehq
 use/test modules
-
+add label layers from new gridviz-eurostat module
 
 doc v3 + change log
 upgrade demos to v3
@@ -24,6 +21,7 @@ function and value ***
 example for javascript generated dataset
 make parameter both a function and a static value - check how it is done in d3
 bug un fullscreen button. On fullscreen exit.
+add 3035 backgrounds to gridviz-eurostat module ?
 
 extract modules ?
 style value by alpha: Document
