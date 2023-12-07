@@ -81,14 +81,13 @@ export const viewScaleQuantile = (opts) => {
  */
 export const viewScaleColor = (opts) => {
     const valueFunction = opts.valueFunction
+    const stretching = opts.stretching
     let colorScale = opts.colorScale || (() => "purple")
 
-    console.log(opts.colors)
     //case of discrete colors
     if (opts.colors)
         colorScale = t => opts.colors[t == 1 ? opts.colors.length - 1 : Math.floor(t * opts.colors.length)]
 
-    const stretching = opts.stretching
     return (cells) => {
         if (cells.length == 0 || !cells) return
         /** @type {[undefined, undefined] | [number, number]} */
