@@ -5,6 +5,7 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4200000, y: 2600000, z: 300, backgroundColor: "#EADDCA" })
+        .addZoomButtons()
 
     //define dataset
     const dataset = new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/500m/', {

@@ -8,6 +8,7 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4700000, y: 2800000, z: 1000 })
+        .addZoomButtons()
 
     //define background layer
     const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("NaturalEarth", 7, "EPSG3035", { filterColor: () => '#ffffff88' }))

@@ -11,6 +11,7 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 3700000, y: 2400000, z: 400 })
+        .addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(

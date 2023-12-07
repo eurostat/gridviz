@@ -5,6 +5,7 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
+        .addZoomButtons()
 
     //define dataset
     const dataset = new gridviz.TiledGrid(map, "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/10000m/")

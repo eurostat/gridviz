@@ -5,6 +5,7 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
+        .addZoomButtons()
 
     //make boundary layer, with a different style depending on the zoom level and line type.
     const boundaryLayer = new gridviz.GeoJSONLayer({

@@ -1,4 +1,6 @@
 use/test in observablehq
+example for javascript generated dataset
+example for style level cells filtering
 doc v3 + change log
 
 upgrade demos to v3
@@ -8,15 +10,11 @@ hillshading style
 contour style
 lego style
 tanaka style
-example for style level cells filtering
 reorganise map - simplify constructor
 population.csv files: make 2021 ones
 legends: add scale.invert everywhere ?
-function and value ***
-example for javascript generated dataset
 make parameter both a function and a static value - check how it is done in d3
 bug un fullscreen button. On fullscreen exit.
-add 3035 backgrounds to gridviz-eurostat module ?
 
 extract modules ?
 style value by alpha: Document

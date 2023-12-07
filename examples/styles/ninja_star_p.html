@@ -8,6 +8,7 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 3763437, y: 2891045, z: 50.1, zoomExtent: [2, 2000], backgroundColor: "black" })
+        .addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
