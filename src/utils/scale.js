@@ -15,9 +15,9 @@ import { scaleQuantile } from "d3-scale"
 
 
 /**
- * Generic function for view scale - continuous
+ * Generic function for view scale - continuous or discrete
  * 
- * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number}} opts 
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number, classNumber?:number}} opts 
  * @returns {function(Array.<import("../core/Dataset").Cell>):Scale}
  */
 export const viewScale = (opts) => {
@@ -28,6 +28,7 @@ export const viewScale = (opts) => {
     const stretching = opts.stretching
     const range_ = opts.range
     const domain_ = opts.domain
+    const classNumber = opts.classNumber
     return (cells, r, z) => {
         const domain = domain_ || [minValue, max(cells, valueFunction)]
         const range = range_ || [minSizePix * z, r * maxSizeFactor]
@@ -38,6 +39,7 @@ export const viewScale = (opts) => {
             t = (t - domainMin) / domainSize
             //stretch
             if (stretching) t = stretching(t)
+            if (classNumber) t = t == 1 ? t : Math.floor(t * (classNumber + 1)) / classNumber
             //scale to range
             return rangeMin + t * rangeSize
         }
