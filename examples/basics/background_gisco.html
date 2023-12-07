@@ -8,7 +8,7 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
 
     //define background layer
-    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 10, "EPSG3035"))
+    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 18, "EPSG3035"))
 
     //add layer to map
     map.layers = [backgroundLayer]
