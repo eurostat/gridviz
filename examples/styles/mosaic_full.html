@@ -56,25 +56,6 @@
         const map = new gridviz.Map(document.getElementById('viz-container'), { x: 4500000, y: 2960000, z: 1500, zoomExtent: [30, 7000], backgroundColor: '#ECE6D3' })
             .setViewFromURL()
 
-        /*
-    .setBoundaryLayer(
-        gviz_es.getEurostatBoundariesLayer({
-            scale: '10M',
-            col: '#00000077',
-            lineDash: () => [],
-        })
-    )*/
-        /*.addBackgroundLayer({
-            url: 'https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/',
-            resolutions: [
-                156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512,
-                9783.93962050256, 4891.96981025128, 2445.98490512564,
-            ],
-            origin: [0, 6000000],
-            filterColor: (z) => '#ffffffd3',
-        })
-*/
-
         //define multi resolution dataset
         const dataset = new gridviz.MultiResolutionDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
@@ -130,6 +111,27 @@
                 haloColor: () => '#ffffff',
                 haloWidth: () => 3,
             }))
+
+
+        /*
+    .setBoundaryLayer(
+        gviz_es.getEurostatBoundariesLayer({
+            scale: '10M',
+            col: '#00000077',
+            lineDash: () => [],
+        })
+    )*/
+        /*.addBackgroundLayer({
+            url: 'https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/',
+            resolutions: [
+                156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512,
+                9783.93962050256, 4891.96981025128, 2445.98490512564,
+            ],
+            origin: [0, 6000000],
+            filterColor: (z) => '#ffffffd3',
+        })
+*/
+
 
         //add layers to map
         map.layers = [gridLayer, labelLayer]
