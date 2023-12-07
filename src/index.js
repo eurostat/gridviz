@@ -3,7 +3,7 @@
 
 // the application
 export { Map } from './core/Map.js'
-//export { GeoCanvas } from './GeoCanvas.js'
+export { GeoCanvas } from './core/GeoCanvas.js'
 export { Style } from './core/Style.js'
 export { Layer } from './core/Layer.js'
 export { MultiResolutionDataset } from './core/MultiResolutionDataset.js'
