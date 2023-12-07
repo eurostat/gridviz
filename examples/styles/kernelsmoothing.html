@@ -2,7 +2,6 @@
         <option value="color" selected>Color - continuous</option>
         <option value="color_discrete">Color - discrete</option>
         <option value="size">Circle size</option>
-        <!-- <option value="side">Shading</option> -->
     </select>
     <br />Smoothing<br />
     <input type="range" min="3" max="30" value="10" class="slider" id="sigma" />
@@ -88,6 +87,5 @@
     document.getElementById('sigma').oninput = update
 
     update()
-
 
 </script>
