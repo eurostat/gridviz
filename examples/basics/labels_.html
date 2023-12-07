@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
 <script>
@@ -9,12 +10,7 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 4700000, y: 2800000, z: 1000 })
 
     //define background layer
-    const backgroundLayer = new gridviz.BackgroundLayer({
-        url: 'https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/',
-        resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
-        origin: [0, 6000000],
-        filterColor: () => '#ffffff88',
-    })
+    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("NaturalEarth", 7, "EPSG3035", { filterColor: () => '#ffffff88' }))
 
     //ETRS89-LAEA projection (EPSG 3035)
     const proj = d3
