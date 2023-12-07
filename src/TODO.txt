@@ -3,6 +3,7 @@ use/test in observablehq
 use/test modules
 add label layers from new gridviz-eurostat module
 
+gisco background layers in gridviz-eurostat module
 modules updates: gridviz-smoothing
 doc v3 + change log
 upgrade demos to v3
