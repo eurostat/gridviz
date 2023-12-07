@@ -32,10 +32,6 @@
         filterSmoothed: (value) => value > 0.001,
     })
 
-    //set paramerters for quantile style
-    //const classNumber = 7
-    //const colors = d3.schemeYlOrRd[classNumber] //.reverse() //schemeSpectral
-
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [smoothingStyle])]
 
