@@ -33,8 +33,8 @@
     })
 
     //set paramerters for quantile style
-    const classNumber = 7
-    const colors = d3.schemeYlOrRd[classNumber] //.reverse() //schemeSpectral
+    //const classNumber = 7
+    //const colors = d3.schemeYlOrRd[classNumber] //.reverse() //schemeSpectral
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [smoothingStyle])]
@@ -66,12 +66,8 @@
             smoothingStyle.styles = [
                 new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => viewScale(c.ksmval),
-                    viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ksmval, stretching: gridviz.logarithmicScale(-7) }),
+                    viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.ksmval, colors: d3.schemeYlOrRd[7], stretching: gridviz.logarithmicScale(-7) }),
                 })
-                /*new gridviz.ShapeColorSizeStyle({
-                    color: (c, r, z, viewScale) => viewScale(c.ksmval),
-                    viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.ksmval, classNumber: classNumber, colors: colors }),
-                })*/
             ]
         } else if (sty == 'size') {
             smoothingStyle.factor = 8
