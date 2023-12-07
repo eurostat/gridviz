@@ -106,6 +106,50 @@ export const viewScaleColor = (opts) => {
     }
 }
 
+
+
+/**
+ * Generic function for color view scale - continuous
+ * 
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, stretching?:function(number):number, classNumber?:number, colors?:Array.<string>, colorScale?:function(number):string }} opts 
+ * @returns {function(Array.<import("../core/Dataset").Cell>):ColorScale}
+ */
+export const viewScaleColorDiscrete = (opts) => {
+    const valueFunction = opts.valueFunction
+    const stretching = opts.stretching
+    const classNumber = opts.classNumber || 12
+
+    let colors = opts.colors
+    if (opts.colorScale) colors = discreteColors(opts.colorScale, classNumber)
+    colors = colors || Array.from({ length: classNumber }, (_, i) => "rgb(" + Math.floor(255 * i / (classNumber - 1)) + ",150,150)")
+
+    return (cells) => {
+        if (cells.length == 0 || !cells) return
+        /** @type {[undefined, undefined] | [number, number]} */
+        const domain = extent(cells, valueFunction)
+        if (domain[0] == undefined) return
+        const domainSize = domain[1] - domain[0]
+        const scale = t => {
+            //scale to [0,1]
+            t = (t - domain[0]) / domainSize
+            //stretch
+            if (stretching) t = stretching(t)
+            return colors[t == 1 ? classNumber - 1 : Math.floor(t * classNumber)]
+        }
+        //function that return the domain value from the [0,1] range.
+        scale.invert = t => {
+            if (stretching) t = stretching.invert(t)
+            return domain[0] + t * domainSize
+        }
+
+        return scale;
+    }
+}
+
+
+
+
+
 /**
  * Generic function for color view scale - quantile
  * 
