@@ -2,6 +2,8 @@
 
 ## Version 3
 
+gisco background layers in gridviz-eurostat module
+modules updates: gridviz-smoothing and gridviz-eurostat
 LineLayer -> geojsonlayer
 legend: no more segment width. size with shape set to "line"
 style filtering

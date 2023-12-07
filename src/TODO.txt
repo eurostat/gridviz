@@ -1,11 +1,6 @@
-upgrade modules: gridviz-eurostat gridviz-parquet
 use/test in observablehq
-use/test modules
-add label layers from new gridviz-eurostat module
-
-gisco background layers in gridviz-eurostat module
-modules updates: gridviz-smoothing
 doc v3 + change log
+
 upgrade demos to v3
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
@@ -34,6 +29,7 @@ style: bi-symbol map
 replace GreyEarth with own shaded relief
 income change: double smoothing map ?
 legend for bivariate map
+upgrade modules:  gridviz-parquet
 
 NO
 POP Pop
