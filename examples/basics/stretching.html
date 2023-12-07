@@ -29,7 +29,7 @@ font-family: Arial, Helvetica, sans-serif;
 </div>
 
 <script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -55,10 +55,17 @@ font-family: Arial, Helvetica, sans-serif;
         cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant' + (c.TOT_P_2021 == 1 ? '' : 's')
     })
 
-    //.setLabelLayer(gviz_es.getEuronymeLabelLayer('EUR', '20', { dark: true }))
-    //.setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
+    //define background layer
+    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("GreyEarth", 7, "EPSG3035", { filterColor: () => '#000000d1' }))
 
-    map.layers = [gridLayer]
+    //define boundaries layer
+    const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
+    //define label layer
+    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true }))
+
+    //add layers to map
+    map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
 
     const update = () => {
 
