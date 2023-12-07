@@ -1,6 +1,6 @@
 <div>Style<br /><select id="style">
         <option value="color" selected>Color - continuous</option>
-        <option value="colord">Color - discrete</option>
+        <option value="color_quantile">Color - quantile</option>
         <option value="size">Circle size</option>
         <!-- <option value="side">Shading</option> -->
     </select>
@@ -11,6 +11,7 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@2.0.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
@@ -19,102 +20,60 @@
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
 
-    //define dataset
-    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+    //define multi resolution dataset
+    const dataset = new gridviz.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+    )
 
     //define style
-    const style = new gridviz_smoothing.KernelSmoothingStyle({
-        value: (cell) => +cell.population,
+    const smoothingStyle = new gridviz_smoothing.KernelSmoothingStyle({
+        value: (cell) => +cell.TOT_P_2021,
         filterSmoothed: (value) => value > 0.001,
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [new gridviz.GridLayer(dataset, [smoothingStyle])]
 
     //
     const update = () => {
+
         //set sigma
         const sig = +document.querySelector('#sigma').value
-        style.sigma = (resolution, z) => (resolution * sig) / 10
+        smoothingStyle.sigma = (resolution, z) => (resolution * sig) / 10
 
         //set selected style
         const sty = document.querySelector('#style').value
         if (sty == 'color') {
-            s.factor = 3
-            s.styles = [
-                new gridviz.SquareColorWGLStyle({
-                    colorCol: 'ksmval',
+            smoothingStyle.factor = 3
+            smoothingStyle.styles = [
+                new gridviz.SquareColorWebGLStyle({
                     color: (t) => d3.interpolateSpectral(1 - t), //d3.interpolateCividis,
-                    tFun: (v, r, s) => {
-                        const v_ = gridviz.sExp(v / s.max, -20)
-                        return v_
+                    viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
+                    tFun: (cell, resolution, z, max) => {
+                        const t = gridviz.sExp(cell.ksmval / max, -20)
+                        return t
                     },
                 }),
             ]
-        } else if (sty == 'colord') {
-            const nbClass = 12
-            s.factor = 2
-            s.styles = [
-                new gridviz.SquareColorWGLStyle({
-                    colorCol: 'ksmval',
-                    color: (t) => d3.interpolateSpectral(1 - t),
-                    tFun: (v, r, s) => {
-                        const v_ = gridviz.sExp(v / s.max, -20)
-                        const cl = Math.floor(nbClass * v_) / nbClass
-                        return cl
-                    },
-                }),
+        } else if (sty == 'color_quantile') {
+            smoothingStyle.factor = 2
+            const classNumber = 12
+            const colors = d3.schemeYlOrRd[classNumber] //d3.interpolateSpectral(1 - t)
+            smoothingStyle.styles = [
+                new gridviz.ShapeColorSizeStyle({
+                    color: (c, r, z, viewScale) => viewScale(c.ksmval),
+                    viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.ksmval, classNumber: classNumber, colors: colors }),
+                })
             ]
         } else if (sty == 'size') {
-            s.factor = 8
-            s.styles = [
+            smoothingStyle.factor = 8
+            smoothingStyle.styles = [
                 new gridviz.ShapeColorSizeStyle({
-                    color: () => 'black',
-                    sizeCol: 'ksmval',
-                    size: (v, r, s, z) => 1.3 * r * Math.pow(v / s.max, 0.3),
-                    shape: () => 'circle',
-                }),
-            ]
-        } else if (sty == 'joyplot') {
-            s.factor = 20
-            s.styles = [
-                new gridviz.JoyPlotStyle({
-                    heightCol: 'ksmval',
-                    height: (v, r, s, z) => {
-                        console.log(5 * r * Math.sqrt(v / s.max))
-                        return 5 * r * Math.sqrt(v / s.max)
-                    },
-                }),
-            ]
-        } else if (sty == 'side') {
-            s.factor = 10
-            s.styles = [
-                new gridviz.SideStyle({
-                    valueCol: 'ksmval',
-                    value: (v1, v2) => {
-                        return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0)
-                    },
-
-                    color: (side, r, s, z) => {
-                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        const tr = 0.3 * gridviz.sPow(Math.abs(side.value) / max, 0.3)
-                        return (side.value > 0 && side.or === 'h') ||
-                            (side.value < 0 && side.or === 'v')
-                            ? 'rgba(0,0,0,' + tr + ')'
-                            : 'rgba(255,255,100,' + tr + ')'
-                    },
-                    width: (side, r, s, z) => {
-                        return r * 1
-                    },
-
-                    /*
-                color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                width: (side, r, s, z) => {
-                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                    return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gridviz.sPow(Math.abs(side.value) / max, 0.3))
-                },*/
-
-                    fillColor: (c) => (c.ksmval < 0 ? '#d13c4b' : '#4288b5'),
+                    size: (c, r, z, viewScale) => viewScale(c.ksmval),
+                    viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ksmval, maxSizeFactor: 1.3, stretching: gridviz.logarithmicScale(-8) }),
+                    shape: () => "circle",
+                    color: () => "black"
                 }),
             ]
         }
