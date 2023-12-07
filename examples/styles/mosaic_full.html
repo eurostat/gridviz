@@ -104,6 +104,13 @@
         //define background layer
         const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("GreyEarth", 7, "EPSG3035", { filterColor: () => '#ffffffd3' }))
 
+        //define boundaries layer
+        const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer({
+            scale: '10M',
+            col: '#00000077',
+            lineDash: () => [],
+        }))
+
         //define label layer
         const labelLayer = new gridviz.LabelLayer(
             gridviz_eurostat.getEuronymeLabelLayer('EUR', 50, {
@@ -115,18 +122,8 @@
                 haloWidth: () => 3,
             }))
 
-
-        /*
-    .setBoundaryLayer(
-        gviz_es.getEurostatBoundariesLayer({
-            scale: '10M',
-            col: '#00000077',
-            lineDash: () => [],
-        })
-    )*/
-
         //add layers to map
-        map.layers = [backgroundLayer, gridLayer, labelLayer]
+        map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
 
 
         /*/convert to roman numbers - source: https://stackoverflow.com/a/9083076/413912
