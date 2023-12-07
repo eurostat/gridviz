@@ -17,7 +17,7 @@ import { scaleQuantile } from "d3-scale"
 /**
  * Generic function for view scale - continuous
  * 
- * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number }} opts 
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number}} opts 
  * @returns {function(Array.<import("../core/Dataset").Cell>):Scale}
  */
 export const viewScale = (opts) => {
@@ -31,16 +31,19 @@ export const viewScale = (opts) => {
     return (cells, r, z) => {
         const domain = domain_ || [minValue, max(cells, valueFunction)]
         const range = range_ || [minSizePix * z, r * maxSizeFactor]
+        const domainSize = domain[1] - domain[0], domainMin = domain[0]
+        const rangeSize = range[1] - range[0], rangeMin = range[0]
         return t => {
             //scale to [0,1]
-            t = (t - domain[0]) / (domain[1] - domain[0])
+            t = (t - domainMin) / domainSize
             //stretch
             if (stretching) t = stretching(t)
             //scale to range
-            return range[0] + t * (range[1] - range[0])
+            return rangeMin + t * rangeSize
         }
     }
 }
+
 
 
 /**
@@ -85,10 +88,10 @@ export const viewScaleColor = (opts) => {
         /** @type {[undefined, undefined] | [number, number]} */
         const domain = extent(cells, valueFunction)
         if (domain[0] == undefined) return
-        const amplitude = domain[1] - domain[0]
+        const domainSize = domain[1] - domain[0]
         const scale = t => {
             //scale to [0,1]
-            t = (t - domain[0]) / amplitude
+            t = (t - domain[0]) / domainSize
             //stretch
             if (stretching) t = stretching(t)
             return colorScale(t)
@@ -96,7 +99,7 @@ export const viewScaleColor = (opts) => {
         //function that return the domain value from the [0,1] range.
         scale.invert = t => {
             if (stretching) t = stretching.invert(t)
-            return domain[0] + t * amplitude
+            return domain[0] + t * domainSize
         }
 
         return scale;
