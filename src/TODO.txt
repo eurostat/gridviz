@@ -31,6 +31,7 @@ style: spider net diagram
 style: flower - for composition
 style: bi-symbol map
 
+replace GreyEarth with own shaded relief
 income change: double smoothing map ?
 legend for bivariate map
 
