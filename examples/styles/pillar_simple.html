@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
 
@@ -36,17 +37,19 @@
         filterColor: (z) => '#ffffff77',
     })
 
-    //make layer
+    //define grid layer
     const gridLayer = new gridviz.GridLayer(dataset, [style], {
         minPixelsPerCell: 6,
         cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
     })
 
-    //TODO
-    //.setLabelLayer(gviz_es.getEuronymeLabelLayer('EUR', 50))
-    //.setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
+    //define boundaries layer
+    const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
+    //define label layer
+    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('EUR', 50))
 
     //add layer to map
-    map.layers = [backgroundLayer, gridLayer]
+    map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
 
 </script>
