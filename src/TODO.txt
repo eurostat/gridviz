@@ -1,8 +1,9 @@
-upgrade modules: gridviz-eurostat gridviz-smoothing gridviz-parquet
+upgrade modules: gridviz-eurostat gridviz-parquet
 use/test in observablehq
 use/test modules
 add label layers from new gridviz-eurostat module
 
+modules updates: gridviz-smoothing
 doc v3 + change log
 upgrade demos to v3
 static image background layer - for map background in oversea territories
