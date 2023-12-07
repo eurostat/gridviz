@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -8,7 +9,7 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000, backgroundColor: "black" })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000, backgroundColor: "black" })
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
@@ -26,7 +27,7 @@
     })
 
     //define stoke style
-    const strokeStyle = new gridviz.StrokeStyle({ visible: (z) => z < 80 })
+    const strokeStyle = new gridviz.StrokeStyle({ visible: (z) => z < 70 })
 
     //define grid layer
     const gridLayer = new gridviz.GridLayer(dataset, [style, strokeStyle], {
@@ -35,13 +36,13 @@
     })
 
     //define background layer
-    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("GreyEarth", 7, "EPSG3035", { filterColor: () => '#ffffffd3' }))
+    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("GreyEarth", 7, "EPSG3035", { filterColor: () => '#000000d1' }))
 
     //define boundaries layer
     const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
 
     //define label layer
-    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('FR', 20, { dark: true }))
+    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true }))
 
     //add layers to map
     map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
