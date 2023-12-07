@@ -39,7 +39,8 @@ export const viewScale = (opts) => {
             t = (t - domainMin) / domainSize
             //stretch
             if (stretching) t = stretching(t)
-            if (classNumber) t = t == 1 ? t : Math.floor(t * (classNumber + 1)) / classNumber
+            //classify
+            if (classNumber) t = t == 1 ? 1 : Math.floor(t * (classNumber)) / (classNumber - 1)
             //scale to range
             return rangeMin + t * rangeSize
         }

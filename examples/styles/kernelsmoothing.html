@@ -69,7 +69,7 @@
             smoothingStyle.styles = [
                 new gridviz.ShapeColorSizeStyle({
                     size: (c, r, z, viewScale) => viewScale(c.ksmval),
-                    viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ksmval, maxSizeFactor: 1.3, stretching: gridviz.logarithmicScale(-7) }),
+                    viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ksmval, maxSizeFactor: 1.3, minSizePix:1, stretching: gridviz.logarithmicScale(-7), classNumber: 3 }),
                     shape: () => "circle",
                     color: () => "black"
                 }),
