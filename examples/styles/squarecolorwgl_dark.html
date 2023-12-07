@@ -9,9 +9,6 @@
 
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000, backgroundColor: "black" })
-    //        .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20', { dark: true }))
-    //.setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
-    //        .addBackgroundLayer({
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
@@ -31,10 +28,22 @@
     //define stoke style
     const strokeStyle = new gridviz.StrokeStyle({ visible: (z) => z < 80 })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style, strokeStyle], {
+    //define grid layer
+    const gridLayer = new gridviz.GridLayer(dataset, [style, strokeStyle], {
         minPixelsPerCell: 1.5,
         cellInfoHTML: (cell) => '<b>' + cell.TOT_P_2021 + '</b> inhabitant' + (cell.TOT_P_2021 == 1 ? '' : 's')
-    })]
+    })
+
+    //define background layer
+    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("GreyEarth", 7, "EPSG3035", { filterColor: () => '#ffffffd3' }))
+
+    //define boundaries layer
+    const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
+    //define label layer
+    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('FR', 20, { dark: true }))
+
+    //add layers to map
+    map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
 
 </script>
