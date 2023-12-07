@@ -83,6 +83,7 @@ export const viewScaleColor = (opts) => {
     const valueFunction = opts.valueFunction
     let colorScale = opts.colorScale || (() => "purple")
 
+    console.log(opts.colors)
     //case of discrete colors
     if (opts.colors)
         colorScale = t => opts.colors[t == 1 ? opts.colors.length - 1 : Math.floor(t * opts.colors.length)]
