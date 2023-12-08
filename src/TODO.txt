@@ -1,4 +1,3 @@
-use/test in observablehq
 example for javascript generated dataset
 example for style level cells filtering
 doc v3
