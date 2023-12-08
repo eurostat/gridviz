@@ -125,7 +125,7 @@ export class GridLayer extends Layer {
 
 
     /**
-     * Set/get layer stack.
+     * Set/get style stack.
      * 
      * @param {undefined|import("../core/Style").Style|Array.<import("../core/Style").Style>} styles 
      * @returns { this | Array.<import("../core/Style").Style> }
