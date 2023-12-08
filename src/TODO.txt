@@ -3,8 +3,10 @@ example for javascript generated dataset
 example for style level cells filtering
 doc v3
 doc change log
-
 upgrade demos to v3
+
+*** Merge v3 to master ***
+
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
 hillshading style
