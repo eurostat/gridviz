@@ -9,13 +9,13 @@ import { Dataset } from '../core/Dataset.js'
  * @author Joseph Davies, Julien Gaffuri
  */
 export class JSGrid extends Dataset {
+
     /**
-     * @param {import("../core/Map.js").Map} map The map.
-     * @param {Array.<Object>} cells The cells.
      * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {Array.<Object>} cells The cells.
      */
-    constructor(map, cells, resolution) {
-        super(map, "", resolution)
+    constructor(resolution, cells) {
+        super(undefined, "", resolution)
 
         /**
          * @private
