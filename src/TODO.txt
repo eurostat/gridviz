@@ -1,8 +1,7 @@
-example for javascript generated dataset
-example for style level cells filtering
-doc v3
 doc change log
-upgrade demos to v3
+example for style level cells filtering
+upgrade census 2021 demo to v3
+doc v3
 
 *** Merge v3 to master ***
 
