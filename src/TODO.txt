@@ -1,4 +1,3 @@
-example for style level cells filtering
 upgrade census 2021 demo to v3
 doc v3
 
