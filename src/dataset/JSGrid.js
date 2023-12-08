@@ -1,8 +1,6 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../core/GeoCanvas.js").Envelope }} GridInfo */
-
 import { Dataset } from '../core/Dataset.js'
 
 /**
@@ -12,15 +10,16 @@ import { Dataset } from '../core/Dataset.js'
  */
 export class JSGrid extends Dataset {
     /**
-     * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {import("../core/Map.js").Map} map The map.
      * @param {Array.<Object>} cells The cells.
+     * @param {number} resolution The dataset resolution in geographical unit.
      */
-    constructor(resolution, cells) {
-        super(undefined, "", resolution)
+    constructor(map, cells, resolution) {
+        super(map, "", resolution)
 
         /**
          * @private
-         * @type {Array.<import("../core/MultiResolutionDataset.js").Cell>} */
+         * @type {Array.<import('../core/Dataset.js').Cell>} */
         this.cells = cells || []
     }
 
