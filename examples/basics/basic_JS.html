@@ -39,8 +39,11 @@
         strokeColor: () => "black"
     })
 
+    //define layer
+    const gridLayer = new gridviz.GridLayer(dataset, [colorStyle, strokeStyle])
+
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [colorStyle, strokeStyle])]
+    map.layers = [gridLayer]
 
     //
     map.redraw()
