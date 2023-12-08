@@ -9,7 +9,6 @@ import { FullscreenButton } from '../button/FullscreenButton.js'
 
 // external imports
 import { select } from 'd3-selection'
-import { Layer } from './Layer.js'
 
 /**
  * A gridviz application.
@@ -139,10 +138,10 @@ export class Map {
     /**
      * Set/get layer stack.
      * 
-     * @param {undefined|Layer|Layer[]} layers 
-     * @returns { this | Layer[] }
+     * @param {undefined|import("./Layer.js").Layer|import("./Layer.js").Layer[]} layers 
+     * @returns { this | import("./Layer.js").Layer[] }
      */
-    layers(layers) {
+    layers_(layers) {
         if (arguments.length === 0) return this.layers
         if (arguments.length === 1)
             if (Array.isArray(layers)) this.layers = layers

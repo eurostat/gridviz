@@ -2,7 +2,6 @@
 'use strict'
 
 import { Layer } from '../core/Layer.js'
-import { Style } from '../core/Style'
 
 /**
  * A layer, which specifies a dataset to be shown with specified styles.
@@ -12,7 +11,7 @@ import { Style } from '../core/Style'
 export class GridLayer extends Layer {
     /**
      * @param {import("../core/Dataset").Dataset|import("../core/MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import("../core/Style").Style>} styles The styles, ordered in drawing order.
      * @param {{visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minPixelsPerCell?:number,cellInfoHTML?:function(import("../core/Dataset").Cell):string}} opts
      */
     constructor(dataset, styles, opts = {}) {
@@ -22,7 +21,7 @@ export class GridLayer extends Layer {
         /** @type {import("../core/Dataset").Dataset|import("../core/MultiResolutionDataset").MultiResolutionDataset} */
         this.dataset = dataset
 
-        /** @type {Array.<Style>} */
+        /** @type {Array.<import("../core/Style").Style>} */
         this.styles = styles
 
         /** 
@@ -128,10 +127,10 @@ export class GridLayer extends Layer {
     /**
      * Set/get layer stack.
      * 
-     * @param {undefined|Style|Array.<Style>} styles 
-     * @returns { this | Array.<Style> }
+     * @param {undefined|import("../core/Style").Style|Array.<import("../core/Style").Style>} styles 
+     * @returns { this | Array.<import("../core/Style").Style> }
      */
-    styles(styles) {
+    styles_(styles) {
         if (arguments.length === 0) return this.styles
         if (arguments.length === 1)
             if (Array.isArray(styles)) this.styles = styles
