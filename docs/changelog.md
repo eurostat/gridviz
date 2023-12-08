@@ -30,6 +30,8 @@
 - Map properties *showBgLayers*, *showLabels* and *showBoundaries* removed. Use the new generic *visible* property instead.
 - *LineLayer* class was renamed *GeoJSONLayer* to prepare support for new geometry types.
 - Stretching function structure change and renaming. See examples.
+- Add *layers_()* method to *Map* class, to get or set map layers.
+- Add *styles_()* method to *GridLayer* class, to get or set layer styles.
 
 ### Legends
 
