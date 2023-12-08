@@ -1,3 +1,5 @@
+add layers() method to map
+add styles() method to gridlayer
 example for style level cells filtering
 upgrade census 2021 demo to v3
 doc v3
