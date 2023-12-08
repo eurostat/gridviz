@@ -13,19 +13,18 @@
  */
 export class Dataset {
     /**
-     * @param {import("./Map.js").Map} map The map.
+     * @param {import("./Map.js").Map|undefined} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
      * @param {{preprocess?:function(Cell):boolean}} opts
      * @abstract
      */
     constructor(map, url, resolution, opts = {}) {
-        opts = opts || {}
 
         /**
          * The map.
          * @protected
-         * @type {import("./Map.js").Map} */
+         * @type {import("./Map.js").Map|undefined} */
         this.map = map
 
         /**
