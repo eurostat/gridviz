@@ -157,14 +157,15 @@
                     new gridviz.StrokeStyle({ visible: (z) => z < 50 }),
                 ]
 
-                /*gridLayer.styles[0].legends = [
+                gridLayer.styles[0].legends = [
                     new gridviz.ColorLegend({
                         title: "Population",
                         colorScale: d3.interpolateYlOrRd,
                         ticks: 4,
-                        textScale: (t, vs) => vs.invert(t)
+                        textScale: (t, vs) => vs?.invert(t),
+                        tickFormat: Math.round
                     })
-                ]*/
+                ]
 
                 gridLayer.minPixelsPerCell = 1.5
 
