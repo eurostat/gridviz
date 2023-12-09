@@ -296,19 +296,25 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            //map.showLabels = this.checked
+            labelLayer.visible = () => this.checked
             map.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            //map.showBoundaries = this.checked
+            boundariesLayer.visible = () => this.checked
             map.redraw()
         })
 
         // show/hide background layer
         document.querySelector('#background').addEventListener('change', function () {
-            //map.showBgLayers = this.checked
+            if (this.checked) {
+                backgroundLayer1.visible = backgroundLayer1.visible_
+                backgroundLayer2.visible = backgroundLayer2.visible_
+            } else {
+                backgroundLayer1.visible = () => false
+                backgroundLayer2.visible = () => false
+            }
             map.redraw()
         })
 
