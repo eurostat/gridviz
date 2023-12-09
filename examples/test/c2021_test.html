@@ -126,6 +126,9 @@
             }
         )
 
+        //make label layer
+        const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer()
+        )
         //make grid layer
         const gridLayer = new gridviz.GridLayer(dataset, [], {
             cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
