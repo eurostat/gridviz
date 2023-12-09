@@ -96,13 +96,21 @@
             origin: [0, 6000000],
             filterColor: () => '#ffffffc0',
             visible: (z) => z > 50,
+            visible_: (z) => z > 50,
         })
 
         const backgroundLayer2 = new gridviz.BackgroundLayer(
             gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 18, "EPSG3035", {
-                visible: (z) => z <= 50
+                visible: (z) => z <= 50,
+                visible_: (z) => z <= 50
             })
         )
+
+        //define boundaries layer
+        const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
+        //make label layer
+        const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer())
 
         //define multi resolution dataset
         const dataset = new gridviz.MultiResolutionDataset(
@@ -126,16 +134,13 @@
             }
         )
 
-        //make label layer
-        const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer()
-        )
         //make grid layer
         const gridLayer = new gridviz.GridLayer(dataset, [], {
             cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
         })
 
         //add layers to map
-        map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, labelLayer]
+        map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundariesLayer, labelLayer]
 
         //
         const update = () => {
