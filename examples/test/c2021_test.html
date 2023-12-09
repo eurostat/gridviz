@@ -96,13 +96,11 @@
             origin: [0, 6000000],
             filterColor: () => '#ffffffc0',
             visible: (z) => z > 50,
-            visible_: (z) => z > 50,
         })
 
         const backgroundLayer2 = new gridviz.BackgroundLayer(
             gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 18, "EPSG3035", {
                 visible: (z) => z <= 50,
-                visible_: (z) => z <= 50
             })
         )
 
@@ -309,8 +307,8 @@
         // show/hide background layer
         document.querySelector('#background').addEventListener('change', function () {
             if (this.checked) {
-                backgroundLayer1.visible = backgroundLayer1.visible_
-                backgroundLayer2.visible = backgroundLayer2.visible_
+                backgroundLayer1.visible = (z) => z > 50
+                backgroundLayer2.visible = (z) => z <= 50
             } else {
                 backgroundLayer1.visible = () => false
                 backgroundLayer2.visible = () => false
