@@ -88,6 +88,7 @@
 
         //define map with initial view
         const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700 })
+            .addZoomButtons()
             .setViewFromURL()
 
         const backgroundLayer1 = new gridviz.BackgroundLayer({
