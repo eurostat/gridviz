@@ -151,16 +151,7 @@
                 gridLayer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, viewScale) => viewScale(c.T),
-                        //viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.T, colorScale: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
                         viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.T, colorScale: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
-                        //color: (c, r, z, viewScale) => viewScale(c.TOT_P_2021),
-
-                        //viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.T, classNumber: 12, colorScale: d3.interpolateYlOrRd }),
-                        //size
-                        //size: (c, r, z, scale) => scale(+c.T),
-                        //shape: () => "circle",
-                        //viewScale: gridviz.viewScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
-                        //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
                         blendOperation: (z) => z < 100 ? "multiply" : "source-over",
                     }),
                     new gridviz.StrokeStyle({ visible: (z) => z < 50 }),
