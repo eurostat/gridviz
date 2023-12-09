@@ -1,4 +1,4 @@
-upgrade census 2021 demo to v3
+c2021: add legends
 doc v3
 
 *** Merge v3 to master ***
