@@ -149,7 +149,7 @@
             //set style
             if (layCode === 'pop') {
 
-                const nbClasses = 5
+                const nbClasses = 6
                 const colors = d3.schemeYlOrRd[nbClasses]
                 gridLayer.styles = [
                     new gridviz.ShapeColorSizeStyle({
@@ -233,6 +233,7 @@
             } else if (layCode === 'age') {
 
                 const colAge = d3.interpolateSpectral
+                const classNumberSize = 5
                 gridLayer.styles = [
                     new gridviz.CompositionStyle({
                         color: {
@@ -242,7 +243,7 @@
                         },
                         type: () => 'flag',
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 8 }),
                         //viewScale: gridviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                         stripesOrientation: () => 90,
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -251,6 +252,27 @@
                 ]
 
                 gridLayer.minPixelsPerCell = 12
+
+                //age legends
+                gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
+                    title: "Age",
+                    colorLabel: [
+                        [colAge(0.2), "Under 15 years"],
+                        [colAge(0.4), "15 to 64 years"],
+                        [colAge(0.9), "65 years and older"],
+                    ]
+                })]
+
+                //population
+                const legends = gridviz.sizeDiscreteViewScaleLegend(
+                    classNumberSize, {
+                    title: "Population",
+                    shape: "square",
+                    fillColor: "lightgray",
+                    labelFormat: Math.round,
+                })
+                for (let leg of legends) gridLayer.styles[0].legends.push(leg)
+
 
             } else if (layCode === 'mobility') {
 
