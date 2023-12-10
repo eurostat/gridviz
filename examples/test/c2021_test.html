@@ -149,10 +149,16 @@
             //set style
             if (layCode === 'pop') {
 
+                const nbClasses = 5
                 gridLayer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, viewScale) => viewScale(c.T),
-                        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.T, colorScale: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+                        viewScale: gridviz.viewScaleColor({
+                            valueFunction: (c) => +c.T,
+                            //colorScale: d3.interpolateYlOrRd,
+                            colors : d3.schemeYlOrRd[nbClasses],
+                            stretching: gridviz.logarithmicScale(-7)
+                        }),
                         blendOperation: (z) => z < 100 ? "multiply" : "source-over",
                     }),
                     new gridviz.StrokeStyle({ visible: (z) => z < 50 }),
