@@ -165,14 +165,8 @@
                     new gridviz.StrokeStyle({ visible: (z) => z < 50 }),
                 ]
 
+                //legend
                 gridLayer.styles[0].legends = [
-                    /*new gridviz.ColorLegend({
-                        title: "Population",
-                        colorScale: d3.interpolateYlOrRd,
-                        ticks: 4,
-                        textScale: (t, vs) => vs?.invert(t),
-                        tickFormat: Math.round
-                    })*/
                     new gridviz.ColorDiscreteLegend({
                         title: "Population",
                         width: 300,
@@ -198,18 +192,6 @@
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     }),
                 ]
-
-                /*gridLayer.styles[0].legends = [
-                    new gridviz.ColorLegend({
-                        title: "Sex balance",
-                        colorScale: (t, vs) => d3.interpolateSpectral(Math.ceil(nb * t) / (nb - 1)),
-                        ticks: nb + 1,
-                        textScale: (t, vs) => {
-                            //vs.invert(t)
-                            return t
-                        }
-                    })
-                ]*/
 
                 gridLayer.minPixelsPerCell = 5
 
@@ -292,6 +274,16 @@
                 ]
 
                 gridLayer.minPixelsPerCell = 12
+
+                //age legends
+                gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
+                    title: "Mobility, compared to January 1, 2020",
+                    colorLabel: [
+                        ["#fed9a6", "Residence unchanged"],
+                        ["#7570b3", "Moved within the country"],
+                        ["#d95f02", "Moved from outside the country"],
+                    ]
+                })]
 
             } else if (layCode === 'pob') {
 
