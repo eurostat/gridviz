@@ -29,9 +29,9 @@ export const viewScale = (opts) => {
     const range_ = opts.range
     const domain_ = opts.domain
     const classNumber = opts.classNumber
-    return (cells, r, z) => {
+    return (cells, resolution, z) => {
         const domain = domain_ || [minValue, max(cells, valueFunction)]
-        const range = range_ || [minSizePix * z, r * maxSizeFactor]
+        const range = range_ || [minSizePix * z, resolution * maxSizeFactor]
         const domainSize = domain[1] - domain[0], domainMin = domain[0]
         const rangeSize = range[1] - range[0], rangeMin = range[0]
         return t => {
@@ -61,9 +61,9 @@ export const viewScaleQuantile = (opts) => {
     const minSizePix = opts.minSizePix || 1
     const maxSizeFactor = opts.maxSizeFactor || 1
     const scale = scaleQuantile()
-    return (cells, r, z) => {
+    return (cells, resolution, z) => {
         scale.domain(cells.map(valueFunction))
-        const minSizeGeo = minSizePix * z, maxSizeGeo = r * maxSizeFactor
+        const minSizeGeo = minSizePix * z, maxSizeGeo = resolution * maxSizeFactor
         scale.range(Array.from({ length: classNumber }, (_, i) => minSizeGeo + i * (maxSizeGeo - minSizeGeo) / (classNumber - 1)))
         scale.breaks = scale.quantiles()
         scale.values = scale.range()
@@ -159,9 +159,9 @@ export const viewScaleColorQuantile = (opts) => {
  */
 export const viewScaleCombination = (obj) => {
     //obj: prop and a function to call
-    return (cells, r, z) => {
+    return (cells, resolution, z) => {
         const out = {}
-        for (const p in obj) { out[p] = obj[p](cells, r, z) }
+        for (const p in obj) { out[p] = obj[p](cells, resolution, z) }
         return out
     }
 }

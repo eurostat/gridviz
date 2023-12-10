@@ -268,7 +268,7 @@
                         },
                         type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6, maxSizeFactor:1.2 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
