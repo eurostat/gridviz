@@ -87,7 +87,7 @@ export const viewScaleColor = (opts) => {
     const stretching = opts.stretching
     let colorScale = opts.colorScale || (() => "purple")
 
-    //case of discrete colors
+    //discrete colors case: build continuous color scale from discrete ones.
     if (opts.colors)
         colorScale = t => opts.colors[t == 1 ? opts.colors.length - 1 : Math.floor(t * opts.colors.length)]
 
@@ -108,6 +108,12 @@ export const viewScaleColor = (opts) => {
         scale.invert = t => {
             if (stretching) t = stretching.invert(t)
             return domain[0] + t * domainSize
+        }
+        //discrete colors: return the breaks
+        if (opts.colors) {
+            scale.breaks = []
+            for (let i = 1; i < opts.colors.length; i++)
+                scale.breaks.push(i) //TODO
         }
 
         return scale;
