@@ -34,7 +34,7 @@
         title: "Population",
         width: 450,
         colors: () => colors,
-        breaks: (viewScale) => viewScale.breaks.map(b => Math.round(b)),
+        breaks: (viewScale) => viewScale?.breaks.map(b => Math.round(b)),
     })
 
     //link legend to style

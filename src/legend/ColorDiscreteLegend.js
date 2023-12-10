@@ -43,6 +43,7 @@ export class ColorDiscreteLegend extends Legend {
         //get colors and breaks
         const colors = this.colors(opts.viewScale)
         const breaks = this.breaks(opts.viewScale)
+        if (!breaks) return
 
         //classes
         const nb = colors.length

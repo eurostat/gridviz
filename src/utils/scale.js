@@ -88,8 +88,9 @@ export const viewScaleColor = (opts) => {
     let colorScale = opts.colorScale || (() => "purple")
 
     //discrete colors case: build continuous color scale from discrete ones.
-    if (opts.colors)
-        colorScale = t => opts.colors[t == 1 ? opts.colors.length - 1 : Math.floor(t * opts.colors.length)]
+    const nbClass = opts.colors?.length
+    if (opts.colors && nbClass)
+        colorScale = t => opts.colors[t == 1 ? nbClass - 1 : Math.floor(t * nbClass)]
 
     return (cells) => {
         if (cells.length == 0 || !cells) return
@@ -110,10 +111,10 @@ export const viewScaleColor = (opts) => {
             return domain[0] + t * domainSize
         }
         //discrete colors: return the breaks
-        if (opts.colors) {
+        if (opts.colors && nbClass) {
             scale.breaks = []
-            for (let i = 1; i < opts.colors.length; i++)
-                scale.breaks.push(i) //TODO
+            for (let i = 1; i < nbClass; i++)
+                scale.breaks.push(scale.invert(i / nbClass))
         }
 
         return scale;
