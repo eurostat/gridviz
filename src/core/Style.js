@@ -2,7 +2,6 @@
 'use strict'
 
 import { Drawable } from "./Drawable.js"
-import { Legend } from "./Legend"
 
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
 
@@ -83,7 +82,7 @@ export class Style extends Drawable {
     }
 
     /**
-     * @param {Array.<Legend>} legends
+     * @param {Array.<import("./Legend").Legend>} legends
      * @returns {this} */
     addLegends(legends) {
         for (let legend of legends)
