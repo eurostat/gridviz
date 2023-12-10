@@ -150,13 +150,14 @@
             if (layCode === 'pop') {
 
                 const nbClasses = 5
+                const colors = d3.schemeYlOrRd[nbClasses]
                 gridLayer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, viewScale) => viewScale(c.T),
                         viewScale: gridviz.viewScaleColor({
                             valueFunction: (c) => +c.T,
                             //colorScale: d3.interpolateYlOrRd,
-                            colors : d3.schemeYlOrRd[nbClasses],
+                            colors: colors,
                             stretching: gridviz.logarithmicScale(-7)
                         }),
                         blendOperation: (z) => z < 100 ? "multiply" : "source-over",
@@ -165,12 +166,18 @@
                 ]
 
                 gridLayer.styles[0].legends = [
-                    new gridviz.ColorLegend({
+                    /*new gridviz.ColorLegend({
                         title: "Population",
                         colorScale: d3.interpolateYlOrRd,
                         ticks: 4,
                         textScale: (t, vs) => vs?.invert(t),
                         tickFormat: Math.round
+                    })*/
+                    new gridviz.ColorDiscreteLegend({
+                        title: "Population",
+                        width: 300,
+                        colors: () => colors,
+                        breaks: (viewScale) => viewScale?.breaks.map(b => Math.round(b)),
                     })
                 ]
 
