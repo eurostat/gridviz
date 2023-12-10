@@ -2,6 +2,7 @@
 'use strict'
 
 import { Drawable } from "./Drawable.js"
+import { Legend } from "./Legend"
 
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
 
@@ -73,7 +74,7 @@ export class Style extends Drawable {
         return this
     }
 
-    /** Hide all legend elements of the style, if any
+    /** Update legends of the style, if any
      * @param {object} opts
      * @returns {this} */
     updateLegends(opts) {
@@ -81,4 +82,12 @@ export class Style extends Drawable {
         return this
     }
 
+    /**
+     * @param {Array.<Legend>} legends
+     * @returns {this} */
+    addLegends(legends) {
+        for (let legend of legends)
+            this.legends.push(legend)
+        return this
+    }
 }

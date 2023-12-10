@@ -264,14 +264,14 @@
                 })]
 
                 //population
-                const legends = gridviz.sizeDiscreteViewScaleLegend(
+                const sizeLegends = gridviz.sizeDiscreteViewScaleLegend(
                     classNumberSize, {
                     title: "Population",
                     shape: "square",
                     fillColor: "lightgray",
                     labelFormat: Math.round,
                 })
-                for (let leg of legends) gridLayer.styles[0].legends.push(leg)
+                for (let sl of sizeLegends) gridLayer.styles[0].legends.push(sl)
 
 
             } else if (layCode === 'mobility') {
