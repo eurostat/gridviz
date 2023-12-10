@@ -235,7 +235,7 @@
 
                 gridLayer.minPixelsPerCell = 12
 
-                //age legends
+                //age
                 gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
                     title: "Age",
                     colorLabel: [
@@ -256,9 +256,9 @@
                     })
                 )
 
-
             } else if (layCode === 'mobility') {
 
+                const classNumberSize = 5
                 gridLayer.styles = [
                     new gridviz.CompositionStyle({
                         color: {
@@ -268,14 +268,14 @@
                         },
                         type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
 
                 gridLayer.minPixelsPerCell = 12
 
-                //age legends
+                //mobility
                 gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
                     title: "Mobility, compared to January 1, 2020",
                     colorLabel: [
@@ -284,6 +284,16 @@
                         ["#d95f02", "Moved from outside the country"],
                     ]
                 })]
+
+                //population
+                gridLayer.styles[0].addLegends(
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        classNumberSize, {
+                        title: "Population",
+                        fillColor: "lightgray",
+                        labelFormat: Math.round,
+                    })
+                )
 
             } else if (layCode === 'pob') {
 
