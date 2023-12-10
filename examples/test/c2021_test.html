@@ -268,7 +268,7 @@
                         },
                         type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6, maxSizeFactor:1.2 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6, maxSizeFactor: 1.2 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
@@ -297,6 +297,7 @@
 
             } else if (layCode === 'pob') {
 
+                const classNumberSize = 5
                 gridLayer.styles = [
                     new gridviz.CompositionStyle({
                         color: {
@@ -306,12 +307,32 @@
                         },
                         type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
 
                 gridLayer.minPixelsPerCell = 12
+
+                //place of birth
+                gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
+                    title: "Place of birth",
+                    colorLabel: [
+                        ["#fed9a6", "Born in the country"],
+                        ["#7570b3", "Born in another EU member state"],
+                        ["#d95f02", "Born outside the EU"],
+                    ]
+                })]
+
+                //population
+                gridLayer.styles[0].addLegends(
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        classNumberSize, {
+                        title: "Population",
+                        fillColor: "lightgray",
+                        labelFormat: Math.round,
+                    })
+                )
 
             } else console.error('Unexpected layer code: ' + layCode)
 
