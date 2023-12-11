@@ -183,7 +183,6 @@
                 const breaks = [-20, -7, -2, -0.5, 0.5, 2, 7, 20]
                 const sexColorClassifier = gridviz.colorClassifier(breaks, d3.schemeSpectral[breaks.length + 1])
 
-                //const nb = 12
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => sexColorClassifier(c.indMF),
@@ -224,20 +223,41 @@
 
             } else if (layCode === 'emp') {
 
-                gridLayer.styles = [
-                    new gridviz.ShapeColorSizeStyle({
-                        color: (c, r, z, viewScale) => viewScale.color(c.remp),
-                        size: (c, r, z, viewScale) => viewScale.size(c.T),
-                        viewScale: gridviz.viewScaleCombination({
-                            color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.remp, classNumber: 12, colorScale: d3.interpolateYlOrRd }),
-                            size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
-                        }),
-                        shape: () => 'circle',
-                        blendOperation: (z) => z < 50 ? "multiply" : "source-over",
-                    })
-                ]
+                const breaks = [30, 40, 45, 50, 55, 60, 70]
+                const empColorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
+                //d3.interpolateYlOrRd(Math.floor(20*c.remp / 100)/20)
+
+                const classNumberSize = 4
+                const style = new gridviz.ShapeColorSizeStyle({
+                    color: (c, r, z, viewScale) => empColorClassifier(c.remp),
+                    size: (c, r, z, viewScale) => viewScale(c.T),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+                    shape: () => 'circle',
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+                gridLayer.styles = [style]
 
                 gridLayer.minPixelsPerCell = 5
+
+
+
+                //employment color legend
+                style.legends.push(new gridviz.ColorDiscreteLegend({
+                    title: "Employment, in %",
+                    width: 250,
+                    colors: () => empColorClassifier.colors,
+                    breaks: () => empColorClassifier.breaks,
+                }))
+
+                //population size legend
+                style.addLegends(
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        classNumberSize, {
+                        title: "Population",
+                        fillColor: "lightgray",
+                        labelFormat: Math.round,
+                    })
+                )
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + d3.format('.1f')(c.remp) + ' %</b> employment<br>' +
