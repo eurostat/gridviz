@@ -308,7 +308,10 @@
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
+                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
+                    c.Y_LT15 + " under 15 years<br>" +
+                    c["Y15-64"] + " 15 to 64 years<br>" +
+                    c.Y_GE65 + " 65 years and older"
 
             } else if (layCode === 'mobility') {
 
