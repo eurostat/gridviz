@@ -198,7 +198,7 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
     const f = opts.labelFormat || (x => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
-    const viewScaleFun = opts.viewScaleFun || (t => t)
+    const viewScaleFun = opts.viewScaleFun || (t => t) //TODO do it differently? At sizelegend level !
     for (let i = classNumber - 1; i >= 0; i--) {
         opts.title = i == classNumber - 1 ? opts.title : undefined
         opts.size = (viewScale) => viewScaleFun(viewScale).values[i]
