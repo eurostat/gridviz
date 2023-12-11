@@ -179,19 +179,17 @@
 
             } else if (layCode === 'sex') {
 
+                //sex - color classifier
                 const breaks = [-30, -10, -5, -2, -0.5, 0.5, 2, 5, 10, 30]
-                const sexColorScale = gridviz.colorClassifier(breaks, d3.schemeSpectral[breaks.length + 1])
+                const sexColorClassifier = gridviz.colorClassifier(breaks, d3.schemeSpectral[breaks.length + 1])
 
                 //const nb = 12
                 const classNumberSize = 4
                 gridLayer.styles = [
                     new gridviz.ShapeColorSizeStyle({
-                        color: (c, r, z, viewScale) => sexColorScale(c.indMF), //viewScale.color(c.indMF),
-                        size: (c, r, z, viewScale) => viewScale.size(c.T),
-                        viewScale: gridviz.viewScaleCombination({
-                            //color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.indMF, classNumber: nb, colorScale: d3.interpolateSpectral }),
-                            size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 })
-                        }),
+                        color: (c, r, z, viewScale) => sexColorClassifier(c.indMF),
+                        size: (c, r, z, viewScale) => viewScale(c.T),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     }),
@@ -206,7 +204,6 @@
                         title: "Population",
                         fillColor: "lightgray",
                         labelFormat: Math.round,
-                        viewScaleFun: vs => vs.size
                     })
                 )
 
