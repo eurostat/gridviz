@@ -393,7 +393,10 @@
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
+                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.NAT + +c.EU_OTH + +c.OTH) + '</b> person' + ((+c.NAT + +c.EU_OTH + +c.OTH) == 1 ? '' : 's') + "<br>" +
+                    c.NAT + " born in the country<br>" +
+                    c.EU_OTH + " born in another EU member state<br>" +
+                    c.OTH + " born outside the EU"
 
             } else console.error('Unexpected layer code: ' + layCode)
 
