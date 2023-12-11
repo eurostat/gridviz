@@ -322,7 +322,7 @@
                         },
                         type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6, maxSizeFactor: 1.2 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 6, maxSizeFactor: 1.1 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
@@ -349,7 +349,10 @@
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
+                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.SAME + +c.CHG_IN + +c.CHG_OUT) + '</b> person' + ((+c.SAME + +c.CHG_IN + +c.CHG_OUT) == 1 ? '' : 's') + "<br>" +
+                    c.SAME + " residence unchanged<br>" +
+                    c.CHG_IN + " moved within the country<br>" +
+                    c.CHG_OUT + " moved from outside the country"
 
             } else if (layCode === 'pob') {
 
