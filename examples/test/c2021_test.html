@@ -180,13 +180,14 @@
             } else if (layCode === 'sex') {
 
                 const nb = 12
+                const classNumberSize = 5
                 gridLayer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, viewScale) => viewScale.color(c.indMF),
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
                             color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.indMF, classNumber: nb, colorScale: d3.interpolateSpectral }),
-                            size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
+                            size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -194,6 +195,17 @@
                 ]
 
                 gridLayer.minPixelsPerCell = 5
+
+                //population
+                gridLayer.styles[0].addLegends(
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        classNumberSize, {
+                        title: "Population",
+                        fillColor: "lightgray",
+                        labelFormat: Math.round,
+                        viewScaleFun: vs => vs.size
+                    })
+                )
 
             } else if (layCode === 'emp') {
 

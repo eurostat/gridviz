@@ -198,10 +198,11 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
     const f = opts.labelFormat || (x => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
+    const viewScaleFun = opts.viewScaleFun || (t => t)
     for (let i = classNumber - 1; i >= 0; i--) {
         opts.title = i == classNumber - 1 ? opts.title : undefined
-        opts.size = (viewScale) => viewScale.values[i]
-        opts.label = (viewScale) => labelText(viewScale.breaks[i - 1], viewScale.breaks[i])
+        opts.size = (viewScale) => viewScaleFun(viewScale).values[i]
+        opts.label = (viewScale) => labelText(viewScaleFun(viewScale).breaks[i - 1], viewScaleFun(viewScale).breaks[i])
         legends.push(new SizeLegend(opts))
     }
     return legends
