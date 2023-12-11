@@ -87,7 +87,7 @@
         */
 
         //define map with initial view
-        const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700 })
+        const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700, zoomExtent:[10, 10000] })
             .addZoomButtons()
             .setViewFromURL()
 
