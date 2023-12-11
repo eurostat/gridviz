@@ -241,7 +241,7 @@
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + d3.format('.1f')(c.remp) + ' %</b> employment<br>' +
-                    c.EMP + '<br>' +
+                    //c.EMP + '<br>' +
                     (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
             } else if (layCode === 'age') {
