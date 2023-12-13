@@ -120,7 +120,7 @@
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], {
         minPixelsPerCell: 1.5,
-        cellInfoHTML: (cell) => clcLabels[cell.clc] + " " + cell.clc,
+        cellInfoHTML: (cell) => clcLabels[cell.clc],
     })]
 
 </script>
