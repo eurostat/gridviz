@@ -1,6 +1,5 @@
 doc v3
 
-
 *** Merge v3 to master ***
 
 static image background layer - for map background in oversea territories

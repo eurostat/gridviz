@@ -54,15 +54,31 @@ Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/grid
 
 ## Usage
 
-TODO
+TODO: Simple case, with CSV
+Or see intro page ?
 
 ## Concepts
+
+One map. Layers. Different types of layers (map background, boundaries, etc.) and grid layers.
+
+Grid layer showing gridded dataset. In the grid reference system.
+
+One dataset may be reused by several layers. It may be multi-resolution.
+
+A grid layer draws a single dataset using one or several styles.
+
+Each style specifies how to draw cells within the view.
+
+There is a list of predefined styles.
 
 
 ## Adding data
 
+Dataset class, several type. Multiscale dataset.
 
 ### Single CSV file
+
+
 
 ### Multi scale CSV data
 
