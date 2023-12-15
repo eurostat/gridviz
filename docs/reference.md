@@ -7,11 +7,6 @@
   - [Usage](#usage)
   - [Concepts](#concepts)
   - [Adding data](#adding-data)
-    - [Single CSV file](#single-csv-file)
-    - [Multi scale CSV data](#multi-scale-csv-data)
-    - [Tiled data](#tiled-data)
-    - [Multi scale tiled data](#multi-scale-tiled-data)
-    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
   - [Basic styles](#basic-styles)
     - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Square color WebGL Style](#square-color-webgl-style)
@@ -38,7 +33,6 @@
     - [Lego category style](#lego-category-style)
   - [Kernel smoothing](#kernel-smoothing)
   - [Custom styles](#custom-styles)
-  - [Legends](#legends)
   - [Background layer](#background-layer)
     - [Tiled layer](#tiled-layer)
     - [WMS](#wms)
@@ -47,6 +41,8 @@
     - [Showing boundaries](#showing-boundaries)
   - [Transparency](#transparency)
   - [Tooltip](#tooltip)
+  - [View scale](#view-scale)
+  - [Legends](#legends)
   - [Leaflet](#leaflet)
   - [Alright?](#alright)
 
@@ -71,26 +67,26 @@ Each style specifies how to draw cells within the view.
 
 There is a list of predefined styles.
 
+Predefined styles: most parameters are functions of usually 4 (cell,resolution,z,viewscale). The styling parameters (colors, size, etc.) may be computed autimatically depending on each cell, its resolution, and the zoom level. Size parameters are usually specified in ground meters, but may also be specified in screen pixels. viewscale parameter allows defining styling parameters based on the cells within the map view only - see.
+
+
+zoom level: the size of a screen pixel in ground meter. m/pixel.
 
 ## Adding data
 
 Dataset class, several type. Multiscale dataset.
 
-### Single CSV file
+basic_JS
+basic_CSV
+basic_tiled_CSV
+basic_multiscale_CSV
+basic_tiled_multiscale_CSV
 
+Data pre-processing and filtering
 
-
-### Multi scale CSV data
-
-
-### Tiled data
-
-
-### Multi scale tiled data
-
-
-### Data pre-processing and filtering
-
+preprocess
+select
+select_style
 
 
 ## Basic styles
@@ -328,9 +324,6 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 ## Custom styles
 
 
-## Legends
-
-
 ## Background layer
 
 ### Tiled layer
@@ -338,15 +331,36 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 
 ### WMS
 
+
+
 ## Foreground information
 
 ### Showing labels
 
 ### Showing boundaries
 
+
+
 ## Transparency
 
 ## Tooltip
+
+
+
+## View scale
+
+List examples
+opionnal
+
+## Legends
+
+List examples
+
+
+
+
+
+
 
 ## Leaflet
 
