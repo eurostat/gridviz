@@ -48,8 +48,6 @@
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
-V3 documentation
-
 ## Usage
 
 TODO: Simple case, with CSV

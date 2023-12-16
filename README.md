@@ -95,7 +95,9 @@ See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference
 
 ## Documentation
 
-See the **[gridviz documentation page](https://github.com/eurostat/gridviz/blob/master/docs/reference.md)**.
+See the **[gridviz documentation page](./docs/reference.md)**.
+
+The document of [the previous version 2](./docs/reference_v2.md).
 
 ## Grid tiling
 
