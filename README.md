@@ -56,7 +56,7 @@ import * as gridviz from 'gridviz'
 Or you can cherry-pick only the modules that you need, for example:
 
 ```javascript
-import { App, SquareColorWGLStyle } from 'gridviz'
+import { Map, SquareColorWebGLStyle } from 'gridviz'
 ```
 
 ### Basic example
@@ -64,25 +64,27 @@ import { App, SquareColorWGLStyle } from 'gridviz'
 Here’s a basic example that loads a CSV file of a European population grid (5km resolution):
 
 ```javascript
-let map = new gridviz.Map(containerDiv)
-    //set position and zoom
-    .setView(4500000, 2900000, 3000)
-    //add CSV layer
-    .addCSVGridLayer(
-        //data URL
-        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv',
-        //resolution, in CRS unit (m)
-        5000,
-        //the style
-        [
-            new gridviz.SquareColorWGLStyle({
-                //the CSV column to show
-                colorCol: 'Population',
-                //value to [0,1] mapping function
-                tFun: (value) => gridviz.sExp(Math.min(value / 100000, 1), -15),
-            }),
-        ]
-    )
+//define map with initial view
+const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
+
+//define dataset
+const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+
+//define color for each cell
+const colorFunction = (cell) => {
+    if (cell.population > 150000) return "#993404"
+    else if (cell.population > 60000) return "#d95f0e"
+    else if (cell.population > 20000) return "#fe9929"
+    else if (cell.population > 6000) return "#fec44f"
+    else if (cell.population > 1500) return "#fee391"
+    else return "#ffffd4"
+}
+
+//define style
+const style = new gridviz.ShapeColorSizeStyle({ color: colorFunction })
+
+//add layer to map
+map.layers = [new gridviz.GridLayer(dataset, [style])]
 ```
 
 See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference)** for more information.
