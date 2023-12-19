@@ -40,7 +40,7 @@
         "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.dev.cjs",
         "start-dev": "webpack --config webpack.config.dev.cjs",
         "server": "webpack serve -c webpack.config.dev.cjs",
-        "doc": "./node_modules/.bin/jsdoc -c docs/jsdoc/conf.json src/core -d docs/jsdoc/a",
+        "doc": "./node_modules/.bin/jsdoc -c docs/jsdoc/conf.json -d docs/jsdoc/a src/core src/button src/dataset src/layer src/legend",
         "bp": "webpack --config webpack.config.prod.cjs",
         "test": "jest"
     },

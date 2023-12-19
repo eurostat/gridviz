@@ -3,7 +3,8 @@
     "recurseDepth": 10,
     "source": {
         "includePattern": ".+\\.js(doc|x)?$",
-        "excludePattern": "(^|\\/|\\\\)_"
+        "excludePattern": "(^|\\/|\\\\)_",
+        "exclude": [ "src/dataset/COGeo.js", "src/dataset/GeoTIFF.js" ]
     },
     "sourceType": "module",
     "tags": {
