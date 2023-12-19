@@ -4,7 +4,8 @@
     "source": {
         "includePattern": ".+\\.js(doc|x)?$",
         "excludePattern": "(^|\\/|\\\\)_",
-        "exclude": [ "src/dataset/COGeo.js", "src/dataset/GeoTIFF.js" ]
+        "exclude": [ "src/dataset/COGeo.js", "src/dataset/GeoTIFF.js" ],
+        "include": [ "src/utils/scale.js", "src/utils/stretching.js", "src/utils/utils.js"]
     },
     "sourceType": "module",
     "tags": {

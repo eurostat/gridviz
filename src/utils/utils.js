@@ -30,7 +30,7 @@ export function nice(v, multiples = [8, 6, 5, 4, 2.5, 2]) {
 
 
 
-
+/*
 export let monitor = false
 
 let previousDate
@@ -48,3 +48,4 @@ export function monitorDuration(message) {
     previousDate = nowDate
     console.log(d, message)
 }
+*/
