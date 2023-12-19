@@ -6,6 +6,7 @@ import { Layer } from '../core/Layer.js'
 /**
  * A layer, which specifies a dataset to be shown with specified styles.
  *
+ * @module layer
  * @author Joseph Davies, Julien Gaffuri
  */
 export class GridLayer extends Layer {

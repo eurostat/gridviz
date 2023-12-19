@@ -6,6 +6,7 @@ import { Dataset } from '../core/Dataset.js'
 /**
  * A dataset composed of cells defined in javascript, or loaded outside of gridviz map.
  *
+ * @module dataset
  * @author Joseph Davies, Julien Gaffuri
  */
 export class JSGrid extends Dataset {

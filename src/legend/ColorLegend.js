@@ -7,6 +7,7 @@ import { Legend } from '../core/Legend.js'
  * A legend element for continuous color style.
  * Inspiration: https://observablehq.com/@d3/color-legend
  *
+ * @module legend
  * @author Joseph Davies, Julien Gaffuri
  */
 export class ColorLegend extends Legend {

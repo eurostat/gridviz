@@ -9,6 +9,7 @@ import { Dataset } from '../core/Dataset.js'
 /**
  * A dataset composed of a single CSV file (not tiled).
  *
+ * @module dataset
  * @author Joseph Davies, Julien Gaffuri
  */
 export class CSVGrid extends Dataset {

@@ -13,6 +13,7 @@ import { select } from 'd3-selection'
 /**
  * A gridviz application.
  *
+ * @module core
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Map {

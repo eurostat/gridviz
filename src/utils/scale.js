@@ -13,6 +13,10 @@ import { scaleQuantile } from "d3-scale"
 * @typedef {function(number):string} ColorScale */
 
 
+/**
+ * @module utils
+ */
+
 
 /**
  * Generic function for view scale - continuous or discrete

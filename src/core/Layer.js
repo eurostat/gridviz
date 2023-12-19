@@ -4,6 +4,7 @@
 import { Drawable } from "./Drawable.js"
 
 /**
+ * @module core
  * @abstract
  * @author Joseph Davies, Julien Gaffuri
  */

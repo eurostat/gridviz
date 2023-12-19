@@ -7,6 +7,7 @@
  *
  * @abstract
  *
+ * @module core
  * @author Joseph Davies, Julien Gaffuri
  */
 export class MultiResolutionDataset {

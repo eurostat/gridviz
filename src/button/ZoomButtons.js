@@ -3,6 +3,7 @@ import { Button } from './Button.js'
 /**
  * Button for toggling fullscreen mode
  *
+ * @module button
  * @author Joseph Davies, Julien Gaffuri
  */
 export class ZoomButtons extends Button {

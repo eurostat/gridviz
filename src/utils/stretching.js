@@ -1,6 +1,10 @@
 //@ts-check
 'use strict'
 
+/**
+ * @module utils
+ */
+
 
 //TODO invert for circular
 //TODO use Math.sqrt

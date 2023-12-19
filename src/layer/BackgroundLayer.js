@@ -9,6 +9,7 @@ import { Layer } from '../core/Layer.js'
  * See https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
  * https://www.maptiler.com/google-maps-coordinates-tile-bounds-projection/#6/27.88/44.48
  * 
+ * @module layer
  * @author Julien Gaffuri
  */
 export class BackgroundLayer extends Layer {

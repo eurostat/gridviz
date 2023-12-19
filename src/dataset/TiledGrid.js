@@ -13,6 +13,7 @@ import { json, csv } from 'd3-fetch'
 /**
  * A tiled dataset, composed of CSV tiles.
  *
+ * @module dataset
  * @author Joseph Davies, Julien Gaffuri
  */
 export class TiledGrid extends Dataset {

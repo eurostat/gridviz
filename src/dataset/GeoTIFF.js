@@ -8,6 +8,7 @@ import { Dataset } from '../core/Dataset.js'
  * @todo
  * A dataset composed of a single GeoTiff file.
  *
+ * @module dataset
  * @author Joseph Davies, Julien Gaffuri
  */
 export class GeoTIFF extends Dataset {

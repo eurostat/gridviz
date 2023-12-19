@@ -7,6 +7,7 @@ import { select } from 'd3-selection'
 /**
  * A generic class to make a tooltip.
  * It is a div element, which can be moved under the mouse pointer and filled with some information in html.
+ * @module core
  */
 export class Tooltip {
     /**

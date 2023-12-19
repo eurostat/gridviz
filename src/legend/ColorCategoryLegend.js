@@ -6,6 +6,7 @@ import { Legend } from '../core/Legend.js'
 /**
  * A legend element for color categrories.
  *
+ * @module legend
  * @author Joseph Davies, Julien Gaffuri
  */
 export class ColorCategoryLegend extends Legend {

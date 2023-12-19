@@ -13,6 +13,7 @@ import { Drawable } from "./Drawable.js"
 /**
  * A style, to show a grid dataset.
  *
+ * @module core
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Style extends Drawable {

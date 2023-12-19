@@ -5,6 +5,7 @@ import { Layer } from '../core/Layer.js'
 import { json } from 'd3-fetch'
 
 /**
+ * @module layer
  * @author Joseph Davies, Julien Gaffuri
  */
 export class GeoJSONLayer extends Layer {

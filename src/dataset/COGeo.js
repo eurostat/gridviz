@@ -8,6 +8,7 @@ import { Dataset } from '../core/Dataset.js'
  * A dataset composed of a COGeo file.
  * @see https://www.cogeo.org/
  *
+ * @module dataset
  * @author Joseph Davies, Julien Gaffuri
  */
 export class COGeo extends Dataset {

@@ -6,6 +6,7 @@ import { Legend } from '../core/Legend.js'
 /**
  * A legend element for segment orientation.
  *
+ * @module legend
  * @author Joseph Davies, Julien Gaffuri
  */
 export class OrientationLegend extends Legend {

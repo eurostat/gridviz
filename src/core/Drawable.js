@@ -5,6 +5,7 @@
  * This is an abstract class used to group elements shared between Layer and Style classes.
  * 
  * @abstract
+ * @module core
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Drawable {

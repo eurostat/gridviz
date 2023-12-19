@@ -7,6 +7,7 @@ import { Layer } from '../core/Layer.js'
  *
  * A map WMS background layer.
  * 
+ * @module layer
  * @author Julien Gaffuri
  */
 export class BackgroundLayerWMS extends Layer {

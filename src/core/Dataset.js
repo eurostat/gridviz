@@ -9,6 +9,7 @@
  * A dataset component, of grid cells.
  * @abstract
  *
+ * @module core
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Dataset {

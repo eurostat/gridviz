@@ -6,6 +6,7 @@ import { select } from 'd3-selection'
 /**
  * A legend container.
  *
+ * @module core
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Legend {

@@ -8,6 +8,7 @@ import { max } from 'd3-array'
 /**
  * A legend element for proportional symbols.
  *
+ * @module legend
  * @author Joseph Davies, Julien Gaffuri
  */
 export class SizeLegend extends Legend {

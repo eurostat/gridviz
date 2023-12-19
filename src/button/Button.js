@@ -3,6 +3,7 @@ import { select } from 'd3-selection'
 /**
  * Parent class for button elements used to interact with the gridviz viewer.
  *
+ * @module button
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Button {

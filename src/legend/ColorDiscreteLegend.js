@@ -7,6 +7,7 @@ import { Legend } from '../core/Legend.js'
  * A legend element for discrete color style.
  * Inspiration: https://observablehq.com/@d3/color-legend
  *
+ * @module legend
  * @author Julien Gaffuri
  */
 export class ColorDiscreteLegend extends Legend {
