@@ -7,6 +7,7 @@ import { SideStyle } from './SideStyle.js'
 
 /**
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class ContourStyle extends SideStyle {

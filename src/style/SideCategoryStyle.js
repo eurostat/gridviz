@@ -6,6 +6,7 @@ import { SideStyle } from './SideStyle.js'
 /**
  * A style to show the sides of grid cells based on their different categories.
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class SideCategoryStyle extends SideStyle {

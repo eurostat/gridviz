@@ -4,7 +4,7 @@
 import { Style } from '../core/Style.js'
 
 /**
- *
+ * @module style
  * @author Julien Gaffuri
  */
 export class StrokeStyle extends Style {

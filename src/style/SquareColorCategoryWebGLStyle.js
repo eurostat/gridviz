@@ -10,6 +10,7 @@ import { WebGLSquareColoringCatAdvanced } from '../utils/WebGLSquareColoringCatA
  * To show cells as colored squares, from categories.
  * All cells are drawn as squares, with the same size
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class SquareColorCategoryWebGLStyle extends Style {

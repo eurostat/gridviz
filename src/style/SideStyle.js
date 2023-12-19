@@ -9,7 +9,7 @@ import { Style } from '../core/Style.js'
  * @typedef {function(Array.<Side>,number, number):*} SideViewScale */
 
 /**
- *
+ * @module style
  * @author Julien Gaffuri
  */
 export class SideStyle extends Style {

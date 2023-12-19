@@ -10,6 +10,7 @@ import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvance
  * To show cells as colored squares, with computation of the colors on GPU side (faster than JavaScript side).
  * Alls squares with the same size
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class SquareColorWebGLStyle extends Style {

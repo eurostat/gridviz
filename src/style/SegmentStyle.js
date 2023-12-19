@@ -6,6 +6,7 @@ import { Style } from '../core/Style.js'
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class SegmentStyle extends Style {

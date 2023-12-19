@@ -4,7 +4,7 @@
 import { Style } from '../core/Style.js'
 
 /**
- *
+ * @module style
  * @author Joseph Davies, Julien Gaffuri
  */
 export class NinjaStarStyle extends Style {

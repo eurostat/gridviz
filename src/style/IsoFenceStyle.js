@@ -7,6 +7,7 @@ import { SideStyle } from './SideStyle.js'
 /** @typedef {{x:number,y:number,or:"v"|"h",c1:import('../core/Dataset.js').Cell|undefined,c2:import('../core/Dataset.js').Cell|undefined}} Side */
 
 /**
+ * @module style
  * @author Julien Gaffuri
  */
 export class IsoFenceStyle extends Style {

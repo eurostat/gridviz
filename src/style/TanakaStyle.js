@@ -8,6 +8,7 @@ import { classifier as clFun, colorClassifier as cclFun } from '../utils/scale.j
 /**
  * @see https://manifold.net/doc/mfd9/example__tanaka_contours.htm
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class TanakaStyle {

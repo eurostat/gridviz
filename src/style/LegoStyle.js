@@ -7,6 +7,7 @@ import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.j
 import { Style } from '../core/Style.js'
 
 /**
+ * @module style
  * @author Julien Gaffuri
  */
 export class LegoStyle {

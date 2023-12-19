@@ -7,6 +7,7 @@ import { Style } from '../core/Style.js'
  * A very generic style that shows grid cells with specific color, size and shape.
  * It can be used to show variables as cell colors, cell size, cell shape, or any combination of the three visual variables.
  *
+ * @module style
  * @author Joseph Davies, Julien Gaffuri
  */
 export class ShapeColorSizeStyle extends Style {

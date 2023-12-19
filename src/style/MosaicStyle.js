@@ -4,6 +4,7 @@
 import { Style } from '../core/Style.js'
 
 /**
+ * @module style
  * @author Julien Gaffuri
  */
 export class MosaicStyle extends Style {

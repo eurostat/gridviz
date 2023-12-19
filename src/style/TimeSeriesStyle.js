@@ -9,6 +9,7 @@ import { Style } from '../core/Style.js'
  * Show cell as timeseries chart
  * Can be used for sparkline map of https://datagistips.hypotheses.org/488
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class TimeSeriesStyle extends Style {

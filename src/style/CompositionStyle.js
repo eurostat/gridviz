@@ -11,6 +11,7 @@ import { Style } from '../core/Style.js'
  * For a list of supported symbols, @see CompositionType
  * The symbol can be scaled depending on the cell importance.
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class CompositionStyle extends Style {

@@ -9,6 +9,7 @@ import { color } from 'd3-color'
 
 /**
  *
+ * @module style
  * @author Julien Gaffuri
  */
 export class DotDensityStyle extends Style {
