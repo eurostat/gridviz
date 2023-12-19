@@ -4,13 +4,33 @@
     "source": {
         "includePattern": ".+\\.js(doc|x)?$",
         "excludePattern": "(^|\\/|\\\\)_",
-        "exclude": [ "src/dataset/COGeo.js", "src/dataset/GeoTIFF.js" ],
-        "include": [ "src/utils/scale.js", "src/utils/stretching.js", "src/utils/utils.js"]
+        "exclude": [
+            "src/dataset/COGeo.js",
+            "src/dataset/GeoTIFF.js"
+        ],
+        "include": [
+            "src/core",
+            "src/button",
+            "src/dataset",
+            "src/layer",
+            "src/legend",
+            "src/style",
+            "src/utils/scale.js",
+            "src/utils/stretching.js",
+            "src/utils/utils.js"
+        ]
+    },
+    "opts": {
+        "destination": "docs/jsdoc/a",
+        "recurse": true
     },
     "sourceType": "module",
     "tags": {
         "allowUnknownTags": true,
-        "dictionaries": ["jsdoc","closure"]
+        "dictionaries": [
+            "jsdoc",
+            "closure"
+        ]
     },
     "templates": {
         "cleverLinks": false,

@@ -152,10 +152,10 @@ export const viewScaleColorQuantile = (opts) => {
 
 
 /**
- * combine view scale functions
+ * Combine view scale functions
  * 
  * @param {*} obj 
- * @returns 
+ * @returns {function}
  */
 export const viewScaleCombination = (obj) => {
     //obj: prop and a function to call
