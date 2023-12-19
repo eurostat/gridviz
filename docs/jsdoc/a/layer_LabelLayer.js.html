@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: layer/LabelLayer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: layer/LabelLayer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//@ts-check
+'use strict'
+
+import { Layer } from '../core/Layer.js'
+import { csv } from 'd3-fetch'
+
+/** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
+ * @typedef {{name: string, x:number, y:number }} Label */
+
+/**
+ * A (generic) layer for placename labels, to be shown on top of the grid layers.
+ * The input is a CSV file with the position (x, y) of the labels and name + some other info on the label importance.
+ * If the label data is not in the expected format or in the same CRS as the grid, it can be corrected with the "preprocess" function.
+ * The selection of the label, their style (font, weight, etc.) and color can be specified depending on their importance and the zoom level.
+ *
+ * @author Joseph Davies, Julien Gaffuri
+ */
+export class LabelLayer extends Layer {
+    /**
+     * @param {object} opts
+     */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {}
+
+        /**
+         * The URL of the label data, as CSV file.
+         * The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level.
+         * If necessary, this data can be reformated with the 'preprocess' parameter.
+         * @private
+         * @type {string} */
+        this.url = opts.url
+
+        /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
+         * @private
+         * @type {function(Label,number):string} */
+        this.style = opts.style || (() => 'bold 1em Arial')
+
+        /** Specify the label color, depending on its importance and the zoom level.
+         * @private
+         * @type {function(Label,number):string} */
+        this.color = opts.color || (opts.dark ? () => '#ddd' : () => '#222')
+
+        /** Specify the label halo color, depending on its importance and the zoom level.
+         * @private
+         * @type {function(Label,number):string} */
+        this.haloColor = opts.haloColor || (opts.dark ? () => '#000000BB' : () => '#FFFFFFBB')
+
+        /** Specify the label halo width, depending on its importance and the zoom level.
+         * @private
+         * @type {function(Label,number):number} */
+        this.haloWidth = opts.haloWidth || (() => 4)
+
+        /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
+         * "left" || "right" || "center" || "start" || "end"
+         * @private
+         * @type {CanvasTextAlign} */
+        this.textAlign = opts.textAlign || 'start'
+
+        /**
+         * @private
+         * @type {Array.&lt;number>} */
+        this.offsetPix = opts.offsetPix || [5, 5]
+
+        /**
+         * A preprocess to run on each label after loading.
+         * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
+         * Return false if the label should not be kept.
+         * @private
+         * @type {function(Label):boolean} */
+        this.preprocess = opts.preprocess
+
+        /**
+         * @private
+         * @type {Array.&lt;Label> | undefined} */
+        this.labels = undefined
+
+        /**
+         * @private
+         * @type {string} */
+        this.loadingStatus = 'notLoaded'
+    }
+
+    /**
+     * Draw the label layer.
+     *
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
+     * @returns {void}
+     */
+    draw(geoCanvas) {
+        //load labels, if not done yet.
+        if (!this.labels) {
+            this.load(geoCanvas.redraw)
+            return
+        }
+
+        //
+        const z = geoCanvas.view.z
+
+        //text align
+        geoCanvas.ctx.textAlign = this.textAlign || 'start'
+
+        //line join and cap
+        geoCanvas.ctx.lineJoin = 'bevel' //|| "round" || "miter";
+        geoCanvas.ctx.lineCap = 'butt' //|| "round" || "square";
+
+        //draw in pix coordinates
+        geoCanvas.initCanvasTransform()
+
+        //draw labels, one by one
+        for (const lb of this.labels) {
+            //get label style
+            const st = this.style(lb, z)
+            if (!st) continue
+            geoCanvas.ctx.font = st
+
+            //check label within the view, to be drawn
+            if (!geoCanvas.toDraw(lb)) continue
+
+            //position
+            const xP = geoCanvas.geoToPixX(lb.x) + this.offsetPix[0]
+            const yP = geoCanvas.geoToPixY(lb.y) - this.offsetPix[1]
+
+            //label stroke, for the halo
+            if (this.haloColor &amp;&amp; this.haloWidth) {
+                const hc = this.haloColor(lb, z)
+                const hw = this.haloWidth(lb, z)
+                if (hc &amp;&amp; hw &amp;&amp; hw > 0) {
+                    geoCanvas.ctx.strokeStyle = hc
+                    geoCanvas.ctx.lineWidth = hw
+                    geoCanvas.ctx.strokeText(lb.name, xP, yP)
+                }
+            }
+
+            //label fill
+            if (this.color) {
+                const col = this.color(lb, z)
+                if (col) {
+                    geoCanvas.ctx.fillStyle = col
+                    geoCanvas.ctx.fillText(lb.name, xP, yP)
+                }
+            }
+        }
+    }
+
+    /**
+     * Load data for labels, from URL this.url
+     * @param {function():void} callback
+     * @private
+     */
+    async load(callback) {
+        if (!this.url) {
+            console.log('Failed loading labels: No URL specified. ' + this.url)
+            this.loadingStatus = 'failed'
+            this.labels = []
+            return
+        }
+
+        //check if data already loaded
+        if (this.loadingStatus != 'notLoaded') return
+
+        //load data
+        this.loadingStatus = 'loading'
+
+        try {
+            /** @type { Array.&lt;Label> } */
+            const data = await csv(this.url)
+
+            //preprocess/filter
+            if (this.preprocess) {
+                this.labels = []
+                for (const c of data) {
+                    const b = this.preprocess(c)
+                    if (b == false) continue
+                    this.labels.push(c)
+                }
+            } else {
+                //store labels
+                this.labels = data
+            }
+
+            this.loadingStatus = 'loaded'
+
+            //redraw
+            if (callback) callback()
+        } catch (error) {
+            console.log('Failed loading labels from ' + this.url)
+            this.labels = []
+            this.loadingStatus = 'failed'
+        }
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundLayer.html">BackgroundLayer</a></li><li><a href="BackgroundLayerWMS.html">BackgroundLayerWMS</a></li><li><a href="Button.html">Button</a></li><li><a href="CSVGrid.html">CSVGrid</a></li><li><a href="ColorCategoryLegend.html">ColorCategoryLegend</a></li><li><a href="ColorDiscreteLegend.html">ColorDiscreteLegend</a></li><li><a href="ColorLegend.html">ColorLegend</a></li><li><a href="CompositionStyle.html">CompositionStyle</a></li><li><a href="ContourStyle.html">ContourStyle</a></li><li><a href="Dataset.html">Dataset</a></li><li><a href="DotDensityStyle.html">DotDensityStyle</a></li><li><a href="Drawable.html">Drawable</a></li><li><a href="FullscreenButton.html">FullscreenButton</a></li><li><a href="GeoCanvas.html">GeoCanvas</a></li><li><a href="GeoJSONLayer.html">GeoJSONLayer</a></li><li><a href="GridLayer.html">GridLayer</a></li><li><a href="IsoFenceStyle.html">IsoFenceStyle</a></li><li><a href="JSGrid.html">JSGrid</a></li><li><a href="JoyPlotStyle.html">JoyPlotStyle</a></li><li><a href="LabelLayer.html">LabelLayer</a></li><li><a href="Layer.html">Layer</a></li><li><a href="Legend.html">Legend</a></li><li><a href="LegoStyle.html">LegoStyle</a></li><li><a href="LegoTopStyle.html">LegoTopStyle</a></li><li><a href="Map.html">Map</a></li><li><a href="MosaicStyle.html">MosaicStyle</a></li><li><a href="MultiResolutionDataset.html">MultiResolutionDataset</a></li><li><a href="NinjaStarStyle.html">NinjaStarStyle</a></li><li><a href="OrientationLegend.html">OrientationLegend</a></li><li><a href="PillarStyle.html">PillarStyle</a></li><li><a href="SegmentStyle.html">SegmentStyle</a></li><li><a href="ShapeColorSizeStyle.html">ShapeColorSizeStyle</a></li><li><a href="SideCategoryStyle.html">SideCategoryStyle</a></li><li><a href="SideStyle.html">SideStyle</a></li><li><a href="SizeLegend.html">SizeLegend</a></li><li><a href="SquareColorCategoryWebGLStyle.html">SquareColorCategoryWebGLStyle</a></li><li><a href="SquareColorWebGLStyle.html">SquareColorWebGLStyle</a></li><li><a href="StrokeStyle.html">StrokeStyle</a></li><li><a href="Style.html">Style</a></li><li><a href="TanakaStyle.html">TanakaStyle</a></li><li><a href="TextStyle.html">TextStyle</a></li><li><a href="TiledGrid.html">TiledGrid</a></li><li><a href="TimeSeriesStyle.html">TimeSeriesStyle</a></li><li><a href="Tooltip.html">Tooltip</a></li><li><a href="ZoomButtons.html">ZoomButtons</a></li></ul><h3>Global</h3><ul><li><a href="global.html#circularInverseScale">circularInverseScale</a></li><li><a href="global.html#circularScale">circularScale</a></li><li><a href="global.html#classifier">classifier</a></li><li><a href="global.html#colorClassifier">colorClassifier</a></li><li><a href="global.html#defaultLabelText">defaultLabelText</a></li><li><a href="global.html#discreteColors">discreteColors</a></li><li><a href="global.html#ensureTooltipInsideContainer">ensureTooltipInsideContainer</a></li><li><a href="global.html#exponentialScale">exponentialScale</a></li><li><a href="global.html#getClass">getClass</a></li><li><a href="global.html#identity">identity</a></li><li><a href="global.html#logarithmicScale">logarithmicScale</a></li><li><a href="global.html#orientationLegend">orientationLegend</a></li><li><a href="global.html#powerInverseScale">powerInverseScale</a></li><li><a href="global.html#powerScale">powerScale</a></li><li><a href="global.html#sizeDiscreteLegend">sizeDiscreteLegend</a></li><li><a href="global.html#sizeDiscreteViewScaleLegend">sizeDiscreteViewScaleLegend</a></li><li><a href="global.html#sizeLegend">sizeLegend</a></li><li><a href="global.html#sizeLegendViewScale">sizeLegendViewScale</a></li><li><a href="global.html#viewScale">viewScale</a></li><li><a href="global.html#viewScaleColor">viewScaleColor</a></li><li><a href="global.html#viewScaleColorQuantile">viewScaleColorQuantile</a></li><li><a href="global.html#viewScaleCombination">viewScaleCombination</a></li><li><a href="global.html#viewScaleQuantile">viewScaleQuantile</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 19 2023 15:49:18 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

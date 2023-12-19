@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: style/PillarStyle.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: style/PillarStyle.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//@ts-check
+'use strict'
+
+import { Style } from '../core/Style.js'
+
+/**
+ * @author Julien Gaffuri
+ */
+export class PillarStyle extends Style {
+
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {}
+
+        /** A function returning the height of the line representing a cell, in geo unit
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
+        this.height = opts.height
+
+        /** A function returning the color of the line representing a cell.
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
+        this.color = opts.color || (() => "#c08c59") //(c,r,z,vs) => {}
+
+        /** A function returning the width of the line representing a cell, in geo unit
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
+        this.width = opts.width || ((cell, resolution) => 0.5 * resolution)
+
+        /** A function returning the width of the line representing a cell, in geo unit
+         * @type {function(number, number,object):boolean} */
+        this.simple = opts.simple || (() => false)
+
+        /** @type {number} */
+        this.viewHeightFactor = opts.viewHeightFactor || 1.5
+        //0,0 is the center
+        /** @type {number} */
+        this.viewSX = opts.viewSX == undefined ? 0 : opts.viewSX
+        /** @type {number} */
+        this.viewSY = opts.viewSY == undefined ? -0.5 : opts.viewSY
+
+        //TODO replace with sun location ?
+        /** @type {number} */
+        this.shadowDirection =
+            opts.shadowDirection == undefined ? (-40.3 * Math.PI) / 180.0 : opts.shadowDirection
+        /** @type {number} */
+        this.shadowFactor = opts.shadowFactor || 0.3
+        /** @type {string} */
+        this.shadowColor = opts.shadowColor || '#00000033'
+
+        /** @type {string} */
+        this.outlineCol = opts.outlineCol || '#FFFFFF'
+        /** @type {number} */
+        this.outlineWidthPix = opts.outlineWidthPix == undefined ? 0.5 : opts.outlineWidthPix
+    }
+
+    /**
+     * Draw cells as segments.
+     *
+     * @param {Array.&lt;import("../core/Dataset").Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
+     */
+    draw(cells, geoCanvas, resolution) {
+
+        //filter
+        if (this.filter) cells = cells.filter(this.filter)
+
+        //
+        const z = geoCanvas.view.z
+
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+
+        //get view center geo position
+        const cvx = geoCanvas.view.x + this.viewSX * geoCanvas.w * z
+        const cvy = geoCanvas.view.y + this.viewSY * geoCanvas.h * z
+        //get view height
+        const H = this.viewHeightFactor * (geoCanvas.w + geoCanvas.h) * 0.5 * z
+
+        //sort cells by y and x
+        //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
+        cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x)
+
+        //get simple information
+        const simple = this.simple(resolution, z, viewScale)
+
+        geoCanvas.ctx.lineCap = simple ? 'butt' : 'round'
+
+        //draw shadows
+        geoCanvas.ctx.strokeStyle = this.shadowColor
+        geoCanvas.ctx.fillStyle = this.shadowColor
+        for (let cell of cells) {
+            //width
+            /** @type {number|undefined} */
+            const wG = this.width ? this.width(cell, resolution, z, viewScale) : undefined
+            if (!wG || wG &lt; 0) continue
+
+            //height
+            /** @type {number|undefined} */
+            const hG = this.height ? this.height(cell, resolution, z, viewScale) : undefined
+            if (!hG || hG &lt; 0) continue
+
+            //get offset
+            //TODO use that
+            //const offset = this.offset(c, resolution, z)
+
+            //set width
+            geoCanvas.ctx.lineWidth = wG
+
+            //compute cell centre postition
+            const cx = cell.x + resolution / 2
+            const cy = cell.y + resolution / 2
+            const ls = hG * this.shadowFactor
+
+            //draw segment
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.moveTo(cx, cy)
+            geoCanvas.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection))
+            geoCanvas.ctx.stroke()
+
+            /*
+            if (this.simple) {
+                //draw base circle
+                cg.ctx.beginPath();
+                cg.ctx.arc(
+                    cx, cy,
+                    wG * 0.5,
+                    0, 2 * Math.PI, false);
+                //cg.ctx.stroke();
+                cg.ctx.fill();
+            }*/
+        }
+
+        //draw pillars
+        for (let cell of cells) {
+            //color
+            /** @type {string|undefined} */
+            const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
+            if (!col) continue
+
+            //width
+            /** @type {number|undefined} */
+            const wG = this.width ? this.width(cell, resolution, z, viewScale) : undefined
+            if (!wG || wG &lt; 0) continue
+
+            //height
+            /** @type {number|undefined} */
+            const hG = this.height ? this.height(cell, resolution, z, viewScale) : undefined
+            if (!hG || hG &lt; 0) continue
+
+            //get offset
+            //TODO use that
+            //const offset = this.offset(c, resolution, z)
+
+            //compute cell centre postition
+            const cx = cell.x + resolution / 2
+            const cy = cell.y + resolution / 2
+
+            //compute angle
+            const dx = cx - cvx,
+                dy = cy - cvy
+            const a = Math.atan2(dy, dx)
+            const D = Math.sqrt(dx * dx + dy * dy)
+            const d = (D * hG) / (H - hG)
+
+            if (simple) {
+                //draw segment
+                geoCanvas.ctx.strokeStyle = col
+                geoCanvas.ctx.lineWidth = wG
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cx, cy)
+                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                geoCanvas.ctx.stroke()
+            } else {
+                //draw background segment
+                geoCanvas.ctx.strokeStyle = this.outlineCol
+                geoCanvas.ctx.lineWidth = wG + 2 * this.outlineWidthPix * z
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cx, cy)
+                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                geoCanvas.ctx.stroke()
+
+                //draw segment
+                geoCanvas.ctx.strokeStyle = col
+                geoCanvas.ctx.lineWidth = wG
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cx, cy)
+                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                geoCanvas.ctx.stroke()
+
+                //draw top circle
+                geoCanvas.ctx.strokeStyle = this.outlineCol
+                //cg.ctx.fillStyle = "#c08c59"
+                geoCanvas.ctx.lineWidth = this.outlineWidthPix * z
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.arc(cx + d * Math.cos(a), cy + d * Math.sin(a), wG * 0.5, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.stroke()
+                //cg.ctx.fill();
+            }
+        }
+
+        //in case...
+        geoCanvas.ctx.lineCap = 'butt'
+
+        //update legends
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundLayer.html">BackgroundLayer</a></li><li><a href="BackgroundLayerWMS.html">BackgroundLayerWMS</a></li><li><a href="Button.html">Button</a></li><li><a href="CSVGrid.html">CSVGrid</a></li><li><a href="ColorCategoryLegend.html">ColorCategoryLegend</a></li><li><a href="ColorDiscreteLegend.html">ColorDiscreteLegend</a></li><li><a href="ColorLegend.html">ColorLegend</a></li><li><a href="CompositionStyle.html">CompositionStyle</a></li><li><a href="ContourStyle.html">ContourStyle</a></li><li><a href="Dataset.html">Dataset</a></li><li><a href="DotDensityStyle.html">DotDensityStyle</a></li><li><a href="Drawable.html">Drawable</a></li><li><a href="FullscreenButton.html">FullscreenButton</a></li><li><a href="GeoCanvas.html">GeoCanvas</a></li><li><a href="GeoJSONLayer.html">GeoJSONLayer</a></li><li><a href="GridLayer.html">GridLayer</a></li><li><a href="IsoFenceStyle.html">IsoFenceStyle</a></li><li><a href="JSGrid.html">JSGrid</a></li><li><a href="JoyPlotStyle.html">JoyPlotStyle</a></li><li><a href="LabelLayer.html">LabelLayer</a></li><li><a href="Layer.html">Layer</a></li><li><a href="Legend.html">Legend</a></li><li><a href="LegoStyle.html">LegoStyle</a></li><li><a href="LegoTopStyle.html">LegoTopStyle</a></li><li><a href="Map.html">Map</a></li><li><a href="MosaicStyle.html">MosaicStyle</a></li><li><a href="MultiResolutionDataset.html">MultiResolutionDataset</a></li><li><a href="NinjaStarStyle.html">NinjaStarStyle</a></li><li><a href="OrientationLegend.html">OrientationLegend</a></li><li><a href="PillarStyle.html">PillarStyle</a></li><li><a href="SegmentStyle.html">SegmentStyle</a></li><li><a href="ShapeColorSizeStyle.html">ShapeColorSizeStyle</a></li><li><a href="SideCategoryStyle.html">SideCategoryStyle</a></li><li><a href="SideStyle.html">SideStyle</a></li><li><a href="SizeLegend.html">SizeLegend</a></li><li><a href="SquareColorCategoryWebGLStyle.html">SquareColorCategoryWebGLStyle</a></li><li><a href="SquareColorWebGLStyle.html">SquareColorWebGLStyle</a></li><li><a href="StrokeStyle.html">StrokeStyle</a></li><li><a href="Style.html">Style</a></li><li><a href="TanakaStyle.html">TanakaStyle</a></li><li><a href="TextStyle.html">TextStyle</a></li><li><a href="TiledGrid.html">TiledGrid</a></li><li><a href="TimeSeriesStyle.html">TimeSeriesStyle</a></li><li><a href="Tooltip.html">Tooltip</a></li><li><a href="ZoomButtons.html">ZoomButtons</a></li></ul><h3>Global</h3><ul><li><a href="global.html#circularInverseScale">circularInverseScale</a></li><li><a href="global.html#circularScale">circularScale</a></li><li><a href="global.html#classifier">classifier</a></li><li><a href="global.html#colorClassifier">colorClassifier</a></li><li><a href="global.html#defaultLabelText">defaultLabelText</a></li><li><a href="global.html#discreteColors">discreteColors</a></li><li><a href="global.html#ensureTooltipInsideContainer">ensureTooltipInsideContainer</a></li><li><a href="global.html#exponentialScale">exponentialScale</a></li><li><a href="global.html#getClass">getClass</a></li><li><a href="global.html#identity">identity</a></li><li><a href="global.html#logarithmicScale">logarithmicScale</a></li><li><a href="global.html#orientationLegend">orientationLegend</a></li><li><a href="global.html#powerInverseScale">powerInverseScale</a></li><li><a href="global.html#powerScale">powerScale</a></li><li><a href="global.html#sizeDiscreteLegend">sizeDiscreteLegend</a></li><li><a href="global.html#sizeDiscreteViewScaleLegend">sizeDiscreteViewScaleLegend</a></li><li><a href="global.html#sizeLegend">sizeLegend</a></li><li><a href="global.html#sizeLegendViewScale">sizeLegendViewScale</a></li><li><a href="global.html#viewScale">viewScale</a></li><li><a href="global.html#viewScaleColor">viewScaleColor</a></li><li><a href="global.html#viewScaleColorQuantile">viewScaleColorQuantile</a></li><li><a href="global.html#viewScaleCombination">viewScaleCombination</a></li><li><a href="global.html#viewScaleQuantile">viewScaleQuantile</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 19 2023 15:49:18 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
