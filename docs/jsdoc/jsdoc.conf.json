@@ -22,7 +22,8 @@
     },
     "opts": {
         "destination": "docs/jsdoc/a",
-        "recurse": true
+        "recurse": true,
+        "template": "default"
     },
     "sourceType": "module",
     "tags": {
