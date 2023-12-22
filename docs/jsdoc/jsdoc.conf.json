@@ -22,8 +22,8 @@
     },
     "opts": {
         "destination": "docs/jsdoc/a",
-        "recurse": true,
-        "template": "templates/default"
+        "encoding": "utf8",
+        "recurse": true
     },
     "sourceType": "module",
     "tags": {
@@ -35,6 +35,11 @@
     },
     "templates": {
         "cleverLinks": false,
-        "monospaceLinks": false
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": false,
+            "layoutFile": "docs/jsdoc/tmpl/layout.tmpl",
+            "useLongnameInNav": false
+        }
     }
 }
