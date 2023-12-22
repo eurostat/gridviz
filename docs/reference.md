@@ -4,7 +4,6 @@
 
 - [Gridviz API reference](#gridviz-api-reference)
   - [Table of contents](#table-of-contents)
-  - [Usage](#usage)
   - [Concepts](#concepts)
   - [Adding data](#adding-data)
   - [Basic styles](#basic-styles)
@@ -48,46 +47,47 @@
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
-## Usage
-
-TODO: Simple case, with CSV
-Or see intro page ?
-
 ## Concepts
 
-One map. Layers. Different types of layers (map background, boundaries, etc.) and grid layers.
+Here are few concepts on Gridviz to be aware of:
 
-Grid layer showing gridded dataset. In the grid reference system.
+1. A gridviz map is composed of a stack of layers. Layers may have different types (background image, boundaries, labels, etc.). The main layer type is **GridLayer**, for gridded data. Background layers are usually drawn below, usually a single one. Boundaries and label layers should also be drawn as foreground, on top of grid layers.
 
-One dataset may be reused by several layers. It may be multi-resolution.
+2. Gridded dataset are defined independantly from their grid layer. Each dataset may thus be reused by several layers. It is loaded and stored once, and reused several times.
 
-A grid layer draws a single dataset using one or several styles.
+3. A gridded dataset may be multi-resolution. Gridviz then takes care of selecting the most suitable resolution according to the visualisation zoom level (and a predefined *minPixelsPerCell* parameter). This ensures only the relevant data for the visualisation view and zoom level is loaded and displayed.
 
-Each style specifies how to draw cells within the view.
+4. A grid layer draws a single gridded dataset using one or several styles. It is thus possible to combine styles and draw them on top of each other to show different aspects of a single dataset.
 
-There is a list of predefined styles.
+5. A style specifies how to draw the cells within the view. The style is not defined at cell level only - it allows defining more advanced styling techniques using cell sets, based on the relations of each cell with its neigbours.
 
-Predefined styles: most parameters are functions of usually 4 (cell,resolution,z,viewscale). The styling parameters (colors, size, etc.) may be computed autimatically depending on each cell, its resolution, and the zoom level. Size parameters are usually specified in ground meters, but may also be specified in screen pixels. viewscale parameter allows defining styling parameters based on the cells within the map view only - see.
+6. Gridviz comes with a library of predefined styles. These styles are customisable. Users are also offered a full flexibility to define their own style and show their cells the way they need. Predefined style may be seen only as examples and inspiration sources.
 
+7. Predefined styles parameters are usually not static values, but **functions** of usually four parameters: The *cell* to be drawn, its *resolution*, the *zoom* level, and a *viewscale* object. Styling parameters (such as colors, size, etc.) may thus be computed depending on each cell, its resolution, and the zoom level. Size parameters are usually specified in the unit of measurement of the grid coordinate reference system, usually ground meters. They may also be specified in screen pixels. These functions allow adapting the cartographic styles (colors, dimensions, etc.) to the cell values, their size and the zoom level.
 
-zoom level: the size of a screen pixel in ground meter. m/pixel.
+8. For some predefined styles parameters, *viewscale* parameter allows defining styling parameters based on the cells within the map view only. This parameter is an object computed only once from the cells within the view. It may be used for example to compute the minimum and maximum values of these cells and adapt a color scale to this for a better contrast. It should generally be used to compute scales that are view dependant - hence the name *viewscale*. See [this section](#view-scale) for some examples.
+
+9. Gridviz zoom level, usually noted **z**, is defined in **ground UoM per pixel**. The ground UoM is usually meter. **z** value can be used directly to transorm distances from ground distance to map screen distance, in pixels, as a division. **resolution** parameter is the cell size, in ground UoM. Its size in map screen pixel is thus 'resolution / z'.
+
+10. A grid layer shows gridded data in the grid coordinate reference system. Several gridded datasets may be overlayed, as soon as they are defined in the same coordinate reference system. Other layers (background, labels, etc.) must be defined also in the grid coordinate reference system.
 
 ## Adding data
 
-Dataset class, several type. Multiscale dataset.
+A gridviz dataset defines how to retrieve a list of grid cells. A grid cell is stored as a javascript object having a **x** and **y** property, which is usually the coordinates of the grid cell lower left corner in the grid coordinate reference system (the **x** and **y** values are usually multiples of the grid resolution value).
 
-basic_JS
-basic_CSV
-basic_tiled_CSV
-basic_multiscale_CSV
-basic_tiled_multiscale_CSV
+Gridviz proposed several types of datasets: Javascript, CSV, tiled CSV. These datasets may be bundled into multi-resolution datasets, to be used for multi-scale maps. See these examples:
 
-Data pre-processing and filtering
+- basic_JS
+- basic_CSV
+- basic_tiled_CSV
+- basic_multiscale_CSV
+- basic_tiled_multiscale_CSV
 
-preprocess
-select
-select_style
+The gridded data may be pre-processing after loading and filtered. See these examples:
 
+- preprocess
+- select
+- select_style
 
 ## Basic styles
 
