@@ -9,7 +9,7 @@
 </p>
 
 
-[Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser using a large variety of [cartographic styles and techniques](https://eurostat.github.io/gridviz/docs/reference). Unlike traditional raster-based web mapping tools, Gridviz renders everything client-side, on the fly.
+[Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser using a large variety of [cartographic styles and techniques](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md). Unlike traditional raster-based web mapping tools, Gridviz renders everything client-side, on the fly.
 
 ## Styles
 
@@ -107,12 +107,12 @@ In order to visualize large grids efficiently, you can produce tiled grids in a 
 
 ## About
 
-|                |                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                |        |
+| -------------- | ----------- |
 | _contributors_ | [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) |
-| _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
-| _status_       | Since 2020                                                                                                                                                                            |
-| _license_      | [EUPL 1.2](LICENSE)                                                                                                                                                                   |
+| _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)            |
+| _status_       | Since 2020         |
+| _license_      | [EUPL 1.2](LICENSE)            |
 
 ### Support and contribution
 
