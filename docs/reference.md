@@ -73,15 +73,15 @@ Here are few concepts on Gridviz to be aware of:
 
 ## Adding data
 
-A gridviz dataset defines how to retrieve a list of grid cells. A grid cell is stored as a javascript object having a **x** and **y** property, which is usually the coordinates of the grid cell lower left corner in the grid coordinate reference system (the **x** and **y** values are usually multiples of the grid resolution value).
+A gridviz dataset defines how to retrieve gridded data, as a list of grid cells. A grid cell is stored as a javascript object having a **x** and **y** property, which is usually the coordinates of the grid cell lower left corner in the grid coordinate reference system. The **x** and **y** values are usually multiples of the grid resolution value.
 
-Gridviz proposed several types of datasets: Javascript, CSV, tiled CSV. These datasets may be bundled into multi-resolution datasets, to be used for multi-scale maps. See these examples:
+Gridviz proposed several types of datasets: Javascript, CSV, tiled CSV. These datasets may be bundled into multi-resolution datasets, to be used for multi-scale maps:
 
-- basic_JS
-- basic_CSV
-- basic_tiled_CSV
-- basic_multiscale_CSV
-- basic_tiled_multiscale_CSV
+- See [this example for raw javascript data](https://eurostat.github.io/gridviz/examples/basics/basic_JS.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_JS.html)).
+- See [this example for CSV data](https://eurostat.github.io/gridviz/examples/basics/basic_CSV.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_CSV.html)).
+- See [this example for tiled CSV data](https://eurostat.github.io/gridviz/examples/basics/basic_tiled_CSV.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_tiled_CSV.html)).
+- See [this example for tiled CSV data](https://eurostat.github.io/gridviz/examples/basics/basic_multiscale_CSV.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_multiscale_CSV.html)).
+- See [this example for tiled CSV data](https://eurostat.github.io/gridviz/examples/basics/basic_tiled_multiscale_CSV.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_tiled_multiscale_CSV.html)).
 
 The gridded data may be pre-processing after loading and filtered. See these examples:
 
