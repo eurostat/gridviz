@@ -83,11 +83,11 @@ Gridviz proposed several types of datasets: Javascript, CSV, tiled CSV. These da
 - See [this example for tiled CSV data](https://eurostat.github.io/gridviz/examples/basics/basic_multiscale_CSV.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_multiscale_CSV.html)).
 - See [this example for tiled CSV data](https://eurostat.github.io/gridviz/examples/basics/basic_tiled_multiscale_CSV.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/basic_tiled_multiscale_CSV.html)).
 
-The gridded data may be pre-processing after loading and filtered. See these examples:
+The gridded data may be pre-processing after loading and filtered:
 
-- preprocess
-- select
-- select_style
+- See [this example for basic pre-processing](https://eurostat.github.io/gridviz/examples/basics/preprocess.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/preprocess.html)).
+- See [this example for basic filtering/selection](https://eurostat.github.io/gridviz/examples/basics/select.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/select.html)).
+- See [this example for basic filtering/selection at style level](https://eurostat.github.io/gridviz/examples/basics/select_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/select_style.html)).
 
 ## Basic styles
 
