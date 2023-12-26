@@ -40,6 +40,7 @@
     - [Showing boundaries](#showing-boundaries)
   - [Transparency](#transparency)
   - [Tooltip](#tooltip)
+  - [Buttons](#buttons)
   - [View scale](#view-scale)
   - [Legends](#legends)
   - [Leaflet](#leaflet)
@@ -307,34 +308,52 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 
 ## Custom styles
 
+custom_style.html
+
 
 ## Background layer
 
 ### Tiled layer
 
+background.html
+background_gisco.html
 
 ### WMS
 
+background_WMS.html
 
 
 ## Foreground information
 
 ### Showing labels
 
+labels.html
+labels_.html
+
 ### Showing boundaries
 
-
+boundaries.html
 
 ## Transparency
 
+blending_alpha.html
+
 ## Tooltip
+
+tooltip.html
+
+## Buttons
+
+buttons.html
 
 
 
 ## View scale
 
 List examples
-opionnal
+optionnal
+
+stretching.html
 
 ## Legends
 
