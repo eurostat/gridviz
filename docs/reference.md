@@ -350,18 +350,14 @@ buttons.html
 
 ## View scale
 
-List examples
-optionnal
+viewscale_basic.html
+viewscale.html
 
 stretching.html
 
 ## Legends
 
 List examples
-
-
-
-
 
 
 
