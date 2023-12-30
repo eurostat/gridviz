@@ -360,7 +360,6 @@ stretching.html
 List examples
 
 
-
 ## Leaflet
 
 Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
