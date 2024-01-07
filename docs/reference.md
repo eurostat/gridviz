@@ -348,10 +348,9 @@ See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.ht
 
 ## View scale
 
-viewscale_basic.html
-viewscale.html
-
-stretching.html
+- See [this basic example](https://eurostat.github.io/gridviz/examples/basics/viewscale_basic.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_basic.html)).
+- See [this more advanced example](https://eurostat.github.io/gridviz/examples/basics/viewscale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale.html)) using some predefined function.
+- See [this example for stretching functions](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
 
 ## Legends
 
