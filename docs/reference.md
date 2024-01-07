@@ -354,9 +354,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.ht
 
 ## Legends
 
-
-List examples
-
+See various examples here: https://github.com/eurostat/gridviz/blob/master/examples/legends/
 
 ## Leaflet
 
