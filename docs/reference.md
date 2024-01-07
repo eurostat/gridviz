@@ -308,45 +308,43 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 
 ## Custom styles
 
-custom_style.html
+See [this example](https://eurostat.github.io/gridviz/examples/basics/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/custom_style.html)) to define a simple custom style.
 
 
 ## Background layer
 
 ### Tiled layer
 
-background.html
-background_gisco.html
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/background.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/background_gisco.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_gisco.html)).
 
 ### WMS
 
-background_WMS.html
-
+See [this example](https://eurostat.github.io/gridviz/examples/basics/background_WMS.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_WMS.html)).
 
 ## Foreground information
 
 ### Showing labels
 
-labels.html
-labels_.html
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/labels.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/labels.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/labels_.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/labels_.html)).
 
 ### Showing boundaries
 
-boundaries.html
+See [this example](https://eurostat.github.io/gridviz/examples/basics/boundaries.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/boundaries.html)).
 
 ## Transparency
 
-blending_alpha.html
+See [this example](https://eurostat.github.io/gridviz/examples/basics/blending_alpha.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/blending_alpha.html)).
 
 ## Tooltip
 
-tooltip.html
+See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)).
+
 
 ## Buttons
 
-buttons.html
-
-
+See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)).
 
 ## View scale
 
