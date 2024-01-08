@@ -362,12 +362,12 @@ For more information on these functions and an overview of how they differ, see:
 
 ## Legends
 
-To show map style elements, see various examples here: https://github.com/eurostat/gridviz/blob/master/examples/legends/
+To show map legends, see various examples here: https://github.com/eurostat/gridviz/blob/master/examples/legends/
+
 
 ## Leaflet
 
 Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
-
 
 ## Alright?
 
