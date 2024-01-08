@@ -54,19 +54,19 @@ Here are few concepts on Gridviz to be aware of:
 
 1. A gridviz map is composed of a stack of layers. Layers may have different types (background image, boundaries, labels, etc.). The main layer type is **GridLayer**, for gridded data. Background layers are usually drawn below, usually a single one. Boundaries and label layers should also be drawn as foreground, on top of grid layers.
 
-2. Gridded dataset are defined independantly from their grid layer. Each dataset may thus be reused by several layers. It is loaded and stored once, and reused several times.
+2. Gridded datasets are defined independantly from their grid layer. Each gridded dataset may thus be reused by several layers: It is loaded and stored once, and reused several times.
 
 3. A gridded dataset may be multi-resolution. Gridviz then takes care of selecting the most suitable resolution according to the visualisation zoom level (and a predefined *minPixelsPerCell* parameter). This ensures only the relevant data for the visualisation view and zoom level is loaded and displayed.
 
-4. A grid layer draws a single gridded dataset using one or several styles. It is thus possible to combine styles and draw them on top of each other to show different aspects of a single dataset.
+4. A grid layer draws a single gridded dataset using one or several styles. It is thus possible to combine styles and draw them on top of each other to show different aspects of the data.
 
 5. A style specifies how to draw the cells within the view. The style is not defined at cell level only - it allows defining more advanced styling techniques using cell sets, based on the relations of each cell with its neigbours.
 
-6. Gridviz comes with a library of predefined styles. These styles are customisable. Users are also offered a full flexibility to define their own style and show their cells the way they need. Predefined style may be seen only as examples and inspiration sources.
+6. Gridviz comes with a library of [predefined styles](#basic-styles). These styles are customisable. Users are also offered a full flexibility to [define their own style](#custom-styles) and show their cells the way they need. Predefined style may be seen only as examples and inspiration sources.
 
 7. Predefined styles parameters are usually not static values, but **functions** of usually four parameters: The *cell* to be drawn, its *resolution*, the *zoom* level, and a *viewscale* object. Styling parameters (such as colors, size, etc.) may thus be computed depending on each cell, its resolution, and the zoom level. Size parameters are usually specified in the unit of measurement of the grid coordinate reference system, usually ground meters. They may also be specified in screen pixels. These functions allow adapting the cartographic styles (colors, dimensions, etc.) to the cell values, their size and the zoom level.
 
-8. For some predefined styles parameters, *viewscale* parameter allows defining styling parameters based on the cells within the map view only. This parameter is an object computed only once from the cells within the view. It may be used for example to compute the minimum and maximum values of these cells and adapt a color scale to this for a better contrast. It should generally be used to compute scales that are view dependant - hence the name *viewscale*. See [this section](#view-scale) for some examples.
+8. For some predefined style parameters, *viewscale* parameter allows defining styling parameters based on the cells within the map view only. This parameter is an object computed only once from the cells within the view. It may be used for example to compute the minimum and maximum values of these cells and adapt a color scale to this for a better contrast. It should generally be used to compute scales that are view dependant - hence the name *viewscale*. See [this section](#view-scale) for some examples.
 
 9. Gridviz zoom level, usually noted **z**, is defined in **ground UoM per pixel**. The ground UoM is usually meter. **z** value can be used directly to transorm distances from ground distance to map screen distance, in pixels, as a division. **resolution** parameter is the cell size, in ground UoM. Its size in map screen pixel is thus 'resolution / z'.
 
