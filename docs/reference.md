@@ -40,6 +40,12 @@
   - [View scale](#view-scale)
   - [Stretching](#stretching)
   - [Legends](#legends)
+    - [Color legend](#color-legend)
+    - [Color category legend](#color-category-legend)
+    - [Color discrete legend](#color-discrete-legend)
+    - [Orientation legend](#orientation-legend)
+    - [Size legend](#size-legend)
+    - [Width legend](#width-legend)
   - [Leaflet](#leaflet)
   - [Alright?](#alright)
 
@@ -346,7 +352,7 @@ For some predefined style parameters, *viewscale* parameter allows defining styl
 Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continuous mapping from a statistical variable to a visual variable (color, size, etc.). The statistical distribution can be stretched with one of the _stretching functions_ listed below can be used. These are continuous bijective functions defined from *[0,1]* to *[0,1]* intervals. They have different properties and should be chosen according to the data distribution. The amplitude of the stretching can be adjusted with a parameter.
 
 | Stretching function | Description           | Stretching parameter                                    |
-| ------------------- | ---------------------------------------- | --------------------- |
+| ------------------- | -------------------------- | --------------------- |
 | **powerScale**            | Polynomial function            | Power exponent, from 0 to Infinity. No change: 1         |
 | **powerInverseScale**            | Polynomial inverse function    | Power exponent, from 0 to Infinity. No change: 1         |
 | **logarithmicScale**            | Exponential function           | Logarithmic base, from -Infinity to Infinity. No change: 0 |
@@ -356,13 +362,79 @@ Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continu
 
 For more information on these functions and an overview of how they differ, see:
 
--   [this example](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
--   the [code](../src/utils/stretching.js)
--   those [graphs](https://observablehq.com/@jgaffuri/stretching)
+- [this example](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
+- the [code](../src/utils/stretching.js)
+- those [graphs](https://observablehq.com/@jgaffuri/stretching)
 
 ## Legends
 
-To show map legends, see various examples here: https://github.com/eurostat/gridviz/blob/master/examples/legends/
+Gridviz offers different types of legends that are suited to different cartographic styles, namely:
+
+- [Color legend](#color-legend)
+- [Color category legend](#color-category-legend)
+- [Color discrete legend](#color-discrete-legend)
+- [Orientation legend](#Orientation-legend)
+- [Size legend](#size-legend)
+- [Width legend](#Width-legend)
+
+You can style each legend by using the 'D3-like' style() function after constructing your legend, like so:
+
+```javascript
+new gridviz.SizeLegend({
+    title: 'Number of inhabitants',
+    exaggerationFactor: 0.8,
+    shape: 'circle',
+    fillColor: '#3E5791',
+}).style('padding', '0px 5px')
+```
+
+The legend elements are added within a default HTML element. To define where the legend elements should be added, see [this example](https://eurostat.github.io/gridviz/examples/legends/external_legend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/external_legend.html)).
+
+### Color legend
+
+![](img/legends/color_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegend.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendViewScale.html)) for a view scale based style.
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorQuantileLegendViewScale.html)) for a quantile view scale based style.
+
+### Color category legend
+
+![](img/legends/color_category_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorCategoryLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorCategoryLegend.html)).
+
+### Color discrete legend
+
+![](img/legends/color_discrete_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegend.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegendViewScale.html)) for a view scale based style.
+
+
+### Orientation legend
+
+![](img/legends/segment_orientation_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/orientationLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/orientationLegend.html)).
+
+### Size legend
+
+![](img/legends/size_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeLegend.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeDiscreteLegend.html)) for a discrete style.
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeLegendViewScale.html)) for a view scale based style.
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeQuantileLegendViewScale.html)) for a quantile view scale based style.
+
+### Width legend
+
+![](img/legends/segment_width_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/widthLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthLegend.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/widthDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthDiscreteLegend.html)) for a discrete style.
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/widthLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthLegendViewScale.html)) for a view scale based style.
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/widthQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthQuantileLegendViewScale.html)) for a quantile view scale based style.
 
 
 ## Leaflet
