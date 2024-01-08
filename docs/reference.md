@@ -41,8 +41,8 @@
   - [Stretching](#stretching)
   - [Legends](#legends)
     - [Color legend](#color-legend)
-    - [Color category legend](#color-category-legend)
     - [Color discrete legend](#color-discrete-legend)
+    - [Color category legend](#color-category-legend)
     - [Orientation legend](#orientation-legend)
     - [Size legend](#size-legend)
     - [Width legend](#width-legend)
@@ -371,8 +371,8 @@ For more information on these functions and an overview of how they differ, see:
 Gridviz offers different types of legends that are suited to different cartographic styles, namely:
 
 - [Color legend](#color-legend)
-- [Color category legend](#color-category-legend)
 - [Color discrete legend](#color-discrete-legend)
+- [Color category legend](#color-category-legend)
 - [Orientation legend](#Orientation-legend)
 - [Size legend](#size-legend)
 - [Width legend](#Width-legend)
@@ -397,12 +397,6 @@ The legend elements are added within a default HTML element. To define where the
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegend.html)).
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendViewScale.html)) for a view scale based style.
 
-### Color category legend
-
-![](img/legends/color_category_legend.png)
-
-- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorCategoryLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorCategoryLegend.html)).
-
 ### Color discrete legend
 
 ![](img/legends/color_discrete_legend.png)
@@ -411,6 +405,11 @@ The legend elements are added within a default HTML element. To define where the
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegendViewScale.html)) for a view scale based style.
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorQuantileLegendViewScale.html)) for a quantile view scale based style.
 
+### Color category legend
+
+![](img/legends/color_category_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorCategoryLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorCategoryLegend.html)).
 
 ### Orientation legend
 
