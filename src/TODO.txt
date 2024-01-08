@@ -11,6 +11,7 @@ population.csv files: make 2021 ones
 legends: add scale.invert everywhere ?
 make parameter both a function and a static value - check how it is done in d3
 bug un fullscreen button. On fullscreen exit.
+geojson
 
 integrate scale and color-scale: colors scale should be based on size scale, with [0,1] color scale as range ?
 extract modules ?

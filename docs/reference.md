@@ -368,16 +368,11 @@ For more information on these functions and an overview of how they differ, see:
 
 ## Legends
 
-Gridviz offers different types of legends that are suited to different cartographic styles, namely:
+Gridviz offers several types of legends that are suited to different cartographic styles.
 
-- [Color legend](#color-legend)
-- [Color discrete legend](#color-discrete-legend)
-- [Color category legend](#color-category-legend)
-- [Orientation legend](#Orientation-legend)
-- [Size legend](#size-legend)
-- [Width legend](#Width-legend)
+The legend elements are added within a default HTML element. To define where the legend elements should be added, see [this example](https://eurostat.github.io/gridviz/examples/legends/external_legend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/external_legend.html)).
 
-You can style each legend by using the 'D3-like' style() function after constructing your legend, like so:
+Each legend can be customised using the 'D3-like' *style()* function after constructing the legend, like so:
 
 ```javascript
 new gridviz.SizeLegend({
@@ -387,8 +382,6 @@ new gridviz.SizeLegend({
     fillColor: '#3E5791',
 }).style('padding', '0px 5px')
 ```
-
-The legend elements are added within a default HTML element. To define where the legend elements should be added, see [this example](https://eurostat.github.io/gridviz/examples/legends/external_legend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/external_legend.html)).
 
 ### Color legend
 
