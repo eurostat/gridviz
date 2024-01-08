@@ -301,7 +301,7 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 
 ## Custom styles
 
-The style can be freely defined through the **drawFun**, which specifies how to draw the list of cells within the view on the map canvas. See [this example](https://eurostat.github.io/gridviz/examples/basics/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/custom_style.html)) to define a simple custom style.
+The style can be freely defined through the **drawFun**, which specifies how to draw the list of cells within the view on the map canvas. See [this example](https://eurostat.github.io/gridviz/examples/basics/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/custom_style.html)) to define a simple style to draw each cell as an arrow symbol.
 
 ## Background layer
 
