@@ -38,6 +38,7 @@
   - [Tooltip](#tooltip)
   - [Buttons](#buttons)
   - [View scale](#view-scale)
+  - [Stretching](#stretching)
   - [Legends](#legends)
   - [Leaflet](#leaflet)
   - [Alright?](#alright)
@@ -331,7 +332,7 @@ A tooltip may be customised for the grid cells passed over the mouse pointer. By
 
 ## Buttons
 
-To show zoom buttons, see [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)).
+To show zoom and full screen mode buttons, see [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)).
 
 ## View scale
 
@@ -339,7 +340,25 @@ For some predefined style parameters, *viewscale* parameter allows defining styl
 
 - See [this basic example](https://eurostat.github.io/gridviz/examples/basics/viewscale_basic.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_basic.html)).
 - See [this more advanced example](https://eurostat.github.io/gridviz/examples/basics/viewscale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale.html)) using some predefined function.
-- See [this example for stretching functions](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
+
+## Stretching
+
+Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continuous mapping from a statistical variable to a visual variable (color, size, etc.). The statistical distribution can be stretched with one of the _stretching functions_ listed below can be used. These are continuous bijective functions defined from *[0,1]* to *[0,1]* intervals. They have different properties and should be chosen according to the data distribution. The amplitude of the stretching can be adjusted with a parameter.
+
+| Stretching function | Description           | Stretching parameter                                    |
+| ------------------- | ---------------------------------------- | --------------------- |
+| **powerScale**            | Polynomial function            | Power exponent, from 0 to Infinity. No change: 1         |
+| **powerInverseScale**            | Polynomial inverse function    | Power exponent, from 0 to Infinity. No change: 1         |
+| **logarithmicScale**            | Exponential function           | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **exponentialScale**         | Exponential    | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **circularScale**         | Circular    | 0: no stretching. 1: perfect circle section |
+| **circularInverseScale**         | Circular    | 0: no stretching. 1: perfect circle section |
+
+For more information on these functions and an overview of how they differ, see:
+
+-   [this example](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
+-   the [code](../src/utils/stretching.js)
+-   those [graphs](https://observablehq.com/@jgaffuri/stretching)
 
 ## Legends
 
