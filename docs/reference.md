@@ -317,18 +317,19 @@ Foreground layers may be defined such as:
 
 ## Transparency
 
-See [this example](https://eurostat.github.io/gridviz/examples/basics/blending_alpha.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/blending_alpha.html)).
+To handle layer and style transparency, blending modes and alpha values may be defined. See [this example](https://eurostat.github.io/gridviz/examples/basics/blending_alpha.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/blending_alpha.html)).
 
 ## Tooltip
 
-See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)).
-
+A tooltip may be customised for the grid cells passed over the mouse pointer. By default, the list of properties is shown. See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)) to define the tooltip text.
 
 ## Buttons
 
-See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)).
+To show zoom buttons, see [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)).
 
 ## View scale
+
+For some predefined style parameters, *viewscale* parameter allows defining styling parameters based on the cells within the map view only. This parameter is an object computed only once from the cells within the view. It may be used for example to compute the minimum and maximum values of these cells and adapt a color scale to this for a better contrast. It should generally be used to compute scales that are view dependant - hence the name *viewscale*.
 
 - See [this basic example](https://eurostat.github.io/gridviz/examples/basics/viewscale_basic.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_basic.html)).
 - See [this more advanced example](https://eurostat.github.io/gridviz/examples/basics/viewscale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale.html)) using some predefined function.
@@ -336,7 +337,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.ht
 
 ## Legends
 
-See various examples here: https://github.com/eurostat/gridviz/blob/master/examples/legends/
+To show map style elements, see various examples here: https://github.com/eurostat/gridviz/blob/master/examples/legends/
 
 ## Leaflet
 
