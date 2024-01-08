@@ -33,11 +33,7 @@
   - [Kernel smoothing](#kernel-smoothing)
   - [Custom styles](#custom-styles)
   - [Background layer](#background-layer)
-    - [Tiled layer](#tiled-layer)
-    - [WMS](#wms)
   - [Foreground information](#foreground-information)
-    - [Showing labels](#showing-labels)
-    - [Showing boundaries](#showing-boundaries)
   - [Transparency](#transparency)
   - [Tooltip](#tooltip)
   - [Buttons](#buttons)
@@ -164,8 +160,7 @@ This style shows the stroke of each cell with different colors, widths, shapes a
 
 This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
 
-- See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/tanaka.html)).
-- See [this other example](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/tanaka_full.html)).
+TODO: upgrade and add doc.
 
 ### Dot density style
 
@@ -281,8 +276,7 @@ This style shows the cell as a star polygon whose compacity depends on a variabl
 
 This style shows the grid cells as lego bricks with changeable colors and height based on a quantitative variable.
 
-- See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego.html)).
-- See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_EUR.html)).
+TODO: upgrade and document.
 
 ### Lego category style
 
@@ -290,8 +284,7 @@ This style shows the grid cells as lego bricks with changeable colors and height
 
 This style shows the grid cells as lego bricks with changeable colors based on a categorical variable.
 
-- See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego_cat.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_cat.html)).
-- See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_EUR.html)).
+TODO: upgrade and document.
 
 ## Kernel smoothing
 
@@ -308,30 +301,19 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 
 ## Custom styles
 
-See [this example](https://eurostat.github.io/gridviz/examples/basics/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/custom_style.html)) to define a simple custom style.
-
+The style can be freely defined through the **drawFun**, which specifies how to draw the list of cells within the view on the map canvas. See [this example](https://eurostat.github.io/gridviz/examples/basics/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/custom_style.html)) to define a simple custom style.
 
 ## Background layer
 
-### Tiled layer
-
-- See [this example](https://eurostat.github.io/gridviz/examples/basics/background.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background.html)).
-- See [this example](https://eurostat.github.io/gridviz/examples/basics/background_gisco.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_gisco.html)).
-
-### WMS
-
-See [this example](https://eurostat.github.io/gridviz/examples/basics/background_WMS.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_WMS.html)).
+Background image layers may be defined:
+- as a tiled layer: See [this example](https://eurostat.github.io/gridviz/examples/basics/background.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background.html)) or [this other example](https://eurostat.github.io/gridviz/examples/basics/background_gisco.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_gisco.html)).
+- or from a [OGC WMS - Web Map Service](https://www.ogc.org/standard/wms/): See [this example](https://eurostat.github.io/gridviz/examples/basics/background_WMS.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_WMS.html)).
 
 ## Foreground information
 
-### Showing labels
-
-- See [this example](https://eurostat.github.io/gridviz/examples/basics/labels.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/labels.html)).
-- See [this example](https://eurostat.github.io/gridviz/examples/basics/labels_.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/labels_.html)).
-
-### Showing boundaries
-
-See [this example](https://eurostat.github.io/gridviz/examples/basics/boundaries.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/boundaries.html)).
+Foreground layers may be defined such as:
+- label layers: See [this example](https://eurostat.github.io/gridviz/examples/basics/labels.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/labels.html)) or [this other example](https://eurostat.github.io/gridviz/examples/basics/labels_.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/labels_.html)).
+- boundaries layers: See [this example](https://eurostat.github.io/gridviz/examples/basics/boundaries.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/boundaries.html)).
 
 ## Transparency
 
