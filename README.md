@@ -33,7 +33,7 @@
 
 -   [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/demos/EUR.html)
 -   [Germany - 100m resolution - Zensus 2011](https://eurostat.github.io/gridviz/examples/demos/DE.html)
--   [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/demos/FR.html). Focus on [total population](https://eurostat.github.io/gridviz/examples/FR_pop.html) and [income](https://eurostat.github.io/gridviz/examples/demos/FR_income.html).
+-   [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/demos/FR.html). Focus on [total population](https://eurostat.github.io/gridviz/examples/demos/FR_pop.html) and [income](https://eurostat.github.io/gridviz/examples/demos/FR_income.html).
 -   [Norway - 250m resolution - SSB](https://eurostat.github.io/gridviz/examples/demos/NO.html)
 -   [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/demos/HR.html)
 -   [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
