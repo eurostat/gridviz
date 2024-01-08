@@ -317,11 +317,15 @@ Foreground layers may be defined such as:
 
 ## Transparency
 
-To handle layer and style transparency, blending modes and alpha values may be defined. See [this example](https://eurostat.github.io/gridviz/examples/basics/blending_alpha.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/blending_alpha.html)).
+To handle layer and style transparency, blending modes and alpha values may be defined.
+
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/blending_alpha.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/blending_alpha.html)).
 
 ## Tooltip
 
-A tooltip may be customised for the grid cells passed over the mouse pointer. By default, the list of properties is shown. See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)) to define the tooltip text.
+A tooltip may be customised for the grid cells passed over the mouse pointer. By default, the list of properties is shown.
+
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)) to define the tooltip text.
 
 ## Buttons
 
