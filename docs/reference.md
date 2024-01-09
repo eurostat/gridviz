@@ -326,7 +326,7 @@ Foreground layers may be defined such as:
 
 ## Transparency
 
-To handle layer and style transparency, blending modes and alpha values may be defined.
+To handle layer and style transparency, blending modes and alpha values may be defined at layer or style level. These values may be set according to the zoom level.
 
 - See [this example](https://eurostat.github.io/gridviz/examples/basics/blending_alpha.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/blending_alpha.html)).
 
