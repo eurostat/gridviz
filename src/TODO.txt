@@ -1,11 +1,14 @@
+hillshading style
+losange side style
+contour style
+lego style
+tanaka style
+
+
 census 2021 example
 
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
-hillshading style
-contour style
-lego style
-tanaka style
 reorganise map - simplify constructor
 population.csv files: make 2021 ones
 legends: add scale.invert everywhere ?
