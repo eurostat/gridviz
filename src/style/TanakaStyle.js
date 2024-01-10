@@ -2,7 +2,7 @@
 'use strict'
 
 import { SideStyle } from './SideStyle.js'
-import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
+import { SquareColorWebGLStyle } from './SquareColorWebGLStyle.js'
 import { classifier as clFun, colorClassifier as cclFun } from '../utils/scale.js'
 
 /**
@@ -37,7 +37,7 @@ export class TanakaStyle {
         const classifier = clFun(breaks)
         const colorClassifier = cclFun(breaks, colors)
 
-        const cellStyle = new SquareColorCategoryWebGLStyle({ color: (cell) => colorClassifier(value(cell)) })
+        const cellStyle = new SquareColorWebGLStyle({ color: (cell) => colorClassifier(value(cell)) })
 
         const getSideValue = (side) => {
             const cl1 = side.c1 ? classifier(value(side.c1)) : 0

@@ -20,8 +20,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
         opts = opts || {}
 
         /**
-         * The name of the column/attribute of the tabular data where to retrieve the category code of the cell, for coloring.
-         * @type {string} */
+         * A function returning the category code of the cell, for coloring.
+         * @type {function(import('../core/Dataset.js').Cell):string} */
         this.code = opts.code
 
         /**
@@ -72,7 +72,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const iBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-            const cat = c[this.code]
+            const cat = this.code(c)
             if (cat == undefined) {
                 console.log('Unexpected category: ' + cat)
                 continue

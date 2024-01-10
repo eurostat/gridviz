@@ -14,7 +14,7 @@
     })
 
     //define color style
-    const style = new gridviz.SquareColorCategoryWebGLStyle({ code: "clc", color: { 41: '#1ca3ec' } })
+    const style = new gridviz.SquareColorCategoryWebGLStyle({ code: cell => cell.clc, color: { 41: '#1ca3ec' } })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]

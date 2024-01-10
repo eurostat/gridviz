@@ -13,7 +13,7 @@
     //define color style
     const style = new gridviz.SquareColorCategoryWebGLStyle(
         {
-            code: "clc",
+            code: cell => cell.clc,
             color: { 41: '#1ca3ec' },
             filter: (cell) => cell.clc == "41"
         }
