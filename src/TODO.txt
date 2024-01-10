@@ -1,9 +1,3 @@
-lego style
-publish
-hillshading style - on observable
-
-list observable HQ examples in doc ?
-
 census 2021 example
 
 contour style
