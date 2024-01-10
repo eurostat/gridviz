@@ -282,7 +282,7 @@ This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/ind
 
 This style shows the grid cells as lego bricks with changeable colors and height based on a quantitative variable.
 
-TODO: upgrade and document.
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego.html)).
 
 ### Lego category style
 
