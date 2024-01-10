@@ -1,8 +1,7 @@
-losange side style
 tanaka style
 contour style
 lego style
-hillshading style
+hillshading style - on observable
 
 list observable HQ examples in doc ?
 
