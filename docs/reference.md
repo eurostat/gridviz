@@ -14,7 +14,6 @@
     - [Segment style](#segment-style)
     - [Stroke style](#stroke-style)
   - [Advanced styles](#advanced-styles)
-    - [Tanaka style](#tanaka-style)
     - [Dot density style](#dot-density-style)
     - [Pillars style](#pillars-style)
     - [Text style](#text-style)
@@ -28,6 +27,7 @@
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
     - [Ninja star style](#ninja-star-style)
+    - [Tanaka style](#tanaka-style)
     - [Lego style](#lego-style)
     - [Lego category style](#lego-category-style)
   - [Kernel smoothing](#kernel-smoothing)
@@ -160,14 +160,6 @@ This style shows the stroke of each cell with different colors, widths, shapes a
 
 ## Advanced styles
 
-### Tanaka style
-
-[![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
-
-This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
-
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/tanaka.html)).
-
 ### Dot density style
 
 [![dot density style](img/styles/dotdensity.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html)
@@ -275,6 +267,14 @@ This style shows the cell as a star polygon whose compacity depends on a variabl
 
 - See [this basic example](https://eurostat.github.io/gridviz/examples/styles/ninja_star.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ninja_star.html)).
 - See [this other example](https://eurostat.github.io/gridviz/examples/styles/ninja_star_p.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ninja_star_p.html)) with stars parallel to the x/y axes.
+
+### Tanaka style
+
+[![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
+
+This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
+
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/tanaka.html)).
 
 ### Lego style
 
