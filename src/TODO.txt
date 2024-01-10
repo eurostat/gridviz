@@ -1,12 +1,12 @@
 tanaka style
-contour style
-lego style
 hillshading style - on observable
+lego style
 
 list observable HQ examples in doc ?
 
 census 2021 example
 
+contour style
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
 reorganise map - simplify constructor

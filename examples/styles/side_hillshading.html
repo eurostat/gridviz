@@ -14,12 +14,11 @@
     )
 
     //define style
+    const sideValue = side => (+side.c2?.elevation || 0) - (+side.c1?.elevation || 0)
     const scale = gridviz.exponentialScale(-8)
     const style = new gridviz.SideStyle({
         color: (side, resolution) => {
-            const z1 = side.c1?.elevation || 0
-            const z2 = side.c2?.elevation || 0
-            const dz = +z2 - +z1
+            const dz = sideValue(side)
             const slopeAngle = Math.atan2(dz, resolution)
             let coeff = slopeAngle * 2 / Math.PI
             coeff = scale(Math.abs(coeff))
