@@ -290,7 +290,7 @@ TODO: upgrade and document.
 
 This style shows the grid cells as lego bricks with changeable colors based on a categorical variable.
 
-TODO: upgrade and document.
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/lego_cat.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_cat.html)).
 
 ## Kernel smoothing
 
