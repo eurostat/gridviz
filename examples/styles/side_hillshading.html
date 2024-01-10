@@ -1,10 +1,6 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
 
     //define map with initial view
@@ -33,17 +29,7 @@
         },
         width: (side, r, s, z) => {
             return r
-            //return r * 0.4
-            /*const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-            return (
-                r *
-                (0.01 +
-                    (side.or === 'v' ? 0.6 : 1) *
-                    0.333 *
-                    gridviz.sPow(Math.abs(side.value) / max, 0.3))
-            )*/
-        },
-        //diamond: true
+        }
     })
 
     //add layer to map
