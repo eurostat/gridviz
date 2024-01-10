@@ -1,4 +1,3 @@
-tanaka style
 hillshading style - on observable
 lego style
 
