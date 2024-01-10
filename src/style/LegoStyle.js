@@ -11,18 +11,14 @@ import { Style } from '../core/Style.js'
  * @author Julien Gaffuri
  */
 export class LegoStyle {
-    /**
-     * @param {string} col
-     * @param {object} opts
-     * @returns {Array.<Style>}
-     */
-    static get(col, opts) {
+
+    static get(value, breaks, colors, opts = {}) {
         opts = opts || {}
 
         //the colors
         //http://www.jennyscrayoncollection.com/2021/06/all-current-lego-colors.html
         //https://leonawicz.github.io/legocolors/reference/figures/README-plot-1.png
-        opts.colors = opts.colors || [
+        /*opts.colors = opts.colors || [
             '#00852b', //darker green
             '#afd246', //light green
             '#fac80a', //dark yellow
@@ -33,18 +29,18 @@ export class LegoStyle {
             '#720012', //dark red
             //"purple",
             //"#eee" //whithe
-        ]
+        ]*/
 
         opts.colDark = opts.colDark || '#333'
         opts.colBright = opts.colBright || '#aaa'
         opts.widthFactor = opts.widthFactor || 0.12
 
         //reuse tanaka as basis
-        const ts = TanakaStyle.get(col, opts)
+        const ts = TanakaStyle.get(value, breaks, colors, opts)
         //style to show limits between pieces
         const sst = new StrokeStyle({
             strokeColor: () => '#666',
-            strokeWidth: (v, r, s, z) => 0.2 * z,
+            strokeWidth: (c, r, z) => 0.2 * z,
             filter: opts.filter,
         })
 
