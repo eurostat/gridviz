@@ -58,7 +58,7 @@ export class LegoStyle {
      * @param {object} opts
      * @returns {Array.<Style>}
      */
-    static getCat(code, color, opts) {
+    static getCategory(code, color, opts) {
         opts = opts || {}
 
         opts.colDark = opts.colDark || '#333'

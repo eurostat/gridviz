@@ -286,11 +286,11 @@ This style shows the grid cells as lego bricks with changeable colors and height
 
 ### Lego category style
 
-[![lego style](img/styles/lego_cat.png)](https://eurostat.github.io/gridviz/examples/styles/lego_cat.html)
+[![lego style](img/styles/lego_category.png)](https://eurostat.github.io/gridviz/examples/styles/lego_category.html)
 
 This style shows the grid cells as lego bricks with changeable colors based on a categorical variable.
 
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/lego_cat.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_cat.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/lego_category.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_category.html)).
 
 ## Kernel smoothing
 
