@@ -57,20 +57,21 @@ export class LegoStyle {
     }
 
     /**
-     * @param {function(string):string} col
+     * @param {function(import('../core/Dataset.js').Cell):string} code
+     * @param {object} color
      * @param {object} opts
      * @returns {Array.<Style>}
      */
-    static getCat(col, opts) {
+    static getCat(code, color, opts) {
         opts = opts || {}
 
         opts.colDark = opts.colDark || '#333'
         opts.colBright = opts.colBright || '#aaa'
 
         //
-        const s = new SquareColorCategoryWebGLStyle({ colorCol: col, color: opts.color })
+        const s = new SquareColorCategoryWebGLStyle({ code: code, color: color })
         //style to show limits between pieces
-        const sst = new StrokeStyle({ strokeColor: () => '#666', strokeWidth: (v, r, s, z) => 0.2 * z })
+        const sst = new StrokeStyle({ strokeColor: () => '#666', strokeWidth: (c, r, z) => 0.2 * z })
 
         return [s, sst, new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
     }
@@ -88,26 +89,26 @@ class LegoTopStyle extends Style {
         this.colBright = opts.colBright || '#aaa'
     }
 
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, r) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        cg.ctx.lineWidth = 0.6 * cg.view.z
+        geoCanvas.ctx.lineWidth = 0.6 * geoCanvas.view.z
 
         //dark part
-        cg.ctx.strokeStyle = this.colDark
+        geoCanvas.ctx.strokeStyle = this.colDark
         for (let c of cells) {
-            cg.ctx.beginPath()
-            cg.ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), true)
-            cg.ctx.stroke()
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), true)
+            geoCanvas.ctx.stroke()
         }
 
         //bright part
-        cg.ctx.strokeStyle = this.colBright
+        geoCanvas.ctx.strokeStyle = this.colBright
         for (let c of cells) {
-            cg.ctx.beginPath()
-            cg.ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), false)
-            cg.ctx.stroke()
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), false)
+            geoCanvas.ctx.stroke()
         }
     }
 }
