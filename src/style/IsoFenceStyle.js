@@ -78,57 +78,7 @@ export class IsoFenceStyle extends Style {
 
         //make sides
         /**  @type {Array.<Side>} */
-        const sides = SideStyle.buildSides(cells, resolution, this.angle % 180 != 90 && this.sVert, this.angle % 180 != 0 && this.sHor, true)
-
-
-
-        /*const sides = []
-
-        //make horizontal sides - except when angle%180=0
-        //sort cells by x and y
-        if (this.angle % 180 != 90 && this.sVert) {
-            cells.sort((c1, c2) => (c2.x == c1.x ? c1.y - c2.y : c1.x - c2.x))
-            let c1 = cells[0]
-            for (let i = 1; i < cells.length; i++) {
-                let c2 = cells[i]
-
-                if ((c1.y + resolution == c2.y) && (c1.x == c2.x))
-                    //cells in same column and touch along horizontal side
-                    //make shared side
-                    sides.push({ x: c1.x + r2, y: c2.y, or: 'h', c1: c1, c2: c2 })
-                else {
-                    //cells do not touch along horizontal side
-                    //make two sides: top one for c1, bottom for c2
-                    sides.push({ x: c1.x + r2, y: c1.y + resolution, or: 'h', c1: c1, c2: undefined })
-                    sides.push({ x: c2.x + r2, y: c2.y, or: 'h', c1: undefined, c2: c2 })
-                }
-
-                c1 = c2
-            }
-        }
-
-        //make vertical sides - except when angle%180=90
-        //sort cells by y and x
-        if (this.angle % 180 != 0 && this.sHor) {
-            cells.sort((c1, c2) => (c2.y == c1.y ? c1.x - c2.x : c1.y - c2.y))
-            let c1 = cells[0]
-            for (let i = 1; i < cells.length; i++) {
-                let c2 = cells[i]
-
-                if ((c1.x + resolution == c2.x) && (c1.y == c2.y))
-                    //cells in same row and touch along vertical side
-                    //make shared side
-                    sides.push({ x: c2.x, y: c1.y + r2, or: 'v', c1: c1, c2: c2 })
-                else {
-                    //cells do not touch along vertical side
-                    //make two sides: right one for c1, left for c2
-                    sides.push({ x: c1.x + resolution, y: c1.y + r2, or: 'v', c1: c1, c2: undefined })
-                    sides.push({ x: c2.x, y: c2.y + r2, or: 'v', c1: undefined, c2: c2 })
-                }
-
-                c1 = c2
-            }
-        }*/
+        const sides = SideStyle.buildSides(cells, resolution, this.angle % 180 != 90 && this.sVert, this.angle % 180 != 0 && this.sHor)
 
         //
         if (sides.length == 0) return
@@ -164,15 +114,16 @@ export class IsoFenceStyle extends Style {
 
         //draw sides
         geoCanvas.ctx.lineCap = "round";
-        for (let s of sides) {
+        for (let side of sides) {
+            const c1 = side.c1, c2 = side.c2, x = side.x, y = side.y
 
             //heights - in geo
-            const hG1 = s.c1 ? this.height(s.c1, resolution, z, viewScale) : 0,
-                hG2 = s.c2 ? this.height(s.c2, resolution, z, viewScale) : 0
+            const hG1 = c1 ? this.height(c1, resolution, z, viewScale) : 0,
+                hG2 = c2 ? this.height(c2, resolution, z, viewScale) : 0
 
             //compute totals for both cells
-            const total1 = computeTotal(s.c1, cats),
-                total2 = computeTotal(s.c2, cats)
+            const total1 = computeTotal(c1, cats),
+                total2 = computeTotal(c2, cats)
             if (total1 == 0 && total2 == 0) continue
 
             let cumul1 = 0, cumul2 = 0
@@ -180,8 +131,8 @@ export class IsoFenceStyle extends Style {
                 //draw stripe of side s and category column
 
                 //get values for both cells
-                let v1 = s.c1 ? +s.c1[column] : 0
-                let v2 = s.c2 ? +s.c2[column] : 0
+                let v1 = c1 ? +c1[column] : 0
+                let v2 = c2 ? +c2[column] : 0
                 if (v1 == 0 && v2 == 0) continue
 
                 //compute heights
@@ -192,26 +143,26 @@ export class IsoFenceStyle extends Style {
 
                 //make path
                 geoCanvas.ctx.beginPath()
-                if (s.or == "h") {
+                if (side.or == "h") {
                     //horizontal side - vertical section
                     //bottom left
-                    geoCanvas.ctx.moveTo(s.x + h1 * cos + dx, s.y - r2 + h1 * sin + dy)
+                    geoCanvas.ctx.moveTo(x + h1 * cos + dx, y - r2 + h1 * sin + dy)
                     //top left
-                    geoCanvas.ctx.lineTo(s.x + h2 * cos + dx, s.y + r2 + h2 * sin + dy)
+                    geoCanvas.ctx.lineTo(x + h2 * cos + dx, y + r2 + h2 * sin + dy)
                     //top right
-                    geoCanvas.ctx.lineTo(s.x + h2n * cos + dx, s.y + r2 + h2n * sin + dy)
+                    geoCanvas.ctx.lineTo(x + h2n * cos + dx, y + r2 + h2n * sin + dy)
                     //bottom right
-                    geoCanvas.ctx.lineTo(s.x + h1n * cos + dx, s.y - r2 + h1n * sin + dy)
+                    geoCanvas.ctx.lineTo(x + h1n * cos + dx, y - r2 + h1n * sin + dy)
                 } else {
                     //vertical side - horizontal section
                     //bottom left
-                    geoCanvas.ctx.moveTo(s.x - r2 + h1 * cos + dx, s.y + h1 * sin + dy)
+                    geoCanvas.ctx.moveTo(x - r2 + h1 * cos + dx, y + h1 * sin + dy)
                     //bottom right
-                    geoCanvas.ctx.lineTo(s.x + r2 + h2 * cos + dx, s.y + h2 * sin + dy)
+                    geoCanvas.ctx.lineTo(x + r2 + h2 * cos + dx, y + h2 * sin + dy)
                     //top right
-                    geoCanvas.ctx.lineTo(s.x + r2 + h2n * cos + dx, s.y + h2n * sin + dy)
+                    geoCanvas.ctx.lineTo(x + r2 + h2n * cos + dx, y + h2n * sin + dy)
                     //top left
-                    geoCanvas.ctx.lineTo(s.x - r2 + h1n * cos + dx, s.y + h1n * sin + dy)
+                    geoCanvas.ctx.lineTo(x - r2 + h1n * cos + dx, y + h1n * sin + dy)
                 }
                 //cg.ctx.closePath()
 
@@ -224,11 +175,11 @@ export class IsoFenceStyle extends Style {
 
                 //TODO draw only one line
                 //draw corner line
-                //if (s.or == "h") {
-                drawCornerLine(s.c1)
-                drawCornerLine(s.c2)
-                //if (this.angle > 0 && s.or == "h") drawCornerLine(s.c2)
-                //else drawCornerLine(s.c2)
+                //if (side.or == "h") {
+                drawCornerLine(c1)
+                drawCornerLine(c2)
+                //if (this.angle > 0 && side.or == "h") drawCornerLine(c2)
+                //else drawCornerLine(c2)
                 //}
             }
         }
