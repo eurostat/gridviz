@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title></title>
-</head>
-
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="map" style="height: 100%; width: 100%"></div>
+    <div id="map" style="height: 600px; width: 1000px"></div>
 
     <div style="
         position: absolute;
@@ -87,7 +79,7 @@
         */
 
         //define map with initial view
-        const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700, zoomExtent:[10, 10000] })
+        const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700, zoomExtent: [10, 10000] })
             .addZoomButtons()
             .setViewFromURL()
 
@@ -277,7 +269,7 @@
                         },
                         type: () => 'flag',
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 8 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 8, maxSizeFactor:0.9 }),
                         //viewScale: gridviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                         stripesOrientation: () => 90,
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -464,5 +456,3 @@
 
 
 </body>
-
-</html>
