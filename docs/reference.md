@@ -167,7 +167,7 @@ This style shows the stroke of each cell with different colors, widths, shapes a
 
 This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
 
-TODO: upgrade and add doc.
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/tanaka.html)).
 
 ### Dot density style
 
