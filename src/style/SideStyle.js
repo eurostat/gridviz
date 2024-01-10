@@ -28,6 +28,9 @@ export class SideStyle extends Style {
         /** A function returning the length of a cell side, in geo unit
          * @type {function(Side, number, number, object):number} */
         this.length = opts.length || ((side, resolution, z, sideViewScale) => resolution)
+
+        /** Set to A or True so that the side is drawn as a diamond */
+        this.diamond = opts.diamond
     }
 
     /**
@@ -63,31 +66,40 @@ export class SideStyle extends Style {
             const col = this.color ? this.color(side, resolution, z, viewScale) : undefined
             if (!col || col == 'none') continue
 
-            //width
-            /** @type {number|undefined} */
-            const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
-            if (!wG || wG <= 0) continue
-
-            //length
-            /** @type {number|undefined} */
-            const lG = this.length ? this.length(side, resolution, z, viewScale) : undefined
-            if (!lG || lG <= 0) continue
-            const lG2 = lG * 0.5
-
-            //set color and width
+            //set color
             geoCanvas.ctx.strokeStyle = col
-            geoCanvas.ctx.lineWidth = wG
 
-            //draw segment with correct orientation
-            geoCanvas.ctx.beginPath()
-            if (side.or === "v") {
-                geoCanvas.ctx.moveTo(side.x, side.y + r2 - lG2)
-                geoCanvas.ctx.lineTo(side.x, side.y + r2 + lG2)
+            if (this.diamond) {
+
+                //TODO
+
             } else {
-                geoCanvas.ctx.moveTo(side.x + r2 - lG2, side.y)
-                geoCanvas.ctx.lineTo(side.x + r2 + lG2, side.y)
+
+                //width
+                /** @type {number|undefined} */
+                const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
+                if (!wG || wG <= 0) continue
+
+                //set width
+                geoCanvas.ctx.lineWidth = wG
+
+                //length
+                /** @type {number|undefined} */
+                const lG = this.length ? this.length(side, resolution, z, viewScale) : undefined
+                if (!lG || lG <= 0) continue
+                const lG2 = lG * 0.5
+
+                //draw segment with correct orientation
+                geoCanvas.ctx.beginPath()
+                if (side.or === "v") {
+                    geoCanvas.ctx.moveTo(side.x, side.y + r2 - lG2)
+                    geoCanvas.ctx.lineTo(side.x, side.y + r2 + lG2)
+                } else {
+                    geoCanvas.ctx.moveTo(side.x + r2 - lG2, side.y)
+                    geoCanvas.ctx.lineTo(side.x + r2 + lG2, side.y)
+                }
+                geoCanvas.ctx.stroke()
             }
-            geoCanvas.ctx.stroke()
         }
 
         //update legends
