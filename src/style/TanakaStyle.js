@@ -58,6 +58,6 @@ export class TanakaStyle {
             width: (side, resolution, z) => opts.width(Math.abs(getSideValue(side)), resolution, z)
         })
 
-        return [cellStyle, sideStyle]
+        return [cellStyle/*, sideStyle*/]
     }
 }
