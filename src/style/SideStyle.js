@@ -29,7 +29,7 @@ export class SideStyle extends Style {
          * @type {function(Side, number, number, object):number} */
         this.length = opts.length || ((side, resolution, z, sideViewScale) => resolution)
 
-        /** Set to A or True so that the side is drawn as a diamond */
+        /** Set to A or true so that the side is drawn as a diamond */
         this.diamond = opts.diamond
     }
 
@@ -66,12 +66,20 @@ export class SideStyle extends Style {
             const col = this.color ? this.color(side, resolution, z, viewScale) : undefined
             if (!col || col == 'none') continue
 
-            //set color
-            geoCanvas.ctx.strokeStyle = col
-
             if (this.diamond) {
 
-                //TODO
+                //set color
+                geoCanvas.ctx.fillStyle = col
+
+                //draw diamond
+                const x = side.x, y = side.y
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(x - r2, y)
+                geoCanvas.ctx.lineTo(x, y + r2)
+                geoCanvas.ctx.lineTo(x + r2, y)
+                geoCanvas.ctx.lineTo(x, y - r2)
+                geoCanvas.ctx.closePath()
+                geoCanvas.ctx.fill()
 
             } else {
 
@@ -80,23 +88,26 @@ export class SideStyle extends Style {
                 const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
                 if (!wG || wG <= 0) continue
 
-                //set width
-                geoCanvas.ctx.lineWidth = wG
-
                 //length
                 /** @type {number|undefined} */
                 const lG = this.length ? this.length(side, resolution, z, viewScale) : undefined
                 if (!lG || lG <= 0) continue
                 const lG2 = lG * 0.5
 
+                //set width
+                geoCanvas.ctx.lineWidth = wG
+                //set color
+                geoCanvas.ctx.strokeStyle = col
+
                 //draw segment with correct orientation
+                const x = side.x, y = side.y
                 geoCanvas.ctx.beginPath()
                 if (side.or === "v") {
-                    geoCanvas.ctx.moveTo(side.x, side.y + r2 - lG2)
-                    geoCanvas.ctx.lineTo(side.x, side.y + r2 + lG2)
+                    geoCanvas.ctx.moveTo(x, y + r2 - lG2)
+                    geoCanvas.ctx.lineTo(x, y + r2 + lG2)
                 } else {
-                    geoCanvas.ctx.moveTo(side.x + r2 - lG2, side.y)
-                    geoCanvas.ctx.lineTo(side.x + r2 + lG2, side.y)
+                    geoCanvas.ctx.moveTo(x + r2 - lG2, y)
+                    geoCanvas.ctx.lineTo(x + r2 + lG2, y)
                 }
                 geoCanvas.ctx.stroke()
             }
@@ -110,14 +121,14 @@ export class SideStyle extends Style {
 
     /**
      * 
-     * @param {Array.<import('../core/Dataset').Cell>} cells The cells to use to build the sides. The side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides.
+     * @param {Array.<import('../core/Dataset').Cell>} cells The cells to use to build the sides.
      * @param {number} resolution The cells resolution
      * @param {boolean} withHorizontal Set to true to build horizontal sides, false otherwise.
      * @param {boolean} withVertical Set to true to build vertical sides, false otherwise.
-     * @param {boolean} center Set to true so that the side coordinate are those of its center point rather than its left/bottom point.
+     * @param {boolean} center Set to true so that the side coordinate are those of its center point rather than its left/bottom point (the side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides)
      * @returns { Array.<Side> }
      */
-    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = false) {
+    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = true) {
         /** @type { Array.<Side> } */
         const sides = []
 

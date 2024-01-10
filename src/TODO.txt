@@ -1,9 +1,10 @@
-hillshading style
 losange side style
+tanaka style
 contour style
 lego style
-tanaka style
+hillshading style
 
+list observable HQ examples in doc ?
 
 census 2021 example
 
