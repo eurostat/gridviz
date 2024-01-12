@@ -15,7 +15,7 @@
         box-shadow: 5px 5px 5px grey;
     ">
         <div id="layer">
-            <span style="font-size: 1.2em">
+            <span style="font-size: 1em">
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label>
                 <br />
@@ -34,6 +34,14 @@
                 <input type="radio" name="layer" id="pob" value="pob" />
                 <label for="pob">Birth place</label>
                 <br />
+                <hr />
+                <input type="radio" name="layer" id="share" value="share" />
+                <label for="share">Share of</label>
+                <select id="share_">
+                    <option value="F">Female</option>
+                    <option value="M">Male</option>
+                    <option value="EMP" selected>Employed</option>
+                </select>
             </span>
         </div>
         <span style="font-size: 1.2em">
@@ -103,6 +111,13 @@
         //make label layer
         const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer())
 
+        //function to compute the percentage of a cell value
+        const computePercentage = (c, col) => {
+            c["s" + col] = c[col] / c.T * 100
+            if (c["s" + col] < 0 || c["s" + col] > 100) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], c.T)
+            c["s" + col] = c["s" + col] > 100 ? 100 : c["s" + col] < 0 ? 0 : c["s" + col]
+        }
+
         //define multi resolution dataset
         const dataset = new gridviz.MultiResolutionDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
@@ -117,10 +132,10 @@
                     c.indMF = (100 * c.indMF) / (+c.M + +c.F)
                     if (isNaN(c.indMF)) c.indMF = 0
 
-                    //employment
-                    c.remp = c.EMP / c.T * 100
-                    if (c.remp < 0 || c.remp > 100) console.log("Unexpected employment rate: " + c.remp, c.EMP, c.T)
-                    c.remp = c.remp > 100 ? 100 : c.remp < 0 ? 0 : c.remp
+                    //compute percentages
+                    computePercentage(c, "F")
+                    computePercentage(c, "M")
+                    computePercentage(c, "EMP")
                 }
             }
         )
@@ -217,11 +232,11 @@
 
                 const breaks = [30, 40, 45, 50, 55, 60, 70]
                 const empColorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
-                //d3.interpolateYlOrRd(Math.floor(20*c.remp / 100)/20)
+                //d3.interpolateYlOrRd(Math.floor(20*c.sEMP / 100)/20)
 
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
-                    color: (c, r, z, viewScale) => empColorClassifier(c.remp),
+                    color: (c, r, z, viewScale) => empColorClassifier(c.sEMP),
                     size: (c, r, z, viewScale) => viewScale(c.T),
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
                     shape: () => 'circle',
@@ -252,7 +267,7 @@
                 )
 
                 gridLayer.cellInfoHTML = (c) =>
-                    '<b>' + d3.format('.1f')(c.remp) + ' %</b> employment<br>' +
+                    '<b>' + d3.format('.1f')(c.sEMP) + ' %</b> employment<br>' +
                     //c.EMP + '<br>' +
                     (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
@@ -269,7 +284,7 @@
                         },
                         type: () => 'flag',
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 8, maxSizeFactor:0.9 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 8, maxSizeFactor: 0.9 }),
                         //viewScale: gridviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                         stripesOrientation: () => 90,
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -392,6 +407,54 @@
                     c.NAT + " born in the country<br>" +
                     c.EU_OTH + " born in another EU member state<br>" +
                     c.OTH + " born outside the EU"
+
+            } else if (layCode === 'share') {
+
+                const shareA = document.querySelector('#share_').value
+                const shareB = "s" + shareA
+
+                console.log(shareA, shareB)
+
+                const breaks = [30, 40, 45, 50, 55, 60, 70]
+                const empColorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
+                const classNumberSize = 4
+                const style = new gridviz.ShapeColorSizeStyle({
+                    color: (c, r, z, viewScale) => empColorClassifier(c.sEMP),
+                    //size: (c, r, z, viewScale) => viewScale(c.T),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+                    shape: () => 'circle',
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+                gridLayer.styles = [style]
+
+                gridLayer.minPixelsPerCell = 5
+
+
+
+                /*/employment color legend
+                style.legends.push(new gridviz.ColorDiscreteLegend({
+                    title: "Employment, in %",
+                    width: 250,
+                    colors: () => empColorClassifier.colors,
+                    breaks: () => empColorClassifier.breaks,
+                }))
+
+                //population size legend
+                style.addLegends(
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        classNumberSize, {
+                        title: "Population",
+                        fillColor: "lightgray",
+                        labelFormat: Math.round,
+                    })
+                )*/
+
+                /*gridLayer.cellInfoHTML = (c) =>
+                    '<b>' + d3.format('.1f')(c.sEMP) + ' %</b> employment<br>' +
+                    //c.EMP + '<br>' +
+                    (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')*/
+
+
 
             } else console.error('Unexpected layer code: ' + layCode)
 
