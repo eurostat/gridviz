@@ -38,10 +38,22 @@
                 <input type="radio" name="layer" id="share" value="share" />
                 <label for="share">Share of</label>
                 <select id="share_">
-                    <option value="F">Female</option>
-                    <option value="M">Male</option>
+                    <option value="F">Women</option>
+                    <option value="M">Men</option>
+                    <option value="Y_LT15">Age under 15 years</option>
+                    <option value="Y15-64">Age 15 to 64 years</option>
+                    <option value="Y_GE65">Age 65 years and older</option>
                     <option value="EMP" selected>Employed</option>
+                    <option value="NAT">Born in the country</option>
+                    <option value="EU_OTH">Born in another EU member state</option>
+                    <option value="OTH">Born outside the EU</option>
+                    <option value="SAME">Residence unchanged (2020/2021)</option>
+                    <option value="CHG_IN">Moved within the country (2020/2021)</option>
+                    <option value="CHG_OUT">Moved from outside the country (2020/2021)</option>
                 </select>
+                <br />
+                <input type="checkbox" id="sbtp" checked />
+                <label for="sbtp">Size by total population</label><br />
             </span>
         </div>
         <span style="font-size: 1.2em">
@@ -82,8 +94,8 @@
         "OTH" >= Born outside the EU
 
         "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
-        "CHG_IN" >= Moved within the Netherlands (as of January 1, 2021, compared to January 1, 2020)
-        "CHG_OUT" >= Moved from outside the Netherlands (as of January 1, 2021, compared to January 1, 2020)
+        "CHG_IN" >= Moved within the country (as of January 1, 2021, compared to January 1, 2020)
+        "CHG_OUT" >= Moved from outside the country (as of January 1, 2021, compared to January 1, 2020)
         */
 
         //define map with initial view
@@ -135,7 +147,17 @@
                     //compute percentages
                     computePercentage(c, "F")
                     computePercentage(c, "M")
+                    computePercentage(c, "Y_LT15")
+                    computePercentage(c, "Y15-64")
+                    computePercentage(c, "Y_GE65")
                     computePercentage(c, "EMP")
+                    computePercentage(c, "NAT")
+                    computePercentage(c, "EU_OTH")
+                    computePercentage(c, "OTH")
+                    computePercentage(c, "SAME")
+                    computePercentage(c, "CHG_IN")
+                    computePercentage(c, "CHG_OUT")
+
                 }
             }
         )
@@ -412,22 +434,21 @@
 
                 const shareA = document.querySelector('#share_').value
                 const shareB = "s" + shareA
-
-                console.log(shareA, shareB)
+                const sbtp = document.getElementById('sbtp').checked
 
                 const breaks = [30, 40, 45, 50, 55, 60, 70]
-                const empColorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
+                const colorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
-                    color: (c, r, z, viewScale) => empColorClassifier(c.sEMP),
-                    //size: (c, r, z, viewScale) => viewScale(c.T),
+                    color: (c, r, z, viewScale) => colorClassifier(c[shareB]),
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
-                    shape: () => 'circle',
+                    size: sbtp? (c, r, z, viewScale) => viewScale(c.T) : (c,r)=>r,
+                    shape: sbtp? () => 'circle' : () => 'square',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = 5
+                gridLayer.minPixelsPerCell = sbtp? 5 : 1.5
 
 
 
@@ -449,10 +470,10 @@
                     })
                 )*/
 
-                /*gridLayer.cellInfoHTML = (c) =>
-                    '<b>' + d3.format('.1f')(c.sEMP) + ' %</b> employment<br>' +
+                gridLayer.cellInfoHTML = (c) =>
+                    '<b>' + d3.format('.1f')(c[shareB]) + ' %</b><br>' +
                     //c.EMP + '<br>' +
-                    (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')*/
+                    (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
 
