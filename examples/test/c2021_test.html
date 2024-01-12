@@ -432,23 +432,33 @@
 
             } else if (layCode === 'share') {
 
+                //get gui info
                 const shareA = document.querySelector('#share_').value
                 const shareB = "s" + shareA
                 const sbtp = document.getElementById('sbtp').checked
 
+                //define style
                 const breaks = [30, 40, 45, 50, 55, 60, 70]
                 const colorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => colorClassifier(c[shareB]),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
-                    size: sbtp? (c, r, z, viewScale) => viewScale(c.T) : (c,r)=>r,
-                    shape: sbtp? () => 'circle' : () => 'square',
+                    viewScale: gridviz.viewScaleCombination({
+                        size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 })
+                    }),
+                    size: sbtp ? (c, r, z, viewScale) => viewScale.size(c.T) : (c, r) => r,
+                    shape: sbtp ? () => 'circle' : () => 'square',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
-                gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = sbtp? 5 : 1.5
+                //set styles
+                if (sbtp)
+                    gridLayer.styles = [style]
+                else
+                    gridLayer.styles = [style, new gridviz.StrokeStyle({ visible: (z) => z < 50 })]
+
+                //
+                gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
 
 
 
@@ -458,17 +468,18 @@
                     width: 250,
                     colors: () => empColorClassifier.colors,
                     breaks: () => empColorClassifier.breaks,
-                }))
+                }))*/
 
-                //population size legend
-                style.addLegends(
-                    gridviz.sizeDiscreteViewScaleLegend(
-                        classNumberSize, {
-                        title: "Population",
-                        fillColor: "lightgray",
-                        labelFormat: Math.round,
-                    })
-                )*/
+                /*/population size legend
+                if (sbtp)
+                    style.addLegends(
+                        gridviz.sizeDiscreteViewScaleLegend(
+                            classNumberSize, {
+                            title: "Population",
+                            fillColor: "lightgray",
+                            labelFormat: Math.round,
+                        })
+                    )*/
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + d3.format('.1f')(c[shareB]) + ' %</b><br>' +
