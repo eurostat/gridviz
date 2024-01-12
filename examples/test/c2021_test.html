@@ -1,5 +1,5 @@
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="map" style="height: 600px; width: 1000px"></div>
+    <div id="map" style="height: 600px; width: 100%"></div>
 
     <div style="
         position: absolute;
@@ -124,9 +124,11 @@
         const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer())
 
         //function to compute the percentage of a cell value
-        const computePercentage = (c, col) => {
-            c["s" + col] = c[col] / c.T * 100
-            if (c["s" + col] < 0 || c["s" + col] > 100) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], c.T)
+        const computePercentage = (c, col, totalFunction) => {
+            const total = totalFunction(c)
+            if (total == 0) { c["s" + col] = undefined; return }
+            c["s" + col] = +c[col] / total * 100
+            if (c["s" + col] < 0 || c["s" + col] > 100 || isNaN(total)) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], total)
             c["s" + col] = c["s" + col] > 100 ? 100 : c["s" + col] < 0 ? 0 : c["s" + col]
         }
 
@@ -145,19 +147,18 @@
                     if (isNaN(c.indMF)) c.indMF = 0
 
                     //compute percentages
-                    computePercentage(c, "F")
-                    computePercentage(c, "M")
-                    computePercentage(c, "Y_LT15")
-                    computePercentage(c, "Y15-64")
-                    computePercentage(c, "Y_GE65")
-                    computePercentage(c, "EMP")
-                    computePercentage(c, "NAT")
-                    computePercentage(c, "EU_OTH")
-                    computePercentage(c, "OTH")
-                    computePercentage(c, "SAME")
-                    computePercentage(c, "CHG_IN")
-                    computePercentage(c, "CHG_OUT")
-
+                    computePercentage(c, "F", c => +c.F + +c.M)
+                    computePercentage(c, "M", c => +c.F + +c.M)
+                    computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
+                    computePercentage(c, "Y15-64", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
+                    computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
+                    computePercentage(c, "EMP", c => c.T)
+                    computePercentage(c, "NAT", c => +c.NAT + +c.EU_OTH + +c.OTH)
+                    computePercentage(c, "EU_OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
+                    computePercentage(c, "OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
+                    computePercentage(c, "SAME", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
+                    computePercentage(c, "CHG_IN", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
+                    computePercentage(c, "CHG_OUT", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
                 }
             }
         )
@@ -438,12 +439,40 @@
                 const sbtp = document.getElementById('sbtp').checked
 
                 //define style
-                const breaks = [30, 40, 45, 50, 55, 60, 70]
+
+                //breaks
+                let breaks = undefined
+                switch (shareA) {
+                    case 'F': breaks = [40, 45, 49, 50, 51, 55, 60]; break;
+                    case 'M': breaks = [40, 45, 49, 50, 51, 55, 60]; break;
+                    case 'Y_LT15': breaks = [5, 10, 15, 20, 30]; break;
+                    case 'Y15-64': breaks = [50, 60, 65, 70, 80]; break;
+                    case 'Y_GE65': breaks = [5, 10, 15, 20, 30]; break;
+                    case 'EMP': breaks = [30, 40, 45, 50, 55, 60, 70]; break;
+                    /*
+                            "NAT" >= Born in the country
+                            "EU_OTH" >= Born in another EU member state
+                            "OTH" >= Born outside the EU
+                    
+                            "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
+                            "CHG_IN" >= Moved within the country (as of January 1, 2021, compared to January 1, 2020)
+                            "CHG_OUT" >= Moved from outside the country (as of January 1, 2021, compared to January 1, 2020)
+                    */
+
+                    default:
+                        breaks = [30, 40, 45, 50, 55, 60, 70]
+                }
+
                 const colorClassifier = gridviz.colorClassifier(breaks, d3.schemeYlOrRd[breaks.length + 1])
+                //const classNumberColor = 6
+                //const colors = d3.schemeYlOrRd[classNumberColor]
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
+                    filter: c => c[shareB] != undefined,
                     color: (c, r, z, viewScale) => colorClassifier(c[shareB]),
+                    //color: (c, r, z, viewScale) => viewScale.color(c[shareB]),
                     viewScale: gridviz.viewScaleCombination({
+                        //color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c[shareB], classNumber: classNumberColor, colors: colors }),
                         size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 })
                     }),
                     size: sbtp ? (c, r, z, viewScale) => viewScale.size(c.T) : (c, r) => r,
@@ -460,17 +489,18 @@
                 //
                 gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
 
+                //share color legend
+                style.addLegends([
+                    /*/quantile legend
+                    new gridviz.ColorDiscreteLegend({
+                        title: "Share of " + shareA + ", in %",
+                        width: 250,
+                        colors: () => colors,
+                        breaks: (viewScale) => viewScale.color.breaks.map(b => Math.round(b)),
+                    })*/
+                ])
 
-
-                /*/employment color legend
-                style.legends.push(new gridviz.ColorDiscreteLegend({
-                    title: "Employment, in %",
-                    width: 250,
-                    colors: () => empColorClassifier.colors,
-                    breaks: () => empColorClassifier.breaks,
-                }))*/
-
-                /*/population size legend
+                //population size legend
                 if (sbtp)
                     style.addLegends(
                         gridviz.sizeDiscreteViewScaleLegend(
@@ -478,13 +508,15 @@
                             title: "Population",
                             fillColor: "lightgray",
                             labelFormat: Math.round,
+                            viewScaleFun: vs => vs.size
                         })
-                    )*/
+                    )
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + d3.format('.1f')(c[shareB]) + ' %</b><br>' +
-                    //c.EMP + '<br>' +
-                    (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
+                    c[shareA] + '<br>' //+
+                    + c.T + " person(s)"
+                //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
 
