@@ -1,9 +1,5 @@
 census 2021 example
------
-Share of []
-[] size
------
-
+Share: test and finalise
 trivariate colors - color brewer
 by size / by alpha
 chernioff. sex, emp, age. 3*3. - see isotope icons
