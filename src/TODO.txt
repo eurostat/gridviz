@@ -1,5 +1,5 @@
 census 2021 example
-Share: test and finalise. Freez GUI. legend text. total size.
+Share: test and finalise. Freez GUI. legend text. total size. NaN
 trivariate colors - color brewer
 by size / by alpha
 chernioff. sex, emp, age. 3*3. - see isotope icons
