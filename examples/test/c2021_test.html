@@ -44,12 +44,12 @@
                     <option value="Y15-64">Age 15 to 64 years</option>
                     <option value="Y_GE65">Age 65 years and older</option>
                     <option value="EMP" selected>Employed</option>
-                    <option value="NAT">Born in the country</option>
-                    <option value="EU_OTH">Born in another EU member state</option>
-                    <option value="OTH">Born outside the EU</option>
                     <option value="SAME">Residence unchanged (2020/2021)</option>
                     <option value="CHG_IN">Moved within the country (2020/2021)</option>
                     <option value="CHG_OUT">Moved from outside the country (2020/2021)</option>
+                    <option value="NAT">Born in the country</option>
+                    <option value="EU_OTH">Born in another EU member state</option>
+                    <option value="OTH">Born outside the EU</option>
                 </select>
                 <br />
                 <input type="checkbox" id="sbtp" checked />
@@ -89,13 +89,13 @@
 
         "EMP" >= Employed (working population)
 
-        "NAT" >= Born in the country
-        "EU_OTH" >= Born in another EU member state
-        "OTH" >= Born outside the EU
-
         "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
         "CHG_IN" >= Moved within the country (as of January 1, 2021, compared to January 1, 2020)
         "CHG_OUT" >= Moved from outside the country (as of January 1, 2021, compared to January 1, 2020)
+
+        "NAT" >= Born in the country
+        "EU_OTH" >= Born in another EU member state
+        "OTH" >= Born outside the EU
         */
 
         //define map with initial view
@@ -449,12 +449,12 @@
                     case 'Y15-64': breaks = [50, 60, 65, 70, 80]; break;
                     case 'Y_GE65': breaks = [10, 20, 30, 40, 50]; break;
                     case 'EMP': breaks = [30, 40, 45, 50, 55, 60, 70]; break;
-                    case 'NAT': breaks = [60, 70, 80, 85, 90, 95, 99]; break;
-                    case 'EU_OTH': breaks = [1, 5, 10, 15, 20, 30]; break;
-                    case 'OTH': breaks = [1, 5, 10, 20, 30, 50]; break;
                     case 'SAME': breaks = [70, 80, 90, 95, 99]; break;
                     case 'CHG_IN': breaks = [0.1, 0.5, 1, 5, 10, 20]; break;
                     case 'CHG_OUT': breaks = [0.5, 1, 2, 5, 10]; break;
+                    case 'NAT': breaks = [60, 70, 80, 85, 90, 95, 99]; break;
+                    case 'EU_OTH': breaks = [1, 5, 10, 15, 20, 30]; break;
+                    case 'OTH': breaks = [1, 5, 10, 20, 30, 50]; break;
                     default:
                         breaks = [30, 40, 45, 50, 55, 60, 70]
                 }
@@ -467,12 +467,8 @@
                 const style = new gridviz.ShapeColorSizeStyle({
                     filter: c => c[shareB] != undefined,
                     color: (c, r, z, viewScale) => colorClassifier(c[shareB]),
-                    //color: (c, r, z, viewScale) => viewScale.color(c[shareB]),
-                    viewScale: gridviz.viewScaleCombination({
-                        //color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c[shareB], classNumber: classNumberColor, colors: colors }),
-                        size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 })
-                    }),
-                    size: sbtp ? (c, r, z, viewScale) => viewScale.size(c.T) : (c, r) => r,
+                    viewScale:   gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 })                    ,
+                    size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => 'square',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
@@ -494,13 +490,6 @@
                         colors: () => colors,
                         breaks: () => breaks,
                     })
-                    /*/quantile legend
-                    new gridviz.ColorDiscreteLegend({
-                        title: "Share of " + shareA + ", in %",
-                        width: 250,
-                        colors: () => colors,
-                        breaks: (viewScale) => viewScale.color.breaks.map(b => Math.round(b)),
-                    })*/
                 ])
 
                 //population size legend
@@ -511,7 +500,6 @@
                             title: "Population",
                             fillColor: "lightgray",
                             labelFormat: Math.round,
-                            viewScaleFun: vs => vs.size
                         })
                     )
 
