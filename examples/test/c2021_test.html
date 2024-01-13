@@ -467,7 +467,7 @@
                 const style = new gridviz.ShapeColorSizeStyle({
                     filter: c => c[shareB] != undefined,
                     color: (c, r, z, viewScale) => colorClassifier(c[shareB]),
-                    viewScale:   gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 })                    ,
+                    viewScale: sbtp ? gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }) : undefined,
                     size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => 'square',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
