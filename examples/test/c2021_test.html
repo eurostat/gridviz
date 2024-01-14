@@ -518,6 +518,8 @@
 
             } else if (layCode === 'trivariate') {
 
+                const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
+                const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
                 const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
                     const lowThreshold = opts.lowThreshold || [1 / 3, 1 / 3, 1 / 3]
                     const highThreshold = opts.highThreshold || [2 / 3, 2 / 3, 2 / 3]
@@ -525,12 +527,10 @@
                     const colorInterpolation = opts.colorInterpolation || d3.interpolateLab
 
                     //https://d3js.org/d3-interpolate/color
-                    const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
-                    const colorsMiddle = [middleColor(colors[1], colors[2]), middleColor(colors[0], colors[2]), middleColor(colors[0], colors[1])]
-                    const centralColor = colorInterpolation(colorsMiddle[2], colors[2])(0.333)
+                    const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
+                    const middleColors = opts.middleColors || [middleColorFunction(colors[1], colors[2]), middleColorFunction(colors[0], colors[2]), middleColorFunction(colors[0], colors[1])]
+                    const centralColor = opts.centralColor || colorInterpolation(middleColors[2], colors[2])(0.333)
 
-                    const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
-                    const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
                     const high_ = orderedIndexesDec(highThreshold)
                     const low_ = orderedIndexesInc(lowThreshold)
 
@@ -543,13 +543,13 @@
                         const shares = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
                         //return colors
                         for (let i of high_) if (shares[i] > highThreshold[i]) return colors[i]
-                        for (let i of low_) if (shares[i] < lowThreshold[i]) return colorsMiddle[i]
+                        for (let i of low_) if (shares[i] < lowThreshold[i]) return middleColors[i]
                         return centralColor
                     }
                     fun.lowThreshold = lowThreshold
                     fun.highThreshold = highThreshold
                     fun.colors = colors
-                    fun.colorsMiddle = colorsMiddle
+                    fun.colorsMiddle = middleColors
                     fun.centralColor = centralColor
                     fun.lowIndex = low_
                     fun.highIndex = high_
@@ -562,6 +562,7 @@
                     lowThreshold: [0.1, 0.6, 0.2],
                     highThreshold: [0.2, 0.7, 0.4],
                     colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                    centralColor: "gray",
                     colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
                 })
 
