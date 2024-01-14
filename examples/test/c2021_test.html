@@ -513,9 +513,18 @@
 
             } else if (layCode === 'tri_age') {
 
+                const colorTrivariateFun = c => {
+                    const tot = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
+                    if (!tot) return undefined
+                    const g = Math.floor(255 * +c.Y_LT15 / tot)
+                    const b = Math.floor(255 * +c["Y15-64"] / tot)
+                    const r = Math.floor(255 * +c.Y_GE65 / tot)
+                    return "rgb(" + r + "," + g + "," + b + ")"
+                }
+
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
-                    color: (c) => "purple",
+                    color: (c) => colorTrivariateFun(c),
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
                     size: (c, r, z, viewScale) => viewScale(c.T),
                     shape: () => 'circle',
