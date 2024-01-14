@@ -58,10 +58,10 @@
                 <hr />
                 <input type="radio" name="layer" id="trivariate" value="trivariate" />
                 <label for="trivariate">Trivariate color</label>
-                <select id="share_">
-                    <option value="F" selected>Age</option>
-                    <option value="M">Men</option>
-                    <option value="Y_LT15">Age under 15 years</option>
+                <select id="trivariate_theme">
+                    <option value="age" selected>Age</option>
+                    <option value="mobility">Mobility</option>
+                    <option value="pob">Birth place</option>
                 </select>
         </div>
         <hr />
@@ -549,7 +549,7 @@
                     fun.lowThreshold = lowThreshold
                     fun.highThreshold = highThreshold
                     fun.colors = colors
-                    fun.colorsMiddle = middleColors
+                    fun.middleColors = middleColors
                     fun.centralColor = centralColor
                     fun.lowIndex = low_
                     fun.highIndex = high_
@@ -591,6 +591,9 @@
                         "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
                         "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
                         "middle": "Other cases",
+                        "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
+                        "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
+                        "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
                     }
                 })]
 
