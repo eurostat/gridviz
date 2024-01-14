@@ -513,14 +513,15 @@
 
             } else if (layCode === 'tri_age') {
 
-                const colorInterpolation = d3.interpolateRgb
-                const middleColor = (c1, c2) => {
-                    //https://d3js.org/d3-interpolate/color
-                    return colorInterpolation(c1, c2)(0.5)
-                }
                 const c1 = "green"
                 const c2 = "blue"
                 const c3 = "red"
+
+                const colorInterpolation = d3.interpolateHcl //interpolateLab //interpolateHsl //interpolateRgb
+                const middleColor = (color1, color2) => {
+                    //https://d3js.org/d3-interpolate/color
+                    return colorInterpolation(color1, color2)(0.5)
+                }
                 const c12 = middleColor(c1, c2)
                 const c13 = middleColor(c1, c3)
                 const c23 = middleColor(c2, c3)
@@ -532,18 +533,14 @@
                     const rt15 = +c.Y_LT15 / tot
                     const rt1564 = +c["Y15-64"] / tot
                     const rt65 = +c.Y_GE65 / tot
+                    //from higher to lower
                     if (rt1564 > 0.7) return c2
                     if (rt65 > 0.4) return c3
                     if (rt15 > 0.2) return c1
+                    //from higher to lower
                     if (rt1564 < 0.6) return c13
                     if (rt65 < 0.2) return c12
                     if (rt15 < 0.1) return c23
-                    /*if (rt1564 > 0.7) return "cyan"
-                    if (rt65 > 0.4) return "magenta"
-                    if (rt15 > 0.2) return "yellow"
-                    if (rt1564 < 0.6) return "red"
-                    if (rt65 < 0.2) return "green"
-                    if (rt15 < 0.1) return "blue"*/
                     return c123
                 }
 
