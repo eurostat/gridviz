@@ -513,37 +513,38 @@
 
             } else if (layCode === 'tri_age') {
 
-                const properties = ["Y_LT15", "Y15-64", "Y_GE65"]
-                const low = [0.1, 0.6, 0.2]
-                const high = [0.2, 0.7, 0.4]
-                const colors = ["#4daf4a", "#377eb8", "#e41a1c"]
-                //const colAge = d3.interpolateSpectral
-                //const colors = [colAge(0.2), colAge(0.4), colAge(0.9)]
-                //const colors = ["green", "blue", "red"]
-                const colorInterpolation = d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
+                const trivariateColorClassifier = (properties, low, high, colors, colorInterpolation = d3.interpolateLab) => {
+                    //https://d3js.org/d3-interpolate/color
+                    const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
+                    const colorsMiddle = [middleColor(colors[1], colors[2]), middleColor(colors[0], colors[2]), middleColor(colors[0], colors[1])]
+                    const c012 = colorInterpolation(colorsMiddle[2], colors[2])(0.333)
 
-                const p0 = properties[0], p1 = properties[1], p2 = properties[2]
-                const c0 = colors[0], c1 = colors[1], c2 = colors[2]
+                    const orderedIndexes = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
+                    const high_ = orderedIndexes(high)
+                    const low_ = orderedIndexes(low)
 
-                //https://d3js.org/d3-interpolate/color
-                const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
-                const colorsMiddle = [middleColor(c1, c2), middleColor(c0, c2), middleColor(c0, c1)]
-                const c012 = colorInterpolation(colorsMiddle[2], c2)(0.333)
-
-                const high_ = [1, 2, 0]
-                const low_ = [1, 2, 0]
-                const totalFunction = c => +c[p0] + +c[p1] + +c[p2]
-                const colorTrivariateFun = c => {
-                    //compute total
-                    const tot = totalFunction(c)
-                    if (!tot) return undefined
-                    //compute shares
-                    const shares = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
-                    //return colors
-                    for (let i of high_) if (shares[i] > high[i]) return colors[i]
-                    for (let i of low_) if (shares[i] < low[i]) return colorsMiddle[i]
-                    return c012
+                    const p0 = properties[0], p1 = properties[1], p2 = properties[2]
+                    const totalFunction = c => +c[p0] + +c[p1] + +c[p2]
+                    return c => {
+                        //compute total
+                        const tot = totalFunction(c)
+                        if (!tot) return undefined
+                        //compute shares
+                        const shares = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
+                        //return colors
+                        for (let i of high_) if (shares[i] > high[i]) return colors[i]
+                        for (let i of low_) if (shares[i] < low[i]) return colorsMiddle[i]
+                        return c012
+                    }
                 }
+
+                const colorTrivariateFun = trivariateColorClassifier(
+                    ["Y_LT15", "Y15-64", "Y_GE65"],
+                    [0.1, 0.6, 0.2],
+                    [0.2, 0.7, 0.4],
+                    ["#4daf4a", "#377eb8", "#e41a1c"],
+                    d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
+                )
 
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
