@@ -522,11 +522,10 @@
                 const c2 = colors[1]
                 const c3 = colors[2]
 
+                //https://d3js.org/d3-interpolate/color
                 const colorInterpolation = d3.interpolateHcl //interpolateLab //interpolateHsl //interpolateRgb
-                const middleColor = (color1, color2) => {
-                    //https://d3js.org/d3-interpolate/color
-                    return colorInterpolation(color1, color2)(0.5)
-                }
+                const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
+
                 const c12 = middleColor(c1, c2)
                 const c13 = middleColor(c1, c3)
                 const c23 = middleColor(c2, c3)
