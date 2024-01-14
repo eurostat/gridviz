@@ -514,7 +514,9 @@
             } else if (layCode === 'tri_age') {
 
                 const properties = ["Y_LT15", "Y15-64", "Y_GE65"]
-                const colors = ["green", "blue", "red"]
+                const colAge = d3.interpolateSpectral
+                const colors = [colAge(0.2), colAge(0.4), colAge(0.9)]
+                //const colors = ["green", "blue", "red"]
 
                 const p0 = properties[0], p1 = properties[1], p2 = properties[2]
                 const c0 = colors[0], c1 = colors[1], c2 = colors[2]
