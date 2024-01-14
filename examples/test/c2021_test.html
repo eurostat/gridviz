@@ -56,9 +56,14 @@
                 <label for="sbtp">Size by total population</label>
                 <br />
                 <hr />
-                <input type="radio" name="layer" id="tri_age" value="tri_age" />
-                <label for="tri_age">Age - Trivariate</label>
-        </div>
+                <input type="radio" name="layer" id="trivariate" value="trivariate" />
+                <label for="trivariate">Trivariate color</label>
+                <select id="share_">
+                    <option value="F" selected>Age</option>
+                    <option value="M">Men</option>
+                    <option value="Y_LT15">Age under 15 years</option>
+                </select>
+            </div>
         <hr />
         <input type="checkbox" id="label" checked />
         <label for="label">City names</label><br />
@@ -511,7 +516,7 @@
                     + c.T + " person(s)"
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
-            } else if (layCode === 'tri_age') {
+            } else if (layCode === 'trivariate') {
 
                 const trivariateColorClassifier = (properties, totalFunction, lowThreshold, highThreshold, colors, colorInterpolation = d3.interpolateLab) => {
                     //https://d3js.org/d3-interpolate/color
