@@ -513,7 +513,7 @@
 
             } else if (layCode === 'tri_age') {
 
-                const trivariateColorClassifier = (properties, totalFunction, low, high, colors, colorInterpolation = d3.interpolateLab) => {
+                const trivariateColorClassifier = (properties, totalFunction, lowThreshold, highThreshold, colors, colorInterpolation = d3.interpolateLab) => {
                     //https://d3js.org/d3-interpolate/color
                     const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
                     const colorsMiddle = [middleColor(colors[1], colors[2]), middleColor(colors[0], colors[2]), middleColor(colors[0], colors[1])]
@@ -521,8 +521,8 @@
 
                     const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
                     const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
-                    const high_ = orderedIndexesDec(high)
-                    const low_ = orderedIndexesInc(low)
+                    const high_ = orderedIndexesDec(highThreshold)
+                    const low_ = orderedIndexesInc(lowThreshold)
 
                     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
                     const fun = c => {
@@ -532,17 +532,17 @@
                         //compute shares
                         const shares = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
                         //return colors
-                        for (let i of high_) if (shares[i] > high[i]) return colors[i]
-                        for (let i of low_) if (shares[i] < low[i]) return colorsMiddle[i]
+                        for (let i of high_) if (shares[i] > highThreshold[i]) return colors[i]
+                        for (let i of low_) if (shares[i] < lowThreshold[i]) return colorsMiddle[i]
                         return centralColor
                     }
-                    fun.low = low
-                    fun.high = high
+                    fun.lowThreshold = lowThreshold
+                    fun.highThreshold = highThreshold
                     fun.colors = colors
                     fun.colorsMiddle = colorsMiddle
                     fun.centralColor = centralColor
-                    fun.low_ = low_
-                    fun.high_ = high_
+                    fun.lowIndex = low_
+                    fun.highIndex = high_
                     return fun
                 }
 
