@@ -513,9 +513,13 @@
 
             } else if (layCode === 'tri_age') {
 
-                const c1 = "green"
-                const c2 = "blue"
-                const c3 = "red"
+                const properties = ["Y_LT15", "Y15-64", "Y_GE65"]
+                const colors = ["green", "blue", "red"]
+                const totalFunction = c => +c[properties[0]] + +c[properties[1]] + +c[properties[2]]
+
+                const c1 = colors[0]
+                const c2 = colors[1]
+                const c3 = colors[2]
 
                 const colorInterpolation = d3.interpolateHcl //interpolateLab //interpolateHsl //interpolateRgb
                 const middleColor = (color1, color2) => {
@@ -528,7 +532,7 @@
                 const c123 = colorInterpolation(c12, c3)(0.333)
 
                 const colorTrivariateFun = c => {
-                    const tot = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
+                    const tot = totalFunction(c)
                     if (!tot) return undefined
                     const rt15 = +c.Y_LT15 / tot
                     const rt1564 = +c["Y15-64"] / tot
