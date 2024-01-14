@@ -74,7 +74,7 @@ export class TrivariateLegend extends Legend {
 
 
         const setAttributes = (elt, color, text) => {
-            elt.raise();
+            //elt.raise();
             elt.attr('fill', color)
                 .attr("stroke", "black")//colorOver)
                 .attr("stroke-width", 0)
