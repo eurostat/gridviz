@@ -516,36 +516,32 @@
                 const properties = ["Y_LT15", "Y15-64", "Y_GE65"]
                 const colors = ["green", "blue", "red"]
 
-                const p1 = properties[0], p2 = properties[1], p3 = properties[2]
-                const totalFunction = c => +c[p1] + +c[p2] + +c[p3]
-                const c1 = colors[0]
-                const c2 = colors[1]
-                const c3 = colors[2]
+                const p0 = properties[0], p1 = properties[1], p2 = properties[2]
+                const c0 = colors[0], c1 = colors[1], c2 = colors[2]
 
                 //https://d3js.org/d3-interpolate/color
                 const colorInterpolation = d3.interpolateHcl //interpolateLab //interpolateHsl //interpolateRgb
                 const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
-
+                const c01 = middleColor(c0, c1)
+                const c02 = middleColor(c0, c2)
                 const c12 = middleColor(c1, c2)
-                const c13 = middleColor(c1, c3)
-                const c23 = middleColor(c2, c3)
-                const c123 = colorInterpolation(c12, c3)(0.333)
+                const c012 = colorInterpolation(c01, c2)(0.333)
 
+                const totalFunction = c => +c[p0] + +c[p1] + +c[p2]
                 const colorTrivariateFun = c => {
+                    //compute percentages
                     const tot = totalFunction(c)
                     if (!tot) return undefined
-                    const s1 = +c[p1] / tot
-                    const s2 = +c[p2] / tot
-                    const s3 = +c[p3] / tot
+                    const s0 = +c[p0] / tot, s1 = +c[p1] / tot, s2 = +c[p2] / tot
                     //from higher to lower
-                    if (s2 > 0.7) return c2
-                    if (s3 > 0.4) return c3
-                    if (s1 > 0.2) return c1
+                    if (s1 > 0.7) return c1
+                    if (s2 > 0.4) return c2
+                    if (s0 > 0.2) return c0
                     //from higher to lower
-                    if (s2 < 0.6) return c13
-                    if (s3 < 0.2) return c12
-                    if (s1 < 0.1) return c23
-                    return c123
+                    if (s1 < 0.6) return c02
+                    if (s2 < 0.2) return c01
+                    if (s0 < 0.1) return c12
+                    return c012
                 }
 
                 const classNumberSize = 4
