@@ -519,9 +519,10 @@
                     const colorsMiddle = [middleColor(colors[1], colors[2]), middleColor(colors[0], colors[2]), middleColor(colors[0], colors[1])]
                     const c012 = colorInterpolation(colorsMiddle[2], colors[2])(0.333)
 
-                    const orderedIndexes = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
-                    const high_ = orderedIndexes(high)
-                    const low_ = orderedIndexes(low)
+                    const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
+                    const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
+                    const high_ = orderedIndexesDec(high)
+                    const low_ = orderedIndexesInc(low)
 
                     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
                     const totalFunction = c => +c[p0] + +c[p1] + +c[p2]
