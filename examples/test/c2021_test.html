@@ -63,7 +63,7 @@
                     <option value="M">Men</option>
                     <option value="Y_LT15">Age under 15 years</option>
                 </select>
-            </div>
+        </div>
         <hr />
         <input type="checkbox" id="label" checked />
         <label for="label">City names</label><br />
@@ -576,14 +576,10 @@
                 gridLayer.minPixelsPerCell = 5
 
                 //age
-                /*gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
+                gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
                     title: "Age",
-                    colorLabel: [
-                        [colAge(0.2), "Under 15 years"],
-                        [colAge(0.4), "15 to 64 years"],
-                        [colAge(0.9), "65 years and older"],
-                    ]
-                })]*/
+                    classifier: colorTrivariateFun
+                })]
 
                 //population
                 gridLayer.styles[0].addLegends(
