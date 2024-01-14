@@ -40,12 +40,6 @@ export class TrivariateLegend extends Legend {
             .attr('width', w)
             .attr('height', h)
 
-        /*/triangle fill
-        const points = "0," + height + " " + this.width + "," + height + " " + (this.width / 2) + ",0"
-        svg.append('polygon')
-            .attr('points', points)
-            .attr('fill', this.classifier.centralColor)*/
-
         //0 top
         svg.append('polygon')
             .attr('points', (w / 3) + "," + (h / 3) + " " + (w * 2 / 3) + "," + (h / 3) + " " + (w / 2) + ",0")
@@ -66,12 +60,12 @@ export class TrivariateLegend extends Legend {
 
         //12 bottom
         svg.append('polygon')
-            .attr('points', (w / 3) + "," + (h / 3) + " " + (w * 2 / 3) + "," + (h / 3) + " " + (w / 2) + ",0")
-            .attr('fill', this.classifier.colors[0])
-
-
-
-
+            .attr('points',
+                (w / 3) + "," + (h) + " "
+                + (2 * w / 3) + "," + (h) + " "
+                + (w * 3 / 4) + "," + (h * 5 / 6) + " "
+                + (w / 4) + "," + (h * 5 / 6))
+            .attr('fill', this.classifier.colorsMiddle[0])
 
         //
         //TODO
