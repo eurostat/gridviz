@@ -53,7 +53,11 @@
                 </select>
                 <br />
                 <input type="checkbox" id="sbtp" checked />
-                <label for="sbtp">Size by total population</label><br />
+                <label for="sbtp">Size by total population</label>
+                <br />
+                <hr />
+                <input type="radio" name="layer" id="tri_age" value="tri_age" />
+                <label for="tri_age">Trivariate age</label>
         </div>
         <hr />
         <input type="checkbox" id="label" checked />
@@ -507,7 +511,48 @@
                     + c.T + " person(s)"
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
+            } else if (layCode === 'tri_age') {
 
+                const classNumberSize = 4
+                const style = new gridviz.ShapeColorSizeStyle({
+                    color: (c) => "purple",
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+                    size: (c, r, z, viewScale) => viewScale(c.T),
+                    shape: () => 'circle',
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+
+                //set styles
+                gridLayer.styles = [style]
+
+
+                gridLayer.minPixelsPerCell = 5
+
+                //age
+                /*gridLayer.styles[0].legends = [new gridviz.ColorCategoryLegend({
+                    title: "Age",
+                    colorLabel: [
+                        [colAge(0.2), "Under 15 years"],
+                        [colAge(0.4), "15 to 64 years"],
+                        [colAge(0.9), "65 years and older"],
+                    ]
+                })]*/
+
+                //population
+                gridLayer.styles[0].addLegends(
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        classNumberSize, {
+                        title: "Population",
+                        shape: "square",
+                        fillColor: "lightgray",
+                        labelFormat: Math.round,
+                    })
+                )
+
+                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
+                    c.Y_LT15 + " under 15 years<br>" +
+                    c["Y15-64"] + " 15 to 64 years<br>" +
+                    c.Y_GE65 + " 65 years and older"
 
             } else console.error('Unexpected layer code: ' + layCode)
 
