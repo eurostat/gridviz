@@ -515,8 +515,9 @@
 
                 const properties = ["Y_LT15", "Y15-64", "Y_GE65"]
                 const colors = ["green", "blue", "red"]
-                const totalFunction = c => +c[properties[0]] + +c[properties[1]] + +c[properties[2]]
 
+                const p1 = properties[0], p2 = properties[1], p3 = properties[2]
+                const totalFunction = c => +c[p1] + +c[p2] + +c[p3]
                 const c1 = colors[0]
                 const c2 = colors[1]
                 const c3 = colors[2]
@@ -534,17 +535,17 @@
                 const colorTrivariateFun = c => {
                     const tot = totalFunction(c)
                     if (!tot) return undefined
-                    const rt15 = +c.Y_LT15 / tot
-                    const rt1564 = +c["Y15-64"] / tot
-                    const rt65 = +c.Y_GE65 / tot
+                    const s1 = +c[p1] / tot
+                    const s2 = +c[p2] / tot
+                    const s3 = +c[p3] / tot
                     //from higher to lower
-                    if (rt1564 > 0.7) return c2
-                    if (rt65 > 0.4) return c3
-                    if (rt15 > 0.2) return c1
+                    if (s2 > 0.7) return c2
+                    if (s3 > 0.4) return c3
+                    if (s1 > 0.2) return c1
                     //from higher to lower
-                    if (rt1564 < 0.6) return c13
-                    if (rt65 < 0.2) return c12
-                    if (rt15 < 0.1) return c23
+                    if (s2 < 0.6) return c13
+                    if (s3 < 0.2) return c12
+                    if (s1 < 0.1) return c23
                     return c123
                 }
 
