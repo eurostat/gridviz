@@ -578,7 +578,9 @@
                 //age
                 gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
                     title: "Age",
-                    classifier: colorTrivariateFun
+                    classifier: colorTrivariateFun,
+                    tooltip: map.tooltip,
+                    texts: { "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15" }
                 })]
 
                 //population

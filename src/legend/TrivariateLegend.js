@@ -1,6 +1,7 @@
 //@ts-check
 'use strict'
 
+import { select } from 'd3-selection'
 import { Legend } from '../core/Legend.js'
 
 /**
@@ -18,6 +19,9 @@ export class TrivariateLegend extends Legend {
         this.classifier = opts.classifier
 
         this.width = opts.width || 150
+        this.colorOver = opts.colorOver || "red"
+        this.tooltip = opts.tooltip
+        this.texts = opts.texts
     }
 
     /**
@@ -33,6 +37,10 @@ export class TrivariateLegend extends Legend {
 
         const sqrt2over2 = 0.866025
         const w = this.width, h = w * sqrt2over2
+        const classifier = this.classifier
+        const colorOver = this.colorOver
+        const tt = this.tooltip
+        const texts = this.texts
 
         //make svg element
         const svg = this.div
@@ -43,20 +51,29 @@ export class TrivariateLegend extends Legend {
         //0 top
         svg.append('polygon')
             .attr('points', (w / 3) + "," + (h / 3) + " " + (w * 2 / 3) + "," + (h / 3) + " " + (w / 2) + ",0")
-            .attr('fill', this.classifier.colors[0])
+            .attr('fill', classifier.colors[0])
+            .on("mouseover", function () { select(this).attr("fill", colorOver); })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colors[0]); })
+            .on("mouseover", function (e) { select(this).attr("fill", colorOver); tt.html(texts["0"]); tt.setPosition(e); tt.show() })
+            .on("mousemove", function (e) { select(this).attr("fill", colorOver); tt.setPosition(e) })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colors[0]); tt.hide() })
         //1 left
         svg.append('polygon')
             .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
-            .attr('fill', this.classifier.colors[1])
+            .attr('fill', classifier.colors[1])
+            .on("mouseover", function () { select(this).attr("fill", colorOver); })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colors[1]); })
         //2 right
         svg.append('polygon')
             .attr('points', (w * 2 / 3) + "," + h + " " + w + "," + h + " " + (w * 5 / 6) + "," + (2 * h / 3))
-            .attr('fill', this.classifier.colors[2])
+            .attr('fill', classifier.colors[2])
+            .on("mouseover", function () { select(this).attr("fill", colorOver); })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colors[2]); })
 
         //middle triangle
         svg.append('polygon')
             .attr('points', (w / 2) + "," + (h / 3) + " " + (w / 4) + "," + (h * 5 / 6) + " " + (3 * w / 4) + "," + (h * 5 / 6))
-            .attr('fill', this.classifier.centralColor)
+            .attr('fill', classifier.centralColor)
 
         //12 bottom
         svg.append('polygon')
@@ -65,17 +82,31 @@ export class TrivariateLegend extends Legend {
                 + (2 * w / 3) + "," + (h) + " "
                 + (w * 3 / 4) + "," + (h * 5 / 6) + " "
                 + (w / 4) + "," + (h * 5 / 6))
-            .attr('fill', this.classifier.colorsMiddle[0])
+            .attr('fill', classifier.colorsMiddle[0])
+            .on("mouseover", function () { select(this).attr("fill", colorOver); })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colorsMiddle[0]); })
 
-        //
-        //TODO
-
-        /*/triangle stroke
+        //02 right
         svg.append('polygon')
-            .attr('points', points)
-            .attr('fill', "none")
-            .attr('stroke-width', 1)
-            .attr('stroke', "black")
-*/
+            .attr('points',
+                (w / 2) + "," + (h / 3) + " "
+                + (w * 3 / 4) + "," + (h * 5 / 6) + " "
+                + (w * 5 / 6) + "," + (h * 2 / 3) + " "
+                + (w * 2 / 3) + "," + (h / 3))
+            .attr('fill', classifier.colorsMiddle[1])
+            .on("mouseover", function () { select(this).attr("fill", colorOver); })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colorsMiddle[1]); })
+
+        //01 left
+        svg.append('polygon')
+            .attr('points',
+                (w / 6) + "," + (h * 2 / 3) + " "
+                + (w / 4) + "," + (h * 5 / 6) + " "
+                + (w / 2) + "," + (h / 3) + " "
+                + (w / 3) + "," + (h / 3))
+            .attr('fill', classifier.colorsMiddle[2])
+            .on("mouseover", function () { select(this).attr("fill", colorOver); })
+            .on("mouseout", function () { select(this).attr("fill", classifier.colorsMiddle[2]); })
+
     }
 }
