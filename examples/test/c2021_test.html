@@ -513,11 +513,11 @@
 
             } else if (layCode === 'tri_age') {
 
-                const trivariateColorClassifier = (properties, low, high, colors, colorInterpolation = d3.interpolateLab) => {
+                const trivariateColorClassifier = (properties, totalFunction, low, high, colors, colorInterpolation = d3.interpolateLab) => {
                     //https://d3js.org/d3-interpolate/color
                     const middleColor = (color1, color2) => colorInterpolation(color1, color2)(0.5)
                     const colorsMiddle = [middleColor(colors[1], colors[2]), middleColor(colors[0], colors[2]), middleColor(colors[0], colors[1])]
-                    const c012 = colorInterpolation(colorsMiddle[2], colors[2])(0.333)
+                    const centralColor = colorInterpolation(colorsMiddle[2], colors[2])(0.333)
 
                     const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
                     const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
@@ -525,9 +525,8 @@
                     const low_ = orderedIndexesInc(low)
 
                     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
-                    const totalFunction = c => +c[p0] + +c[p1] + +c[p2]
-                    return c => {
-                        //compute total
+                    const fun = c => {
+                        //get total
                         const tot = totalFunction(c)
                         if (!tot) return undefined
                         //compute shares
@@ -535,12 +534,21 @@
                         //return colors
                         for (let i of high_) if (shares[i] > high[i]) return colors[i]
                         for (let i of low_) if (shares[i] < low[i]) return colorsMiddle[i]
-                        return c012
+                        return centralColor
                     }
+                    fun.low = low
+                    fun.high = high
+                    fun.colors = colors
+                    fun.colorsMiddle = colorsMiddle
+                    fun.centralColor = centralColor
+                    fun.low_ = low_
+                    fun.high_ = high_
+                    return fun
                 }
 
                 const colorTrivariateFun = trivariateColorClassifier(
                     ["Y_LT15", "Y15-64", "Y_GE65"],
+                    c => c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65,
                     [0.1, 0.6, 0.2],
                     [0.2, 0.7, 0.4],
                     ["#4daf4a", "#377eb8", "#e41a1c"],
