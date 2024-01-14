@@ -57,7 +57,7 @@
                 <br />
                 <hr />
                 <input type="radio" name="layer" id="tri_age" value="tri_age" />
-                <label for="tri_age">Trivariate age</label>
+                <label for="tri_age">Age - Trivariate</label>
         </div>
         <hr />
         <input type="checkbox" id="label" checked />
@@ -516,10 +516,16 @@
                 const colorTrivariateFun = c => {
                     const tot = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
                     if (!tot) return undefined
-                    const g = Math.floor(255 * +c.Y_LT15 / tot)
-                    const b = Math.floor(255 * +c["Y15-64"] / tot)
-                    const r = Math.floor(255 * +c.Y_GE65 / tot)
-                    return "rgb(" + r + "," + g + "," + b + ")"
+                    const rt15 = +c.Y_LT15 / tot
+                    const rt1564 = +c["Y15-64"] / tot
+                    const rt65 = +c.Y_GE65 / tot
+                    if (rt1564 > 0.7) return "cyan"
+                    if (rt65 > 0.4) return "magenta"
+                    if (rt15 > 0.2) return "yellow"
+                    if (rt1564 < 0.6) return "red"
+                    if (rt65 < 0.2) return "green"
+                    if (rt15 < 0.1) return "blue"
+                    return "gray"
                 }
 
                 const classNumberSize = 4
