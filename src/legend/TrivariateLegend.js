@@ -23,6 +23,10 @@ export class TrivariateLegend extends Legend {
         this.selectionStrokeWidth = this.selectionStrokeWidth != undefined ? this.selectionStrokeWidth : 5
         this.tooltip = opts.tooltip
         this.texts = opts.texts
+
+        this.leftText = opts.leftText || "Category 0"
+        this.topText = opts.topText || "Category 1"
+        this.rightText = opts.rightText || "Category 2"
     }
 
     /**
@@ -44,14 +48,26 @@ export class TrivariateLegend extends Legend {
         const tt = this.tooltip
         const texts = this.texts
 
+        const padding = 2
+        const fontSize = 12
+
         //make svg element
         const svg = this.div
             .append('svg')
             .attr('width', w + selectionStrokeWidth)
-            .attr('height', h + selectionStrokeWidth)
+            .attr('height', h + 4 * padding + 2 * fontSize)
 
-        const g = svg.append("g")
+        //top label
+        svg.append("text").attr("x", w / 2).attr("y", padding + fontSize).text(this.topText).attr("font-size", fontSize)
+            .attr("text-anchor", "middle")
+        //left label
+        svg.append("text").attr("x", 0).attr("y", 3 * padding + 2 * fontSize + h).text(this.leftText).attr("font-size", fontSize)
+            .attr("text-anchor", "start")
+        //right label
+        svg.append("text").attr("x", w).attr("y", 3 * padding + 2 * fontSize + h).text(this.rightText).attr("font-size", fontSize)
+            .attr("text-anchor", "end")
 
+        const g = svg.append("g").attr("transform", "translate(" + (selectionStrokeWidth / 2) + " " + (selectionStrokeWidth / 2 + (2 * padding + fontSize)) + ")")
         //0 left triangle
         const left = g.append('polygon')
             .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
