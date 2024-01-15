@@ -270,6 +270,9 @@
                     c.F + ' wom' + (c.F == 1 ? 'a' : 'e') + 'n<br>' +
                     'Difference: <b>' + (c.indMF > 0 ? '+' : '') + d3.format('.1f')(c.indMF) + ' % men</b>'
 
+
+
+
             } else if (layCode === 'emp') {
 
                 const breaks = [30, 40, 45, 50, 55, 60, 70]
@@ -280,13 +283,13 @@
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => empColorClassifier(c.sEMP),
                     size: (c, r, z, viewScale) => viewScale(c.T),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
                     shape: () => 'circle',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = 5
+                gridLayer.minPixelsPerCell = 6
 
 
 
@@ -312,6 +315,9 @@
                     '<b>' + d3.format('.1f')(c.sEMP) + ' %</b> employment<br>' +
                     //c.EMP + '<br>' +
                     (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
+
+
+
 
             } else if (layCode === 'age') {
 
@@ -476,7 +482,7 @@
                     case 'Y_GE65': breaks = [10, 20, 30, 40, 50]; break;
                     case 'EMP': breaks = [30, 40, 45, 50, 55, 60, 70]; break;
                     case 'SAME': breaks = [70, 80, 90, 95, 99]; break;
-                    case 'CHG_IN': breaks = [0.1, 0.5, 1, 5, 10, 20]; break;
+                    case 'CHG_IN': breaks = [0.5, 1, 5, 10, 20]; break;
                     case 'CHG_OUT': breaks = [0.5, 1, 2, 5, 10]; break;
                     case 'NAT': breaks = [60, 70, 80, 85, 90, 95, 99]; break;
                     case 'EU_OTH': breaks = [1, 5, 10, 15, 20, 30]; break;
@@ -492,8 +498,8 @@
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     //filter: c => c[shareB] != undefined,
-                    color: (c, r, z, viewScale) => (!c[shareB] || isNaN(c[shareB])) ? "black" : colorClassifier(c[shareB]),
-                    viewScale: sbtp ? gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }) : undefined,
+                    color: (c, r, z, viewScale) => (!c[shareB] || isNaN(c[shareB])) ? "#bbb" : colorClassifier(c[shareB]),
+                    viewScale: sbtp ? gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }) : undefined,
                     size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => 'square',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -504,7 +510,7 @@
                 if (!sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
 
                 //
-                gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
+                gridLayer.minPixelsPerCell = sbtp ? 6 : 1.5
 
                 //share color legend
                 style.addLegends([
@@ -582,7 +588,7 @@
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c) => colorTrivariateFun(c) || "black",
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
                     size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => "square",
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -593,7 +599,7 @@
                 if (!sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
 
                 //
-                gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
+                gridLayer.minPixelsPerCell = sbtp ? 6 : 1.5
 
                 //legends
 

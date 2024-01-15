@@ -1,5 +1,4 @@
-share: fix circle size. gray pixels
-trivariate: tooltip - show percentage + fix! (draw correct legend triangle - find constraints | sum of 2 cannot be more than 100 ?)
+trivariate: tooltip - show percentage
 census 2021 example
 chernioff. sex, emp, age. 3*3. - see isotope icons
 bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS color
