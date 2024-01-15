@@ -485,7 +485,7 @@
 
                 //set styles
                 gridLayer.styles = [style]
-                if (sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
+                if (!sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
 
                 //
                 gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
@@ -580,7 +580,7 @@
 
                 //set styles
                 gridLayer.styles = [style]
-                if (sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
+                if (!sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
 
                 //
                 gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
