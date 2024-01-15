@@ -529,22 +529,12 @@
                 const theme = document.querySelector('#trivariate_theme').value
                 //age, mobility, pob
                 const sbtp = document.getElementById('sbtp_tri').checked
-                /*
-                                "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
-                        "CHG_IN" >= Moved within the country (as of January 1, 2021, compared to January 1, 2020)
-                        "CHG_OUT" >= Moved from outside the country (as of January 1, 2021, compared to January 1, 2020)
-                
-                        "NAT" >= Born in the country
-                        "EU_OTH" >= Born in another EU member state
-                        "OTH" >= Born outside the EU
-                */
-
 
                 let colorTrivariateFun
                 if (theme == "age")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["Y_LT15", "Y15-64", "Y_GE65"],
-                        c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65, {
+                        ["sY_LT15", "sY15-64", "sY_GE65"],
+                        c => 100, {
                         lowThreshold: [0.1, 0.6, 0.2],
                         highThreshold: [0.2, 0.7, 0.4],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
@@ -553,8 +543,8 @@
                     })
                 else if (theme == "mobility")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["CHG_IN", "SAME", "CHG_OUT"],
-                        c => +c.CHG_IN + +c.SAME + +c.CHG_OUT, {
+                        ["sCHG_IN", "sSAME", "sCHG_OUT"],
+                        c => 100, {
                         lowThreshold: [0.01, 0.8, 0.01],
                         highThreshold: [0.1, 0.95, 0.05],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
@@ -563,8 +553,8 @@
                     })
                 else if (theme == "pob")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["EU_OTH", "NAT", "OTH"],
-                        c => +c.EU_OTH + +c.NAT + +c.OTH, {
+                        ["sEU_OTH", "sNAT", "sOTH"],
+                        c => 100, {
                         lowThreshold: [0.05, 0.8, 0.05],
                         highThreshold: [0.2, 0.95, 0.3],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
