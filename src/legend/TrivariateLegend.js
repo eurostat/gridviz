@@ -20,6 +20,7 @@ export class TrivariateLegend extends Legend {
 
         this.width = opts.width || 150
         this.colorOver = opts.colorOver || "red"
+        this.selectionStrokeWidth = this.selectionStrokeWidth != undefined ? this.selectionStrokeWidth : 5
         this.tooltip = opts.tooltip
         this.texts = opts.texts
     }
@@ -39,16 +40,17 @@ export class TrivariateLegend extends Legend {
         const w = this.width, h = w * sqrt2over2
         const classifier = this.classifier
         const colorOver = this.colorOver
+        const selectionStrokeWidth = this.selectionStrokeWidth
         const tt = this.tooltip
         const texts = this.texts
 
         //make svg element
         const svg = this.div
             .append('svg')
-            .attr('width', w)
-            .attr('height', h)
+            .attr('width', w + selectionStrokeWidth)
+            .attr('height', h + selectionStrokeWidth)
 
-            const g = svg.append("g")
+        const g = svg.append("g")
 
         //0 left triangle
         const left = g.append('polygon')
@@ -76,9 +78,10 @@ export class TrivariateLegend extends Legend {
         const setAttributes = (elt, color, text) => {
             //elt.raise();
             elt.attr('fill', color)
-                .attr("stroke", "black")//colorOver)
+                .attr("stroke", colorOver)
                 .attr("stroke-width", 0)
-                .on("mouseover", function (e) { select(this).attr("stroke-width", 5); if (!tt || !text) return; tt.html(text); tt.setPosition(e); tt.show() })
+                .attr("stroke-linejoin", "round")
+                .on("mouseover", function (e) { this.parentNode.appendChild(this); select(this).attr("stroke-width", selectionStrokeWidth); if (!tt || !text) return; tt.html(text); tt.setPosition(e); tt.show() })
                 .on("mouseout", function () { select(this).attr("stroke-width", 0); if (tt) tt.hide() })
             if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
         }
