@@ -1,5 +1,4 @@
 census 2021 example
-Share: Freeze GUI.
 chernioff. sex, emp, age. 3*3. - see isotope icons
 bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS color
 by size / by alpha
