@@ -63,6 +63,9 @@
                     <option value="mobility">Mobility</option>
                     <option value="pob">Birth place</option>
                 </select>
+                <br />
+                <input type="checkbox" id="sbtp_tri" checked />
+                <label for="sbtp_tri">Size by total population</label>
         </div>
         <hr />
         <input type="checkbox" id="label" checked />
@@ -481,10 +484,8 @@
                 })
 
                 //set styles
-                if (sbtp)
-                    gridLayer.styles = [style]
-                else
-                    gridLayer.styles = [style, new gridviz.StrokeStyle({ visible: (z) => z < 50 })]
+                gridLayer.styles = [style]
+                if (sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
 
                 //
                 gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
@@ -556,6 +557,8 @@
                     return fun
                 }
 
+                const sbtp = document.getElementById('sbtp_tri').checked
+
                 const colorTrivariateFun = trivariateColorClassifier(
                     ["Y_LT15", "Y15-64", "Y_GE65"],
                     c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65, {
@@ -570,16 +573,17 @@
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c) => colorTrivariateFun(c),
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }),
-                    size: (c, r, z, viewScale) => viewScale(c.T),
-                    shape: () => 'circle',
+                    size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
+                    shape: sbtp ? () => 'circle' : () => "square",
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
 
                 //set styles
                 gridLayer.styles = [style]
+                if (sbtp) gridLayer.styles.push(new gridviz.StrokeStyle({ visible: (z) => z < 50 }))
 
-
-                gridLayer.minPixelsPerCell = 5
+                //
+                gridLayer.minPixelsPerCell = sbtp ? 5 : 1.5
 
                 //age
                 gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
@@ -594,18 +598,22 @@
                         "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
                         "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
                         "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
-                    }
+                    },
+                    leftText: "Under 15",
+                    topText: "Age 15 to 64",
+                    rightText: "65 and older",
                 })]
 
                 //population
-                gridLayer.styles[0].addLegends(
-                    gridviz.sizeDiscreteViewScaleLegend(
-                        classNumberSize, {
-                        title: "Population",
-                        fillColor: "lightgray",
-                        labelFormat: Math.round,
-                    })
-                )
+                if (sbtp)
+                    gridLayer.styles[0].addLegends(
+                        gridviz.sizeDiscreteViewScaleLegend(
+                            classNumberSize, {
+                            title: "Population",
+                            fillColor: "lightgray",
+                            labelFormat: Math.round,
+                        })
+                    )
 
                 gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
                     c.Y_LT15 + " under 15 years<br>" +
