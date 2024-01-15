@@ -521,7 +521,7 @@
 
                 const sbtp = document.getElementById('sbtp_tri').checked
 
-                const colorTrivariateFun = trivariateColorClassifier(
+                const colorTrivariateFun = gridviz.trivariateColorClassifier(
                     ["Y_LT15", "Y15-64", "Y_GE65"],
                     c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65, {
                     lowThreshold: [0.1, 0.6, 0.2],
