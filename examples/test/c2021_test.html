@@ -441,6 +441,9 @@
                     c.EU_OTH + " born in another EU member state<br>" +
                     c.OTH + " born outside the EU"
 
+
+
+
             } else if (layCode === 'share') {
 
                 //get gui info
@@ -475,8 +478,8 @@
                 const colorClassifier = gridviz.colorClassifier(breaks, colors)
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
-                    filter: c => c[shareB] != undefined,
-                    color: (c, r, z, viewScale) => colorClassifier(c[shareB]),
+                    //filter: c => c[shareB] != undefined,
+                    color: (c, r, z, viewScale) => (!c[shareB] || isNaN(c[shareB])) ? "#bbb" : colorClassifier(c[shareB]),
                     viewScale: sbtp ? gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }) : undefined,
                     size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => 'square',
@@ -493,7 +496,7 @@
                 //share color legend
                 style.addLegends([
                     new gridviz.ColorDiscreteLegend({
-                        title: "Share of " + shareA + ", in %",
+                        title: "Share, in percentage",
                         width: 250,
                         colors: () => colors,
                         breaks: () => breaks,
@@ -517,23 +520,61 @@
                     + c.T + " person(s)"
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
+
+
+
             } else if (layCode === 'trivariate') {
 
-                const sbtp = document.getElementById('sbtp_tri').checked
 
-                const colorTrivariateFun = gridviz.trivariateColorClassifier(
-                    ["Y_LT15", "Y15-64", "Y_GE65"],
-                    c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65, {
-                    lowThreshold: [0.1, 0.6, 0.2],
-                    highThreshold: [0.2, 0.7, 0.4],
-                    colors: ["#4daf4a", "#377eb8", "#e41a1c"],
-                    centralColor: "gray",
-                    colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
-                })
+                const theme = document.querySelector('#trivariate_theme').value
+                //age, mobility, pob
+                const sbtp = document.getElementById('sbtp_tri').checked
+                /*
+                                "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
+                        "CHG_IN" >= Moved within the country (as of January 1, 2021, compared to January 1, 2020)
+                        "CHG_OUT" >= Moved from outside the country (as of January 1, 2021, compared to January 1, 2020)
+                
+                        "NAT" >= Born in the country
+                        "EU_OTH" >= Born in another EU member state
+                        "OTH" >= Born outside the EU
+                */
+
+
+                let colorTrivariateFun
+                if (theme == "age")
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                        ["Y_LT15", "Y15-64", "Y_GE65"],
+                        c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65, {
+                        lowThreshold: [0.1, 0.6, 0.2],
+                        highThreshold: [0.2, 0.7, 0.4],
+                        colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                        centralColor: "gray",
+                        colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
+                    })
+                else if (theme == "mobility")
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                        ["CHG_IN", "SAME", "CHG_OUT"],
+                        c => +c.CHG_IN + +c.SAME + +c.CHG_OUT, {
+                        lowThreshold: [0.01, 0.8, 0.01],
+                        highThreshold: [0.1, 0.95, 0.05],
+                        colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                        centralColor: "gray",
+                        colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
+                    })
+                else if (theme == "pob")
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                        ["EU_OTH", "NAT", "OTH"],
+                        c => +c.EU_OTH + +c.NAT + +c.OTH, {
+                        lowThreshold: [0.05, 0.8, 0.05],
+                        highThreshold: [0.2, 0.95, 0.3],
+                        colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                        centralColor: "gray",
+                        colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
+                    })
 
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
-                    color: (c) => colorTrivariateFun(c),
+                    color: (c) => colorTrivariateFun(c) || "black",
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 1.1 }),
                     size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => "square",
@@ -549,24 +590,60 @@
 
                 //legends
 
-                //age
-                gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
-                    title: "Age",
-                    classifier: colorTrivariateFun,
-                    tooltip: map.tooltip,
-                    texts: {
-                        "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
-                        "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
-                        "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
-                        "middle": "Other cases",
-                        "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
-                        "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
-                        "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
-                    },
-                    leftText: "Under 15",
-                    topText: "Age 15 to 64",
-                    rightText: "65 and older",
-                })]
+                if (theme == "age")
+                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                        title: "Age",
+                        classifier: colorTrivariateFun,
+                        tooltip: map.tooltip,
+                        texts: {
+                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
+                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
+                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
+                            "middle": "Other cases",
+                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
+                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
+                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
+                        },
+                        leftText: "Under 15",
+                        topText: "Age 15 to 64",
+                        rightText: "65 and older",
+                    })]
+                else if (theme == "mobility")
+                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                        title: "Mobility",
+                        classifier: colorTrivariateFun,
+                        tooltip: map.tooltip,
+                        texts: {
+                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
+                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
+                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
+                            "middle": "Other cases",
+                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
+                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
+                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
+                        },
+                        leftText: "Under 15",
+                        topText: "Age 15 to 64",
+                        rightText: "65 and older",
+                    })]
+                else if (theme == "pob")
+                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                        title: "Birth place",
+                        classifier: colorTrivariateFun,
+                        tooltip: map.tooltip,
+                        texts: {
+                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
+                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
+                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
+                            "middle": "Other cases",
+                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
+                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
+                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
+                        },
+                        leftText: "Under 15",
+                        topText: "Age 15 to 64",
+                        rightText: "65 and older",
+                    })]
 
                 //population
                 if (sbtp)

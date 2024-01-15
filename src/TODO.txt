@@ -1,5 +1,5 @@
 census 2021 example
-Share: test and finalise. Freeze GUI. legend text. total size. NaN
+Share: Freeze GUI. total size. NaN
 trivariate colors: all, NaN
 by size / by alpha
 chernioff. sex, emp, age. 3*3. - see isotope icons
