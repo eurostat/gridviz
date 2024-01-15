@@ -52,6 +52,7 @@ export { TrivariateLegend } from './legend/TrivariateLegend.js'
 // export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
+export * from './utils/trivariate.js'
 export { nice } from './utils/utils.js'
 
 import { GeoCanvas } from './core/GeoCanvas.js'
