@@ -57,7 +57,7 @@
                 <br />
                 <hr />
                 <input type="radio" name="layer" id="trivariate" value="trivariate" />
-                <label for="trivariate">Trivariate color</label>
+                <label for="trivariate">Trivariate color of</label>
                 <select id="trivariate_theme">
                     <option value="age" selected>Age</option>
                     <option value="mobility">Mobility</option>
@@ -93,11 +93,11 @@
         "F" >= Women
         "M" >= Men
 
+        "EMP" >= Employed (working population)
+
         "Y_LT15" >= Age under 15 years
         "Y15-64" >= Age 15 to 64 years
         "Y_GE65" >= Age 65 years and older
-
-        "EMP" >= Employed (working population)
 
         "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
         "CHG_IN" >= Moved within the country (as of January 1, 2021, compared to January 1, 2020)
@@ -183,6 +183,15 @@
         const update = () => {
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
+
+            if (layCode != 'share') {
+                document.getElementById('share_').disabled = true
+                document.getElementById('sbtp').disabled = true
+            }
+            if (layCode != 'trivariate') {
+                document.getElementById('trivariate_theme').disabled = true
+                document.getElementById('sbtp_tri').disabled = true
+            }
 
             //set style
             if (layCode === 'pop') {
@@ -446,6 +455,10 @@
 
             } else if (layCode === 'share') {
 
+                //unfreeze GUI
+                document.getElementById('share_').disabled = false
+                document.getElementById('sbtp').disabled = false
+
                 //get gui info
                 const shareA = document.querySelector('#share_').value
                 const shareB = "s" + shareA
@@ -525,7 +538,11 @@
 
             } else if (layCode === 'trivariate') {
 
+                //unfreeze GUI
+                document.getElementById('trivariate_theme').disabled = false
+                document.getElementById('sbtp_tri').disabled = false
 
+                //get gui info
                 const theme = document.querySelector('#trivariate_theme').value
                 //age, mobility, pob
                 const sbtp = document.getElementById('sbtp_tri').checked
