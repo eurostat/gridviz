@@ -1,7 +1,8 @@
-trivariate: tooltip - show percentage
 census 2021 example
+trivariate: tooltip
 chernioff. sex, emp, age. 3*3. - see isotope icons
 bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS color
+CPA ?
 by size / by alpha
 
 
