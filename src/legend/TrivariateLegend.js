@@ -68,8 +68,46 @@ export class TrivariateLegend extends Legend {
         svg.append("text").attr("x", w).attr("y", 3 * padding + 2 * fontSize + h).text(this.rightText).attr("font-size", fontSize)
             .attr("text-anchor", "end")
 
+
+
+        //triangle group
         const g = svg.append("g").attr("transform", "translate(" + (selectionStrokeWidth / 2) + " " + (selectionStrokeWidth / 2 + (2 * padding + fontSize)) + ")")
 
+        //common function for triangle patches
+        const setAttributes = (elt, color, text) => {
+            //elt.raise();
+            elt.attr('fill', color)
+                //.attr("stroke", colorOver)
+                //.attr("stroke-width", 0)
+                //.attr("stroke-linejoin", "round")
+                .on("mouseover", function (e) {
+                    /*this.parentNode.appendChild(this); select(this).attr("stroke-width", selectionStrokeWidth);*/
+                    select(this).attr('fill', selectionColor);
+                    if (!tt || !text) return;
+                    tt.html(text);
+                    tt.setPosition(e);
+                    tt.show()
+                })
+                .on("mouseout", function () {
+                    /*select(this).attr("stroke-width", 0);*/
+                    select(this).attr('fill', color);
+                    if (tt) tt.hide()
+                })
+            if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
+        }
+
+
+        //trapezium s0
+        const t0 = g.append('polygon')
+            .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
+
+
+
+
+        //setAttributes(left, classifier.colors[0], texts["0"])
+
+
+        /*
         let middle, left, top, right, left_, bottom_, right_
         if (!this.real) {
 
@@ -140,35 +178,7 @@ export class TrivariateLegend extends Legend {
                         .attr('points', "0," + h + " " + w * (1 - r) + "," + h + " " + w * (1 - r) / 2 + "," + h * r)
             }
 
-        }
+        }*/
 
-        const setAttributes = (elt, color, text) => {
-            //elt.raise();
-            elt.attr('fill', color)
-                //.attr("stroke", colorOver)
-                //.attr("stroke-width", 0)
-                //.attr("stroke-linejoin", "round")
-                .on("mouseover", function (e) {
-                    /*this.parentNode.appendChild(this); select(this).attr("stroke-width", selectionStrokeWidth);*/
-                    select(this).attr('fill', selectionColor);
-                    if (!tt || !text) return;
-                    tt.html(text);
-                    tt.setPosition(e);
-                    tt.show()
-                })
-                .on("mouseout", function () {
-                    /*select(this).attr("stroke-width", 0);*/
-                    select(this).attr('fill', color);
-                    if (tt) tt.hide()
-                })
-            if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
-        }
-        setAttributes(left, classifier.colors[0], texts["0"])
-        setAttributes(top, classifier.colors[1], texts["1"])
-        setAttributes(right, classifier.colors[2], texts["2"])
-        setAttributes(middle, classifier.centralColor, texts["middle"])
-        setAttributes(left_, classifier.middleColors[2], texts["01"])
-        setAttributes(bottom_, classifier.middleColors[1], texts["02"])
-        setAttributes(right_, classifier.middleColors[0], texts["12"])
     }
 }
