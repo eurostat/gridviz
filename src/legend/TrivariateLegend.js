@@ -41,8 +41,8 @@ export class TrivariateLegend extends Legend {
         //title
         this.makeTitle()
 
-        const sqrt2over2 = 0.866025
-        const w = this.width, h = w * sqrt2over2
+        const sqrt3over2 = 0.866025
+        const w = this.width, h = w * sqrt3over2
         const classifier = this.classifier
         const selectionColor = this.selectionColor
         const selectionStrokeWidth = 0
@@ -96,15 +96,13 @@ export class TrivariateLegend extends Legend {
             if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
         }
 
+        const [c0, c1, c2] = classifier.center
 
         //trapezium s0
         const t0 = g.append('polygon')
-            .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
-
-
-
-
-        //setAttributes(left, classifier.colors[0], texts["0"])
+            .attr('points', "0," + h + " " + c2 / sqrt3over2 + "," + h + " " + (w / 6) + "," + (2 * h / 3))
+        setAttributes(t0, classifier.colors[0], texts["0"])
+        //TODO
 
 
         /*
