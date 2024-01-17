@@ -558,13 +558,13 @@
                     colorTrivariateFun = gridviz.trivariateColorClassifier6(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
-                        center: [0.15, 0.6, 0.25],
-                        thresholds: [0.75, 0.3, 0.45], //3
-                        lowThreshold: [0.1, 0.6, 0.2],
-                        highThreshold: [0.2, 0.7, 0.4],
+                        center: [0.2, 0.5, 0.3],
+                        //thresholds: [0.75, 0.3, 0.45], //3
+                        //lowThreshold: [0.1, 0.6, 0.2],
+                        //highThreshold: [0.2, 0.7, 0.4],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
-                        centralColor: "#aaa",
-                        colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
+                        //centralColor: "#aaa",
+                        //colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
                     })
                 else if (theme == "mobility")
                     colorTrivariateFun = gridviz.trivariateColorClassifier3(

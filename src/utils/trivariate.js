@@ -12,12 +12,12 @@ import { interpolateLab } from "d3-interpolate"
 
 export const trivariateColorClassifier6 = (properties, totalFunction, opts = {}) => {
     const [c0, c1, c2] = opts.center || [1 / 3, 1 / 3, 1 / 3] //sum must be equal to 1
-    const colors = opts.colors || ["red", "green", "blue"]
+    const [color0, color1, color2] = opts.colors || ["red", "green", "blue"]
     const colorInterpolation = opts.colorInterpolation || interpolateLab
 
     //https://d3js.org/d3-interpolate/color
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
-    const middleColors = opts.middleColors || [middleColorFunction(colors[1], colors[2]), middleColorFunction(colors[0], colors[2]), middleColorFunction(colors[0], colors[1])]
+    const [midColor0, midColor1, midColor2] = opts.middleColors || [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]
     //const centralColor = opts.centralColor || colorInterpolation(middleColors[2], colors[2])(0.333)
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
@@ -28,17 +28,17 @@ export const trivariateColorClassifier6 = (properties, totalFunction, opts = {})
         //compute shares
         const [s0, s1, s2] = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
 
-        if (s0 > c0 && s1 < c1 && s2 < c2) return c0
-        else if (s0 < c0 && s1 > c1 && s2 < c2) return c1
-        else if (s0 < c0 && s1 < c1 && s2 > c2) return c2
-        else if (s0 < c0 && s1 > c1 && s2 > c2) return middleColors[0]
-        else if (s0 > c0 && s1 < c1 && s2 > c2) return middleColors[1]
-        else if (s0 > c0 && s1 > c1 && s2 < c2) return middleColors[2]
-        else return "black"
+        if (s0 >= c0 && s1 <= c1 && s2 <= c2) return color0
+        if (s0 <= c0 && s1 >= c1 && s2 <= c2) return color1
+        if (s0 <= c0 && s1 <= c1 && s2 >= c2) return color2
+        if (s0 <= c0 && s1 >= c1 && s2 >= c2) return midColor0
+        if (s0 >= c0 && s1 <= c1 && s2 >= c2) return midColor1
+        if (s0 >= c0 && s1 >= c1 && s2 <= c2) return midColor2
+        return "black"
     }
     fun.center = [c0, c1, c2]
-    fun.colors = colors
-    fun.middleColors = middleColors
+    fun.colors = [color0, color1, color2]
+    fun.middleColors = [midColor0, midColor1, midColor2]
     return fun
 }
 
