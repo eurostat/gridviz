@@ -63,7 +63,7 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
     //const high_ = orderedIndexesDec(highThreshold)
     //const low_ = orderedIndexesInc(lowThreshold)
 
-    const fff = a => a == 0 ? Infinity : 1 / a - 1
+    const fff = a => a == 1 ? Infinity : a / (1 - a)
     const c01 = fff(a01), c12 = fff(a12), c20 = fff(a20)
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
