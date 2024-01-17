@@ -118,22 +118,22 @@ export class TrivariateLegend extends Legend {
                         .attr('points', w + "," + h + " " + w / 2 + ",0 " + w * (1 - r) / 2 + "," + h * r + " " + w * (1 - r) + "," + h)
             }
 
-            for (let i_ = 2; i_ >= 0; i_--) {
+            for (let i_ = 0; i_ < 3; i_++) {
                 const i = this.classifier.highIndex[i_]
                 const r = this.classifier.highThreshold[i]
 
                 if (i == 2)
                     //2 right triangle
                     right = g.append('polygon')
-                        .attr('points', w + "," + h + " " + w * r + "," + h + " " + w * (1 + r)/2 + "," + h * r)
+                        .attr('points', w + "," + h + " " + w * r + "," + h + " " + w * (1 + r) / 2 + "," + h * r)
                 else if (i == 1)
                     //1 top triangle
                     top = g.append('polygon')
-                        //.attr('points', (w / 2) + ",0 " + w * (1 - r) / 2 + "," + h * r + " " + w * (1 + r) / 2 + "," + h * r)
+                        .attr('points', (w / 2) + ",0 " + w * r / 2 + "," + h * (1 - r) + " " + w * (1 - r / 2) + "," + h * (1 - r))
                 else
                     //0 left triangle
                     left = g.append('polygon')
-                        .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
+                        .attr('points', "0," + h + " " + w * (1 - r) + "," + h + " " + w * (1 - r) / 2 + "," + h * r)
             }
 
         }
