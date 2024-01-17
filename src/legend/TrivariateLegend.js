@@ -170,7 +170,5 @@ export class TrivariateLegend extends Legend {
         setAttributes(left_, classifier.middleColors[2], texts["01"])
         setAttributes(bottom_, classifier.middleColors[1], texts["02"])
         setAttributes(right_, classifier.middleColors[0], texts["12"])
-
-
     }
 }
