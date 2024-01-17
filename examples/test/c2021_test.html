@@ -555,21 +555,21 @@
 
                 let colorTrivariateFun
                 if (theme == "age")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier6(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
                         center: [0.15, 0.6, 0.25],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "mobility")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier3(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sCHG_IN", "sSAME", "sCHG_OUT"],
                         c => 100, {
                         center: [0.15, 0.6, 0.25],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "pob")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier3(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sEU_OTH", "sNAT", "sOTH"],
                         c => 100, {
                         center: [0.15, 0.6, 0.25],

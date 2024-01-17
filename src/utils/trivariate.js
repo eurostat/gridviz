@@ -10,7 +10,7 @@ import { interpolateLab } from "d3-interpolate"
 
 
 
-export const trivariateColorClassifier6 = (properties, totalFunction, opts = {}) => {
+export const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
     const [c0, c1, c2] = opts.center || [1 / 3, 1 / 3, 1 / 3] //sum must be equal to 1
     const [color0, color1, color2] = opts.colors || ["red", "green", "blue"]
     const colorInterpolation = opts.colorInterpolation || interpolateLab
@@ -46,7 +46,7 @@ export const trivariateColorClassifier6 = (properties, totalFunction, opts = {})
 
 
 
-
+/*
 const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
 const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
 
@@ -88,8 +88,9 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     fun.highIndex = high_
     return fun
 }
+*/
 
-
+/*
 export const trivariateColorClassifier3 = (properties, totalFunction, opts = {}) => {
     const [a01, a12, a20] = opts.thresholds || [0.5, 0.5, 0.5]
     const [c0, c1, c2] = opts.colors || ["red", "green", "blue"]
@@ -115,3 +116,4 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
     fun.centralColor = centralColor
     return fun
 }
+*/
