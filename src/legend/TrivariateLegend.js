@@ -45,6 +45,7 @@ export class TrivariateLegend extends Legend {
         const w = this.width, h = w * sqrt2over2
         const classifier = this.classifier
         const selectionColor = this.selectionColor
+        const selectionStrokeWidth = 0
         const tt = this.tooltip
         const texts = this.texts
 
@@ -84,37 +85,44 @@ export class TrivariateLegend extends Legend {
             //middle triangle
             middle = g.append('polygon')
                 .attr('points', (w / 2) + "," + (h / 3) + " " + (w / 4) + "," + (h * 5 / 6) + " " + (3 * w / 4) + "," + (h * 5 / 6))
-            //01 left
+            //01 left trapezium
             left_ = g.append('polygon')
                 .attr('points', (w / 6) + "," + (h * 2 / 3) + " " + (w / 4) + "," + (h * 5 / 6) + " " + (w / 2) + "," + (h / 3) + " " + (w / 3) + "," + (h / 3))
-            //02 bottom
+            //02 bottom trapezium
             bottom_ = g.append('polygon')
                 .attr('points', (w / 3) + "," + (h) + " " + (2 * w / 3) + "," + (h) + " " + (w * 3 / 4) + "," + (h * 5 / 6) + " " + (w / 4) + "," + (h * 5 / 6))
-            //12 right
+            //12 right trapezium
             right_ = g.append('polygon')
                 .attr('points', (w / 2) + "," + (h / 3) + " " + (w * 3 / 4) + "," + (h * 5 / 6) + " " + (w * 5 / 6) + "," + (h * 2 / 3) + " " + (w * 2 / 3) + "," + (h / 3))
 
         } else {
-            let r
 
             //middle triangle
             middle = g.append('polygon')
                 .attr('points', (w / 2) + ",0 0," + h + " " + w + "," + h)
 
-            //01 left
-            r = this.classifier.lowThreshold[2]
-            left_ = g.append('polygon')
-                .attr('points', w / 2 + ",0 0," + h + " " + w * r + "," + h + " " + w * (1 + r) / 2 + "," + r * h)
+            for (let i_ = 2; i_ >= 0; i_--) {
+                const i = this.classifier.lowIndex[i_]
+                const r = this.classifier.lowThreshold[i]
+                if (i == 2)
+                    //01 left trapezium
+                    left_ = g.append('polygon')
+                        .attr('points', w / 2 + ",0 0," + h + " " + w * r + "," + h + " " + w * (1 + r) / 2 + "," + r * h)
+                else if (i == 1)
+                    //02 bottom trapezium
+                    bottom_ = g.append('polygon')
+                        .attr('points', "0," + h + " " + w + "," + h + " " + w * (1 - r / 2) + "," + h * (1 - r) + " " + r * w / 2 + "," + h * (1 - r))
+                else
+                    //12 right trapezium
+                    right_ = g.append('polygon')
+                        .attr('points', w + "," + h + " " + w / 2 + ",0 " + w * (1 - r) / 2 + "," + h * r + " " + w * (1 - r) + "," + h)
+            }
 
-            //02 bottom
-            r = this.classifier.lowThreshold[1]
-            bottom_ = g.append('polygon')
-                .attr('points', "0," + h + " " + w + "," + h + " " + w * (1 - r / 2) + "," + h * (1 - r) + " " + r * w / 2 + "," + h * (1 - r))
+            for (let i_ = 2; i_ >= 0; i_--) {
+                const i = this.classifier.highIndex[i_]
+                const r = this.classifier.highThreshold[i]
 
-            //12 right
-            r = this.classifier.lowThreshold[0]
-            right_ = g.append('polygon')
-                .attr('points', w + "," + h + " " + w / 2 + ",0 " + w * (1 - r) / 2 + "," + h * r + " " + w * (1 - r) + "," + h)
+            }
 
         }
 
