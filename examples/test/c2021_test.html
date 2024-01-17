@@ -555,10 +555,11 @@
 
                 let colorTrivariateFun
                 if (theme == "age")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier3(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier6(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
-                        thresholds: [0.75, 0.3, 0.45], //
+                        center: [0.15, 0.6, 0.25],
+                        thresholds: [0.75, 0.3, 0.45], //3
                         lowThreshold: [0.1, 0.6, 0.2],
                         highThreshold: [0.2, 0.7, 0.4],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
@@ -569,7 +570,7 @@
                     colorTrivariateFun = gridviz.trivariateColorClassifier3(
                         ["sCHG_IN", "sSAME", "sCHG_OUT"],
                         c => 100, {
-                        thresholds: [0.92, 0.04, 0.3], //
+                        thresholds: [0.92, 0.04, 0.3], //3
                         lowThreshold: [0.01, 0.8, 0.01],
                         highThreshold: [0.1, 0.95, 0.05],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
@@ -580,7 +581,7 @@
                     colorTrivariateFun = gridviz.trivariateColorClassifier3(
                         ["sEU_OTH", "sNAT", "sOTH"],
                         c => 100, {
-                        thresholds: [0.8, 0.25, 0.35], //
+                        thresholds: [0.8, 0.25, 0.35], //3
                         lowThreshold: [0.05, 0.8, 0.05],
                         highThreshold: [0.2, 0.95, 0.3],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],

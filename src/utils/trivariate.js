@@ -29,13 +29,12 @@ export const trivariateColorClassifier6 = (properties, totalFunction, opts = {})
         const [s0, s1, s2] = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
 
         if (s0 > c0 && s1 < c1 && s2 < c2) return c0
-        if (s0 < c0 && s1 > c1 && s2 < c2) return c1
-        if (s0 < c0 && s1 < c1 && s2 > c2) return c2
-        if (s0 < c0 && s1 > c1 && s2 > c2) return middleColors[0]
-        if (s0 > c0 && s1 < c1 && s2 > c2) return middleColors[1]
-        if (s0 > c0 && s1 > c1 && s2 < c2) return middleColors[2]
-
-        return "black"
+        else if (s0 < c0 && s1 > c1 && s2 < c2) return c1
+        else if (s0 < c0 && s1 < c1 && s2 > c2) return c2
+        else if (s0 < c0 && s1 > c1 && s2 > c2) return middleColors[0]
+        else if (s0 > c0 && s1 < c1 && s2 > c2) return middleColors[1]
+        else if (s0 > c0 && s1 > c1 && s2 < c2) return middleColors[2]
+        else return "black"
     }
     fun.center = [c0, c1, c2]
     fun.colors = colors
