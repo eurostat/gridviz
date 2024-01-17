@@ -603,10 +603,12 @@
 
                 //legends
 
+                const legendWidth = 250
                 if (theme == "age")
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
                         title: "Age",
                         classifier: colorTrivariateFun,
+                        width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
                             "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
@@ -625,6 +627,7 @@
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
                         title: "Mobility (2020-2021)",
                         classifier: colorTrivariateFun,
+                        width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
                             "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% moved within the country",
@@ -643,6 +646,7 @@
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
                         title: "Birth place",
                         classifier: colorTrivariateFun,
+                        width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
                             "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% born in another EU member state",
