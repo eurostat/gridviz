@@ -122,6 +122,18 @@ export class TrivariateLegend extends Legend {
                 const i = this.classifier.highIndex[i_]
                 const r = this.classifier.highThreshold[i]
 
+                if (i == 2)
+                    //2 right triangle
+                    right = g.append('polygon')
+                        .attr('points', (w * 2 / 3) + "," + h + " " + w + "," + h + " " + (w * 5 / 6) + "," + (2 * h / 3))
+                else if (i == 1)
+                    //1 top triangle
+                    top = g.append('polygon')
+                        .attr('points', (w / 3) + "," + (h / 3) + " " + (w * 2 / 3) + "," + (h / 3) + " " + (w / 2) + ",0")
+                else
+                    //0 left triangle
+                    left = g.append('polygon')
+                        .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
             }
 
         }
