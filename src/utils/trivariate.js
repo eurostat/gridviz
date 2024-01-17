@@ -29,9 +29,11 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         //compute shares
         const shares = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
         //return colors
-        //start first with the triangles: from the larger to the smaller
+        //start first with the extreme high (triangles): from the larger value (small triangle) to the lower value (large triangle)
         for (let i of high_) if (shares[i] > highThreshold[i]) return colors[i]
+        //then draw the extreme low (trapeziums): from the lower value (small trapeziums) to the larger values (large trapezium)
         for (let i of low_) if (shares[i] < lowThreshold[i]) return middleColors[i]
+        //else central color
         return centralColor
     }
     fun.lowThreshold = lowThreshold

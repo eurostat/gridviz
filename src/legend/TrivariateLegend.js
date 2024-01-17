@@ -101,6 +101,8 @@ export class TrivariateLegend extends Legend {
             middle = g.append('polygon')
                 .attr('points', (w / 2) + ",0 0," + h + " " + w + "," + h)
 
+            //draw trapezium
+            //draw large trapezium first
             for (let i_ = 2; i_ >= 0; i_--) {
                 const i = this.classifier.lowIndex[i_]
                 const r = this.classifier.lowThreshold[i]
@@ -118,7 +120,9 @@ export class TrivariateLegend extends Legend {
                         .attr('points', w + "," + h + " " + w / 2 + ",0 " + w * (1 - r) / 2 + "," + h * r + " " + w * (1 - r) + "," + h)
             }
 
-            for (let i_ = 0; i_ < 3; i_++) {
+            //draw triangles
+            //draw large triangles first
+            for (let i_ = 2; i_ >= 0; i_--) {
                 const i = this.classifier.highIndex[i_]
                 const r = this.classifier.highThreshold[i]
 
