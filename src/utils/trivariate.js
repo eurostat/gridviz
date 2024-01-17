@@ -48,7 +48,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 
 
 export const trivariateColorClassifier3 = (properties, totalFunction, opts = {}) => {
-    const [c01, c12, c20] = opts.thresholds || [1, 1, 1]
+    const [a01, a12, a20] = opts.thresholds || [0.5, 0.5, 0.5]
     //const t20 = 1.5 - t01 - t12
     //const lowThreshold = opts.lowThreshold || [1 / 3, 1 / 3, 1 / 3]
     //const highThreshold = opts.highThreshold || [2 / 3, 2 / 3, 2 / 3]
@@ -62,6 +62,9 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
 
     //const high_ = orderedIndexesDec(highThreshold)
     //const low_ = orderedIndexesInc(lowThreshold)
+
+    const fff = a => a == 0 ? Infinity : 1 / a - 1
+    const c01 = fff(a01), c12 = fff(a12), c20 = fff(a20)
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
     const fun = c => {
