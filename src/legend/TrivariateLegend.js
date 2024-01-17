@@ -19,8 +19,7 @@ export class TrivariateLegend extends Legend {
         this.classifier = opts.classifier
 
         this.width = opts.width || 150
-        this.colorOver = opts.colorOver || "red"
-        this.selectionStrokeWidth = this.selectionStrokeWidth != undefined ? this.selectionStrokeWidth : 5
+        this.selectionColor = this.selectionColor || "red"
         this.tooltip = opts.tooltip
         this.texts = opts.texts
 
@@ -45,8 +44,7 @@ export class TrivariateLegend extends Legend {
         const sqrt2over2 = 0.866025
         const w = this.width, h = w * sqrt2over2
         const classifier = this.classifier
-        const colorOver = this.colorOver
-        const selectionStrokeWidth = this.selectionStrokeWidth
+        const selectionColor = this.selectionColor
         const tt = this.tooltip
         const texts = this.texts
 
@@ -106,7 +104,7 @@ export class TrivariateLegend extends Legend {
             //01 left
             r = this.classifier.lowThreshold[2]
             left_ = g.append('polygon')
-                .attr('points', w/2+",0 0,"+h+" "+w*r+","+h)
+                .attr('points', w / 2 + ",0 0," + h + " " + w * r + "," + h + " " + w * (1 + r) / 2 + "," + r * h)
 
             //02 bottom
             r = this.classifier.lowThreshold[1]
@@ -123,11 +121,22 @@ export class TrivariateLegend extends Legend {
         const setAttributes = (elt, color, text) => {
             //elt.raise();
             elt.attr('fill', color)
-                .attr("stroke", colorOver)
-                .attr("stroke-width", 0)
-                .attr("stroke-linejoin", "round")
-                .on("mouseover", function (e) { /*this.parentNode.appendChild(this);*/ select(this).attr("stroke-width", selectionStrokeWidth); if (!tt || !text) return; tt.html(text); tt.setPosition(e); tt.show() })
-                .on("mouseout", function () { select(this).attr("stroke-width", 0); if (tt) tt.hide() })
+                //.attr("stroke", colorOver)
+                //.attr("stroke-width", 0)
+                //.attr("stroke-linejoin", "round")
+                .on("mouseover", function (e) {
+                    /*this.parentNode.appendChild(this); select(this).attr("stroke-width", selectionStrokeWidth);*/
+                    select(this).attr('fill', selectionColor);
+                    if (!tt || !text) return;
+                    tt.html(text);
+                    tt.setPosition(e);
+                    tt.show()
+                })
+                .on("mouseout", function () {
+                    /*select(this).attr("stroke-width", 0);*/
+                    select(this).attr('fill', color);
+                    if (tt) tt.hide()
+                })
             if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
         }
         //setAttributes(left, classifier.colors[0], texts["0"])
