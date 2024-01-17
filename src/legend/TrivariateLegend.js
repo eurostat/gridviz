@@ -125,11 +125,11 @@ export class TrivariateLegend extends Legend {
                 if (i == 2)
                     //2 right triangle
                     right = g.append('polygon')
-                        .attr('points', (w * 2 / 3) + "," + h + " " + w + "," + h + " " + (w * 5 / 6) + "," + (2 * h / 3))
+                        .attr('points', w + "," + h + " " + w * r + "," + h + " " + w * (1 + r)/2 + "," + h * r)
                 else if (i == 1)
                     //1 top triangle
                     top = g.append('polygon')
-                        .attr('points', (w / 3) + "," + (h / 3) + " " + (w * 2 / 3) + "," + (h / 3) + " " + (w / 2) + ",0")
+                        //.attr('points', (w / 2) + ",0 " + w * (1 - r) / 2 + "," + h * r + " " + w * (1 + r) / 2 + "," + h * r)
                 else
                     //0 left triangle
                     left = g.append('polygon')
@@ -159,9 +159,9 @@ export class TrivariateLegend extends Legend {
                 })
             if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
         }
-        //setAttributes(left, classifier.colors[0], texts["0"])
-        //setAttributes(top, classifier.colors[1], texts["1"])
-        //setAttributes(right, classifier.colors[2], texts["2"])
+        setAttributes(left, classifier.colors[0], texts["0"])
+        setAttributes(top, classifier.colors[1], texts["1"])
+        setAttributes(right, classifier.colors[2], texts["2"])
         setAttributes(middle, classifier.centralColor, texts["middle"])
         setAttributes(left_, classifier.middleColors[2], texts["01"])
         setAttributes(bottom_, classifier.middleColors[1], texts["02"])
