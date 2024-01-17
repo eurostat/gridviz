@@ -558,6 +558,7 @@
                     colorTrivariateFun = gridviz.trivariateColorClassifier3(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
+                        thresholds: [3, 0.3, 0.5],
                         lowThreshold: [0.1, 0.6, 0.2],
                         highThreshold: [0.2, 0.7, 0.4],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
@@ -602,66 +603,66 @@
                 gridLayer.minPixelsPerCell = sbtp ? 6 : 1.5
 
                 //legends
-/*
-                const legendWidth = 250
-                if (theme == "age")
-                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
-                        title: "Age",
-                        classifier: colorTrivariateFun,
-                        width: legendWidth,
-                        tooltip: map.tooltip,
-                        texts: {
-                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
-                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
-                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
-                            "middle": "Other cases",
-                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
-                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
-                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
-                        },
-                        leftText: "Under 15",
-                        topText: "Age 15 to 64",
-                        rightText: "65 and older",
-                    })]
-                else if (theme == "mobility")
-                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
-                        title: "Mobility (2020-2021)",
-                        classifier: colorTrivariateFun,
-                        width: legendWidth,
-                        tooltip: map.tooltip,
-                        texts: {
-                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% moved within the country",
-                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% residence unchanged",
-                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% moved from outside the country",
-                            "middle": "Other cases",
-                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% moved within the country",
-                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% residence unchanged",
-                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% moved from outside the country",
-                        },
-                        leftText: "EU",
-                        topText: "Same country",
-                        rightText: "Rest of the world",
-                    })]
-                else if (theme == "pob")
-                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
-                        title: "Birth place",
-                        classifier: colorTrivariateFun,
-                        width: legendWidth,
-                        tooltip: map.tooltip,
-                        texts: {
-                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% born in another EU member state",
-                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% born in the country",
-                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% born outside the EU",
-                            "middle": "Other cases",
-                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% born in another EU member state",
-                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% born in the country",
-                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% born outside the EU",
-                        },
-                        leftText: "EU",
-                        topText: "Same country",
-                        rightText: "Rest of the world",
-                    })]
-*/
+                /*
+                                const legendWidth = 250
+                                if (theme == "age")
+                                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                                        title: "Age",
+                                        classifier: colorTrivariateFun,
+                                        width: legendWidth,
+                                        tooltip: map.tooltip,
+                                        texts: {
+                                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% persons aged <15",
+                                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% persons aged 15 to 64",
+                                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% persons aged >=65",
+                                            "middle": "Other cases",
+                                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% persons aged <15",
+                                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% persons aged 15 to 64",
+                                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% persons aged >=65",
+                                        },
+                                        leftText: "Under 15",
+                                        topText: "Age 15 to 64",
+                                        rightText: "65 and older",
+                                    })]
+                                else if (theme == "mobility")
+                                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                                        title: "Mobility (2020-2021)",
+                                        classifier: colorTrivariateFun,
+                                        width: legendWidth,
+                                        tooltip: map.tooltip,
+                                        texts: {
+                                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% moved within the country",
+                                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% residence unchanged",
+                                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% moved from outside the country",
+                                            "middle": "Other cases",
+                                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% moved within the country",
+                                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% residence unchanged",
+                                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% moved from outside the country",
+                                        },
+                                        leftText: "EU",
+                                        topText: "Same country",
+                                        rightText: "Rest of the world",
+                                    })]
+                                else if (theme == "pob")
+                                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                                        title: "Birth place",
+                                        classifier: colorTrivariateFun,
+                                        width: legendWidth,
+                                        tooltip: map.tooltip,
+                                        texts: {
+                                            "0": "More that " + (colorTrivariateFun.highThreshold[0] * 100) + "% born in another EU member state",
+                                            "1": "More that " + (colorTrivariateFun.highThreshold[1] * 100) + "% born in the country",
+                                            "2": "More that " + (colorTrivariateFun.highThreshold[2] * 100) + "% born outside the EU",
+                                            "middle": "Other cases",
+                                            "12": "Less that " + (colorTrivariateFun.lowThreshold[0] * 100) + "% born in another EU member state",
+                                            "02": "Less that " + (colorTrivariateFun.lowThreshold[1] * 100) + "% born in the country",
+                                            "01": "Less that " + (colorTrivariateFun.lowThreshold[2] * 100) + "% born outside the EU",
+                                        },
+                                        leftText: "EU",
+                                        topText: "Same country",
+                                        rightText: "Rest of the world",
+                                    })]
+                */
                 //population
                 if (sbtp)
                     gridLayer.styles[0].addLegends(

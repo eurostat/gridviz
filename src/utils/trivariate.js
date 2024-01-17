@@ -58,7 +58,7 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
     //https://d3js.org/d3-interpolate/color
     //const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     //const middleColors = opts.middleColors || [middleColorFunction(colors[1], colors[2]), middleColorFunction(colors[0], colors[2]), middleColorFunction(colors[0], colors[1])]
-    //const centralColor = opts.centralColor || colorInterpolation(middleColors[2], colors[2])(0.333)
+    const centralColor = opts.centralColor || "gray" //|| colorInterpolation(middleColors[2], colors[2])(0.333)
 
     //const high_ = orderedIndexesDec(highThreshold)
     //const low_ = orderedIndexesInc(lowThreshold)
@@ -71,8 +71,10 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
         //compute shares
         const [s0, s1, s2] = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
         //return colors
-        if (s0 * c01 > s1) return s0 > s2 * c20 ? c0 : c2
-        return s1 * c12 > s2 ? c1 : c2
+        if (s0 * c01 > s1 && s0 > s2 * c20) return c0
+        else if (s1 > s0 * c01 && s1 * c12 > s2) return c1
+        else if (s2 * c20 > s0 && s2 > s1 * c12) return c2
+        else return centralColor
     }
     //fun.lowThreshold = lowThreshold
     //fun.highThreshold = highThreshold
