@@ -555,7 +555,7 @@
 
                 let colorTrivariateFun
                 if (theme == "age")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier3(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
                         lowThreshold: [0.1, 0.6, 0.2],
@@ -565,7 +565,7 @@
                         colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
                     })
                 else if (theme == "mobility")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier3(
                         ["sCHG_IN", "sSAME", "sCHG_OUT"],
                         c => 100, {
                         lowThreshold: [0.01, 0.8, 0.01],
@@ -575,7 +575,7 @@
                         colorInterpolation: d3.interpolateLab //interpolateHcl interpolateLab //interpolateHsl //interpolateRgb
                     })
                 else if (theme == "pob")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier3(
                         ["sEU_OTH", "sNAT", "sOTH"],
                         c => 100, {
                         lowThreshold: [0.05, 0.8, 0.05],
@@ -602,7 +602,7 @@
                 gridLayer.minPixelsPerCell = sbtp ? 6 : 1.5
 
                 //legends
-
+/*
                 const legendWidth = 250
                 if (theme == "age")
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
@@ -661,7 +661,7 @@
                         topText: "Same country",
                         rightText: "Rest of the world",
                     })]
-
+*/
                 //population
                 if (sbtp)
                     gridLayer.styles[0].addLegends(
