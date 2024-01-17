@@ -27,6 +27,8 @@ export class TrivariateLegend extends Legend {
         this.leftText = opts.leftText || "Category 0"
         this.topText = opts.topText || "Category 1"
         this.rightText = opts.rightText || "Category 2"
+
+        this.real = opts.real || true
     }
 
     /**
@@ -68,26 +70,30 @@ export class TrivariateLegend extends Legend {
             .attr("text-anchor", "end")
 
         const g = svg.append("g").attr("transform", "translate(" + (selectionStrokeWidth / 2) + " " + (selectionStrokeWidth / 2 + (2 * padding + fontSize)) + ")")
+
+
+        let middle, left, top, right, left_, bottom_, right_
+
         //0 left triangle
-        const left = g.append('polygon')
+        left = g.append('polygon')
             .attr('points', "0," + h + " " + (w / 3) + "," + h + " " + (w / 6) + "," + (2 * h / 3))
         //1 top triangle
-        const top = g.append('polygon')
+        top = g.append('polygon')
             .attr('points', (w / 3) + "," + (h / 3) + " " + (w * 2 / 3) + "," + (h / 3) + " " + (w / 2) + ",0")
         //2 right triangle
-        const right = g.append('polygon')
+        right = g.append('polygon')
             .attr('points', (w * 2 / 3) + "," + h + " " + w + "," + h + " " + (w * 5 / 6) + "," + (2 * h / 3))
         //middle triangle
-        const middle = g.append('polygon')
+        middle = g.append('polygon')
             .attr('points', (w / 2) + "," + (h / 3) + " " + (w / 4) + "," + (h * 5 / 6) + " " + (3 * w / 4) + "," + (h * 5 / 6))
         //01 left
-        const left_ = g.append('polygon')
+        left_ = g.append('polygon')
             .attr('points', (w / 6) + "," + (h * 2 / 3) + " " + (w / 4) + "," + (h * 5 / 6) + " " + (w / 2) + "," + (h / 3) + " " + (w / 3) + "," + (h / 3))
         //02 bottom
-        const bottom_ = g.append('polygon')
+        bottom_ = g.append('polygon')
             .attr('points', (w / 3) + "," + (h) + " " + (2 * w / 3) + "," + (h) + " " + (w * 3 / 4) + "," + (h * 5 / 6) + " " + (w / 4) + "," + (h * 5 / 6))
         //12 right
-        const right_ = g.append('polygon')
+        right_ = g.append('polygon')
             .attr('points', (w / 2) + "," + (h / 3) + " " + (w * 3 / 4) + "," + (h * 5 / 6) + " " + (w * 5 / 6) + "," + (h * 2 / 3) + " " + (w * 2 / 3) + "," + (h / 3))
 
 

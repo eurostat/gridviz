@@ -1,5 +1,5 @@
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="map" style="height: 600px; width: 100%"></div>
+    <div id="map" style="height: 100%; width: 100%"></div>
 
     <div style="
         position: absolute;
@@ -558,7 +558,7 @@
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
-                        lowThreshold: [0.1, 0.6, 0.15],
+                        lowThreshold: [0.1, 0.6, 0.2],
                         highThreshold: [0.2, 0.7, 0.4],
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                         centralColor: "#aaa",
