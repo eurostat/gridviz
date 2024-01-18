@@ -18,7 +18,9 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     //https://d3js.org/d3-interpolate/color
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     const [midColor0, midColor1, midColor2] = opts.middleColors || [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]
-    //const centralColor = opts.centralColor || colorInterpolation(middleColors[2], colors[2])(0.333)
+
+    //const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
+    //const centralCoefficient = opts.centralCoefficient || 2 / 3
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
     const fun = c => {

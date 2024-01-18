@@ -100,8 +100,12 @@ export class TrivariateLegend extends Legend {
 
         //trapezium s0
         const t0 = g.append('polygon')
-            .attr('points', "0," + h + " " + c2 / sqrt3over2 + "," + h + " " + (w / 6) + "," + (2 * h / 3))
-        setAttributes(t0, classifier.colors[0], texts["0"])
+            .attr('points', "0," + h + " " + w / 3 + "," + h + " " + w / 2 + "," + h * 2 / 3 + " " + w / 6 + "," + h * 2 / 3)
+        setAttributes(t0, classifier.colors[0], /*texts["0"]*/undefined)
+        //trapezium s1
+        const t1 = g.append('polygon')
+            .attr('points', w / 2 + ",0 " + w * 2 / 3 + "," + h / 3 + " " + w / 2 + "," + h * 2 / 3 + " " + w / 3 + "," + h / 3)
+        setAttributes(t1, classifier.colors[1], /*texts["0"]*/undefined)
         //TODO
 
 
