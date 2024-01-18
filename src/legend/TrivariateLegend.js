@@ -96,7 +96,7 @@ export class TrivariateLegend extends Legend {
             if (tt && text) elt.on("mousemove", function (e) { tt.setPosition(e) })
         }
 
-        const [c0, c1, c2] = classifier.center
+        //const [c0, c1, c2] = classifier.center
 
         //trapezium s0
         const t0 = g.append('polygon')
@@ -110,6 +110,18 @@ export class TrivariateLegend extends Legend {
         const t2 = g.append('polygon')
             .attr('points', w + "," + h + " " + w * 5 / 6 + "," + 2 * h / 3 + " " + w / 2 + "," + h * 2 / 3 + " " + w * 2 / 3 + "," + h)
         setAttributes(t2, classifier.colors[2], /*texts["0"]*/undefined)
+        //triangle s0
+        const t0_ = g.append('polygon')
+            .attr('points', w / 2 + "," + h * 2 / 3 + " " + w * 5 / 6 + "," + h * 2 / 3 + " " + w * 2 / 3 + "," + h / 3)
+        setAttributes(t0_, classifier.middleColors[0], /*texts["0"]*/undefined)
+        //triangle s1
+        const t1_ = g.append('polygon')
+            .attr('points', w / 2 + "," + h * 2 / 3 + " " + w / 3 + "," + h + " " + w * 2 / 3 + "," + h)
+        setAttributes(t1_, classifier.middleColors[1], /*texts["0"]*/undefined)
+        //triangle s2
+        const t2_ = g.append('polygon')
+            .attr('points', w / 2 + "," + h * 2 / 3 + " " + w / 6 + "," + h * 2 / 3 + " " + w / 3 + "," + h / 3)
+        setAttributes(t2_, classifier.middleColors[2], /*texts["0"]*/undefined)
         //TODO
 
 
