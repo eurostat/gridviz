@@ -179,6 +179,9 @@
         //add layers to map
         map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundariesLayer, labelLayer]
 
+        //format function for percentages
+        const formatPercentage = d3.format('.1f')
+
         //
         const update = () => {
             //read GUI selection
@@ -268,7 +271,7 @@
                     '<b>' + (+c.F + +c.M) + '</b> person' + (+c.F + +c.M == 1 ? '' : 's') + '<br>' +
                     c.M + ' m' + (c.M == 1 ? "a" : "e") + 'n<br>' +
                     c.F + ' wom' + (c.F == 1 ? 'a' : 'e') + 'n<br>' +
-                    'Difference: <b>' + (c.indMF > 0 ? '+' : '') + d3.format('.1f')(c.indMF) + ' % men</b>'
+                    'Difference: <b>' + (c.indMF > 0 ? '+' : '') + formatPercentage(c.indMF) + ' % men</b>'
 
 
 
@@ -312,7 +315,7 @@
                 )
 
                 gridLayer.cellInfoHTML = (c) =>
-                    '<b>' + d3.format('.1f')(c.sEMP) + ' %</b> employment<br>' +
+                    '<b>' + formatPercentage(c.sEMP) + ' %</b> employment<br>' +
                     //c.EMP + '<br>' +
                     (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
@@ -534,7 +537,7 @@
                     )
 
                 gridLayer.cellInfoHTML = (c) =>
-                    '<b>' + d3.format('.1f')(c[shareB]) + ' %</b><br>' +
+                    '<b>' + formatPercentage(c[shareB]) + ' %</b><br>' +
                     c[shareA] + '<br>' //+
                     + c.T + " person(s)"
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
@@ -661,10 +664,18 @@
                         })
                     )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
-                    c.Y_LT15 + " under 15 years<br>" +
-                    c["Y15-64"] + " 15 to 64 years<br>" +
-                    c.Y_GE65 + " 65 years and older"
+                if (theme == "age")
+                    gridLayer.cellInfoHTML = (c) => {
+                        const total = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
+                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                            c.sY_LT15 + "% under 15 years<br>" +
+                            c["sY15-64"] + "% 15 to 64 years<br>" +
+                            c.sY_GE65 + "% 65 years and older"
+                    }
+                else if (theme == "mobility")
+                    gridLayer.cellInfoHTML = (c) => { return "TODO" }
+                else if (theme == "pob")
+                    gridLayer.cellInfoHTML = (c) => { return "TODO" }
 
             } else console.error('Unexpected layer code: ' + layCode)
 
