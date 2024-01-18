@@ -653,7 +653,7 @@
                         rightText: "Rest of the world",
                     })]
 
-                //population
+                //population legend
                 if (sbtp)
                     gridLayer.styles[0].addLegends(
                         gridviz.sizeDiscreteViewScaleLegend(
@@ -664,18 +664,31 @@
                         })
                     )
 
+                //tooltip text
                 if (theme == "age")
                     gridLayer.cellInfoHTML = (c) => {
                         const total = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
                         return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
-                            c.sY_LT15 + "% under 15 years<br>" +
-                            c["sY15-64"] + "% 15 to 64 years<br>" +
-                            c.sY_GE65 + "% 65 years and older"
+                            formatPercentage(c.sY_LT15) + "% under 15 years<br>" +
+                            formatPercentage(c["sY15-64"]) + "% 15 to 64 years<br>" +
+                            formatPercentage(c.sY_GE65) + "% 65 years and older"
                     }
                 else if (theme == "mobility")
-                    gridLayer.cellInfoHTML = (c) => { return "TODO" }
+                    gridLayer.cellInfoHTML = (c) => {
+                        const total = +c.CHG_IN + +c.SAME + +c.CHG_OUT
+                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                            formatPercentage(c.sSAME) + "% residence unchanged<br>" +
+                            formatPercentage(c.sCHG_IN) + "% moved within the country<br>" +
+                            formatPercentage(c.sCHG_OUT) + "% moved from outside the country"
+                    }
                 else if (theme == "pob")
-                    gridLayer.cellInfoHTML = (c) => { return "TODO" }
+                    gridLayer.cellInfoHTML = (c) => {
+                        const total = +c.NAT + +c.EU_OTH + +c.OTH
+                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                            formatPercentage(c.sNAT) + "% born in the country<br>" +
+                            formatPercentage(c.sEU_OTH) + "% born in another EU member state<br>" +
+                            formatPercentage(c.sOTH) + "% born outside the EU"
+                    }
 
             } else console.error('Unexpected layer code: ' + layCode)
 
