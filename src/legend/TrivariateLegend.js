@@ -106,6 +106,10 @@ export class TrivariateLegend extends Legend {
         const t1 = g.append('polygon')
             .attr('points', w / 2 + ",0 " + w * 2 / 3 + "," + h / 3 + " " + w / 2 + "," + h * 2 / 3 + " " + w / 3 + "," + h / 3)
         setAttributes(t1, classifier.colors[1], /*texts["0"]*/undefined)
+        //trapezium s2
+        const t2 = g.append('polygon')
+            .attr('points', w + "," + h + " " + w * 5 / 6 + "," + 2 * h / 3 + " " + w / 2 + "," + h * 2 / 3 + " " + w * 2 / 3 + "," + h)
+        setAttributes(t2, classifier.colors[2], /*texts["0"]*/undefined)
         //TODO
 
 
