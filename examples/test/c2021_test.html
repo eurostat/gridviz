@@ -500,9 +500,12 @@
                         if (sexI == 1) return empNeutralColorClassifier(c.sEMP)
                         if (sexI == 2) return empMaleColorClassifier(c.sEMP)
                     },
-                    /*size: (c, r) => {
+                    size: (c, r) => {
                         const i = ageTrivariateClassifier(c)
-                    },*/
+                        if (i == "square") return r * 0.7071
+                        if (i == "circle") return r * 2.5066
+                        if (i == "diamond") return r
+                    },
                     //size: (c, r, z, viewScale) => viewScale(c.T),
                     //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
                     shape: (c) => ageTrivariateClassifier(c),
