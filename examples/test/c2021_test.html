@@ -471,19 +471,20 @@
 
                 //emp color classifiers
                 const empBreaks = [30, 45, 55, 70]
-                const empFemaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeYlOrRd[empBreaks.length + 1])
-                const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeYlOrRd[empBreaks.length + 1])
-                const empNeutralColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeYlOrRd[empBreaks.length + 1])
+                const empFemaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeReds[empBreaks.length + 1])
+                const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeGreys[empBreaks.length + 1])
+                const empNeutralColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeBlues[empBreaks.length + 1])
 
-                //const classNumberSize = 4
+                const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => {
                         const sexI = sexClassifier(c.indMF)
-                        const empC = empColorClassifier(c.sEMP)
-                        return empC
+                        if (sexI == 0) return empFemaleColorClassifier(c.sEMP)
+                        if (sexI == 1) return empNeutralColorClassifier(c.sEMP)
+                        if (sexI == 2) return empMaleColorClassifier(c.sEMP)
                     },
-                    //size: (c, r, z, viewScale) => viewScale(c.T),
-                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+                    size: (c, r, z, viewScale) => viewScale(c.T),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
                     shape: () => 'circle',
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
