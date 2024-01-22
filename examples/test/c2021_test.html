@@ -34,6 +34,9 @@
                 <input type="radio" name="layer" id="pob" value="pob" />
                 <label for="pob">Birth place</label>
                 <br />
+                <input type="radio" name="layer" id="multi1" value="multi1" />
+                <label for="multi1">Age sex employment</label>
+                <br />
                 <hr />
                 <input type="radio" name="layer" id="share" value="share" />
                 <label for="share">Share of</label>
@@ -459,6 +462,34 @@
                     c.EU_OTH + " born in another EU member state<br>" +
                     c.OTH + " born outside the EU"
 
+
+            } else if (layCode === 'multi1') {
+
+                //sex classifier
+                const sexBreaks = [-2, 2,]
+                const sexClassifier = gridviz.classifier(sexBreaks)
+
+                //emp color classifiers
+                const empBreaks = [30, 45, 55, 70]
+                const empFemaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeYlOrRd[empBreaks.length + 1])
+                const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeYlOrRd[empBreaks.length + 1])
+                const empNeutralColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeYlOrRd[empBreaks.length + 1])
+
+                //const classNumberSize = 4
+                const style = new gridviz.ShapeColorSizeStyle({
+                    color: (c, r, z, viewScale) => {
+                        const sexI = sexClassifier(c.indMF)
+                        const empC = empColorClassifier(c.sEMP)
+                        return empC
+                    },
+                    //size: (c, r, z, viewScale) => viewScale(c.T),
+                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+                    shape: () => 'circle',
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+                gridLayer.styles = [style]
+
+                gridLayer.minPixelsPerCell = 6
 
 
 

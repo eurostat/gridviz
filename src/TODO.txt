@@ -1,6 +1,5 @@
 *** census 2021
 trivariate: legend center hexagon. legend uncentered
-
 chernioff. sex, emp, age. 3*3. - see isotype icons
 sex: shape - emp: value - age hue
 sex: hue - emp: value - age shape (circle,square,triangle)
