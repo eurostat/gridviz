@@ -37,33 +37,33 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         }*/
 
         if (s0 >= c0 && s1 <= c1 && s2 <= c2) {
-            //if (cc && (s2 - c2) * (c1 - cc * c1) >= (s1 - cc * c1) * (cc * c2 - c2))
-            //    return centralColor
+            if (cc && (s2 - c2) * (c1 - cc * c1) >= (s1 - cc * c1) * (cc * c2 - c2))
+                return centralColor
             return color0
         }
         if (s0 <= c0 && s1 >= c1 && s2 <= c2) {
-            //if (cc && (s2 - c2) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c2 - c2))
-            //    return centralColor
+            if (cc && (s2 - c2) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c2 - c2))
+                return centralColor
             return color1
         }
         if (s0 <= c0 && s1 <= c1 && s2 >= c2) {
-            if (cc && (s2 - c2) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c2 - c2))
+            if (cc && (s1 - c1) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c1 - c1))
                 return centralColor
             return color2
         }
         if (s0 <= c0 && s1 >= c1 && s2 >= c2) {
-            //if (cc && s0 > cc * c0)
-            //    return centralColor
+            if (cc && s0 > cc * c0)
+                return centralColor
             return midColor0
         }
         if (s0 >= c0 && s1 <= c1 && s2 >= c2) {
-            //if (cc && s1 > cc * c1)
-            //    return centralColor
+            if (cc && s1 > cc * c1)
+                return centralColor
             return midColor1
         }
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
-            //if (cc && s2 > cc * c2)
-            //    return centralColor
+            if (cc && s2 > cc * c2)
+                return centralColor
             return midColor2
         }
         return "black"
