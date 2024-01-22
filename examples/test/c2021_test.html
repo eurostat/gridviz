@@ -571,8 +571,8 @@
                         ["sCHG_OUT", "sSAME", "sCHG_IN"],
                         c => 100, {
                         center: [0.05, 0.85, 0.1],
-                        centralColor: "#999",
-                        centerCoefficient: 0.25,
+                        //centralColor: "#999",
+                        //centerCoefficient: 0.7,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "pob")
@@ -580,8 +580,8 @@
                         ["sOTH", "sNAT", "sEU_OTH"],
                         c => 100, {
                         center: [0.25, 0.6, 0.15],
-                        centralColor: "#999",
-                        centerCoefficient: 0.1,
+                        //centralColor: "#999",
+                        //centerCoefficient: 0.5,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
 
@@ -642,7 +642,7 @@
                         leftText: "Outside",
                         topText: "No change",
                         rightText: "Inside country",
-                        centerCoefficient: 0.5,
+                        //centerCoefficient: 0.5,
                     })]
                 else if (theme == "pob")
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
@@ -662,7 +662,7 @@
                         leftText: "Rest of the world",
                         topText: "Same country",
                         rightText: "EU",
-                        centerCoefficient: 0.5,
+                        //centerCoefficient: 0.5,
                     })]
 
                 //population legend
