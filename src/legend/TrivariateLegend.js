@@ -125,6 +125,7 @@ export class TrivariateLegend extends Legend {
 
         //center
         if (this.centerCoefficient) {
+            //TODO make it an hexagon !
             const center = g.append('circle')
                 .attr('cx', w / 2).attr('cy', h * 2 / 3)
                 .attr('r', this.centerCoefficient * h / 3)
