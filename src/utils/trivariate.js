@@ -19,7 +19,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     const [midColor0, midColor1, midColor2] = opts.middleColors || [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]
 
-    //const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
+    const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
     //const centralCoefficient = opts.centralCoefficient || 2 / 3
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
@@ -36,7 +36,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         if (s0 <= c0 && s1 >= c1 && s2 >= c2) return midColor0
         if (s0 >= c0 && s1 <= c1 && s2 >= c2) return midColor1
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) return midColor2
-        return "black"
+        return centralColor
     }
     fun.center = [c0, c1, c2]
     fun.colors = [color0, color1, color2]
