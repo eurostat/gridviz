@@ -124,10 +124,12 @@ export class TrivariateLegend extends Legend {
         setAttributes(t2_, classifier.middleColors[2], texts["01"])
 
         //center
-        const center = g.append('circle')
-            .attr('cx', w / 2).attr('cy', h * 2 / 3)
-            .attr('r', classifier.centerCoefficient * h / 3)
-        setAttributes(center, classifier.centralColor, texts["center"])
+        if (this.centerCoefficient) {
+            const center = g.append('circle')
+                .attr('cx', w / 2).attr('cy', h * 2 / 3)
+                .attr('r', this.centerCoefficient * h / 3)
+            setAttributes(center, classifier.centralColor, texts["center"])
+        }
 
 
         /*
