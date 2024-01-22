@@ -21,6 +21,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
     //const centerRadius = opts.centerRadius
+    const centerCoefficient = opts.centerCoefficient
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
     const fun = c => {
@@ -35,12 +36,26 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
             if (d < centerRadius) return centralColor
         }*/
 
-        if (s0 >= c0 && s1 <= c1 && s2 <= c2) {return color0}
-        if (s0 <= c0 && s1 >= c1 && s2 <= c2) {return color1}
-        if (s0 <= c0 && s1 <= c1 && s2 >= c2) {return color2}
-        if (s0 <= c0 && s1 >= c1 && s2 >= c2) {return midColor0}
-        if (s0 >= c0 && s1 <= c1 && s2 >= c2) {return midColor1}
-        if (s0 >= c0 && s1 >= c1 && s2 <= c2) {return midColor2}
+        if (s0 >= c0 && s1 <= c1 && s2 <= c2) {
+            if (centerCoefficient && s2 >= (1 - centerCoefficient) * c2) return centralColor
+            return color0
+        }
+        if (s0 <= c0 && s1 >= c1 && s2 <= c2) {
+            return color1
+        }
+        if (s0 <= c0 && s1 <= c1 && s2 >= c2) {
+            return color2
+        }
+        if (s0 <= c0 && s1 >= c1 && s2 >= c2) {
+            return midColor0
+        }
+        if (s0 >= c0 && s1 <= c1 && s2 >= c2) {
+            return midColor1
+        }
+        if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
+
+            return midColor2
+        }
         return "black"
     }
     fun.center = [c0, c1, c2]
