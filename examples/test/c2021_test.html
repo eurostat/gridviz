@@ -478,6 +478,17 @@
                 const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeGreys[empBreaks.length + 1])
                 const empNeutralColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeBlues[empBreaks.length + 1])
 
+                //age classifier
+                const ageTrivariateClassifier = gridviz.trivariateColorClassifier(
+                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    c => 100, {
+                    center: [0.15, 0.6, 0.25],
+                    withMiddleClasses: false,
+                    centralColor: "central",
+                    centerCoefficient: 0.25,
+                    colors: ["0", "1", "2"],
+                })
+
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => {
@@ -488,7 +499,11 @@
                     },
                     size: (c, r, z, viewScale) => viewScale(c.T),
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
-                    shape: () =hh> 'circle', //TODO by age
+                    shape: (c) => {
+                        const i = ageTrivariateClassifier(c)
+                        console.log(i)
+                        //TODO
+                    },
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
