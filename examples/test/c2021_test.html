@@ -468,6 +468,8 @@
                 //emp value
                 //age shape
 
+
+
                 //sex classifier
                 const sexBreaks = [-2, 2,]
                 const sexClassifier = gridviz.classifier(sexBreaks)
@@ -484,12 +486,13 @@
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     withMiddleClasses: false,
-                    centralColor: "central",
+                    centralColor: "square",
                     centerCoefficient: 0.25,
-                    colors: ["L15", "15_64", "M65"],
+                    colors: ["circle", "square", "diamond"], //TODO triangle up down right left
+                    defaultColor: "square",
                 })
 
-                const classNumberSize = 4
+                //const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => {
                         const sexI = sexClassifier(c.indMF)
@@ -497,15 +500,12 @@
                         if (sexI == 1) return empNeutralColorClassifier(c.sEMP)
                         if (sexI == 2) return empMaleColorClassifier(c.sEMP)
                     },
-                    size: (c, r, z, viewScale) => viewScale(c.T),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
-                    shape: (c) => {
+                    /*size: (c, r) => {
                         const i = ageTrivariateClassifier(c)
-                        if (i == "L15") return "circle"
-                        if (i == "15_64") return "diamond"
-                        if (i == "M65") return "triangle"
-                        return "square"
-                    },
+                    },*/
+                    //size: (c, r, z, viewScale) => viewScale(c.T),
+                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
+                    shape: (c) => ageTrivariateClassifier(c),
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]

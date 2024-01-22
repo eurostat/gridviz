@@ -84,7 +84,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
             return s1 > s0 ? color1 : color0
         }
         //should not happen
-        return "black"
+        return opts.defaultColor || "black"
     }
 
     //attach information to output function
