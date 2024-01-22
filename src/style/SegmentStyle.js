@@ -84,7 +84,7 @@ export class SegmentStyle extends Style {
             geoCanvas.ctx.strokeStyle = col
             geoCanvas.ctx.lineWidth = wG
 
-            //compute segment centre postition
+            //compute segment center postition
             const cx = cell.x + resolution / 2 + offset.dx
             const cy = cell.y + resolution / 2 + offset.dy
 

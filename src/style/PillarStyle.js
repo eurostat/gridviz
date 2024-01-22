@@ -107,7 +107,7 @@ export class PillarStyle extends Style {
             //set width
             geoCanvas.ctx.lineWidth = wG
 
-            //compute cell centre postition
+            //compute cell center postition
             const cx = cell.x + resolution / 2
             const cy = cell.y + resolution / 2
             const ls = hG * this.shadowFactor
@@ -152,7 +152,7 @@ export class PillarStyle extends Style {
             //TODO use that
             //const offset = this.offset(c, resolution, z)
 
-            //compute cell centre postition
+            //compute cell center postition
             const cx = cell.x + resolution / 2
             const cy = cell.y + resolution / 2
 

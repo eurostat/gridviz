@@ -1,5 +1,5 @@
 *** census 2021
-trivariate: legend center hexagon. legend uncentrered ? No red for rest of the world
+trivariate: legend center hexagon. legend uncentered ? No red for rest of the world
 chernioff. sex, emp, age. 3*3. - see isotope icons
 bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS color
 CPA ?

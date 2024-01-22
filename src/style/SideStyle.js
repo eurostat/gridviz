@@ -125,14 +125,14 @@ export class SideStyle extends Style {
      * @param {number} resolution The cells resolution
      * @param {boolean} withHorizontal Set to true to build horizontal sides, false otherwise.
      * @param {boolean} withVertical Set to true to build vertical sides, false otherwise.
-     * @param {boolean} centre Set to true so that the side coordinate are those of its center point rather than its left/bottom point (the side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides)
+     * @param {boolean} center Set to true so that the side coordinate are those of its center point rather than its left/bottom point (the side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides)
      * @returns { Array.<Side> }
      */
-    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, centre = true) {
+    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = true) {
         /** @type { Array.<Side> } */
         const sides = []
 
-        const r2 = centre ? resolution / 2 : 0
+        const r2 = center ? resolution / 2 : 0
 
         //make horizontal sides
         //sort cells by x and y

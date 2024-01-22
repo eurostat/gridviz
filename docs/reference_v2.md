@@ -529,7 +529,7 @@ See [this example with random colors](https://eurostat.github.io/gridviz/example
 | **nb**      | function(v,r,s,z):number | (v, r, s, z) => 0.3 _ r _ r / (z _ z) _ v / s.max | A function computing the number of dots for a cell, from its **nbCol** value **v**, the resolution **r**, statistics **s** and  **z**.                                                  |
 | **color**   | function(c):string        | () => "#FF5733"                                      | A function returning the color of the dots of a cell. Note that it is the same color for all dots within a cell.                                                                                    |
 | **dotSize** | function(r,z):number     | (r,z) => 2 \* z                                    | A function computing the dot size from the resolution **r** and  **z**. It is the same size for all dots.                                                                               |
-| **sigma**   | function(r,z):number     | (r, z) => r \* 0.4                                  | A function computing the sigma parameter of the dispertion (gaussian) of the dots around the cell centre, from from the resolution **r** and  **z**. It is the same sigma for all dots. |
+| **sigma**   | function(r,z):number     | (r, z) => r \* 0.4                                  | A function computing the sigma parameter of the dispertion (gaussian) of the dots around the cell center, from from the resolution **r** and  **z**. It is the same sigma for all dots. |
 
 ### Pillars style
 
