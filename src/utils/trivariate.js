@@ -37,7 +37,6 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         }*/
 
         if (s0 >= c0 && s1 <= c1 && s2 <= c2) {
-            if (cc && s2 > cc * c2) return centralColor
             return color0
         }
         if (s0 <= c0 && s1 >= c1 && s2 <= c2) {
@@ -53,7 +52,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
             return midColor1
         }
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
-
+            if (cc && s2 > cc * c2) return centralColor
             return midColor2
         }
         return "black"
