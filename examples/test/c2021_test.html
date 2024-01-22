@@ -483,10 +483,10 @@
                     ["sY_LT15", "sY15-64", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
-                    withMiddleClasses: false,
+                    //withMiddleClasses: false,
                     centralColor: "central",
                     centerCoefficient: 0.25,
-                    colors: ["0", "1", "2"],
+                    colors: ["L15", "15_64", "M65"],
                 })
 
                 const classNumberSize = 4
@@ -503,6 +503,7 @@
                         const i = ageTrivariateClassifier(c)
                         console.log(i)
                         //TODO
+                        return "square"
                     },
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
