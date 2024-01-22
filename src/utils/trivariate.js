@@ -23,7 +23,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     //https://d3js.org/d3-interpolate/color
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     //the colors corresponding to the middle classes
-    const [midColor0, midColor1, midColor2] = opts.middleColors || [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]
+    const [midColor0, midColor1, midColor2] = opts.middleColors || withMiddleClasses? [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]: []
 
     //the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
