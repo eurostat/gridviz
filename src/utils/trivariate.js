@@ -21,7 +21,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
     //const centerRadius = opts.centerRadius
-    const cc = opts.centerCoefficient != undefined ? 1 - opts.centerCoefficient : undefined
+    const cc = opts.centerCoefficient ? 1 - opts.centerCoefficient : undefined
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
     const fun = c => {

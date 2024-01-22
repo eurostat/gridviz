@@ -568,20 +568,20 @@
                     })
                 else if (theme == "mobility")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["sCHG_IN", "sSAME", "sCHG_OUT"],
+                        ["sCHG_OUT", "sSAME", "sCHG_IN"],
                         c => 100, {
-                        center: [0.1, 0.85, 0.05],
+                        center: [0.05, 0.85, 0.1],
                         centralColor: "#999",
                         centerCoefficient: 0.25,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "pob")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["sEU_OTH", "sNAT", "sOTH"],
+                        ["sOTH", "sNAT", "sEU_OTH"],
                         c => 100, {
-                        center: [0.15, 0.6, 0.25],
+                        center: [0.25, 0.6, 0.15],
                         centralColor: "#999",
-                        centerCoefficient: 0.25,
+                        centerCoefficient: 0.1,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
 
@@ -622,6 +622,7 @@
                         leftText: "Under 15",
                         topText: "Age 15 to 64",
                         rightText: "65 and older",
+                        centerCoefficient: 0.5,
                     })]
                 else if (theme == "mobility")
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
@@ -630,16 +631,18 @@
                         width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
-                            "0": "Over representation of persons<br>that moved within the country",
+                            "0": "Over representation of persons<br>that moved from outside the country",
                             "1": "Over representation of persons<br>with residence unchanged",
-                            "2": "Over representation of persons<br>that moved from outside the country",
-                            "12": "Under representation of persons<br>that moved within the country",
+                            "2": "Over representation of persons<br>that moved within the country",
+                            "12": "Under representation of persons<br>that moved from outside the country",
                             "02": "Under representation of persons<br>with residence unchanged",
-                            "01": "Under representation of persons<br>that moved from outside the country",
+                            "01": "Under representation of persons<br>that moved within the country",
+                            "center": "Balanced representation of mobility groups",
                         },
-                        leftText: "Inside country",
+                        leftText: "Outside",
                         topText: "No change",
-                        rightText: "Outside",
+                        rightText: "Inside country",
+                        centerCoefficient: 0.5,
                     })]
                 else if (theme == "pob")
                     gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
@@ -648,16 +651,18 @@
                         width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
-                            "0": "Over representation of persons<br>born in another EU member state",
+                            "0": "Over representation of persons<br>born outside the EU",
                             "1": "Over representation of persons<br>born in the country",
-                            "2": "Over representation of persons<br>born outside the EU",
-                            "12": "Under representation of persons<br>born in another EU member state",
+                            "2": "Over representation of persons<br>born in another EU member state",
+                            "12": "Under representation of persons<br>born outside the EU",
                             "02": "Under representation of persons<br>born in the country",
-                            "01": "Under representation of persons<br>born outside the EU",
+                            "01": "Under representation of persons<br>born in another EU member state",
+                            "center": "Balanced representation",
                         },
-                        leftText: "EU",
+                        leftText: "Rest of the world",
                         topText: "Same country",
-                        rightText: "Rest of the world",
+                        rightText: "EU",
+                        centerCoefficient: 0.5,
                     })]
 
                 //population legend
