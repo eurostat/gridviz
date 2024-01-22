@@ -37,8 +37,8 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         }*/
 
         if (s0 >= c0 && s1 <= c1 && s2 <= c2) {
-            //TODO
-            if (cc && s1 > cc * c1) return centralColor
+            if (cc && (s2 - c2) * (c1 - cc * c1) >= (s1 - cc * c1) * (cc * c2 - c2))
+                return centralColor
             return color0
         }
         if (s0 <= c0 && s1 >= c1 && s2 <= c2) {
