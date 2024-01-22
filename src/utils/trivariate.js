@@ -21,7 +21,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
     //const centerRadius = opts.centerRadius
-    const cc = opts.centerCoefficient ? 1 - opts.centerCoefficient : 0
+    const cc = opts.centerCoefficient != undefined ? 1 - opts.centerCoefficient : undefined
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
     const fun = c => {
@@ -37,32 +37,32 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         }*/
 
         if (s0 >= c0 && s1 <= c1 && s2 <= c2) {
-            if (cc && (s2 - c2) * (c1 - cc * c1) >= (s1 - cc * c1) * (cc * c2 - c2))
+            if (cc != undefined && (s2 - c2) * (c1 - cc * c1) >= (s1 - cc * c1) * (cc * c2 - c2))
                 return centralColor
             return color0
         }
         if (s0 <= c0 && s1 >= c1 && s2 <= c2) {
-            if (cc && (s2 - c2) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c2 - c2))
+            if (cc != undefined && (s2 - c2) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c2 - c2))
                 return centralColor
             return color1
         }
         if (s0 <= c0 && s1 <= c1 && s2 >= c2) {
-            if (cc && (s1 - c1) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c1 - c1))
+            if (cc != undefined && (s1 - c1) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c1 - c1))
                 return centralColor
             return color2
         }
         if (s0 <= c0 && s1 >= c1 && s2 >= c2) {
-            if (cc && s0 > cc * c0)
+            if (cc != undefined && s0 > cc * c0)
                 return centralColor
             return midColor0
         }
         if (s0 >= c0 && s1 <= c1 && s2 >= c2) {
-            if (cc && s1 > cc * c1)
+            if (cc != undefined && s1 > cc * c1)
                 return centralColor
             return midColor1
         }
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
-            if (cc && s2 > cc * c2)
+            if (cc != undefined && s2 > cc * c2)
                 return centralColor
             return midColor2
         }

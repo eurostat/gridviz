@@ -562,11 +562,8 @@
                         ["sY_LT15", "sY15-64", "sY_GE65"],
                         c => 100, {
                         center: [0.15, 0.6, 0.25],
-                        //center: [0.12, 0.55, 0.21], //lower
-                        //center: [0.18, 0.65, 0.29], //higher
-                        centralColor: "cyan",
-                        //centerRadius: 0.05,
-                        centerCoefficient: 1,
+                        centralColor: "#999",
+                        centerCoefficient: 0.25,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "mobility")
@@ -574,6 +571,8 @@
                         ["sCHG_IN", "sSAME", "sCHG_OUT"],
                         c => 100, {
                         center: [0.1, 0.85, 0.05],
+                        centralColor: "#999",
+                        centerCoefficient: 0.25,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "pob")
@@ -581,6 +580,8 @@
                         ["sEU_OTH", "sNAT", "sOTH"],
                         c => 100, {
                         center: [0.15, 0.6, 0.25],
+                        centralColor: "#999",
+                        centerCoefficient: 0.25,
                         colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
 
