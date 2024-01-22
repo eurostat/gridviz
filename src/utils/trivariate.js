@@ -20,7 +20,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     const [midColor0, midColor1, midColor2] = opts.middleColors || [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]
 
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
-    //const centralCoefficient = opts.centralCoefficient || 2 / 3
+    //const centerRadius = opts.centerRadius
 
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
     const fun = c => {
@@ -30,13 +30,18 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         //compute shares
         const [s0, s1, s2] = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
 
-        if (s0 >= c0 && s1 <= c1 && s2 <= c2) return color0
-        if (s0 <= c0 && s1 >= c1 && s2 <= c2) return color1
-        if (s0 <= c0 && s1 <= c1 && s2 >= c2) return color2
-        if (s0 <= c0 && s1 >= c1 && s2 >= c2) return midColor0
-        if (s0 >= c0 && s1 <= c1 && s2 >= c2) return midColor1
-        if (s0 >= c0 && s1 >= c1 && s2 <= c2) return midColor2
-        return centralColor
+        /*if (centerRadius) {
+            const d = Math.hypot(c0 - s0, c1 - s1, c2 - s2)
+            if (d < centerRadius) return centralColor
+        }*/
+
+        if (s0 >= c0 && s1 <= c1 && s2 <= c2) {return color0}
+        if (s0 <= c0 && s1 >= c1 && s2 <= c2) {return color1}
+        if (s0 <= c0 && s1 <= c1 && s2 >= c2) {return color2}
+        if (s0 <= c0 && s1 >= c1 && s2 >= c2) {return midColor0}
+        if (s0 >= c0 && s1 <= c1 && s2 >= c2) {return midColor1}
+        if (s0 >= c0 && s1 >= c1 && s2 <= c2) {return midColor2}
+        return "black"
     }
     fun.center = [c0, c1, c2]
     fun.colors = [color0, color1, color2]
