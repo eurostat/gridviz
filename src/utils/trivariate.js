@@ -23,7 +23,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     //https://d3js.org/d3-interpolate/color
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     //the colors corresponding to the middle classes
-    const [midColor0, midColor1, midColor2] = opts.middleColors || withMiddleClasses? [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]: []
+    const [midColor0, midColor1, midColor2] = opts.middleColors || withMiddleClasses ? [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)] : []
 
     //the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
@@ -67,21 +67,21 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
             //central class
             if (cc != undefined && s0 > cc * c0) return centralColor
             if (withMiddleClasses) return midColor0
-            return s1 > s2 ? c1 : c2
+            return s1 > s2 ? color1 : color2
         }
         //middle class 1 - intersection class 0 and 1
         if (s0 >= c0 && s1 <= c1 && s2 >= c2) {
             //central class
             if (cc != undefined && s1 > cc * c1) return centralColor
             if (withMiddleClasses) return midColor1
-            return s0 > s2 ? c0 : c2
+            return s0 > s2 ? color0 : color2
         }
         //middle class 2 - intersection class 0 and 1
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
             //central class
             if (cc != undefined && s2 > cc * c2) return centralColor
             if (withMiddleClasses) return midColor2
-            return s1 > s0 ? c1 : c0
+            return s1 > s0 ? color1 : color0
         }
         //should not happen
         return "black"
