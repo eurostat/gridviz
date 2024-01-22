@@ -11,19 +11,29 @@ import { interpolateLab } from "d3-interpolate"
 
 
 export const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
-    const [c0, c1, c2] = opts.center || [1 / 3, 1 / 3, 1 / 3] //sum must be equal to 1
+    //the center point coordinates. sum must be equal to 1
+    const [c0, c1, c2] = opts.center || [1 / 3, 1 / 3, 1 / 3]
+    //the three colors (or codes) corresponding to the 3 categories
     const [color0, color1, color2] = opts.colors || ["red", "green", "blue"]
+    //the color interpolation function
     const colorInterpolation = opts.colorInterpolation || interpolateLab
 
+    //parameter to decide wether to show middle classes. Middle classes are the 3 intersection classes
+    const withMiddleClasses = opts.withMiddleClasses != undefined ? opts.withMiddleClasses : true
     //https://d3js.org/d3-interpolate/color
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
+    //the colors corresponding to the middle classes
     const [midColor0, midColor1, midColor2] = opts.middleColors || [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)]
 
+    //the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
     const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
-    //const centerRadius = opts.centerRadius
+    //the coefficient for the size of the central class. Set to 0 or undefined for not showing any central class. Set to 1 for a central class that contains the middle classes
     const cc = opts.centerCoefficient ? 1 - opts.centerCoefficient : undefined
 
+    //the three properties
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
+
+    //the output classifier method
     const fun = c => {
         //get total
         const tot = totalFunction(c)
@@ -31,48 +41,59 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
         //compute shares
         const [s0, s1, s2] = [+c[p0] / tot, +c[p1] / tot, +c[p2] / tot]
 
-        /*if (centerRadius) {
-            const d = Math.hypot(c0 - s0, c1 - s1, c2 - s2)
-            if (d < centerRadius) return centralColor
-        }*/
-
+        //class 0
         if (s0 >= c0 && s1 <= c1 && s2 <= c2) {
+            //central class near class 0
             if (cc != undefined && (s2 - c2) * (c1 - cc * c1) >= (s1 - cc * c1) * (cc * c2 - c2))
                 return centralColor
             return color0
         }
+        //class 1
         if (s0 <= c0 && s1 >= c1 && s2 <= c2) {
+            //central class near class 1
             if (cc != undefined && (s2 - c2) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c2 - c2))
                 return centralColor
             return color1
         }
+        //class 2
         if (s0 <= c0 && s1 <= c1 && s2 >= c2) {
+            //central class near class 2
             if (cc != undefined && (s1 - c1) * (c0 - cc * c0) >= (s0 - cc * c0) * (cc * c1 - c1))
                 return centralColor
             return color2
         }
+        //middle class 0 - intersection class 1 and 2
         if (s0 <= c0 && s1 >= c1 && s2 >= c2) {
-            if (cc != undefined && s0 > cc * c0)
-                return centralColor
-            return midColor0
+            //central class
+            if (cc != undefined && s0 > cc * c0) return centralColor
+            if (withMiddleClasses) return midColor0
+            return s1 > s2 ? c1 : c2
         }
+        //middle class 1 - intersection class 0 and 1
         if (s0 >= c0 && s1 <= c1 && s2 >= c2) {
-            if (cc != undefined && s1 > cc * c1)
-                return centralColor
-            return midColor1
+            //central class
+            if (cc != undefined && s1 > cc * c1) return centralColor
+            if (withMiddleClasses) return midColor1
+            return s0 > s2 ? c0 : c2
         }
+        //middle class 2 - intersection class 0 and 1
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
-            if (cc != undefined && s2 > cc * c2)
-                return centralColor
-            return midColor2
+            //central class
+            if (cc != undefined && s2 > cc * c2) return centralColor
+            if (withMiddleClasses) return midColor2
+            return s1 > s0 ? c1 : c0
         }
+        //should not happen
         return "black"
     }
+
+    //attach information to output function
     fun.center = [c0, c1, c2]
     fun.colors = [color0, color1, color2]
     fun.middleColors = [midColor0, midColor1, midColor2]
     fun.centralColor = centralColor
     fun.centerCoefficient = opts.centerCoefficient
+
     return fun
 }
 
@@ -124,9 +145,9 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 }
 */
 
-
+/*
 export const trivariateColorClassifier3 = (properties, totalFunction, opts = {}) => {
-    const [a01, a12, a20] = opts.thresholds || [0.5, 0.5, 0.5]
+    const [a01, a12, a20] = opts.thresholds || [1/3, 1/3, 1/3]
     const [c0, c1, c2] = opts.colors || ["red", "green", "blue"]
     const centralColor = opts.centralColor || "gray"
 
@@ -150,3 +171,4 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
     fun.centralColor = centralColor
     return fun
 }
+*/
