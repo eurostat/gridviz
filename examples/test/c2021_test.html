@@ -464,6 +464,9 @@
 
 
             } else if (layCode === 'multi1') {
+                //sex hue
+                //emp value
+                //age shape
 
                 //sex classifier
                 const sexBreaks = [-2, 2,]
@@ -485,7 +488,7 @@
                     },
                     size: (c, r, z, viewScale) => viewScale(c.T),
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
-                    shape: () => 'circle',
+                    shape: () =hh> 'circle', //TODO by age
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]

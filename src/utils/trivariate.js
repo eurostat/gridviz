@@ -124,7 +124,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 }
 */
 
-/*
+
 export const trivariateColorClassifier3 = (properties, totalFunction, opts = {}) => {
     const [a01, a12, a20] = opts.thresholds || [0.5, 0.5, 0.5]
     const [c0, c1, c2] = opts.colors || ["red", "green", "blue"]
@@ -150,4 +150,3 @@ export const trivariateColorClassifier3 = (properties, totalFunction, opts = {})
     fun.centralColor = centralColor
     return fun
 }
-*/
