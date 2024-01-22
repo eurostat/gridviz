@@ -498,18 +498,19 @@
                         if (sexI == 2) return empMaleColorClassifier(c.sEMP)
                     },
                     size: (c, r, z, viewScale) => viewScale(c.T),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
                     shape: (c) => {
                         const i = ageTrivariateClassifier(c)
-                        console.log(i)
-                        //TODO
+                        if (i == "L15") return "circle"
+                        if (i == "15_64") return "diamond"
+                        if (i == "M65") return "triangle"
                         return "square"
                     },
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = 6
+                gridLayer.minPixelsPerCell = 9
 
 
 
