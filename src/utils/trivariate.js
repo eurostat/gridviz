@@ -71,6 +71,8 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     fun.center = [c0, c1, c2]
     fun.colors = [color0, color1, color2]
     fun.middleColors = [midColor0, midColor1, midColor2]
+    fun.centralColor = centralColor
+    fun.centerCoefficient = opts.centerCoefficient
     return fun
 }
 

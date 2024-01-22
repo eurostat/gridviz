@@ -27,7 +27,7 @@ export class TrivariateLegend extends Legend {
         this.topText = opts.topText || "Category 1"
         this.rightText = opts.rightText || "Category 2"
 
-        this.real = opts.real || true
+        this.centerCoefficient = opts.centerCoefficient || this.classifier.centerCoefficient
     }
 
     /**
@@ -122,7 +122,12 @@ export class TrivariateLegend extends Legend {
         const t2_ = g.append('polygon')
             .attr('points', w / 2 + "," + h * 2 / 3 + " " + w / 6 + "," + h * 2 / 3 + " " + w / 3 + "," + h / 3)
         setAttributes(t2_, classifier.middleColors[2], texts["01"])
-        //TODO
+
+        //center
+        const center = g.append('circle')
+            .attr('cx', w / 2).attr('cy', h * 2 / 3)
+            .attr('r', classifier.centerCoefficient * h / 3)
+        setAttributes(center, classifier.centralColor, texts["center"])
 
 
         /*
