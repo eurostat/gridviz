@@ -718,7 +718,7 @@
                 //total population size
 
                 //employment orientation - 3 classes
-                const breaks = [40, 60]
+                const breaks = [45, 55]
                 const empClassifier = gridviz.classifier(breaks)
 
                 //age color - 3 classes
@@ -726,10 +726,11 @@
                     ["sY_LT15", "sY15-64", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
-                    //centralColor: "#999",
-                    //centerCoefficient: 0.25,
+                    centralColor: "#999",
+                    centerCoefficient: 0.25,
                     colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     withMiddleClasses: false,
+                    //defaultColor: "none", //TODO
                 })
 
                 //population size
@@ -740,11 +741,11 @@
                         color: (cell) => ageClassifier(cell),
                         orientation: (cell) => 10 + 35 * empClassifier(cell.sEMP),
                         width: (c, r, z, viewScale) => viewScale(c.T),
-                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 0.5 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 2, maxSizeFactor: 0.5 }),
                     })
                 ]
 
-                gridLayer.minPixelsPerCell = 8
+                gridLayer.minPixelsPerCell = 10
 
             } else if (layCode === 'multi1') {
 
