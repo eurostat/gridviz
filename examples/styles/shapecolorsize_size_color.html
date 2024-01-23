@@ -4,6 +4,10 @@
         <option value="square">Square</option>
         <option value="diamond">Diamond</option>
         <option value="donut">Donut</option>
+        <option value="triangle_up">Triangle up</option>
+        <option value="triangle_down">Triangle down</option>
+        <option value="triangle_left">Triangle left</option>
+        <option value="triangle_right">Triangle right</option>
     </select>
 </div>
 <div id="map" style="height: 500px; width: 800px"></div>
@@ -48,7 +52,7 @@
         style.shape = () => shape
 
         //set size
-        const sizeFactor = (shape === 'circle' || shape === 'diamond') ? 1.41 : 1
+        const sizeFactor = (shape === 'circle' || shape === 'diamond' || shape === 'triangle_up' || shape === 'triangle_down' || shape === 'triangle_left' || shape === 'triangle_right') ? 1.41 : 1
         style.size = (c, r, z, viewScale) => sizeFactor * viewScale(c.ind)
 
         //redraw
