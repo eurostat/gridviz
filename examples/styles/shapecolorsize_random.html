@@ -19,9 +19,13 @@
         //set random shape
         shape: () => {
             const r = Math.random()
-            if (r < 1 / 4) return "circle"
-            if (r < 2 / 4) return "square"
-            if (r < 3 / 4) return "diamond"
+            if (r < 1 / 6) return "circle"
+            if (r < 2 / 6) return "square"
+            if (r < 3 / 6) return "diamond"
+            if (r < 3.5 / 6) return "triangle_up"
+            if (r < 4 / 6) return "triangle_down"
+            if (r < 4.5 / 6) return "triangle_left"
+            if (r < 5 / 6) return "triangle_right"
             return "donut"
         },
     })
