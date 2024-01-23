@@ -22,7 +22,14 @@
         //random shape
         shape: () => {
             const r = rd()
-            return r <= 1 / 3 ? 'square' : r <= 2 / 3 ? 'circle' : 'diamond'
+            if (r < 1 / 5) return "circle"
+            if (r < 2 / 5) return "square"
+            if (r < 3 / 5) return "diamond"
+            if (r < 3.5 / 5) return "triangle_up"
+            if (r < 4 / 5) return "triangle_down"
+            if (r < 4.5 / 5) return "triangle_left"
+            return "triangle_right"
+            //return "donut"
         },
     })
 
