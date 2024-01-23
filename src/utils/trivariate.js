@@ -26,7 +26,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
     const [midColor0, midColor1, midColor2] = opts.middleColors || withMiddleClasses ? [middleColorFunction(color1, color2), middleColorFunction(color0, color2), middleColorFunction(color0, color1)] : []
 
     //the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
-    const centralColor = opts.centralColor || colorInterpolation(midColor2, color2)(0.333)
+    const centralColor = opts.centralColor || colorInterpolation(middleColorFunction(color0, color1), color2)(0.333)
     //the coefficient for the size of the central class. Set to 0 or undefined for not showing any central class. Set to 1 for a central class that contains the middle classes
     const cc = opts.centerCoefficient ? 1 - opts.centerCoefficient : undefined
 
