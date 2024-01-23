@@ -68,6 +68,9 @@
                 <label for="sbtp_tri">Size by total population</label>
                 <br />
                 <hr />
+                <input type="radio" name="layer" id="emp_age" value="emp_age" />
+                <label for="emp_age">Employment and age</label>
+                <br />
                 <input type="radio" name="layer" id="multi1" value="multi1" />
                 <label for="multi1">Age sex employment 1</label>
                 <br />
@@ -466,72 +469,6 @@
                     c.EU_OTH + " born in another EU member state<br>" +
                     c.OTH + " born outside the EU"
 
-            } else if (layCode === 'multi1') {
-
-                //sex shape
-                //emp value
-                //age hue
-
-                //emp orientation - segment
-                //age hue
-
-                //emp orientation - segment
-                //sex hue/value
-
-                //sex shape
-                //age hue
-
-            } else if (layCode === 'multi2') {
-                //sex hue
-                //emp value
-                //age shape
-
-                //sex classifier
-                const sexBreaks = [-2, 2,]
-                const sexClassifier = gridviz.classifier(sexBreaks)
-
-                //emp color classifiers
-                const empBreaks = [30, 45, 55, 70]
-                const empFemaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeReds[empBreaks.length + 1])
-                const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeGreys[empBreaks.length + 1])
-                const empNeutralColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeBlues[empBreaks.length + 1])
-
-                //age classifier
-                const ageTrivariateClassifier = gridviz.trivariateColorClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
-                    c => 100, {
-                    center: [0.15, 0.6, 0.25],
-                    withMiddleClasses: false,
-                    centralColor: "square",
-                    centerCoefficient: 0.25,
-                    colors: ["circle", "square", "diamond"], //TODO triangle up down right left
-                    defaultColor: "square",
-                })
-
-                //const classNumberSize = 4
-                const style = new gridviz.ShapeColorSizeStyle({
-                    color: (c, r, z, viewScale) => {
-                        const sexI = sexClassifier(c.indMF)
-                        if (sexI == 0) return empFemaleColorClassifier(c.sEMP)
-                        if (sexI == 1) return empNeutralColorClassifier(c.sEMP)
-                        if (sexI == 2) return empMaleColorClassifier(c.sEMP)
-                    },
-                    size: (c, r) => {
-                        const i = ageTrivariateClassifier(c)
-                        if (i == "square") return r * 0.7071
-                        if (i == "circle") return r * 0.7979
-                        if (i == "diamond") return r
-                    },
-                    //size: (c, r, z, viewScale) => viewScale(c.T),
-                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
-                    shape: (c) => ageTrivariateClassifier(c),
-                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
-                })
-                gridLayer.styles = [style]
-
-                gridLayer.minPixelsPerCell = 9
-
-
 
             } else if (layCode === 'share') {
 
@@ -772,6 +709,101 @@
                             formatPercentage(c.sEU_OTH) + "% born in another EU member state<br>" +
                             formatPercentage(c.sOTH) + "% born outside the EU"
                     }
+
+
+
+            } else if (layCode === 'emp_age') {
+                //emp orientation - segment
+                //age hue
+
+                //employment orientation - 3 classes
+                const breaks = [40, 60]
+                const empClassifier = gridviz.classifier(breaks)
+
+                //age color - 4 classes
+                const ageClassifier = gridviz.trivariateColorClassifier(
+                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    c => 100, {
+                    center: [0.15, 0.6, 0.25],
+                    centralColor: "#999",
+                    centerCoefficient: 0.25,
+                    colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                    withMiddleClasses: false,
+                })
+
+                gridLayer.styles = [
+                    new gridviz.SegmentStyle({
+                        color: (cell) => ageClassifier(cell),
+                        width: (cell, resolution, z) => 6 * z,
+                        //length: (cell, resolution, z) => r * (0.5 + Math.random()),
+                        orientation: (cell) => 10 + 35 * empClassifier(c.sEMP),
+                    })
+                ]
+
+                gridLayer.minPixelsPerCell = 12
+
+            } else if (layCode === 'multi1') {
+
+                //emp orientation - segment
+                //sex hue/value
+
+                //sex shape
+                //age hue
+
+            } else if (layCode === 'multi2') {
+                //sex hue //emp value //age shape
+
+                //try
+                //sex shape //emp value //age hue
+
+
+                //sex classifier
+                const sexBreaks = [-5, 5,]
+                const sexClassifier = gridviz.classifier(sexBreaks)
+
+                //emp color classifiers
+                const empBreaks = [30, 45, 55, 70]
+                const empFemaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeReds[empBreaks.length + 1])
+                const empNeutralColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeGreys[empBreaks.length + 1])
+                const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeBlues[empBreaks.length + 1])
+
+                //age classifier
+                const ageTrivariateClassifier = gridviz.trivariateColorClassifier(
+                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    c => 100, {
+                    center: [0.15, 0.6, 0.25],
+                    withMiddleClasses: false,
+                    centralColor: "square",
+                    centerCoefficient: 0.25,
+                    colors: ["circle", "diamond", "triangle_up"],
+                    defaultColor: "square",
+                })
+
+                //const classNumberSize = 4
+                const style = new gridviz.ShapeColorSizeStyle({
+                    color: (c, r, z, viewScale) => {
+                        const sexI = sexClassifier(c.indMF)
+                        if (sexI == 0) return empFemaleColorClassifier(c.sEMP)
+                        if (sexI == 1) return empNeutralColorClassifier(c.sEMP)
+                        if (sexI == 2) return empMaleColorClassifier(c.sEMP)
+                    },
+                    size: (c, r) => {
+                        const i = ageTrivariateClassifier(c)
+                        if (i == "square") return r * 0.7071
+                        if (i == "circle") return r * 0.7979
+                        if (i == "diamond") return r
+                        if (i == "triangle_up") return r
+                    },
+                    //size: (c, r, z, viewScale) => viewScale(c.T),
+                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
+                    shape: (c) => ageTrivariateClassifier(c),
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+                gridLayer.styles = [style]
+
+                gridLayer.minPixelsPerCell = 12
+
+
 
             } else console.error('Unexpected layer code: ' + layCode)
 
