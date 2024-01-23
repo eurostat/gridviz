@@ -715,32 +715,36 @@
             } else if (layCode === 'emp_age') {
                 //emp orientation - segment
                 //age hue
+                //total population size
 
                 //employment orientation - 3 classes
                 const breaks = [40, 60]
                 const empClassifier = gridviz.classifier(breaks)
 
-                //age color - 4 classes
+                //age color - 3 classes
                 const ageClassifier = gridviz.trivariateColorClassifier(
                     ["sY_LT15", "sY15-64", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
-                    centralColor: "#999",
-                    centerCoefficient: 0.25,
+                    //centralColor: "#999",
+                    //centerCoefficient: 0.25,
                     colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     withMiddleClasses: false,
                 })
 
+                //population size
+                const classNumberSize = 4
+
                 gridLayer.styles = [
                     new gridviz.SegmentStyle({
                         color: (cell) => ageClassifier(cell),
-                        width: (cell, resolution, z) => 6 * z,
-                        //length: (cell, resolution, z) => r * (0.5 + Math.random()),
                         orientation: (cell) => 10 + 35 * empClassifier(cell.sEMP),
+                        width: (c, r, z, viewScale) => viewScale(c.T),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 0.5 }),
                     })
                 ]
 
-                gridLayer.minPixelsPerCell = 12
+                gridLayer.minPixelsPerCell = 8
 
             } else if (layCode === 'multi1') {
 
