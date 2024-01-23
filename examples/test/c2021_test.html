@@ -736,7 +736,7 @@
                         color: (cell) => ageClassifier(cell),
                         width: (cell, resolution, z) => 6 * z,
                         //length: (cell, resolution, z) => r * (0.5 + Math.random()),
-                        orientation: (cell) => 10 + 35 * empClassifier(c.sEMP),
+                        orientation: (cell) => 10 + 35 * empClassifier(cell.sEMP),
                     })
                 ]
 
