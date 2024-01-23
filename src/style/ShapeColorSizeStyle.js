@@ -93,6 +93,13 @@ export class ShapeColorSizeStyle extends Style {
                 geoCanvas.ctx.lineTo(c.x + r2 + s2, c.y + r2)
                 geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 - s2)
                 geoCanvas.ctx.fill()
+            } else if (shape === 'triangle_up') {
+                const dr2 = (size - resolution) / 2
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(c.x - dr2, c.y - dr2)
+                geoCanvas.ctx.lineTo(c.x + r2, c.y + resolution + dr2)
+                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                geoCanvas.ctx.fill()
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }

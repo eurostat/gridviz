@@ -3,7 +3,7 @@
 
 import { Drawable } from "./Drawable.js"
 
-/** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
+/** @typedef {"square"|"circle"|"diamond"|"donut"|"triangle_up"|"none"} Shape */
 
 /**
  * viewScale type
