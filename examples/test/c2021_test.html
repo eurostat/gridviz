@@ -827,12 +827,15 @@
                     },
                     images: chernoffImages,
                     size: (c, r, z, viewScale) => viewScale(c.T),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 10, maxSizeFactor: 0.9 }),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 20, maxSizeFactor: 0.9 }),
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = 30
+                gridLayer.minPixelsPerCell = 35
+
+                gridLayer.cellInfoHTML = (c) => { return "-" }
+
 
             } else if (layCode === 'multi2') {
                 //sex hue //emp value //age shape
