@@ -826,8 +826,8 @@
                         return sexCode + ageCode
                     },
                     images: chernoffImages,
-                    resizeFactor: 0.9,
-                    //blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                    size: () => 0.9,
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 

@@ -36,7 +36,8 @@ export class ImageStyle extends Style {
     draw(cells, geoCanvas, resolution) {
 
         //
-        const z = geoCanvas.view.z
+        const z = geoCanvas.view.z,
+            resolutionPix = resolution / z
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -54,9 +55,9 @@ export class ImageStyle extends Style {
             if (!image) continue
 
             //size and position values
-            const size = resolution / z * this.size(cell, resolution, z, viewScale)
+            let size = resolutionPix * this.size(cell, resolution, z, viewScale)
             if (!size) continue
-            const d = resolution / z * (1 - size) / 2
+            const d = (resolutionPix - size) / 2
 
             try {
                 geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, size, size)
