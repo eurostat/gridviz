@@ -41,6 +41,10 @@ export class ImageStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
+        //prepare position values
+        const size = resolution / z * this.resizeFactor,
+            d = resolution / z * (1 - this.resizeFactor) / 2
+
         //draw in screen coordinates
         geoCanvas.initCanvasTransform()
 
@@ -53,9 +57,8 @@ export class ImageStyle extends Style {
             const image = this.images[code]
             if (!image) continue
 
-            const size = resolution / z * this.resizeFactor
             try {
-                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x), geoCanvas.geoToPixY(cell.y), size, size)
+                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, size, size)
             } catch (error) {
                 console.error(error)
             }
