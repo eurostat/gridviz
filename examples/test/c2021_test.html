@@ -71,6 +71,9 @@
                 <input type="radio" name="layer" id="emp_age" value="emp_age" />
                 <label for="emp_age">Employment and age</label>
                 <br />
+                <input type="radio" name="layer" id="emp_sex" value="emp_sex" />
+                <label for="emp_sex">Employment and sex</label>
+                <br />
                 <input type="radio" name="layer" id="multi1" value="multi1" />
                 <label for="multi1">Age sex employment 1</label>
                 <br />
@@ -718,28 +721,69 @@
                 //total population size
 
                 //employment orientation - 3 classes
-                const breaks = [45, 55]
-                const empClassifier = gridviz.classifier(breaks)
+                //const breaks = [45, 55]
+                //const empClassifier = gridviz.classifier(breaks)
 
-                //age color - 3 classes
+                //age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateColorClassifier(
                     ["sY_LT15", "sY15-64", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     //centralColor: "#999",
-                    centerCoefficient: 0.25,
+                    //centerCoefficient: 0.25,
                     colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                    //colors: ["green", "red", "blue"],
                     withMiddleClasses: false,
                     //defaultColor: "none", //TODO
                 })
 
                 //population size
-                const classNumberSize = 4
+                const classNumberSize = 6
 
                 gridLayer.styles = [
                     new gridviz.SegmentStyle({
                         color: (cell) => ageClassifier(cell),
-                        orientation: (cell) => 10 + 35 * empClassifier(cell.sEMP),
+                        orientation: (cell) => {
+                            const angle = (cell.sEMP - 40) * 90 / (100 - 40 - 30)
+                            return angle < 0 ? 0 : angle > 90 ? 90 : angle
+                            //0 + 45 * empClassifier(cell.sEMP),
+                        },
+                        width: (c, r, z, viewScale) => viewScale(c.T),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 2, maxSizeFactor: 0.5 }),
+                    })
+                ]
+
+                gridLayer.minPixelsPerCell = 10
+
+            } else if (layCode === 'emp_sex') {
+                //emp orientation - segment or color value ???
+                //sex color
+                //total population size
+
+                /*/age color - 3/4 classes
+                const ageClassifier = gridviz.trivariateColorClassifier(
+                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    c => 100, {
+                    center: [0.15, 0.6, 0.25],
+                    //centralColor: "#999",
+                    //centerCoefficient: 0.25,
+                    colors: ["#4daf4a", "#377eb8", "#e41a1c"],
+                    //colors: ["green", "red", "blue"],
+                    withMiddleClasses: false,
+                    //defaultColor: "none", //TODO
+                })*/
+
+                //population size
+                const classNumberSize = 6
+
+                gridLayer.styles = [
+                    new gridviz.SegmentStyle({
+                        color: (cell) => ageClassifier(cell),
+                        orientation: (cell) => {
+                            const angle = (cell.sEMP - 40) * 90 / (100 - 40 - 30)
+                            return angle < 0 ? 0 : angle > 90 ? 90 : angle
+                            //0 + 45 * empClassifier(cell.sEMP),
+                        },
                         width: (c, r, z, viewScale) => viewScale(c.T),
                         viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 2, maxSizeFactor: 0.5 }),
                     })
