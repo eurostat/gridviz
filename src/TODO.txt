@@ -1,6 +1,7 @@
 *** census 2021
+emp: 15-65
 transform trivariate classifier into discrete classifier
-chernioff. sex, emp, age. 3*3. - see isotype icons
+chernioff. sex, emp, age. 2*3*3. - see isotype icons
 trivariate: legend center hexagon. legend uncentered
 sex: shape - emp: value - age hue
 sex: hue - emp: value - age shape (circle,square,triangle)
