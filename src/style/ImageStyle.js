@@ -45,6 +45,7 @@ export class ImageStyle extends Style {
         //draw in screen coordinates
         geoCanvas.initCanvasTransform()
 
+        //
         for (let cell of cells) {
 
             //get cell image code

@@ -818,7 +818,7 @@
                 //sex code
                 const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
 
-                //const classNumberSize = 4
+                const classNumberSize = 3
                 const style = new gridviz.ImageStyle({
                     imageCode: (c) => {
                         const ageCode = ageClassifier(c)
@@ -826,7 +826,8 @@
                         return sexCode + ageCode
                     },
                     images: chernoffImages,
-                    size: (c, r) => 0.9 * r,
+                    size: (c, r, z, viewScale) => viewScale(c.T),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 10, maxSizeFactor: 0.9 }),
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
