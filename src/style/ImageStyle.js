@@ -22,9 +22,9 @@ export class ImageStyle extends Style {
          *  @type {object}        */
         this.images = opts.images || {}
 
-        /** The image will be resized by this factor
-         *  @type {number}        */
-        this.resizeFactor = opts.resizeFactor || 1
+        /** The image will be resized by this factor. 0: no image. 1: full resolution size
+         *  @type {function(import('../core/Dataset.js').Cell, number, number, object):number}        */
+        this.size = opts.size || (() => 1)
     }
 
     /**
@@ -41,10 +41,6 @@ export class ImageStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        //prepare position values
-        const size = resolution / z * this.resizeFactor,
-            d = resolution / z * (1 - this.resizeFactor) / 2
-
         //draw in screen coordinates
         geoCanvas.initCanvasTransform()
 
@@ -56,6 +52,11 @@ export class ImageStyle extends Style {
             //get image
             const image = this.images[code]
             if (!image) continue
+
+            //size and position values
+            const size = resolution / z * this.size(cell, resolution, z, viewScale)
+            if (!size) continue
+            const d = resolution / z * (1 - size) / 2
 
             try {
                 geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, size, size)
