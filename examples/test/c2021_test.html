@@ -825,7 +825,8 @@
                         const sexCode = sexClassifier(c)
                         return sexCode + ageCode
                     },
-                    images: chernoffImages
+                    images: chernoffImages,
+                    resizeFactor: 0.6,
                     //blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
