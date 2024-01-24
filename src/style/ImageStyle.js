@@ -22,9 +22,9 @@ export class ImageStyle extends Style {
          *  @type {object}        */
         this.images = opts.images || {}
 
-        /** The image will be resized by this factor. 0: no image. 1: full resolution size
+        /** The image size in ground meters
          *  @type {function(import('../core/Dataset.js').Cell, number, number, object):number}        */
-        this.size = opts.size || (() => 1)
+        this.size = opts.size || ((cell, resolution) => resolution)
     }
 
     /**
@@ -55,12 +55,12 @@ export class ImageStyle extends Style {
             if (!image) continue
 
             //size and position values
-            let size = resolutionPix * this.size(cell, resolution, z, viewScale)
-            if (!size) continue
-            const d = (resolutionPix - size) / 2
+            let sizePix = this.size(cell, resolution, z, viewScale) / z
+            if (!sizePix) continue
+            const d = (resolutionPix - sizePix) / 2
 
             try {
-                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, size, size)
+                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, sizePix, sizePix)
             } catch (error) {
                 console.error(error)
             }
