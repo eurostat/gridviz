@@ -33,6 +33,7 @@ export { MosaicStyle } from './style/MosaicStyle.js'
 export { NinjaStarStyle } from './style/NinjaStarStyle.js'
 export { TimeSeriesStyle } from './style/TimeSeriesStyle.js'
 export { IsoFenceStyle } from './style/IsoFenceStyle.js'
+export { ImageStyle } from './style/ImageStyle.js'
 
 // export additional layers
 export { GridLayer } from './layer/GridLayer.js'
