@@ -74,11 +74,8 @@
                 <input type="radio" name="layer" id="emp_sex" value="emp_sex" />
                 <label for="emp_sex">Employment and sex</label>
                 <br />
-                <input type="radio" name="layer" id="multi1" value="multi1" />
-                <label for="multi1">Age sex employment 1</label>
-                <br />
-                <input type="radio" name="layer" id="multi2" value="multi2" />
-                <label for="multi2">Age sex employment 2</label>
+                <input type="radio" name="layer" id="chernoff" value="chernoff" />
+                <label for="chernoff">Chernoff faces for sex and age</label>
         </div>
         <hr />
         <input type="checkbox" id="label" checked />
@@ -760,6 +757,8 @@
                 //sex color
                 //total population size
 
+                //TODO
+
                 /*/age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateColorClassifier(
                     ["sY_LT15", "sY15-64", "sY_GE65"],
@@ -791,13 +790,22 @@
 
                 gridLayer.minPixelsPerCell = 10
 
-            } else if (layCode === 'multi1') {
+            } else if (layCode === 'chernoff') {
 
-                //emp orientation - segment
-                //sex hue/value
+                const images = {}
 
-                //sex shape
-                //age hue
+
+                //const classNumberSize = 4
+                const style = new gridviz.ImageStyle({
+                    imageCode: () => "mm",
+                    images: images
+                    //blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+                gridLayer.styles = [style]
+
+                gridLayer.minPixelsPerCell = 12
+
+
 
             } else if (layCode === 'multi2') {
                 //sex hue //emp value //age shape
