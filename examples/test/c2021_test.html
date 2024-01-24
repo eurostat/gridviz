@@ -792,13 +792,12 @@
 
             } else if (layCode === 'chernoff') {
 
-                const images = {}
-
+                if (!chernoffImages) return
 
                 //const classNumberSize = 4
                 const style = new gridviz.ImageStyle({
                     imageCode: () => "mm",
-                    images: images
+                    images: chernoffImages
                     //blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
@@ -905,6 +904,12 @@
 
         //initialise
         update()
+
+        //load chernoff images
+        const chernoffImages = {};
+        (async () => {
+            chernoffImages.mm = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/mm.png")
+        })();
 
 
     </script>

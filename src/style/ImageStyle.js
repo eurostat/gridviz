@@ -48,6 +48,8 @@ export class ImageStyle extends Style {
             const image = this.images[code]
             if (!image) continue
 
+            console.log(image)
+
             const size = 100 //TODO fix that
             try {
                 geoCanvas.initCanvasTransform()
