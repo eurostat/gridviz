@@ -38,6 +38,8 @@ export class ImageStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
+        //draw in screen coordinates
+        geoCanvas.initCanvasTransform()
 
         for (let cell of cells) {
 
@@ -48,11 +50,8 @@ export class ImageStyle extends Style {
             const image = this.images[code]
             if (!image) continue
 
-            console.log(image)
-
-            const size = 100 //TODO fix that
+            const size = resolution / z
             try {
-                geoCanvas.initCanvasTransform()
                 geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x), geoCanvas.geoToPixY(cell.y), size, size)
             } catch (error) {
                 console.error(error)

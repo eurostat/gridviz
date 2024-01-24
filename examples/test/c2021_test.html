@@ -192,6 +192,18 @@
         //format function for percentages
         const formatPercentage = d3.format('.1f')
 
+        //load chernoff images
+        const chernoffImages = {};
+        (async () => {
+            chernoffImages.fy = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/fy.png")
+            chernoffImages.fm = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/fm.png")
+            chernoffImages.fo = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/fo.png")
+            chernoffImages.my = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/my.png")
+            chernoffImages.mm = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/mm.png")
+            chernoffImages.mo = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/mo.png")
+            update()
+        })();
+
         //
         const update = () => {
             //read GUI selection
@@ -794,17 +806,31 @@
 
                 if (!chernoffImages) return
 
+                //age color - 3/4 classes
+                const ageClassifier = gridviz.trivariateColorClassifier(
+                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    c => 100, {
+                    center: [0.15, 0.6, 0.25],
+                    colors: ["y", "m", "o"],
+                    withMiddleClasses: false,
+                })
+
+                //sex code
+                const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
+
                 //const classNumberSize = 4
                 const style = new gridviz.ImageStyle({
-                    imageCode: () => "mm",
+                    imageCode: (c) => {
+                        const ageCode = ageClassifier(c)
+                        const sexCode = sexClassifier(c)
+                        return sexCode + ageCode
+                    },
                     images: chernoffImages
                     //blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = 12
-
-
+                gridLayer.minPixelsPerCell = 25
 
             } else if (layCode === 'multi2') {
                 //sex hue //emp value //age shape
@@ -904,13 +930,6 @@
 
         //initialise
         update()
-
-        //load chernoff images
-        const chernoffImages = {};
-        (async () => {
-            chernoffImages.mm = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/mm.png")
-        })();
-
 
     </script>
     <div style="
