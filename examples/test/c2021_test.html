@@ -827,7 +827,7 @@
                     },
                     images: chernoffImages,
                     size: (c, r, z, viewScale) => viewScale(c.T),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 20, maxSizeFactor: 0.9 }),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 22, maxSizeFactor: 0.9 }),
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]

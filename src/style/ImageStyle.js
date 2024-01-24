@@ -61,7 +61,13 @@ export class ImageStyle extends Style {
             const d = (resolutionPix - sizePix) / 2
 
             try {
-                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, sizePix, sizePix)
+                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d -resolutionPix, sizePix, sizePix)
+
+                /*/red color filter
+                geoCanvas.ctx.globalCompositeOperation = 'source-in';
+                geoCanvas.ctx.fillStyle = 'red';
+                geoCanvas.ctx.fillRect(geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, sizePix, sizePix);
+                geoCanvas.ctx.globalCompositeOperation = 'source-over';*/
             } catch (error) {
                 console.error(error)
             }
