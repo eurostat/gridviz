@@ -22,6 +22,9 @@ export class ImageStyle extends Style {
          *  @type {object}        */
         this.images = opts.images || {}
 
+        /** The image will be resized by this factor
+         *  @type {number}        */
+        this.resizeFactor = opts.resizeFactor || 1
     }
 
     /**
@@ -50,7 +53,7 @@ export class ImageStyle extends Style {
             const image = this.images[code]
             if (!image) continue
 
-            const size = resolution / z
+            const size = resolution / z * this.resizeFactor
             try {
                 geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x), geoCanvas.geoToPixY(cell.y), size, size)
             } catch (error) {
