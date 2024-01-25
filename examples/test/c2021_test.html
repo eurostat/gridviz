@@ -816,6 +816,10 @@
                 //sex code
                 const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
 
+                //employment class
+                const breaks = [40, 60]
+                const empClassifier = gridviz.classifier(breaks)
+
                 const classNumberSize = 3
                 const style = new gridviz.ImageStyle({
                     imageCode: (c) => {
