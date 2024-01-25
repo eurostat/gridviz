@@ -172,7 +172,7 @@
                     computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
                     computePercentage(c, "Y15-64", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
                     computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
-                    computePercentage(c, "EMP", c => c.T)
+                    computePercentage(c, "EMP", c => c.T) //TODO sure?
                     computePercentage(c, "NAT", c => +c.NAT + +c.EU_OTH + +c.OTH)
                     computePercentage(c, "EU_OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
                     computePercentage(c, "OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
@@ -824,8 +824,9 @@
                 const style = new gridviz.ImageStyle({
                     imageCode: (c) => {
                         const ageCode = ageClassifier(c)
-                        const sexCode = sexClassifier(c)
-                        return sexCode + ageCode + "1"
+                        const sexCode = sexClassifier(c.sEMP)
+                        const empCode = empClassifier(c)
+                        return sexCode + ageCode + empCode
                     },
                     images: chernoffImages,
                     size: (c, r, z, viewScale) => viewScale(c.T),
