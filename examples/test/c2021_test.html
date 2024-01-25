@@ -839,8 +839,8 @@
                     const s = sexClassifier(c)
                     return ""
                         + c.T + " person" + (c.T ? "s" : "")
-                        + "<br>Age: over representation of <b>" + (a == "y" ? "<15" : a == "m" ? "15-64" : ">=64") + "</b> age group"
-                        + "<br>Sex: over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
+                        + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
+                        + "<br>" + (a == "y" ? "younger than <b>15</b>" : a == "m" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older") + "."
                 }
 
 
