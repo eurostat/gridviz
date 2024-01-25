@@ -823,7 +823,7 @@
                     imageCode: (c) => {
                         const ageCode = ageClassifier(c)
                         const sexCode = sexClassifier(c)
-                        return sexCode + ageCode
+                        return sexCode + ageCode + "1"
                     },
                     images: chernoffImages,
                     size: (c, r, z, viewScale) => viewScale(c.T),
