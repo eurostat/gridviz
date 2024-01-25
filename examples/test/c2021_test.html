@@ -824,8 +824,8 @@
                 const style = new gridviz.ImageStyle({
                     imageCode: (c) => {
                         const ageCode = ageClassifier(c)
-                        const sexCode = sexClassifier(c.sEMP)
-                        const empCode = empClassifier(c)
+                        const sexCode = sexClassifier(c)
+                        const empCode = empClassifier(c.sEMP)
                         return sexCode + ageCode + empCode
                     },
                     images: chernoffImages,
