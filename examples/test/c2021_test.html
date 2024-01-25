@@ -195,12 +195,10 @@
         //load chernoff images
         const chernoffImages = {};
         (async () => {
-            chernoffImages.fy1 = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/fy.png")
-            chernoffImages.fm1 = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/fm.png")
-            chernoffImages.fo1 = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/fo.png")
-            chernoffImages.my1 = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/my.png")
-            chernoffImages.mm1 = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/mm.png")
-            chernoffImages.mo1 = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/mo.png")
+            for (let s of ["f", "m"])
+                for (let a of ["y", "m", "o"])
+                    for (let i = 0; i <= 2; i++)
+                        chernoffImages[s + a + i] = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/" + (s + a + i) + ".png")
             update()
         })();
 
