@@ -827,14 +827,21 @@
                     },
                     images: chernoffImages,
                     size: (c, r, z, viewScale) => viewScale(c.T),
-                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 22, maxSizeFactor: 0.9 }),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 30, maxSizeFactor: 0.9 }),
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
 
-                gridLayer.minPixelsPerCell = 35
+                gridLayer.minPixelsPerCell = 40
 
-                gridLayer.cellInfoHTML = (c) => { return "-" }
+                gridLayer.cellInfoHTML = (c) => {
+                    const a = ageClassifier(c)
+                    const s = sexClassifier(c)
+                    return ""
+                        + "T" + c.T
+                        + "Age: over representation of <b>" + (a == "y" ? "<15" : a == "m" ? "15-64" : ">=64") + "</b> group"
+                        + "<br>Sex: over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
+                }
 
 
             } else if (layCode === 'multi2') {
