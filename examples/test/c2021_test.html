@@ -809,7 +809,6 @@
                     ["sY_LT15", "sY15-64", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
-                    colors: ["y", "m", "o"],
                     withMixedClasses: false,
                 })
 
@@ -823,7 +822,8 @@
                 const classNumberSize = 3
                 const style = new gridviz.ImageStyle({
                     imageCode: (c) => {
-                        const ageCode = ageClassifier(c)
+                        const a = +ageClassifier(c)
+                        const ageCode = a == 0 ? "y" : a == 1 ? "m" : "o"
                         const sexCode = sexClassifier(c)
                         const empCode = empClassifier(c.sEMP)
                         return sexCode + ageCode + empCode
