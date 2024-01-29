@@ -4,6 +4,7 @@
 import { interpolateLab } from "d3-interpolate"
 
 
+
 export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
 
     //the three properties
