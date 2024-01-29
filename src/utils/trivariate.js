@@ -81,10 +81,11 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
 }
 
 
-export const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
+
+export const trivariateColorClassifier = (properties, totalFunction, colors = ["red", "green", "blue"], opts = {}) => {
 
     //the three colors
-    const [color0, color1, color2] = opts.colors || ["red", "green", "blue"]
+    const [color0, color1, color2] = colors
 
     //the color interpolation function
     const colorInterpolation = opts.colorInterpolation || interpolateLab
