@@ -83,33 +83,43 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
 
 export const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
 
+    //the three colors
+    const [color0, color1, color2] = opts.colors || ["red", "green", "blue"]
+
+    //the color interpolation function
+    const colorInterpolation = opts.colorInterpolation || interpolateLab
+
+    //https://d3js.org/d3-interpolate/color
+    const mixColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
+    //the colors corresponding to the mixed classes
+    const [mixColor0, mixColor1, mixColor2] = opts.middleColors || opts.withMixedClasses ? [mixColorFunction(color1, color2), mixColorFunction(color0, color2), mixColorFunction(color0, color1)] : []
+
+    //the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
+    const centerColor = opts.centerColor || colorInterpolation(mixColorFunction(color0, color1), color2)(0.333)
+
+    //make classifier
+    const classifier = trivariateColorClassifier(properties, totalFunction, opts)
+
+    //the output color classifier method
+    const fun = c => {
+        const cla = classifier(c)
+        if (cla == "0") return color0
+        if (cla == "1") return color1
+        if (cla == "2") return color2
+        if (cla == "m0") return mixColor0
+        if (cla == "m1") return mixColor1
+        if (cla == "m2") return mixColor2
+        if (cla == "center") return centerColor
+        return opts.defaultColor || "black"
+    }
+    fun.center = classifier.center
+    fun.centerCoefficient = opts.centerCoefficient
+    fun.colors = [color0, color1, color2]
+    fun.mixColors = [mixColor0, mixColor1, mixColor2]
+    fun.centralColor = centerColor
+
+    return fun
 }
-
-
-
-
-//the three classes
-//const [class0, class1, class2] = opts.colors || ["red", "green", "blue"]
-//the color interpolation function
-//const colorInterpolation = opts.colorInterpolation || interpolateLab
-
-//https://d3js.org/d3-interpolate/color
-//const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
-//the colors corresponding to the middle classes
-//const [midColor0, midColor1, midColor2] = opts.middleColors || withMixedClasses ? [middleColorFunction(class1, class2), middleColorFunction(class0, class2), middleColorFunction(class0, class1)] : []
-
-//the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
-//const centralColor = opts.centralColor || colorInterpolation(middleColorFunction(class0, class1), class2)(0.333)
-/*
-fun.colors = [class0, class1, class2]
-fun.middleColors = [midColor0, midColor1, midColor2]
-fun.centralColor = centralColor
-*/
-
-
-
-
-
 
 
 
