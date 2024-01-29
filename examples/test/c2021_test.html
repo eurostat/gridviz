@@ -844,7 +844,7 @@
                     return ""
                         + c.T + " person" + (c.T ? "s" : "")
                         + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
-                        + "<br>" + (a == "y" ? "younger than <b>15</b>" : a == "m" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
+                        + "<br>" + (a == "0" ? "younger than <b>15</b>" : a == "1" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
                         + "<br>with <b>" + (e == 0 ? "low" : e == 1 ? "average" : "high") + "</b> employment"
                 }
 
