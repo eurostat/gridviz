@@ -576,31 +576,31 @@
 
                 let colorTrivariateFun
                 if (theme == "age")
-                    colorTrivariateFun = gridviz.trivariateClassifier(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sY_LT15", "sY15-64", "sY_GE65"],
-                        c => 100, {
+                        c => 100,
+                        ["#4daf4a", "#377eb8", "#e41a1c"], {
                         center: [0.15, 0.6, 0.25],
                         centralColor: "#999",
                         centerCoefficient: 0.25,
-                        colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "mobility")
-                    colorTrivariateFun = gridviz.trivariateClassifier(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sCHG_OUT", "sSAME", "sCHG_IN"],
-                        c => 100, {
+                        c => 100,
+                        ["#4daf4a", "#377eb8", "#e41a1c"], {
                         center: [0.05, 0.85, 0.1],
                         //centralColor: "#999",
                         //centerCoefficient: 0.7,
-                        colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
                 else if (theme == "pob")
-                    colorTrivariateFun = gridviz.trivariateClassifier(
+                    colorTrivariateFun = gridviz.trivariateColorClassifier(
                         ["sOTH", "sNAT", "sEU_OTH"],
-                        c => 100, {
+                        c => 100,
+                        ["#4daf4a", "#377eb8", "#e41a1c"], {
                         center: [0.25, 0.6, 0.15],
                         //centralColor: "#999",
                         //centerCoefficient: 0.5,
-                        colors: ["#4daf4a", "#377eb8", "#e41a1c"],
                     })
 
                 const classNumberSize = 4
