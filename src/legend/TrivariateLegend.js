@@ -113,15 +113,15 @@ export class TrivariateLegend extends Legend {
         //triangle s0
         const t0_ = g.append('polygon')
             .attr('points', w / 2 + "," + h * 2 / 3 + " " + w * 5 / 6 + "," + h * 2 / 3 + " " + w * 2 / 3 + "," + h / 3)
-        setAttributes(t0_, classifier.middleColors[0], texts["12"])
+        setAttributes(t0_, classifier.mixColors[0], texts["12"])
         //triangle s1
         const t1_ = g.append('polygon')
             .attr('points', w / 2 + "," + h * 2 / 3 + " " + w / 3 + "," + h + " " + w * 2 / 3 + "," + h)
-        setAttributes(t1_, classifier.middleColors[1], texts["02"])
+        setAttributes(t1_, classifier.mixColors[1], texts["02"])
         //triangle s2
         const t2_ = g.append('polygon')
             .attr('points', w / 2 + "," + h * 2 / 3 + " " + w / 6 + "," + h * 2 / 3 + " " + w / 3 + "," + h / 3)
-        setAttributes(t2_, classifier.middleColors[2], texts["01"])
+        setAttributes(t2_, classifier.mixColors[2], texts["01"])
 
         //center
         if (this.centerCoefficient) {
@@ -129,7 +129,7 @@ export class TrivariateLegend extends Legend {
             const center = g.append('circle')
                 .attr('cx', w / 2).attr('cy', h * 2 / 3)
                 .attr('r', this.centerCoefficient * h / 3)
-            setAttributes(center, classifier.centralColor, texts["center"])
+            setAttributes(center, classifier.centerColor, texts["center"])
         }
 
 

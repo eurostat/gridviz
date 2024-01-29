@@ -91,10 +91,12 @@ export const trivariateColorClassifier = (properties, totalFunction, colors, opt
     //the color interpolation function
     const colorInterpolation = opts.colorInterpolation || interpolateLab
 
+    //parameter to decide wether to use mixed classes.
+    const withMixedClasses = opts.withMixedClasses != undefined ? opts.withMixedClasses : true
     //https://d3js.org/d3-interpolate/color
     const mixColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     //the colors corresponding to the mixed classes
-    const [mixColor0, mixColor1, mixColor2] = opts.middleColors || opts.withMixedClasses ? [mixColorFunction(color1, color2), mixColorFunction(color0, color2), mixColorFunction(color0, color1)] : []
+    const [mixColor0, mixColor1, mixColor2] = opts.mixedColors || withMixedClasses ? [mixColorFunction(color1, color2), mixColorFunction(color0, color2), mixColorFunction(color0, color1)] : []
 
     //the central color, used for the central class, if any. The central class is the class of relatively balanced values, around the center point
     const centerColor = opts.centerColor || colorInterpolation(mixColorFunction(color0, color1), color2)(0.333)
@@ -118,7 +120,7 @@ export const trivariateColorClassifier = (properties, totalFunction, colors, opt
     fun.centerCoefficient = opts.centerCoefficient
     fun.colors = [color0, color1, color2]
     fun.mixColors = [mixColor0, mixColor1, mixColor2]
-    fun.centralColor = centerColor
+    fun.centerColor = centerColor
 
     return fun
 }
@@ -141,7 +143,7 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
     //https://d3js.org/d3-interpolate/color
     const middleColorFunction = (color1, color2) => colorInterpolation(color1, color2)(0.5)
     const middleColors = opts.middleColors || [middleColorFunction(colors[1], colors[2]), middleColorFunction(colors[0], colors[2]), middleColorFunction(colors[0], colors[1])]
-    const centralColor = opts.centralColor || colorInterpolation(middleColors[2], colors[2])(0.333)
+    const centerColor = opts.centerColor || colorInterpolation(middleColors[2], colors[2])(0.333)
 
     const high_ = orderedIndexesDec(highThreshold)
     const low_ = orderedIndexesInc(lowThreshold)
@@ -159,13 +161,13 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
         //then draw the extreme low (trapeziums): from the lower value (small trapeziums) to the larger values (large trapezium)
         for (let i of low_) if (shares[i] < lowThreshold[i]) return middleColors[i]
         //else central color
-        return centralColor
+        return centerColor
     }
     fun.lowThreshold = lowThreshold
     fun.highThreshold = highThreshold
     fun.colors = colors
     fun.middleColors = middleColors
-    fun.centralColor = centralColor
+    fun.centerColor = centerColor
     fun.lowIndex = low_
     fun.highIndex = high_
     return fun
@@ -176,7 +178,7 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
 export const trivariateClassifier3 = (properties, totalFunction, opts = {}) => {
     const [a01, a12, a20] = opts.thresholds || [1/3, 1/3, 1/3]
     const [c0, c1, c2] = opts.colors || ["red", "green", "blue"]
-    const centralColor = opts.centralColor || "gray"
+    const centerColor = opts.centerColor || "gray"
 
     const fff = a => a == 1 ? Infinity : a / (1 - a)
     const c01 = fff(a01), c12 = fff(a12), c20 = fff(a20)
@@ -192,10 +194,10 @@ export const trivariateClassifier3 = (properties, totalFunction, opts = {}) => {
         if (s0 * c01 > s1 && s0 > s2 * c20) return c0
         else if (s1 > s0 * c01 && s1 * c12 > s2) return c1
         else if (s2 * c20 > s0 && s2 > s1 * c12) return c2
-        else return centralColor
+        else return centerColor
     }
     fun.colors = [c0, c1, c2]
-    fun.centralColor = centralColor
+    fun.centerColor = centerColor
     return fun
 }
 */
