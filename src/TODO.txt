@@ -1,10 +1,9 @@
-transform trivariate classifier into discrete classifier
-publish
-document chernioff
 
 *** census 2021
-emp: 15-65
-chernioff. sex, emp, age. 2*3*3. - see isotype icons
+transform trivariate classifier into discrete classifier
+emp: 15-65 ?
+chernoff: finalise
+publish document chernioff
 trivariate: legend center hexagon. legend uncentered
 sex: shape - emp: value - age hue
 sex: hue - emp: value - age shape (circle,square,triangle)

@@ -10,7 +10,7 @@ import { interpolateLab } from "d3-interpolate"
 
 
 
-export const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
+export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
     //the center point coordinates. sum must be equal to 1
     const [c0, c1, c2] = opts.center || [1 / 3, 1 / 3, 1 / 3]
     //the three colors (or codes) corresponding to the 3 categories
@@ -105,7 +105,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
 const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
 
-export const trivariateColorClassifier = (properties, totalFunction, opts = {}) => {
+export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
     const lowThreshold = opts.lowThreshold || [1 / 3, 1 / 3, 1 / 3]
     const highThreshold = opts.highThreshold || [2 / 3, 2 / 3, 2 / 3]
     const colors = opts.colors || ["red", "green", "blue"]
@@ -146,7 +146,7 @@ export const trivariateColorClassifier = (properties, totalFunction, opts = {}) 
 */
 
 /*
-export const trivariateColorClassifier3 = (properties, totalFunction, opts = {}) => {
+export const trivariateClassifier3 = (properties, totalFunction, opts = {}) => {
     const [a01, a12, a20] = opts.thresholds || [1/3, 1/3, 1/3]
     const [c0, c1, c2] = opts.colors || ["red", "green", "blue"]
     const centralColor = opts.centralColor || "gray"
