@@ -1,9 +1,9 @@
 
 *** census 2021
+chernoff: example (FR), document, publish
+trivariate: example (FR), document, publish. Extract ?
 trivariate: legend center hexagon. legend uncentered
 emp: 15-65 ?
-chernoff: finalise
-publish extract document chernioff trivariate
 sex: shape - emp: value - age hue
 sex: hue - emp: value - age shape (circle,square,triangle)
 bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS color
