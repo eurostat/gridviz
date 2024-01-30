@@ -193,17 +193,19 @@
         const formatPercentage = d3.format('.1f')
 
         //load chernoff images
-        async function loadChernoffImages(obj, callback = undefined) {
+        async function loadChernoffImages(obj, baseURL, callback = undefined) {
             obj = obj || {}
             for (let s of ["f", "m"])
                 for (let a of ["y", "m", "o"])
                     for (let i = 0; i <= 2; i++)
-                        obj[s + a + i] = await gridviz.loadImage("https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/" + (s + a + i) + ".png")
+                        obj[s + a + i] = await gridviz.loadImage(baseURL + (s + a + i) + ".png")
             if (callback) callback()
         }
 
         const chernoffImages = {};
-        loadChernoffImages(chernoffImages, update)
+        //https://jgaffuri.github.io/chernoff-faces/out/v1/fy2.png
+        //https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/
+        loadChernoffImages(chernoffImages, "https://jgaffuri.github.io/chernoff-faces/out/v1/", update)
 
         //
         const update = () => {
