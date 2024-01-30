@@ -33,7 +33,7 @@ export { MosaicStyle } from './style/MosaicStyle.js'
 export { NinjaStarStyle } from './style/NinjaStarStyle.js'
 export { TimeSeriesStyle } from './style/TimeSeriesStyle.js'
 export { IsoFenceStyle } from './style/IsoFenceStyle.js'
-export { ImageStyle, loadImage } from './style/ImageStyle.js'
+export { ImageStyle } from './style/ImageStyle.js'
 
 // export additional layers
 export { GridLayer } from './layer/GridLayer.js'
@@ -54,7 +54,8 @@ export { TrivariateLegend } from './legend/TrivariateLegend.js'
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
 export * from './utils/trivariate.js'
-export { nice } from './utils/utils.js'
+export * from './utils/chernoff.js'
+export { nice, loadImage } from './utils/utils.js'
 
 import { GeoCanvas } from './core/GeoCanvas.js'
 export const getParameterByName = GeoCanvas.getParameterByName

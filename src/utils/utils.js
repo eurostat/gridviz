@@ -29,6 +29,16 @@ export function nice(v, multiples = [8, 6, 5, 4, 2.5, 2]) {
 }
 
 
+export function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { reject(new Error('Error loading image')); };
+        img.src = src;
+    });
+}
+
+
 
 /*
 export let monitor = false

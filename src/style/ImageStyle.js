@@ -79,12 +79,3 @@ export class ImageStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
-
-export function loadImage(src) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = function () { resolve(img); };
-        img.onerror = function () { reject(new Error('Error loading image')); };
-        img.src = src;
-    });
-}

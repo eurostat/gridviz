@@ -192,21 +192,6 @@
         //format function for percentages
         const formatPercentage = d3.format('.1f')
 
-        //load chernoff images
-        async function loadChernoffImages(obj, baseURL, callback = undefined) {
-            obj = obj || {}
-            for (let s of ["f", "m"])
-                for (let a of ["y", "m", "o"])
-                    for (let i = 0; i <= 2; i++)
-                        obj[s + a + i] = await gridviz.loadImage(baseURL + (s + a + i) + ".png")
-            if (callback) callback()
-        }
-
-        const chernoffImages = {};
-        //https://jgaffuri.github.io/chernoff-faces/out/v1/fy2.png
-        //https://raw.githubusercontent.com/eurostat/gridviz/development/assets/chernoff/
-        loadChernoffImages(chernoffImages, "https://jgaffuri.github.io/chernoff-faces/out/v1/", update)
-
         //
         const update = () => {
             //read GUI selection
@@ -807,6 +792,8 @@
 
             } else if (layCode === 'chernoff') {
 
+                console.log(chernoffImages)
+
                 if (!chernoffImages) return
 
                 //age color - 3/4 classes
@@ -915,7 +902,6 @@
             map.redraw()
         }
 
-
         //layer update
         document.querySelector('#layer').addEventListener('change', update)
 
@@ -949,6 +935,12 @@
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true
         }
+
+        //load chernoff images
+        //https://jgaffuri.github.io/chernoff-faces/out/v1/fy2.png
+        //https://raw.githubusercontent.com/jgaffuri/chernoff-faces/main/out/v1/fy2.png
+        const chernoffImages = {}
+        gridviz.loadChernoffFacesImages(chernoffImages, "https://raw.githubusercontent.com/jgaffuri/chernoff-faces/main/out/v1/", update)
 
         //initialise
         update()
