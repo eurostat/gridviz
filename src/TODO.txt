@@ -1,7 +1,8 @@
-
-*** census 2021
 chernoff: example (FR), document, publish
 trivariate: example (FR), document, publish. Extract ?
+
+
+*** census 2021
 trivariate: legend center hexagon. legend uncentered
 emp: 15-65 ?
 sex: shape - emp: value - age hue
