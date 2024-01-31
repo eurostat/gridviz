@@ -1,5 +1,5 @@
 chernoff: example (FR), document, publish
-trivariate: example (FR), document, publish. Extract ?
+trivariate: document (style, legend), publish. Extract ?
 
 
 *** census 2021
