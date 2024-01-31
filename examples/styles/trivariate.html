@@ -4,39 +4,73 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 3700000, y: 2800000, z: 40, zoomExtent: [20, 200] })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4301000, y: 3050000, z: 400 })
 
     //define dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
         resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/ALTER_KURZcsv/' + resolution + 'm/'), {
         preprocess: (c) => {
+            /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
+            //total
             c.TOT = 0; for (let i = 1; i <= 5; i++) c.TOT += +c[i]
-            //age ratio
-            //<29
-            c.yyy = +c["1"] + +c["2"]
-            //>50
-            c.ooo = +c["4"] + +c["5"]
-            c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
-            c.age_ratio = c.age_ratio * 0.5 + 0.5
+            //define 3 age groups:
+            //<18
+            c.yo = +c["1"]
+            //between
+            c.mi = +c["2"] + +c["3"] + +c["4"]
+            //>65
+            c.ol = +c["5"]
         }
     })
 
+    //define trivariate classifier
+    const trivariateClassifier = gridviz.trivariateColorClassifier(
+        //the three groups
+        ["yo", "mi", "ol"],
+        //the function returning the total of the three
+        c => c.TOT,
+        //the colors
+        ["#4daf4a", "#377eb8", "#e41a1c"], {
+        //the center point of the trivariate classification
+        center: [0.15, 0.6, 0.25],
+        //the size of the central class
+        centerCoefficient: 0.2,
+    })
+
     //define style
-    const style = new gridviz.CompositionStyle({
-        color: {
-            men_1ind: '#7570b3',  //blue
-            men_2_4ind: '#1b9e77', //green
-            men_5ind: '#d95f02', //orange
-        },
-        type: () => 'piechart',
-        size: (c, r, z, scale) => scale(+c.men),
-        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.men, classNumber: 5, minSizePix: 2 }),
-        offsetAngle: () => 90,
+    const classNumberSize = 4
+    const style = new gridviz.ShapeColorSizeStyle({
+        color: (c) => trivariateClassifier(c) || "black",
+        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
+        size: (c, r, z, viewScale) => viewScale(c.TOT),
+        shape: () => "circle",
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 4 })]
+
+
+    //legend
+    style.legends = [new gridviz.TrivariateLegend({
+        title: "Age",
+        classifier: trivariateClassifier,
+        width: 100,
+        tooltip: map.tooltip,
+        texts: {
+            "0": "Over representation of persons aged <18",
+            "1": "Over representation of persons aged 18 to 64",
+            "2": "Over representation of persons aged >=65",
+            "12": "Under representation of persons aged <18",
+            "02": "Under representation of<br>persons aged 18 to 64",
+            "01": "Under representation of persons aged >=65",
+            "center": "Balanced representation of age groups",
+        },
+        leftText: "<18",
+        topText: "18 to 64",
+        rightText: ">65",
+        centerCoefficient: 0.5,
+    })]
+
 
 </script>
