@@ -16,6 +16,7 @@
   - [Advanced styles](#advanced-styles)
     - [Dot density style](#dot-density-style)
     - [Pillars style](#pillars-style)
+    - [Trivariate style](#trivariate-style)
     - [Text style](#text-style)
     - [Time series style](#time-series-style)
   - [Side styles](#side-styles)
@@ -179,6 +180,16 @@ This style shows the grid cells as 3D pillars or, with changeable height, width 
 
 - See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar.html)).
 - See [this basic example with simple style](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar_simple.html)).
+
+### Trivariate style
+
+[![trivariate map style](img/styles/trivariate.png)](https://eurostat.github.io/gridviz/examples/styles/trivariate.html)
+
+Trivariate maps use color to show a composition according to three categories. Three different color hue are defined, that correspond to each of the three categories. The cells color is then selected according to the relative importance of the three categories. When two of the three categories are more important that the third, a color mix is used. A central class may be defined to show cases where the three categories are relativelly well balanced.
+
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/trivariate.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/trivariate.html)).
+
+Note that this style is not really a new style - it relies on a specific classifier.
 
 ### Text style
 
