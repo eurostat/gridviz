@@ -1,4 +1,3 @@
-trivariate: publish
 chernoff: example (FR), document, publish
 
 *** census 2021
