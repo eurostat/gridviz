@@ -8,9 +8,20 @@
         .addZoomButtons()
 
     //define dataset
-    const dataset = new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/1000m/',
-        { preprocess: (c) => { c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind } }
-    )
+    const dataset = new gridviz.MultiResolutionDataset(
+        [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/ALTER_KURZcsv/' + resolution + 'm/'), {
+        preprocess: (c) => {
+            c.TOT = 0; for (let i = 1; i <= 5; i++) c.TOT += +c[i]
+            //age ratio
+            //<29
+            c.yyy = +c["1"] + +c["2"]
+            //>50
+            c.ooo = +c["4"] + +c["5"]
+            c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
+            c.age_ratio = c.age_ratio * 0.5 + 0.5
+        }
+    })
 
     //define style
     const style = new gridviz.CompositionStyle({
