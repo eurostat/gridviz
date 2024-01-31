@@ -1,6 +1,5 @@
+trivariate: publish
 chernoff: example (FR), document, publish
-trivariate: document (legend), publish. Extract ?
-
 
 *** census 2021
 trivariate: legend center hexagon. legend uncentered
@@ -11,6 +10,7 @@ bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS colo
 by size / by alpha
 
 
+trivariate: extract ?
 contour style
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
