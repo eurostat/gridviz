@@ -47,6 +47,7 @@
     - [Orientation legend](#orientation-legend)
     - [Size legend](#size-legend)
     - [Width legend](#width-legend)
+    - [Trivariate legend](#trivariate-legend)
   - [Leaflet](#leaflet)
   - [Alright?](#alright)
 
@@ -438,6 +439,12 @@ new gridviz.SizeLegend({
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/widthLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthLegendViewScale.html)) for a view scale based style.
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/widthQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthQuantileLegendViewScale.html)) for a quantile view scale based style.
 
+
+### Trivariate legend
+
+![](img/legends/trivariate_legend.png)
+
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/trivariate.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/trivariate.html)).
 
 ## Leaflet
 
