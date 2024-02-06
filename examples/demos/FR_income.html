@@ -88,7 +88,6 @@
         const map = new gridviz.Map(document.getElementById('map'))
             .setZoomExtent([3, 1500])
             .addZoomButtons()
-            .setViewFromURL()
 
         //income datasets, indexed by geo region and year
         const incDataset = {}
@@ -714,9 +713,9 @@
             const geo = document.querySelector('#geo').value
 
             //clean layers
-            app.bgLayers = []
-            app.labelLayer = undefined
-            app.boundaryLayer = undefined
+            map.bgLayers = []
+            map.labelLayer = undefined
+            map.boundaryLayer = undefined
 
             //set app parameters depending on the geographical selection
 
@@ -743,7 +742,7 @@
 
             //reunion
             else if (geo == "reun") {
-                app.setGeoCenter({ x: 350000, y: 7660000 })
+                map.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gridviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
                     .setLabelLayer(gridviz_es.getEuronymeLabelLayer('RE', '20', {
@@ -759,7 +758,7 @@
 
             //martinique
             else if (geo == "mart") {
-                app.setGeoCenter({ x: 710000, y: 1620000 })
+                map.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gridviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
                     .setLabelLayer(gridviz_es.getEuronymeLabelLayer('MQ', '20', {
@@ -789,20 +788,20 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         // show/hide background
         document.querySelector('#background').addEventListener('change', function () {
-            app.showBgLayers = this.checked
-            app.cg.redraw()
+            map.showBgLayers = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL
@@ -817,7 +816,7 @@
 
         //initialise
         updateGeo()
-        app.setViewFromURL()
+        map.setViewFromURL()
 
     </script>
 
