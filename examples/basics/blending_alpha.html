@@ -24,7 +24,7 @@
     const style = new gridviz.ShapeColorSizeStyle({
         color: colorFunction,
         alpha: (z) => z < 70 ? 0.75 : 1.0,
-        blendOperation: () => "multiply"
+        blendOperation: (z) => "multiply"
     })
 
     //define WMS background layer
