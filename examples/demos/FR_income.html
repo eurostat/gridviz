@@ -171,14 +171,14 @@
         })
 
         //side layers
-        const boundaryLayer = undefined, labelLayer = undefined, backgroundLayer1 = undefined, backgroundLayer2 = undefined
+        const backgroundLayer1 = undefined, backgroundLayer2 = undefined, boundaryLayer = undefined, labelLayer = undefined
 
         //
         const update = () => {
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
             const year_ = document.querySelector('#year').value
-            const year = "ind" + year_
+            //const year = "ind" + year_
             //const chYears = document.querySelector('#chYears').value
             //const y1 = chYears.split("_")[0].replace("d", ""), y2 = chYears.split("_")[1]
             const geo = document.querySelector('#geo').value
@@ -700,6 +700,12 @@
                 )
 
             } else console.error('Unexpected layer code: ' + layCode)
+
+            //fill layer stack
+            if (backgroundLayer1) map.layers.push(backgroundLayer1)
+            if (backgroundLayer2) map.layers.push(backgroundLayer2)
+            if (boundaryLayer) map.layers.push(boundaryLayer)
+            if (labelLayer) map.layers.push(labelLayer)
 
             //console.log("?lay=" + layCode + "&z=" + map.getZoomFactor() + "&x=" + map.getGeoCenter().x + "&y=" + map.getGeoCenter().y)
 
