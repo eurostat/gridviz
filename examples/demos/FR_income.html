@@ -7,7 +7,7 @@
 </head>
 
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="viz-container" style="height: 100%; width: 100%"></div>
+    <div id="map" style="height: 100%; width: 100%"></div>
 
     <div style="
                 font-size: 0.9em;
@@ -83,27 +83,26 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-axis@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
-        let containerDiv = document.getElementById('viz-container')
 
-        const app = new gviz.App(containerDiv)
-            //.addZoomButtons()
-            .setZoomFactorExtent([3, 1500])
+        //define map
+        const map = new gridviz.Map(document.getElementById('map'))
+            .setZoomExtent([3, 1500])
+            .addZoomButtons()
             .setViewFromURL()
 
         //income datasets, indexed by geo region and year
         const incDataset = {}
         const getDataset = (geo, year) =>
-            app.makeMultiScaleTiledGridDataset(
+            new gridviz.MultiResolutionDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
-                (r) => "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/inc/" + year + "/" + r + "m/",
+                r => new gridviz.TiledGrid(map, "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/inc/" + year + "/" + r + "m/"),
                 {
                     preprocess: (c) => {
                         //x	y	imputed	ind	ind_snv
                         //income per inhabitant per month
                         c.revind = Math.round(c.ind_snv / c.ind / 12)
                     },
-                }
-            )
+                })
         for (let geo of ["met", "reun", "mart"]) {
             incDataset[geo] = {}
             for (let year of ["2015", "2017", "2019"])
@@ -113,9 +112,9 @@
         //income timeseries datasets, indexed by geo region
         const incTsDataset = {}
         const getTsDataset = (geo) =>
-            app.makeMultiScaleTiledGridDataset(
+            new gridviz.MultiResolutionDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
-                (r) => "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind_snv/" + + r + "m/",
+                r => new gridviz.TiledGrid(map, "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind_snv/" + + r + "m/"),
                 {
                     preprocess: (c) => {
                         //x,y,ind2015,ind_snv2015,ind2017,ind_snv2017,ind2019,ind_snv2019
@@ -123,19 +122,17 @@
                         for (let year of ["2015", "2017", "2019"])
                             c["revind" + year] = Math.round(c["ind_snv" + year] / c["ind" + year] / 12)
                     },
-                }
-            )
+                })
         incTsDataset.met = getTsDataset("met")
         incTsDataset.reun = getTsDataset("reun")
         incTsDataset.mart = getTsDataset("mart")
 
 
         const imputedStyle =
-            new gviz.ShapeColorSizeStyle({
-                colorCol: 'imputed',
-                color: (v, r, s) => (+v ? '#666' : ''),
+            new gridviz.ShapeColorSizeStyle({
+                color: (c) => (+c.imputed ? '#666' : ''),
                 shape: () => 'circle',
-                size: (v, r, s) => 0.25 * r,
+                size: (c, r) => 0.25 * r,
                 maxZoom: 30,
             })
 
@@ -160,13 +157,13 @@
         })
         const f = lFr.format(",")
 
-        const strokeStyle = new gviz.StrokeStyle({
+        const strokeStyle = new gridviz.StrokeStyle({
             strokeColorCol: "revind",
             strokeColor: (v) => (+v ? '#666' : ''),
             maxZoom: 15,
         })
 
-        const legendInc = new gviz.ColorLegend({
+        const legendInc = new gridviz.ColorLegend({
             title: "Revenu, en € par mois et par personne",
             width: 320,
             ticks: 6,
@@ -202,7 +199,7 @@
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'revind',
                             color: colR,
                             tFun: (v, r, s) => {
@@ -229,9 +226,9 @@
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 0.16),
+                            size: (v, r, s, zf) => 1.3 * r * gridviz.sPow((v - s.min) / (s.max - s.min), 0.16),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -251,7 +248,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(legendInc)
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         title: "Nombre d'habitants",
                         exaggerationFactor: 0.8,
                         shape: 'circle',
@@ -259,14 +256,14 @@
                     }).style('padding', '0px 5px')
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         exaggerationFactor: 0.2,
                         shape: 'circle',
                         fillColor: "black",
                     }).style('padding', '0px 5px')
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         exaggerationFactor: 0.01,
                         shape: 'circle',
                         fillColor: "black",
@@ -280,9 +277,9 @@
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             alphaCol: "ind",
-                            alphaF: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), str),
+                            alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -302,12 +299,12 @@
 
                 //legend
                 app.layers[0].styles[0].legends.push(legendInc)
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                app.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Population - par transparence",
                     width: 320,
                     ticks: 4,
                     colorRamp: d3.interpolateGreys,
-                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, str),
+                    fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, str),
                     getStats: opts => opts.sAlpha
                 }))
 
@@ -323,10 +320,10 @@
                 app.addLayerFromDataset(
                     incTsDataset[geo],
                     [
-                        new gviz.TimeSeriesStyle({
+                        new gridviz.TimeSeriesStyle({
                             ts: ts,
                             lineWidthCol: "ind2019",
-                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.35) * 4) * z },
+                            lineWidth: (v, r, s, z) => { return (1 + gridviz.sPow(v / s.max, 0.35) * 4) * z },
                             //color: () => "black",
                             colorCol: "revind2019",
                             color: (v, r, s) => {
@@ -397,7 +394,7 @@
                     }
                 )
 
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                app.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Niveau de revenu (2019)",
                     width: 150,
                     colorRamp: colR,
@@ -407,7 +404,7 @@
                 }))
 
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentWidthLegend({
+                    new gridviz.SegmentWidthLegend({
                         title: "Population (2019)",
                         labelUnitText: 'hab.',
                         exaggerationFactor: 0.8,
@@ -425,20 +422,20 @@
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
-                        new gviz_sm.KernelSmoothingStyle({
+                        new gridviz_sm.KernelSmoothingStyle({
                             value: (c) => +c.ind_snv,
                             filter: (c) => +c.ind_snv > 0,
                             sigma: (r, zf) => (r * sigma) / 10,
                             filterSm: (v) => v > 0.02,
                             factor: 2,
                             styles: [
-                                new gviz.SquareColorWGLStyle({
+                                new gridviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: colR,
                                     tFun: (v, r, s) => {
                                         let t = (v - s.min) / (s.max - s.min)
                                         t = t > 1 ? 1 : t < 0 ? 0 : t
-                                        t = gviz.sExpRev(t, -10)
+                                        t = gridviz.sExpRev(t, -10)
                                         const cl = Math.floor(nb * t) / nb
                                         return cl
                                     },
@@ -455,12 +452,12 @@
 
                 /*/legend
                 app.layers[0].styles[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: "Nombre d'habitants",
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
                         //width: 500,
                         //ticks: 6,
-                        //fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, -7),
+                        //fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, -7),
                         width: 200,
                         ticks: 2,
                         tickFormat: 'text',
@@ -474,10 +471,10 @@
                 app.addLayerFromDataset(
                     popDataset[geo],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             colorCol: chYears,
                             color: (v, r, s) => {
-                                const stre = gviz.sPow
+                                const stre = gridviz.sPow
                                 let t = 0.5
                                 if (s.min < 0 && v < 0) {
                                     t -= stre(v / s.min, streC) / 2
@@ -490,7 +487,7 @@
                             shape: () => 'square',
                             blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
+                        new gridviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
                         pixNb: 2,
@@ -500,14 +497,14 @@
 
                 //legend
                 app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: "Changement de population de " + y1 + " à " + y2 + ", en nombre d'habitants",
                         ticks: 7,
                         width: 500,
                         colorRamp: d3.interpolateSpectral,
                         invert: true,
                         fun: (t, r, s) => {
-                            const streI = gviz.sPowInverse
+                            const streI = gridviz.sPowInverse
                             if (t < 0.5) return s.min * streI(1 - 2 * t, streC)
                             if (t > 0.5) return s.max * streI(2 * t - 1, streC)
                             return 0
@@ -517,7 +514,7 @@
             } else if (layCode == 'colorChSmTK') {
                 const colR = d3.interpolateSpectral
                 const nb = 25
-                const stre = gviz.sPow
+                const stre = gridviz.sPow
                 const streC = 0.3
 
                 //get year selection
@@ -527,14 +524,14 @@
                 app.addLayerFromDataset(
                     popDataset[geo],
                     [
-                        new gviz_sm.KernelSmoothingStyle({
+                        new gridviz_sm.KernelSmoothingStyle({
                             value: (c) => +c[chYears],
                             sigma: (r, zf) => (r * sigma) / 10,
                             factor: 2,
                             filterSm: (v) => Math.abs(v) > 0.0001,
                             //filter: c => !c.Ind_2015 && !c.Ind_2017,
                             styles: [
-                                new gviz.SquareColorWGLStyle({
+                                new gridviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: (t) => colR(1 - t),
                                     //opacity: (r,zf) => zf < 300? 0.75 : 1,
@@ -551,22 +548,6 @@
                                     },
                                 }),
                             ],
-                            /*gviz.TanakaStyle.get("ksmval", {
-                            tFun: (v, r, s, zf) => {
-                                let t = 0.5
-                                if (s.min < 0 && v < 0) {
-                                    t += stre(v / s.min, streC) / 2
-                                } else {
-                                    t -= stre(v / s.max, streC) / 2
-                                }
-                                t = 1 - t;
-                                t = Math.floor(t * nb) / nb
-                                return t;
-                            },
-                            color: (t) => colR(1 - t),
-                            nb: nb,
-                            //newShading: true,
-                        }),*/
                             blendOperation: () => "multiply"
                         }),
                     ],
@@ -578,7 +559,7 @@
 
                 //legend
                 app.layers[0].styles[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: "Changement de population de " + y1 + " à " + y2,
                         width: 300,
                         ticks: 3,
@@ -591,13 +572,13 @@
                 app.addLayerFromDataset(
                     popDataset[geo],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             colorCol: chYears,
                             color: (v) => (v > 0 ? '#d13c4b' : '#4288b5'),
                             sizeCol: chYears,
                             size: (v, r, s, zf) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
+                                return 1.5 * r * gridviz.sPow(Math.abs(v) / max, 0.2)
                             },
                             shape: () => 'circle',
                             blendOperation: () => "multiply"
@@ -611,7 +592,7 @@
 
                 //legend
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         title: "Changement de population " + y1 + "-" + y2,
                         exaggerationFactor: 0.9,
                         shape: 'circle',
@@ -620,7 +601,7 @@
                     }).style('padding', '0px 5px')
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         exaggerationFactor: 0.2,
                         shape: 'circle',
                         labelUnitText: '',
@@ -628,14 +609,14 @@
                     }).style('padding', '0px 5px')
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         exaggerationFactor: 0.01,
                         shape: 'circle',
                         labelUnitText: '',
                         fillColor: 'gray',
                     }).style('padding', '0px 5px')
                 )
-                const lgCat = new gviz.ColorCategoryLegend({
+                const lgCat = new gridviz.ColorCategoryLegend({
                     shape: 'square',
                     colCat: [
                         ['#d13c4b', 'Hausse'],
@@ -650,7 +631,7 @@
                 app.addLayerFromDataset(
                     popDataset[geo],
                     [
-                        new gviz.SegmentStyle({
+                        new gridviz.SegmentStyle({
                             orientation: (c) => {
                                 let a = (c[per] * maxAngle) / 0.3
                                 a = a < -maxAngle ? -maxAngle : a > maxAngle ? maxAngle : a
@@ -661,7 +642,7 @@
                                 Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
                             length: (v, r) => r,
                             widthCol: "ind" + y2,
-                            width: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.25),
+                            width: (v, r, s, zf) => 0.8 * r * gridviz.sPow(v / s.max, 0.25),
                             blendOperation: () => "multiply"
                         }),
                     ],
@@ -674,14 +655,14 @@
                 //legend
 
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentWidthLegend({
+                    new gridviz.SegmentWidthLegend({
                         title: 'Population en ' + y2,
                         labelUnitText: 'hab.',
                     })
                 )
 
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentOrientationLegend({
+                    new gridviz.SegmentOrientationLegend({
                         title: "Changement de population " + y1 + "-" + y2,
                         labelUnitText: 'Forte hausse',
                         color: '#d13c4b',
@@ -689,28 +670,28 @@
                     })
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentOrientationLegend({
+                    new gridviz.SegmentOrientationLegend({
                         labelUnitText: 'Faible hausse',
                         color: '#d13c4b',
                         orientation: 30,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentOrientationLegend({
+                    new gridviz.SegmentOrientationLegend({
                         labelUnitText: 'Stabilité (<1%)',
                         color: 'gray',
                         orientation: 0,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentOrientationLegend({
+                    new gridviz.SegmentOrientationLegend({
                         labelUnitText: 'Faible baisse',
                         color: '#4288b5',
                         orientation: -30,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
-                    new gviz.SegmentOrientationLegend({
+                    new gridviz.SegmentOrientationLegend({
                         labelUnitText: 'Forte baisse',
                         color: '#4288b5',
                         orientation: -60,
@@ -743,8 +724,8 @@
             if (geo == "met") {
                 app.setGeoCenter({ x: 3760000, y: 2650000 }) //{ x: 3763437, y: 2891045 })
                     .setZoomFactor(900)
-                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
-                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
+                    .setBoundaryLayer(gridviz_es.getEurostatBoundariesLayer())
+                    .setLabelLayer(gridviz_es.getEuronymeLabelLayer('FR', '20'))
                     .addBackgroundLayer({
                         url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMPositronBackground/EPSG3035/",
                         resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564, 1222.99245256282, 611.49622628141, 305.748113140705, 152.8740565703525, 76.43702828517625, 38.21851414258813, 19.109257071294063, 9.554628535647032, 4.777314267823516, 2.388657133911758, 1.19432856695, 0.597164283477939],
@@ -764,8 +745,8 @@
             else if (geo == "reun") {
                 app.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
-                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
-                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('RE', '20', {
+                    .setBoundaryLayer(gridviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
+                    .setLabelLayer(gridviz_es.getEuronymeLabelLayer('RE', '20', {
                         //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-40s/html/
                         proj: d3.geoTransverseMercator()
                             .rotate([-57, 0])
@@ -780,8 +761,8 @@
             else if (geo == "mart") {
                 app.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
-                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
-                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('MQ', '20', {
+                    .setBoundaryLayer(gridviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
+                    .setLabelLayer(gridviz_es.getEuronymeLabelLayer('MQ', '20', {
                         //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-20n/html/
                         proj: d3.geoTransverseMercator()
                             .rotate([63, 0])
@@ -825,13 +806,13 @@
         })
 
         //select layer from URL
-        let ls = gviz.getParameterByName('lay')
+        let ls = gridviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true
         }
         //select geo from URL
-        ls = gviz.getParameterByName('geo')
+        ls = gridviz.getParameterByName('geo')
         if (ls) document.querySelector('#geo').value = ls
 
         //initialise
