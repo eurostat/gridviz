@@ -1,3 +1,4 @@
+upgrade FR DE demos
 chernoff: example (FR), document, publish
 
 *** census 2021
