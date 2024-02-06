@@ -202,9 +202,9 @@
                     incDataset[geo][year_],
                     [
                         new gridviz.SquareColorWebGLStyle({
-                            colorCol: 'revind',
                             color: colR,
-                            tFun: (v, r, s) => {
+                            tFun: (cell) => {
+                                const v = cell.revind
                                 let t = (v - incMin) / (incMax - incMin)
                                 t = t > 1 ? 1 : t < 0 ? 0 : t
                                 return t
