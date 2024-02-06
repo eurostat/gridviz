@@ -171,7 +171,7 @@
         })
 
         //side layers
-        const backgroundLayer1 = undefined, backgroundLayer2 = undefined, boundaryLayer = undefined, labelLayer = undefined
+        let backgroundLayer1, backgroundLayer2, boundaryLayer, labelLayer
 
         //
         const update = () => {
@@ -185,6 +185,7 @@
 
             //remove layers
             map.layers = []
+            let gridLayer
 
             //tooltip function: for income
             const tooltipFun = (withPopulation = false) => (c, r) =>
@@ -197,10 +198,10 @@
 
             if (layCode == 'color') {
 
-                map.addLayerFromDataset(
+                gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
-                        new gridviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWebGLStyle({
                             colorCol: 'revind',
                             color: colR,
                             tFun: (v, r, s) => {
@@ -220,7 +221,7 @@
                 )
 
                 //legend
-                map.layers[0].styles[0].legends.push(legendInc)
+                gridLayer.styles[0].legends.push(legendInc)
 
             } else if (layCode == 'size') {
 
@@ -704,6 +705,7 @@
             //fill layer stack
             if (backgroundLayer1) map.layers.push(backgroundLayer1)
             if (backgroundLayer2) map.layers.push(backgroundLayer2)
+            if (gridLayer) map.layers.push(gridLayer)
             if (boundaryLayer) map.layers.push(boundaryLayer)
             if (labelLayer) map.layers.push(labelLayer)
 
