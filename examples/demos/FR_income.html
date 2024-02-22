@@ -705,11 +705,11 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //fill layer stack
-            //if (backgroundLayer1) map.layers.push(backgroundLayer1)
-            //if (backgroundLayer2) map.layers.push(backgroundLayer2)
+            if (backgroundLayer1) map.layers.push(backgroundLayer1)
+            if (backgroundLayer2) map.layers.push(backgroundLayer2)
             if (gridLayer) map.layers.push(gridLayer)
-            //if (boundaryLayer) map.layers.push(boundaryLayer)
-            //if (labelLayer) map.layers.push(labelLayer)
+            if (boundaryLayer) map.layers.push(boundaryLayer)
+            if (labelLayer) map.layers.push(labelLayer)
 
             //console.log("?lay=" + layCode + "&z=" + map.getZoomFactor() + "&x=" + map.getGeoCenter().x + "&y=" + map.getGeoCenter().y)
 

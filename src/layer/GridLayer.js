@@ -68,7 +68,8 @@ export class GridLayer extends Layer {
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?
             geoCanvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
-            geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
+            if (s.blendOperation)
+                geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             geoCanvas.setCanvasTransform()

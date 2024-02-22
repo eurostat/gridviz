@@ -171,8 +171,8 @@ export class Map {
 
             //set layer alpha and blend mode
             this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-            console.log(layer)
-            this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
+            if (layer.blendOperation)
+                this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
