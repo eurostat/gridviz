@@ -99,8 +99,6 @@ style polygon, to show urbanised areas only from CLC
 
 value by alpha: Make it for webgl style
 
-StrokeStyle - remove unnecessary colorCol property, when color is static
-
 FR: add text: Pour des raisons de confidentialité, ces données ont été modifiées.
 
 pillar: make random example

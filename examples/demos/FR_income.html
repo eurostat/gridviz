@@ -228,6 +228,7 @@
                     incDataset[geo][year_],
                     [
                         new gridviz.ShapeColorSizeStyle({
+                            filter: (c) => +c.ind > 0,
                             size: (c, r, z, viewScale) => viewScale(c.ind),
                             viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind, classNumber: 4, minSizePix: 2, maxSizeFactor: 1.2 }),
                             color: (c, r) => {
@@ -239,7 +240,7 @@
                             shape: () => 'circle',
                             blendOperation: (z) => z < 20 ? "multiply" : "source-over"
                         }),
-                        imputedStyle,
+                        //imputedStyle,
                     ],
                     {
                         pixNb: 8,
@@ -278,14 +279,15 @@
                 /*/TODO alpha
                 const str = -10
                 alphaCol: "ind",
-                    alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),
-*/
+                alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),*/
+                const alphaStretching = gridviz.logarithmicScale(-10)
 
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
                         new gridviz.ShapeColorSizeStyle({
-                            color: (c, r) => {
+                            filter: (c) => +c.ind > 0,
+                            color: (c, r, z, vs) => {
                                 const v = c.revind
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
@@ -415,292 +417,6 @@
                         labelUnitText: 'hab.',
                         exaggerationFactor: 0.8,
                         color: "black",
-                    })
-                )*/
-
-            } else if (layCode == 'smoothed') {
-                //get year selection
-                const sigma = document.querySelector('#sigmaTK').value
-
-                const nb = 8
-
-                //add layer
-                map.addLayerFromDataset(
-                    incDataset[geo][year_],
-                    [
-                        new gridviz_sm.KernelSmoothingStyle({
-                            value: (c) => +c.ind_snv,
-                            filter: (c) => +c.ind_snv > 0,
-                            sigma: (r, zf) => (r * sigma) / 10,
-                            filterSm: (v) => v > 0.02,
-                            factor: 2,
-                            styles: [
-                                new gridviz.SquareColorWGLStyle({
-                                    colorCol: 'ksmval',
-                                    color: colR,
-                                    tFun: (v, r, s) => {
-                                        let t = (v - s.min) / (s.max - s.min)
-                                        t = t > 1 ? 1 : t < 0 ? 0 : t
-                                        t = gridviz.sExpRev(t, -10)
-                                        const cl = Math.floor(nb * t) / nb
-                                        return cl
-                                    },
-                                }),
-                            ],
-                            blendOperation: (zf) => "multiply"
-                        }),
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: tooltipFun(true),
-                    }
-                )
-
-                /*/legend
-                map.layers[0].styles[0].styles[0].legends.push(
-                    new gridviz.ColorLegend({
-                        title: "Nombre d'habitants",
-                        colorRamp: (t) => colR(Math.floor(t * nb) / nb),
-                        //width: 500,
-                        //ticks: 6,
-                        //fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, -7),
-                        width: 200,
-                        ticks: 2,
-                        tickFormat: 'text',
-                        fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : 'X'),
-                    })
-                )*/
-
-            } else if (layCode == 'colorCh') {
-                const streC = 0.22
-
-                map.addLayerFromDataset(
-                    popDataset[geo],
-                    [
-                        new gridviz.ShapeColorSizeStyle({
-                            colorCol: chYears,
-                            color: (v, r, s) => {
-                                const stre = gridviz.sPow
-                                let t = 0.5
-                                if (s.min < 0 && v < 0) {
-                                    t -= stre(v / s.min, streC) / 2
-                                } else {
-                                    t += stre(v / s.max, streC) / 2
-                                }
-                                t = 1 - t
-                                return d3.interpolateSpectral(t)
-                            },
-                            shape: () => 'square',
-                            blendOperation: (z) => z < 25 ? "multiply" : "source-over"
-                        }),
-                        new gridviz.StrokeStyle({ visible: z => z < 15 }),
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: tooltipFunCh,
-                    }
-                )
-
-                /*/legend
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.ColorLegend({
-                        title: "Changement de population de " + y1 + " à " + y2 + ", en nombre d'habitants",
-                        ticks: 7,
-                        width: 500,
-                        colorRamp: d3.interpolateSpectral,
-                        invert: true,
-                        fun: (t, r, s) => {
-                            const streI = gridviz.sPowInverse
-                            if (t < 0.5) return s.min * streI(1 - 2 * t, streC)
-                            if (t > 0.5) return s.max * streI(2 * t - 1, streC)
-                            return 0
-                        },
-                    })
-                )*/
-            } else if (layCode == 'colorChSmTK') {
-                const colR = d3.interpolateSpectral
-                const nb = 25
-                const stre = gridviz.sPow
-                const streC = 0.3
-
-                //get year selection
-                const sigma = document.querySelector('#sigmaCCH').value
-
-                //add layer
-                map.addLayerFromDataset(
-                    popDataset[geo],
-                    [
-                        new gridviz_sm.KernelSmoothingStyle({
-                            value: (c) => +c[chYears],
-                            sigma: (r, zf) => (r * sigma) / 10,
-                            factor: 2,
-                            filterSm: (v) => Math.abs(v) > 0.0001,
-                            //filter: c => !c.Ind_2015 && !c.Ind_2017,
-                            styles: [
-                                new gridviz.SquareColorWGLStyle({
-                                    colorCol: 'ksmval',
-                                    color: (t) => colR(1 - t),
-                                    //opacity: (r,zf) => zf < 300? 0.75 : 1,
-                                    tFun: (v, r, s) => {
-                                        let t = 0.5
-                                        if (s.min < 0 && v < 0) {
-                                            t += stre(v / s.min, streC) / 2
-                                        } else {
-                                            t -= stre(v / s.max, streC) / 2
-                                        }
-                                        t = 1 - t
-                                        t = Math.floor(t * nb) / nb
-                                        return t
-                                    },
-                                }),
-                            ],
-                            blendOperation: () => "multiply"
-                        }),
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: tooltipFunCh,
-                    }
-                )
-
-                /*/legend
-                map.layers[0].styles[0].styles[0].legends.push(
-                    new gridviz.ColorLegend({
-                        title: "Changement de population de " + y1 + " à " + y2,
-                        width: 300,
-                        ticks: 3,
-                        colorRamp: (t) => colR(1 - Math.floor(t * nb) / nb),
-                        tickFormat: 'text',
-                        fun: (t, r, s) => (t == 0 ? 'Baisse' : t == 1 ? 'Hausse' : 'Stabilité'),
-                    })
-                )*/
-            } else if (layCode == 'sizeCh') {
-                map.addLayerFromDataset(
-                    popDataset[geo],
-                    [
-                        new gridviz.ShapeColorSizeStyle({
-                            colorCol: chYears,
-                            color: (v) => (v > 0 ? '#d13c4b' : '#4288b5'),
-                            sizeCol: chYears,
-                            size: (v, r, s, zf) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return 1.5 * r * gridviz.sPow(Math.abs(v) / max, 0.2)
-                            },
-                            shape: () => 'circle',
-                            blendOperation: () => "multiply"
-                        }),
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: tooltipFunCh,
-                    }
-                )
-
-                /*/legend
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({
-                        title: "Changement de population " + y1 + "-" + y2,
-                        exaggerationFactor: 0.9,
-                        shape: 'circle',
-                        labelUnitText: 'habitants',
-                        fillColor: 'gray',
-                    }).style('padding', '0px 5px')
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({
-                        exaggerationFactor: 0.2,
-                        shape: 'circle',
-                        labelUnitText: '',
-                        fillColor: 'gray',
-                    }).style('padding', '0px 5px')
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({
-                        exaggerationFactor: 0.01,
-                        shape: 'circle',
-                        labelUnitText: '',
-                        fillColor: 'gray',
-                    }).style('padding', '0px 5px')
-                )
-                const lgCat = new gridviz.ColorCategoryLegend({
-                    shape: 'square',
-                    colCat: [
-                        ['#d13c4b', 'Hausse'],
-                        ['#4288b5', 'Baisse'],
-                    ],
-                })
-                map.layers[0].styles[0].legends.push(lgCat)*/
-            } else if (layCode == 'segmentCh') {
-                const maxAngle = 60
-                const per = "p" + y1 + "_" + y2
-
-                map.addLayerFromDataset(
-                    popDataset[geo],
-                    [
-                        new gridviz.SegmentStyle({
-                            orientation: (c) => {
-                                let a = (c[per] * maxAngle) / 0.3
-                                a = a < -maxAngle ? -maxAngle : a > maxAngle ? maxAngle : a
-                                return a
-                            },
-                            colorCol: per,
-                            color: (v) =>
-                                Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
-                            length: (v, r) => r,
-                            widthCol: "ind" + y2,
-                            width: (v, r, s, zf) => 0.8 * r * gridviz.sPow(v / s.max, 0.25),
-                            blendOperation: () => "multiply"
-                        }),
-                    ],
-                    {
-                        pixNb: 10,
-                        cellInfoHTML: tooltipFunCh,
-                    }
-                )
-
-                /*/legend
-
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentWidthLegend({
-                        title: 'Population en ' + y2,
-                        labelUnitText: 'hab.',
-                    })
-                )
-
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentOrientationLegend({
-                        title: "Changement de population " + y1 + "-" + y2,
-                        labelUnitText: 'Forte hausse',
-                        color: '#d13c4b',
-                        orientation: 60,
-                    })
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentOrientationLegend({
-                        labelUnitText: 'Faible hausse',
-                        color: '#d13c4b',
-                        orientation: 30,
-                    })
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentOrientationLegend({
-                        labelUnitText: 'Stabilité (<1%)',
-                        color: 'gray',
-                        orientation: 0,
-                    })
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentOrientationLegend({
-                        labelUnitText: 'Faible baisse',
-                        color: '#4288b5',
-                        orientation: -30,
-                    })
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentOrientationLegend({
-                        labelUnitText: 'Forte baisse',
-                        color: '#4288b5',
-                        orientation: -60,
                     })
                 )*/
 

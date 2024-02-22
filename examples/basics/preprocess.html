@@ -28,7 +28,6 @@
 
     //define color style
     const style = new gridviz.ShapeColorSizeStyle({
-        colorCol: 'change',
         color: (cell, resolution, z) => {
             //use new "change" property for coloring
             if (cell.change < -120) return "darkblue"
