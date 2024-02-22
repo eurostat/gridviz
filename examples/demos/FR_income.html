@@ -246,7 +246,7 @@
                     }
                 )
 
-                //legend
+                /*/legend
                 map.layers[0].styles[0].legends.push(legendInc)
                 map.layers[0].styles[0].legends.push(
                     new gridviz.SizeLegend({
@@ -269,7 +269,7 @@
                         shape: 'circle',
                         fillColor: "black",
                     }).style('padding', '0px 5px')
-                )
+                )*/
 
 
             } else if (layCode == 'alpha') {
@@ -298,7 +298,7 @@
                     }
                 )
 
-                //legend
+                /*/legend
                 map.layers[0].styles[0].legends.push(legendInc)
                 map.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Population - par transparence",
@@ -307,7 +307,7 @@
                     colorRamp: d3.interpolateGreys,
                     fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, str),
                     getStats: opts => opts.sAlpha
-                }))
+                }))*/
 
 
             } else if (layCode == 'ts') {
@@ -395,7 +395,7 @@
                     }
                 )
 
-                map.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
+                /*map.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Niveau de revenu (2019)",
                     width: 150,
                     colorRamp: colR,
@@ -411,7 +411,7 @@
                         exaggerationFactor: 0.8,
                         color: "black",
                     })
-                )
+                )*/
 
             } else if (layCode == 'smoothed') {
                 //get year selection
@@ -496,7 +496,7 @@
                     }
                 )
 
-                //legend
+                /*/legend
                 map.layers[0].styles[0].legends.push(
                     new gridviz.ColorLegend({
                         title: "Changement de population de " + y1 + " à " + y2 + ", en nombre d'habitants",
@@ -511,7 +511,7 @@
                             return 0
                         },
                     })
-                )
+                )*/
             } else if (layCode == 'colorChSmTK') {
                 const colR = d3.interpolateSpectral
                 const nb = 25
@@ -558,7 +558,7 @@
                     }
                 )
 
-                //legend
+                /*/legend
                 map.layers[0].styles[0].styles[0].legends.push(
                     new gridviz.ColorLegend({
                         title: "Changement de population de " + y1 + " à " + y2,
@@ -568,7 +568,7 @@
                         tickFormat: 'text',
                         fun: (t, r, s) => (t == 0 ? 'Baisse' : t == 1 ? 'Hausse' : 'Stabilité'),
                     })
-                )
+                )*/
             } else if (layCode == 'sizeCh') {
                 map.addLayerFromDataset(
                     popDataset[geo],
@@ -591,7 +591,7 @@
                     }
                 )
 
-                //legend
+                /*/legend
                 map.layers[0].styles[0].legends.push(
                     new gridviz.SizeLegend({
                         title: "Changement de population " + y1 + "-" + y2,
@@ -624,7 +624,7 @@
                         ['#4288b5', 'Baisse'],
                     ],
                 })
-                map.layers[0].styles[0].legends.push(lgCat)
+                map.layers[0].styles[0].legends.push(lgCat)*/
             } else if (layCode == 'segmentCh') {
                 const maxAngle = 60
                 const per = "p" + y1 + "_" + y2
@@ -653,7 +653,7 @@
                     }
                 )
 
-                //legend
+                /*/legend
 
                 map.layers[0].styles[0].legends.push(
                     new gridviz.SegmentWidthLegend({
@@ -697,7 +697,7 @@
                         color: '#4288b5',
                         orientation: -60,
                     })
-                )
+                )*/
 
             } else console.error('Unexpected layer code: ' + layCode)
 
