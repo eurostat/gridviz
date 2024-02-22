@@ -274,30 +274,34 @@
 
 
             } else if (layCode == 'alpha') {
-                const str = -10
 
-                map.addLayerFromDataset(
+                /*/TODO alpha
+                const str = -10
+                alphaCol: "ind",
+                    alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),
+*/
+
+                gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
                         new gridviz.ShapeColorSizeStyle({
-                            alphaCol: "ind",
-                            alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),
-                            colorCol: "revind",
-                            color: (v, r, s) => {
+                            color: (c, r) => {
+                                const v = c.revind
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
                                 return colR(t);
                             },
-                            blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
+                            blendOperation: (z) => z < 20 ? "multiply" : "source-over"
                         }),
                         strokeStyle,
                         imputedStyle,
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: tooltipFun(true),
+                        cellInfoHTML: tooltipFun(),
                     }
                 )
+
 
                 /*/legend
                 map.layers[0].styles[0].legends.push(legendInc)
