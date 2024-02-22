@@ -752,30 +752,30 @@
             //reunion
             else if (geo == "reun") {
                 map.setView(350000, 7660000).setZoom(75)
-                boundaryLayer = gridviz_eurostat.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" })
-                labelLayer = gridviz_eurostat.getEuronymeLabelLayer('RE', '20', {
+                boundaryLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
+                labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('RE', '20', {
                     //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-40s/html/
                     proj: d3.geoTransverseMercator()
                         .rotate([-57, 0])
                         .reflectY(true)
                         .scale(6378137)
                         .translate([500000, 10016000])
-                })
+                }))
                 //TODO background
             }
 
             //martinique
             else if (geo == "mart") {
                 map.setView(710000, 1620000).setZoom(75)
-                boundaryLayer = gridviz_eurostat.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" })
-                labelLayer = gridviz_eurostat.getEuronymeLabelLayer('MQ', '20', {
+                boundaryLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
+                labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('MQ', '20', {
                     //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-20n/html/
                     proj: d3.geoTransverseMercator()
                         .rotate([63, 0])
                         .reflectY(true)
                         .scale(6378137)
                         .translate([500000, -11000])
-                })
+                }))
                 //TODO background
             }
             else { console.error("Unexpected geo: " + geo); return; }
