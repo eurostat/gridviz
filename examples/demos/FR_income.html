@@ -387,23 +387,26 @@
                     }
                 )
 
+                //legends
+                //color
                 gridLayer.styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Niveau de revenu (2019)",
                     width: 150,
-                    colorRamp: colR,
+                    colorScale: colR,
                     ticks: 2,
                     tickFormat: 'text',
-                    fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
+                    textScale: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
                 }))
-/*
-                gridLayer.styles[0].legends.push(
-                    new gridviz.SegmentWidthLegend({
-                        title: "Population (2019)",
-                        labelUnitText: 'hab.',
-                        exaggerationFactor: 0.8,
-                        color: "black",
-                    })
-                )*/
+                //width
+                /*
+                                gridLayer.styles[0].legends.push(
+                                    new gridviz.SegmentWidthLegend({
+                                        title: "Population (2019)",
+                                        labelUnitText: 'hab.',
+                                        exaggerationFactor: 0.8,
+                                        color: "black",
+                                    })
+                                )*/
 
             } else console.error('Unexpected layer code: ' + layCode)
 
