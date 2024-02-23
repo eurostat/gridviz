@@ -325,16 +325,20 @@
                 const colR = d3.scaleQuantize([0, 1], [d3.schemeCategory10[4], d3.schemeCategory10[0], d3.schemeCategory10[2], d3.schemeCategory10[1], d3.schemeCategory10[3]]);
 
                 //add layer
-                map.addLayerFromDataset(
+                gridLayer = new gridviz.GridLayer(
                     incTsDataset[geo],
                     [
                         new gridviz.TimeSeriesStyle({
+                            filter: (c) => +c.ind2019 > 0,
                             ts: ts,
-                            lineWidthCol: "ind2019",
-                            lineWidth: (v, r, s, z) => { return (1 + gridviz.sPow(v / s.max, 0.35) * 4) * z },
+                            viewScale: (cells) => d3.max(cells, cell => +cell.ind2019),
+                            lineWidth: (c, r, z, max) => {
+                                const v = c.ind2019
+                                return (1 + gridviz.sPow(v / max, 0.35) * 4) * z
+                            },
                             //color: () => "black",
-                            colorCol: "revind2019",
-                            color: (v, r, s) => {
+                            color: (c) => {
+                                const v = c.revind2019
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
                                 return colR(t);
