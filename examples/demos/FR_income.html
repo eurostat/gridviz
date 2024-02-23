@@ -214,7 +214,7 @@
                         imputedStyle,
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: tooltipFun(),
                     }
                 )
@@ -229,7 +229,7 @@
                     [
                         new gridviz.ShapeColorSizeStyle({
                             filter: (c) => +c.ind > 0,
-                            size: (c, r, z, viewScale) => viewScale(c.ind),
+                            size: (c, r, z, vs) => vs(c.ind),
                             viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind, classNumber: 4, minSizePix: 2, maxSizeFactor: 1.2 }),
                             color: (c, r) => {
                                 const v = c.revind
@@ -243,7 +243,7 @@
                         //imputedStyle,
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 5,
                         cellInfoHTML: tooltipFun(true),
                     }
                 )
@@ -282,6 +282,8 @@
                 alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),*/
                 const alphaStretching = gridviz.logarithmicScale(-10)
 
+                //viewScale: (cells) => d3.max(cells, cell => +cell.ind),
+
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
@@ -299,7 +301,7 @@
                         imputedStyle,
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: tooltipFun(),
                     }
                 )
@@ -331,11 +333,8 @@
                         new gridviz.TimeSeriesStyle({
                             filter: (c) => +c.ind2019 > 0,
                             ts: ts,
-                            viewScale: (cells) => d3.max(cells, cell => +cell.ind2019),
-                            lineWidth: (c, r, z, max) => {
-                                const v = c.ind2019
-                                return (1 + gridviz.sPow(v / max, 0.35) * 4) * z
-                            },
+                            lineWidth: (c, r, z, vs) => vs(c.ind2019),
+                            viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind2019, classNumber: 4, minSizePix: 2, maxSizeFactor: 0.5 }),
                             //color: () => "black",
                             color: (c) => {
                                 const v = c.revind2019
@@ -345,7 +344,7 @@
                             },
                         })],
                     {
-                        pixNb: 12,
+                        minPixelsPerCell: 12,
                         cellInfoHTML: (c) => {
 
                             //prepare chart data
