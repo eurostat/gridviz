@@ -312,6 +312,7 @@
                 const colR = d3.scaleQuantize([0, 1], [d3.schemeCategory10[4], d3.schemeCategory10[0], d3.schemeCategory10[2], d3.schemeCategory10[1], d3.schemeCategory10[3]]);
 
                 //add layer
+                const widthClassNumber = 4
                 gridLayer = new gridviz.GridLayer(
                     incTsDataset[geo],
                     [
@@ -319,7 +320,7 @@
                             filter: (c) => +c.ind2019 > 0,
                             ts: ts,
                             lineWidth: (c, r, z, vs) => vs(c.ind2019),
-                            viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind2019, classNumber: 4, minSizePix: 2, maxSizeFactor: 0.5 }),
+                            viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind2019, classNumber: widthClassNumber, minSizePix: 2, maxSizeFactor: 0.5 }),
                             //color: () => "black",
                             color: (c) => {
                                 const t = (c.revind2019 - incMin) / (incMax - incMin);
@@ -400,35 +401,14 @@
                 }))
                 //width
                 gridLayer.styles[0].legends.push(
-                    gridviz.sizeLegendViewScale(
-                        cell => +cell.ind2019, {
-                        k: [0.8, 0.2, 0.01, 0.002],
+                    gridviz.sizeDiscreteViewScaleLegend(
+                        widthClassNumber, {
                         title: "Population (2019)",
                         shape: "line",
                         color: "black",
-                        length: (resolution) => 2 * resolution,
-                        //labelFormat: d3.format(',.2r'),
+                        length: (resolution) => 1.5 * resolution,
+                        labelFormat: Math.round,
                     })
-
-
-                    /*gridviz.sizeLegendViewScale(
-        cell => +cell.TOT_P_2021, {
-        k: [0.8, 0.2, 0.01, 0.002],
-        title: "Population",
-        shape: "line",
-        color: "black",
-        length: (resolution) => 2 * resolution,
-        labelFormat: d3.format(',.2r'),
-    })*/
-
-                    //lineWidth: (c, r, z, vs) => vs(c.ind2019),
-                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind2019, classNumber: 4, minSizePix: 2, maxSizeFactor: 0.5 }),
-
-                    /*new gridviz.SegmentWidthLegend({
-                            labelUnitText: 'hab.',
-                            exaggerationFactor: 0.8,
-                            color: "black",
-                        })*/
                 )
 
             } else console.error('Unexpected layer code: ' + layCode)
