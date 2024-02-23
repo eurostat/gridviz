@@ -398,15 +398,26 @@
                     textScale: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
                 }))
                 //width
-                /*
-                                gridLayer.styles[0].legends.push(
-                                    new gridviz.SegmentWidthLegend({
-                                        title: "Population (2019)",
-                                        labelUnitText: 'hab.',
-                                        exaggerationFactor: 0.8,
-                                        color: "black",
-                                    })
-                                )*/
+                gridLayer.styles[0].legends.push(
+                    gridviz.sizeLegendViewScale(
+                        cell => +cell.ind2019, {
+                        k: [0.8, 0.2, 0.01, 0.002],
+                        title: "Population (2019)",
+                        shape: "line",
+                        color: "black",
+                        length: (resolution) => 2 * resolution,
+                        //labelFormat: d3.format(',.2r'),
+                    })
+
+                    //lineWidth: (c, r, z, vs) => vs(c.ind2019),
+                    //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind2019, classNumber: 4, minSizePix: 2, maxSizeFactor: 0.5 }),
+
+                    /*new gridviz.SegmentWidthLegend({
+                            labelUnitText: 'hab.',
+                            exaggerationFactor: 0.8,
+                            color: "black",
+                        })*/
+                )
 
             } else console.error('Unexpected layer code: ' + layCode)
 
