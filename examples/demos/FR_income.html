@@ -274,16 +274,35 @@
 
                 const alphaStretching = gridviz.logarithmicScale(-10)
 
+                /*/alpha
+                if (this.alphaCol && this.alphaF) {
+                    //get alpha
+                    const alpha = this.alphaF(cell[this.alphaCol], r, statAlpha, zf)
+                    if (alpha == 0) continue
+                    //apply alpha to color col
+                    const col_ = color(col);
+                    if (col_) col = `rgba(${col_.r}, ${col_.g}, ${col_.b}, ${alpha})`;
+                    else console.warn("Could not decode color " + col + " in ShapeColorSizeStyle")
+                }
+    */
+
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
                         new gridviz.ShapeColorSizeStyle({
                             filter: (c) => +c.ind > 0,
                             viewScale: (cells) => d3.max(cells, cell => +cell.ind),
-                            color: (c, r, z, vs) => {
+                            color: (c, r, z, max) => {
                                 const t = (c.revind - incMin) / (incMax - incMin);
-                                //TODO alpha
-                                return colR(t > 1 ? 1 : t < 0 ? 0 : t);
+                                let color = colR(t > 1 ? 1 : t < 0 ? 0 : t)
+                                if (!max) return
+                                const alpha = +cell.ind / max
+                                if (alpha == 0) return
+                                //apply alpha to color col
+                                const col_ = color(col);
+                                if (col_) color = `rgba(${col_.r}, ${col_.g}, ${col_.b}, ${alpha})`;
+                                else console.warn("Could not decode color " + col + " in ShapeColorSizeStyle")
+                                return color;
                             },
                             blendOperation: (z) => z < 20 ? "multiply" : "source-over"
                         }),
