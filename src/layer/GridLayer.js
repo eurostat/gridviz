@@ -87,24 +87,14 @@ export class GridLayer extends Layer {
             for (const s of this.styles) {
                 //check if style is visible
                 if (s.visible && !s.visible(z)) continue
-                for (const lg of s.legends) {
-                    //console.log(s, lg)
-                    //this.legend.append(lg.div)
-                    //s1.node().appendChild(s2.node())
-                    legend.node().append(lg.div.node())
-                }
+                GridLayer.addLegends(legend, s.legends)
 
                 //case for styles of styles, like kernel smoothing
                 //TODO do better
                 if (s['styles']) {
                     for (const s2 of s['styles']) {
                         if (s2.visible && !s2.visible(z)) continue
-                        for (const lg of s2.legends) {
-                            //console.log(s, lg)
-                            //this.legend.append(lg.div)
-                            //s1.node().appendChild(s2.node())
-                            legend.node().append(lg.div.node())
-                        }
+                        GridLayer.addLegends(legend, s2.legends)
                     }
                 }
             }
@@ -112,6 +102,11 @@ export class GridLayer extends Layer {
 
     }
 
+    /** @private */
+    static addLegends(legendComp, lg) {
+        if (Array.isArray(lg)) for (const lg_ of lg) this.addLegends(legendComp, lg_)
+        else legendComp.node().append(lg.div.node())
+    }
 
 
     /**
