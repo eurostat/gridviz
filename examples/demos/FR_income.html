@@ -203,10 +203,8 @@
                         new gridviz.SquareColorWebGLStyle({
                             color: colR,
                             tFun: (cell) => {
-                                const v = cell.revind
-                                let t = (v - incMin) / (incMax - incMin)
-                                t = t > 1 ? 1 : t < 0 ? 0 : t
-                                return t
+                                const t = (cell.revind - incMin) / (incMax - incMin)
+                                return t > 1 ? 1 : t < 0 ? 0 : t
                             },
                             blendOperation: (z) => z < 20 ? "multiply" : "source-over"
                         }),
@@ -232,10 +230,8 @@
                             size: (c, r, z, vs) => vs(c.ind),
                             viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind, classNumber: 4, minSizePix: 2, maxSizeFactor: 1.2 }),
                             color: (c, r) => {
-                                const v = c.revind
-                                let t = (v - incMin) / (incMax - incMin);
-                                t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                return colR(t);
+                                const t = (c.revind - incMin) / (incMax - incMin);
+                                return colR(t > 1 ? 1 : t < 0 ? 0 : t);
                             },
                             shape: () => 'circle',
                             blendOperation: (z) => z < 20 ? "multiply" : "source-over"
@@ -276,24 +272,18 @@
 
             } else if (layCode == 'alpha') {
 
-                /*/TODO alpha
-                const str = -10
-                alphaCol: "ind",
-                alphaF: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), str),*/
                 const alphaStretching = gridviz.logarithmicScale(-10)
-
-                //viewScale: (cells) => d3.max(cells, cell => +cell.ind),
 
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
                         new gridviz.ShapeColorSizeStyle({
                             filter: (c) => +c.ind > 0,
+                            viewScale: (cells) => d3.max(cells, cell => +cell.ind),
                             color: (c, r, z, vs) => {
-                                const v = c.revind
-                                let t = (v - incMin) / (incMax - incMin);
-                                t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                return colR(t);
+                                const t = (c.revind - incMin) / (incMax - incMin);
+                                //TODO alpha
+                                return colR(t > 1 ? 1 : t < 0 ? 0 : t);
                             },
                             blendOperation: (z) => z < 20 ? "multiply" : "source-over"
                         }),
@@ -337,10 +327,8 @@
                             viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind2019, classNumber: 4, minSizePix: 2, maxSizeFactor: 0.5 }),
                             //color: () => "black",
                             color: (c) => {
-                                const v = c.revind2019
-                                let t = (v - incMin) / (incMax - incMin);
-                                t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                return colR(t);
+                                const t = (c.revind2019 - incMin) / (incMax - incMin);
+                                return colR(t > 1 ? 1 : t < 0 ? 0 : t);
                             },
                         })],
                     {
