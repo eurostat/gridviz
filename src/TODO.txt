@@ -1,3 +1,5 @@
+FR income: legends, see error messages
+
 upgrade FR DE demos
 chernoff: example (FR), document, publish
 
