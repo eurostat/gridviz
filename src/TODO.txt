@@ -1,6 +1,5 @@
-FR income: legends, see error messages
-
-upgrade FR DE demos
+FR income: see error messages
+upgrade DE demos
 chernoff: example (FR), document, publish
 
 *** census 2021
