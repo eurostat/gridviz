@@ -295,14 +295,13 @@
                 //legend
                 gridLayer.styles[0].legends.push(legendInc)
                 /*gridLayer.styles[0].legends.push(new gridviz.ColorLegend({
-                    title: "Population - par transparence",
-                    width: 320,
-                    ticks: 4,
-                    colorRamp: d3.interpolateGreys,
-                    fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, str),
-                    getStats: opts => opts.sAlpha
-                }))*/
-
+                     title: "Population - par transparence",
+                     width: 320,
+                     ticks: 4,
+                     colorRamp: d3.interpolateGreys,
+                     fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, str),
+                     getStats: opts => opts.sAlpha
+                 }))*/
 
             } else if (layCode == 'ts') {
                 //define time series list of years
@@ -388,7 +387,7 @@
                     }
                 )
 
-                /*map.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
+                gridLayer.styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Niveau de revenu (2019)",
                     width: 150,
                     colorRamp: colR,
@@ -396,8 +395,8 @@
                     tickFormat: 'text',
                     fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
                 }))
-
-                map.layers[0].styles[0].legends.push(
+/*
+                gridLayer.styles[0].legends.push(
                     new gridviz.SegmentWidthLegend({
                         title: "Population (2019)",
                         labelUnitText: 'hab.',
