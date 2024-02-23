@@ -78,8 +78,14 @@ export class Style extends Drawable {
      * @param {object} opts
      * @returns {this} */
     updateLegends(opts) {
-        for (const lg of this.legends) lg.update(opts)
+        Style.updateLegendsRecursive(this.legends, opts)
         return this
+    }
+
+    /** @private */
+    static updateLegendsRecursive(lg, opts) {
+        if (Array.isArray(lg)) for (const lg_ of lg) this.updateLegendsRecursive(lg_, opts)
+        else lg.update(opts)
     }
 
     /**
