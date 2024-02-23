@@ -222,13 +222,14 @@
 
             } else if (layCode == 'size') {
 
+                const sizeClassNumber = 4
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
                         new gridviz.ShapeColorSizeStyle({
                             filter: (c) => +c.ind > 0,
                             size: (c, r, z, vs) => vs(c.ind),
-                            viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind, classNumber: 4, minSizePix: 2, maxSizeFactor: 1.2 }),
+                            viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.ind, classNumber: sizeClassNumber, minSizePix: 2, maxSizeFactor: 1.2 }),
                             color: (c, r) => {
                                 const t = (c.revind - incMin) / (incMax - incMin);
                                 return colR(t > 1 ? 1 : t < 0 ? 0 : t);
@@ -248,40 +249,14 @@
                 //color
                 gridLayer.styles[0].legends.push(legendInc)
                 //size
-                const sizeLegends = gridviz.sizeDiscreteViewScaleLegend(
-                    4, {
+                gridLayer.styles[0].legends.push(gridviz.sizeDiscreteViewScaleLegend(
+                    sizeClassNumber, {
                     title: "Nombre d'habitants",
                     shape: 'circle',
-                    fillColor: "black"
-                    //exaggerationFactor: 0.8,
-                    //labelFormat: Math.round,
-                })
+                    fillColor: "black",
+                    labelFormat: Math.round,
+                }))
                 //.style('padding', '0px 5px')
-                gridLayer.styles[0].legends.push(sizeLegends)
-
-                /*map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({
-                        title: "Nombre d'habitants",
-                        exaggerationFactor: 0.8,
-                        shape: 'circle',
-                        fillColor: "black",
-                    }).style('padding', '0px 5px')
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({
-                        exaggerationFactor: 0.2,
-                        shape: 'circle',
-                        fillColor: "black",
-                    }).style('padding', '0px 5px')
-                )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({
-                        exaggerationFactor: 0.01,
-                        shape: 'circle',
-                        fillColor: "black",
-                    }).style('padding', '0px 5px')
-                )*/
-
 
             } else if (layCode == 'alpha') {
 
@@ -317,9 +292,9 @@
                 )
 
 
-                /*/legend
-                map.layers[0].styles[0].legends.push(legendInc)
-                map.layers[0].styles[0].legends.push(new gridviz.ColorLegend({
+                //legend
+                gridLayer.styles[0].legends.push(legendInc)
+                /*gridLayer.styles[0].legends.push(new gridviz.ColorLegend({
                     title: "Population - par transparence",
                     width: 320,
                     ticks: 4,
