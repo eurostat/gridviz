@@ -261,6 +261,7 @@
             } else if (layCode == 'alpha') {
 
                 const alphaStretching = gridviz.logarithmicScale(-10)
+                const alphaStretchingInv = gridviz.exponentialScale(-10)
 
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
@@ -287,21 +288,21 @@
                     ],
                     {
                         minPixelsPerCell: 2,
-                        cellInfoHTML: tooltipFun(),
+                        cellInfoHTML: tooltipFun(true),
                     }
                 )
 
 
                 //legend
                 gridLayer.styles[0].legends.push(legendInc)
-                /*gridLayer.styles[0].legends.push(new gridviz.ColorLegend({
-                     title: "Population - par transparence",
-                     width: 320,
-                     ticks: 4,
-                     colorRamp: d3.interpolateGreys,
-                     fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, str),
-                     getStats: opts => opts.sAlpha
-                 }))*/
+                gridLayer.styles[0].legends.push(new gridviz.ColorLegend({
+                    title: "Population - par transparence",
+                    width: 320,
+                    ticks: 4,
+                    colorScale: d3.interpolateGreys,
+                    textScale: (t, max) => max * alphaStretchingInv(t),
+                    labelFormat: Math.round,
+                }))
 
             } else if (layCode == 'ts') {
                 //define time series list of years
