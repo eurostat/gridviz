@@ -274,18 +274,6 @@
 
                 const alphaStretching = gridviz.logarithmicScale(-10)
 
-                /*/alpha
-                if (this.alphaCol && this.alphaF) {
-                    //get alpha
-                    const alpha = this.alphaF(cell[this.alphaCol], r, statAlpha, zf)
-                    if (alpha == 0) continue
-                    //apply alpha to color col
-                    const col_ = color(col);
-                    if (col_) col = `rgba(${col_.r}, ${col_.g}, ${col_.b}, ${alpha})`;
-                    else console.warn("Could not decode color " + col + " in ShapeColorSizeStyle")
-                }
-    */
-
                 gridLayer = new gridviz.GridLayer(
                     incDataset[geo][year_],
                     [
@@ -296,10 +284,10 @@
                                 const t = (c.revind - incMin) / (incMax - incMin);
                                 let color = colR(t > 1 ? 1 : t < 0 ? 0 : t)
                                 if (!max) return
-                                const alpha = +cell.ind / max
+                                const alpha = alphaStretching(+c.ind / max)
                                 if (alpha == 0) return
                                 //apply alpha to color col
-                                const col_ = color(col);
+                                const col_ = d3.color(color);
                                 if (col_) color = `rgba(${col_.r}, ${col_.g}, ${col_.b}, ${alpha})`;
                                 else console.warn("Could not decode color " + col + " in ShapeColorSizeStyle")
                                 return color;
