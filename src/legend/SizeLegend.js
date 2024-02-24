@@ -21,7 +21,7 @@ export class SizeLegend extends Legend {
          *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
         this.label = opts.label || undefined
 
-        /** A function returning the size of the legend symbol
+        /** A function returning the size of the legend symbol, in geo UoM, from the viewscale
          *  @type { function(object):number } */
         this.size = opts.size || undefined
 
