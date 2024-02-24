@@ -249,9 +249,10 @@
                 //color
                 gridLayer.styles[0].legends.push(legendInc)
                 //size
-                gridLayer.styles[0].legends.push(gridviz.SizeLegend(
-
-                ))
+                gridLayer.styles[0].legends.push(new gridviz.SizeLegend({
+                    size: () => 1000,
+                    label: () => "label"
+                }))
 
                 /*/size
                 gridLayer.styles[0].legends.push(gridviz.sizeDiscreteViewScaleLegend(
