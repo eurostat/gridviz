@@ -17,7 +17,7 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the text label
+        /** A function returning the text label, from the view scale and list of cells
          *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
         this.label = opts.label || undefined
 
