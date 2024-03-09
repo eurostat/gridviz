@@ -17,11 +17,11 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the text label, from the view scale and list of cells
-         *  @type { function(object, Array.<import('../core/Dataset.js').Cell>):(number|string) } */
+        /** A function returning the text label, from the view scale and list of cells, resolution and zoom
+         *  @type { function(object, Array.<import('../core/Dataset.js').Cell>, number, number):(number|string) } */
         this.label = opts.label || undefined
 
-        /** A function returning the size of the legend symbol, in geo UoM, from the viewscale
+        /** A function returning the size of the legend symbol, in geo UoM, from the viewscale, resolution and zoom
          *  @type { function(object, number, number):number } */
         this.size = opts.size || undefined
 
@@ -52,7 +52,7 @@ export class SizeLegend extends Legend {
         this.makeTitle()
 
         //get label. May not be a number (!)
-        let label = this.label(opts.viewScale, opts.cells)
+        let label = this.label(opts.viewScale, opts.cells, opts.resolution, opts.z)
 
         //compute size of symbol, in pix
         let sizePix
