@@ -212,7 +212,7 @@
                         imputedStyle,
                     ],
                     {
-                        minPixelsPerCell: 2,
+                        minPixelsPerCell: 4,
                         cellInfoHTML: tooltipFun(),
                     }
                 )
@@ -479,6 +479,8 @@
                         .translate([500000, 10016000])
                 }))
                 //TODO background
+                backgroundLayer1 = null
+                backgroundLayer2 = null
             }
 
             //martinique
@@ -494,6 +496,8 @@
                         .translate([500000, -11000])
                 }))
                 //TODO background
+                backgroundLayer1 = null
+                backgroundLayer2 = null
             }
             else { console.error("Unexpected geo: " + geo); return; }
 
@@ -512,20 +516,17 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            map.showLabels = this.checked
-            map.cg.redraw()
+            map.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            map.showBoundaries = this.checked
-            map.cg.redraw()
+            map.redraw()
         })
 
         // show/hide background
         document.querySelector('#background').addEventListener('change', function () {
-            map.showBgLayers = this.checked
-            map.cg.redraw()
+            map.redraw()
         })
 
         //select layer from URL
