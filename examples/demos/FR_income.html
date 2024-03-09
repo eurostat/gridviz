@@ -419,11 +419,15 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //fill layer stack
-            if (backgroundLayer1) map.layers.push(backgroundLayer1)
-            if (backgroundLayer2) map.layers.push(backgroundLayer2)
+            if (document.getElementById("background").checked) {
+                if (backgroundLayer1) map.layers.push(backgroundLayer1)
+                if (backgroundLayer2) map.layers.push(backgroundLayer2)
+            }
             if (gridLayer) map.layers.push(gridLayer)
-            if (boundaryLayer) map.layers.push(boundaryLayer)
-            if (labelLayer) map.layers.push(labelLayer)
+            if (document.getElementById("boundary").checked)
+                if (boundaryLayer) map.layers.push(boundaryLayer)
+            if (document.getElementById("label").checked)
+                if (labelLayer) map.layers.push(labelLayer)
 
             //console.log("?lay=" + layCode + "&z=" + map.getZoomFactor() + "&x=" + map.getGeoCenter().x + "&y=" + map.getGeoCenter().y)
 
@@ -515,19 +519,11 @@
         //document.getElementById('sigmaCCH').oninput = update
 
         // show/hide labels
-        document.querySelector('#label').addEventListener('change', function () {
-            map.redraw()
-        })
-
+        document.querySelector('#label').addEventListener('change', update)
         // show/hide boundaries
-        document.querySelector('#boundary').addEventListener('change', function () {
-            map.redraw()
-        })
-
+        document.querySelector('#boundary').addEventListener('change', update)
         // show/hide background
-        document.querySelector('#background').addEventListener('change', function () {
-            map.redraw()
-        })
+        document.querySelector('#background').addEventListener('change', update)
 
         //select layer from URL
         let ls = gridviz.getParameterByName('lay')
