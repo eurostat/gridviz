@@ -251,6 +251,7 @@
                 gridLayer.styles[0].legends.push(legendInc)
                 //size
                 gridLayer.styles[0].legends.push(new gridviz.SizeLegend({
+                    title: "Population",
                     size: (vs, r, z) => 1.3 * r,
                     label: (vs, cells, r, z) => vs * sizeStretchingInverse(1.3 / 1.3),
                     labelFormat: Math.round,
