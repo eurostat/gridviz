@@ -250,7 +250,7 @@
                 gridLayer.styles[0].legends.push(legendInc)
                 //size
                 gridLayer.styles[0].legends.push(new gridviz.SizeLegend({
-                    size: () => 1000,
+                    size: (vs) => 1.3 * r * sizeStretching(0.8),
                     label: () => "label"
                 }))
 

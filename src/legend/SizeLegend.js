@@ -22,7 +22,7 @@ export class SizeLegend extends Legend {
         this.label = opts.label || undefined
 
         /** A function returning the size of the legend symbol, in geo UoM, from the viewscale
-         *  @type { function(object):number } */
+         *  @type { function(object, number, number):number } */
         this.size = opts.size || undefined
 
         //symbol
@@ -57,7 +57,7 @@ export class SizeLegend extends Legend {
         //compute size of symbol, in pix
         let sizePix
         if (this.size)
-            sizePix = this.size(opts.viewScale) / opts.z
+            sizePix = this.size(opts.viewScale, opts.resolution, opts.z) / opts.z
         else
             sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
