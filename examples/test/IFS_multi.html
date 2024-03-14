@@ -10,6 +10,29 @@
     //set as resolution the maximum resolution
     const dataset = new gridviz.CSVGrid(map, "http://localhost:1234/IFS.csv", 128000)
 
+    //make style
+    const style = new gridviz.Style({
+        drawFun: (cells, geoCanvas, resolution) => {
+            //draw all cells
+            for (let c of cells) {
+                //random color
+                geoCanvas.ctx.fillStyle = "rgb(0,0," + (255 * Math.random()) + ")"
+                //get cell resolution
+                const resm = c.res * 1000
+                //fill cell rectangle
+                geoCanvas.ctx.fillRect(c.x, c.y, resm, resm)
+            }
+        }
+    })
+
+    //make layer
+    const layer = new gridviz.GridLayer(dataset, [style])
+
+    //add layer to map
+    map.layers = [layer]
+
+
+
     //override cell detection function
     dataset.getCellFromPosition = (posGeo, cells) => {
         for (const c of cells) {
@@ -23,19 +46,15 @@
         return undefined
     }
 
-
-    //create custom style
-    const style = new gridviz.Style({
-        drawFun: (cells, geoCanvas, resolution) => {
-            for (let c of cells) {
-                geoCanvas.ctx.fillStyle = "rgb(0,0," + (255 * Math.random()) + ")"
-                const resm = c.res * 1000
-                geoCanvas.ctx.fillRect(c.x, c.y, resm, resm)
-            }
-        }
-    })
-
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    //override cell focus info function
+    map.getCellFocusInfo = (posGeo) => {
+        //get cell at mouse position
+        const cell = dataset.getCellFromPosition(posGeo, dataset.getViewCache())
+        if (!cell) return undefined
+        const r = cell.res * 1000
+        const html = layer.cellInfoHTML(cell, r)
+        if (!html) return undefined
+        return { cell: cell, html: html, resolution: r }
+    }
 
 </script>
