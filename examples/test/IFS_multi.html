@@ -10,31 +10,28 @@
     //set as resolution the maximum resolution
     const dataset = new gridviz.CSVGrid(map, "http://localhost:1234/IFS.csv", 128000)
 
-    /*dataset.getCellFromPosition = (posGeo, cells) => {
-
-        const r = this.getResolution()
-        for (const cell of cells) {
-            if (posGeo.x < cell.x) continue
-            else if (cell.x + r < posGeo.x) continue
-            else if (posGeo.y < cell.y) continue
-            else if (cell.y + r < posGeo.y) continue
-            else return cell
+    //override cell detection function
+    dataset.getCellFromPosition = (posGeo, cells) => {
+        for (const c of cells) {
+            const r = c.res * 1000
+            if (posGeo.x < c.x) continue
+            else if (c.x + r < posGeo.x) continue
+            else if (posGeo.y < c.y) continue
+            else if (c.y + r < posGeo.y) continue
+            else return c
         }
         return undefined
-    }*/
-
-
+    }
 
 
     //create custom style
     const style = new gridviz.Style({
         drawFun: (cells, geoCanvas, resolution) => {
             for (let c of cells) {
-                geoCanvas.ctx.fillStyle = "rgb(0,0,"+(255*Math.random())+")"
+                geoCanvas.ctx.fillStyle = "rgb(0,0," + (255 * Math.random()) + ")"
                 const resm = c.res * 1000
                 geoCanvas.ctx.fillRect(c.x, c.y, resm, resm)
             }
-
         }
     })
 
