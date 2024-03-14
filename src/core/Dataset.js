@@ -96,8 +96,6 @@ export class Dataset {
         }
         return undefined*/
 
-console.log("aaa!")
-
         /** @type {number} */
         const r = this.getResolution()
         for (const cell of cells) {
@@ -134,4 +132,3 @@ console.log("aaa!")
     }
 
 }
-
