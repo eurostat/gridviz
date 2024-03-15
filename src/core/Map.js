@@ -301,6 +301,15 @@ export class Map {
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
             //console.log(cell, dsc.resolution)
             if (!cell) return undefined
+
+            //rare case for a dataset with mixed resolutions
+            if (dsc.mixedResolution) {
+                const r = dsc.mixedResolution(cell)
+                const html = layer.cellInfoHTML(cell, r)
+                if (!html) return undefined
+                return { cell: cell, html: html, resolution: r }
+            }
+
             const html = layer.cellInfoHTML(cell, dsc.getResolution())
             if (!html) return undefined
             return { cell: cell, html: html, resolution: dsc.getResolution() }

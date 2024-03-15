@@ -32,17 +32,4 @@
     //add layer to map
     map.layers = [layer]
 
-
-
-    //override cell focus info function
-    map.getCellFocusInfo = (posGeo) => {
-        //get cell at mouse position
-        const cell = dataset.getCellFromPosition(posGeo, dataset.getViewCache())
-        if (!cell) return undefined
-        const r = cell.res * 1000
-        const html = layer.cellInfoHTML(cell, r)
-        if (!html) return undefined
-        return { cell: cell, html: html, resolution: r }
-    }
-
 </script>
