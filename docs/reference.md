@@ -49,6 +49,7 @@
     - [Width legend](#width-legend)
     - [Trivariate color legend](#trivariate-color-legend)
   - [Leaflet](#leaflet)
+  - [Mixed resolution grids](#mixed-resolution-grids)
   - [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
@@ -450,6 +451,16 @@ new gridviz.SizeLegend({
 ## Leaflet
 
 Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
+
+## Mixed resolution grids
+
+![mixed resolution grid](img/mixedresolution.png)
+
+A mixed-resolution grid is a grid which contains cells with different sizes.
+
+- See [this example](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/mixed_resolution.html)).
+
+Note that most pre-defined styles of GridViz may not apply for mixed-resolution grids. [Custom styles](#custom-styles) can be defined.
 
 ## Alright?
 
