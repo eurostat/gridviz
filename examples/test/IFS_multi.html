@@ -15,7 +15,7 @@
     const style = new gridviz.ShapeColorSizeStyle({
 
         //some random color
-        color: (cell) => "rgb(0,0," + (255 * Math.random()) + ")",
+        color: () => "rgb(0,0," + (255 * Math.random()) + ")",
 
         //size the cells according to their resolution
         size: dataset.mixedResolution,

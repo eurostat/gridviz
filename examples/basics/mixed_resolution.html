@@ -6,24 +6,23 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
         .addZoomButtons()
 
-    //the maximum resolution of the dataset
-    const maxResolution = 128000
-
-    //function that return a cell resolution
-    const resolutionFun = (cell) => cell.res * 1000
-
-    //define dataset
-    //set as resolution the maximum resolution
-    const dataset = new gridviz.CSVGrid(map, "http://localhost:1234/IFS.csv", maxResolution, { mixedResolution: resolutionFun })
+    //define mixed-resolution dataset
+    //set as resolution the maximum resolution of the dataset: 128000
+    //specify mixedResolution parameter as the function returning each cell resolution
+    const dataset = new gridviz.CSVGrid(map, "http://localhost:1234/IFS.csv", 128000, { mixedResolution: (cell) => cell.res * 1000 })
 
     //make style
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => "rgb(0,0," + (255 * Math.random()) + ")",
+
+        //some random color
+        color: () => "rgb(0,0," + (255 * Math.random()) + ")",
+
         //size the cells according to their resolution
-        size: resolutionFun,
+        size: dataset.mixedResolution,
+
         //apply an offset to ensure cell position
         offset: (cell, resolution, z) => {
-            const d = resolution * (1 - resolutionFun(cell) / resolution) * 0.5
+            const d = resolution * (1 - dataset.mixedResolution(cell) / resolution) * 0.5
             return { dx: -d, dy: -d }
         },
     })
