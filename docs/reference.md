@@ -373,7 +373,8 @@ Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continu
 
 For more information on these functions and an overview of how they differ, see:
 
-- [this example](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
+- [this basic example](https://eurostat.github.io/gridviz/examples/basics/viewscale_basic.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_basic.html)).
+- [this other example based on webGL style](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)).
 - the [code](../src/utils/stretching.js)
 - those [graphs](https://observablehq.com/@jgaffuri/stretching)
 
