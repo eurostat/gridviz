@@ -17,7 +17,7 @@ export class Dataset {
      * @param {import("./Map.js").Map} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
-     * @param {{preprocess?:function(Cell):boolean}} opts
+     * @param {{preprocess?:function(Cell):boolean, mixedResolution?:function(Cell):number}} opts
      * @abstract
      */
     constructor(map, url, resolution, opts = {}) {
@@ -39,6 +39,13 @@ export class Dataset {
          * @protected
          * @type {number} */
         this.resolution = resolution
+
+        /**
+        * In case the dataset is a dataset with cells having different resolution,
+        * this is the function returning the resolution of each cell.
+        * @protected
+        * @type {(function(Cell):number )| undefined } */
+        this.mixedResolution = opts.mixedResolution
 
         /**
          * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column. And also to determine which cells to keep after loading.
@@ -95,6 +102,22 @@ export class Dataset {
             return cell
         }
         return undefined*/
+
+        //rare case of mixed resolution dataset
+        if (this.mixedResolution) {
+            for (const c of cells) {
+                /** @type {number} */
+                const r = this.mixedResolution(c)
+                if (posGeo.x < c.x) continue
+                else if (c.x + r < posGeo.x) continue
+                else if (posGeo.y < c.y) continue
+                else if (c.y + r < posGeo.y) continue
+                else return c
+            }
+            return undefined
+        }
+
+        //common case
 
         /** @type {number} */
         const r = this.getResolution()
