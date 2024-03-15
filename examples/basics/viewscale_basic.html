@@ -14,9 +14,12 @@
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define color style
+
+    //define stretching function: to stetch the color scale so that higher population cells are better differenciated
     const scale = gridviz.logarithmicScale(-7)
+
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
+        //compute [min,max] population within the map view
         viewScale: (cells) => {
             let max, min
             for (let cell of cells) {
@@ -26,6 +29,8 @@
             }
             return [min, max]
         },
+        //map population figure from [min,max] interval to [0,1], apply the stretching function and return the corresponding color
+        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
     })
 
     //add layer to map
