@@ -14,9 +14,10 @@ export class JSGrid extends Dataset {
     /**
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {Array.<Object>} cells The cells.
+     * @param {} opts
      */
-    constructor(resolution, cells) {
-        super(undefined, "", resolution)
+    constructor(resolution, cells, opts = {}) {
+        super(undefined, "", resolution, opts)
 
         /**
          * @private
