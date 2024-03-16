@@ -5,6 +5,8 @@ chernoff: example (FR), document, publish
 
 *** census 2021
 trivariate: legend center hexagon. legend uncentered
+eldering indicator - old/young
+dep persons indicator - old+young / others
 emp: 15-65 ?
 sex: shape - emp: value - age hue
 sex: hue - emp: value - age shape (circle,square,triangle)
