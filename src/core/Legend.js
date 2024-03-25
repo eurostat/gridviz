@@ -42,9 +42,9 @@ export class Legend {
         /** @type {string} @deprecated */
         this['font-family'] = opts['font-family'] || 'Helvetica, Arial, sans-serif'
         /** @type {string} @deprecated */
-        this.width = opts.width
+        //this.width = opts.width
         /** @type {string} @deprecated */
-        this.height = opts.height
+        //this.height = opts.height
 
         //the div element
         if (this.id) this.div = select('#' + this.id)
@@ -62,9 +62,8 @@ export class Legend {
         this.div.style('box-shadow', this['box-shadow'])
         this.div.style('font-family', this['font-family'])
 
-        if (this.width) this.div.style('width', this.width)
-        if (this.height) this.div.style('height', this.height)
-
+        //if (this.width) this.div.style('width', this.width)
+        //if (this.height) this.div.style('height', this.height)
 
         //title
         this.title = opts.title
@@ -93,9 +92,10 @@ export class Legend {
      * Apply a style to the legend div.
      * @param {string} k
      * @param {string} v
-     * @returns {this}
+     * @returns {this|string}
      */
     style(k, v) {
+        if (arguments.length == 1) return this.div.style(k)
         this.div.style(k, v)
         return this
     }

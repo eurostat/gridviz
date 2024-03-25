@@ -22,8 +22,9 @@
     const legend = new gridviz.ColorLegend({
         title: "Population",
         colorScale: d3.interpolateYlOrRd,
-        ticks: 5,
-        textScale: (t) => t * 20000
+        width: 200,
+        ticks: 3,
+        textScale: (t) => t == 0 ? "Low" : t == "1" ? "High" : t == 0.5 ? "Middle" : "X"
     })
 
     //link legend to style
