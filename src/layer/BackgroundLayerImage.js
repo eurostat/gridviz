@@ -5,7 +5,7 @@ import { Layer } from '../core/Layer.js'
 
 /**
  *
- * A map WMS background layer.
+ * A map background layer composed of a single image file, geolocated.
  * 
  * @module layer
  * @author Julien Gaffuri
@@ -63,7 +63,7 @@ export class BackgroundLayerImage extends Layer {
                 }
                 this.img.onerror = () => {
                     //case when no image
-                    console.warn("Could not retrieve WMS background image from", urlS)
+                    console.warn("Could not retrieve background image from", this.url)
                 }
             }
 
