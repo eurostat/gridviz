@@ -1,5 +1,4 @@
 static image background layer - for map background in oversea territories
-implement for reunion and martinique
 document publish
 
 FR income: see error messages
