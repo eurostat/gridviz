@@ -1,3 +1,6 @@
+static image background layer - for map background in oversea territories
+document publish implement for reunion and martinique
+
 FR income: see error messages
 
 upgrade DE demos
@@ -16,7 +19,6 @@ by size / by alpha
 
 trivariate: extract ?
 contour style
-static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
 reorganise map - simplify constructor
 population.csv files: make 2021 ones
