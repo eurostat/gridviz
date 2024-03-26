@@ -39,6 +39,7 @@ export { ImageStyle } from './style/ImageStyle.js'
 export { GridLayer } from './layer/GridLayer.js'
 export { BackgroundLayer } from './layer/BackgroundLayer.js'
 export { BackgroundLayerWMS } from './layer/BackgroundLayerWMS.js'
+export { BackgroundLayerImage } from './layer/BackgroundLayerImage.js'
 export { LabelLayer } from './layer/LabelLayer.js'
 export { GeoJSONLayer } from './layer/GeoJSONLayer.js'
 
