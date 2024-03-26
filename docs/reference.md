@@ -329,6 +329,7 @@ The style can be freely defined through the **drawFun**, which specifies how to 
 Background image layers may be defined:
 - as a tiled layer: See [this example](https://eurostat.github.io/gridviz/examples/basics/background.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background.html)) or [this other example](https://eurostat.github.io/gridviz/examples/basics/background_gisco.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_gisco.html)).
 - or from a [OGC WMS - Web Map Service](https://www.ogc.org/standard/wms/): See [this example](https://eurostat.github.io/gridviz/examples/basics/background_WMS.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_WMS.html)).
+- or as a single image file: See [this example](https://eurostat.github.io/gridviz/examples/basics/background_image.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/background_image.html)).
 
 ## Foreground information
 
