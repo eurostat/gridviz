@@ -29,16 +29,12 @@ export class BackgroundLayerImage extends Layer {
          *  @type {number} */
         this.yMax = opts.yMax || 0;
 
-        /** The image resolution, in m/pixel
+        /** The image width, in geo unit
          * @type {number} */
-        this.resolution = opts.resolution || 1
-
-        /** The image width, in pixel
+        this.width = opts.width || 20000
+        /** The image height, in geo unit
          * @type {number} */
-        this.widthPix = opts.widthPix || 200
-        /** The image height, in pixel
-         * @type {number} */
-        this.heightPix = opts.heightPix || 200
+        this.height = opts.height || 20000
 
         /** The image object
          * @type {HTMLImageElement|undefined} */
@@ -60,11 +56,11 @@ export class BackgroundLayerImage extends Layer {
             //compute screen coordinates and size ratio
             const x = geoCanvas.geoToPixX(this.xMin)
             const y = geoCanvas.geoToPixY(this.yMax)
-            const r = this.resolution / geoCanvas.getView().z
+            const z = geoCanvas.getView().z
 
             //draw image
             geoCanvas.initCanvasTransform()
-            geoCanvas.ctx.drawImage(this.img, x, y, r * this.widthPix, r * this.heightPix)
+            geoCanvas.ctx.drawImage(this.img, x, y, this.width / z, this.height / z)
 
         } else {
             //retrieve image
