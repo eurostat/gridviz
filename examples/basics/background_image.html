@@ -4,13 +4,16 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4480000, y: 2900000, z: 4 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 350000, y: 7660000, z: 75 })
         .addZoomButtons()
 
     //define WMS background layer
     const backgroundLayer = new gridviz.BackgroundLayerImage({
         url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/reunion_relief_200k.png',
-        xMin:
+        xMin: 0,
+        xMax: 200,
+        yMin: 0,
+        yMax: 200,
     })
 
     //add layer to map
