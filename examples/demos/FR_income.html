@@ -455,7 +455,7 @@
 
             //metropolitan france
             if (geo == "met") {
-                map.setView(3760000, 2650000).setZoom(900)
+                map.setView(3760000, 2650000).setZoom(600)
                 boundaryLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
                 labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('FR', '20'))
                 backgroundLayer1 = new gridviz.BackgroundLayer({
