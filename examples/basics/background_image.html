@@ -7,9 +7,14 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 350000, y: 7660000, z: 75 })
         .addZoomButtons()
 
-    //define WMS background layer
+    //define background image layer
     const backgroundLayer = new gridviz.BackgroundLayerImage({
+        //the image URL
         url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/reunion_relief_100k.png',
+
+        //the georeferencing information:
+        // - geo coordinates of the top left corner
+        // - the image width and heigth in geo unit (meters). It is the image width/heigth in pixel multiplied by the resolution (meters/pixel)
         xMin: 314686,
         yMax: 7691260,
         width: 64590.2,
