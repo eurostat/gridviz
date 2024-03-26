@@ -57,7 +57,7 @@ export class BackgroundLayerImage extends Layer {
         if (this.img) {
             //the image was already downloaded: draw it
 
-            //compute screen coordinates
+            //compute screen coordinates and size ratio
             const x = geoCanvas.geoToPixX(this.xMin)
             const y = geoCanvas.geoToPixY(this.yMax)
             const r = this.resolution / geoCanvas.getView().z
