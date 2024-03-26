@@ -1,0 +1,20 @@
+<div id="map" style="height: 500px; width: 800px"></div>
+
+<script src="../../dist/gridviz.js"></script>
+<script>
+
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4480000, y: 2900000, z: 4 })
+        .addZoomButtons()
+
+    //define WMS background layer
+    const backgroundLayer = new gridviz.BackgroundLayerImage({
+        url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/reunion_relief_200k.png',
+        xMin:
+    })
+
+    //add layer to map
+    map.layers = [backgroundLayer]
+    map.redraw()
+
+</script>
