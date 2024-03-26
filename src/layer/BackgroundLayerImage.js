@@ -18,25 +18,27 @@ export class BackgroundLayerImage extends Layer {
         super(opts)
         opts = opts || {}
 
-        /**
+        /** The image file URL
          * @type {string} */
         this.url = opts.url
 
-        /** @type {HTMLImageElement|undefined} */
-        this.img = undefined;
-
-        /** @type {number} */
+        /** The image left coordinate
+         * @type {number} */
         this.xMin = opts.xMin || 0;
-        /** @type {number} */
-        const xMax = opts.xMax || 200;
-        /** @type {number} */
-        this.yMin = opts.yMin || 0;
-        /** @type {number} */
-        const yMax = opts.yMax || 200;
+        /** The image top coordinate
+         *  @type {number} */
+        this.yMax = opts.yMax || 0;
 
-        //compute image width and height
-        this.width = xMax - this.xMin
-        this.height = yMax - this.yMin
+        /** The image width, in pixel
+         * @type {number} */
+        this.widthPix = opts.widthPix || 200
+        /** The image height, in pixel
+         * @type {number} */
+        this.heightPix = opts.heightPix || 200
+
+        /** The image object
+         * @type {HTMLImageElement|undefined} */
+        this.img = undefined;
     }
 
     /**
@@ -46,12 +48,18 @@ export class BackgroundLayerImage extends Layer {
     draw(geoCanvas) {
 
         //update map extent
-        geoCanvas.updateExtentGeo(0)
+        //geoCanvas.updateExtentGeo(0)
 
         if (this.img) {
             //the image was already downloaded: draw it
-            geoCanvas.setCanvasTransform()
-            geoCanvas.ctx.drawImage(this.img, this.xMin, this.yMin, this.width, this.height)
+
+            //compute screen coordinates
+            const x = geoCanvas.geoToPixX(this.xMin)
+            const y = geoCanvas.geoToPixY(this.yMax)
+
+            //draw image
+            geoCanvas.initCanvasTransform()
+            geoCanvas.ctx.drawImage(this.img, x, y, this.widthPix, this.heightPix)
 
         } else {
             //retrieve image
