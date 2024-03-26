@@ -481,7 +481,6 @@
                         .scale(6378137)
                         .translate([500000, 10016000])
                 }))
-                //TODO background
                 backgroundLayer1 = new gridviz.BackgroundLayerImage({
                     url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/reunion_relief_100k.png',
                     xMin: 314686,
@@ -504,8 +503,13 @@
                         .scale(6378137)
                         .translate([500000, -11000])
                 }))
-                //TODO background
-                backgroundLayer1 = null
+                backgroundLayer1 = new gridviz.BackgroundLayerImage({
+                    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/martinique_relief_100k.png',
+                    xMin: 688835,
+                    yMax: 1647753,
+                    width: 49387.18,
+                    height: 57962.4467,
+                })
                 backgroundLayer2 = null
             }
             else { console.error("Unexpected geo: " + geo); return; }
