@@ -1,5 +1,5 @@
 static image background layer - for map background in oversea territories
-document publish
+publish
 
 FR income: see error messages
 
