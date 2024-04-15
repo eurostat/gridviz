@@ -27,9 +27,9 @@
     )
 
     //make style
+    const colorScale = d3.interpolateYlOrRd
     const scale = gridviz.logarithmicScale(-4)
     const style = new gridviz.ShapeColorSizeStyle({
-
         //compute [min,max] population within the map view
         viewScale: (cells) => {
             let max, min
@@ -40,13 +40,10 @@
             }
             return [min, max]
         },
-
         //color, based on population
-        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.density - min) / (max - min))),
-
+        color: (cell, resolution, z, [min, max]) => colorScale(scale((+cell.density - min) / (max - min))),
         //size the cells according to their resolution
         size: dataset.mixedResolution,
-
         //apply an offset to ensure cell position
         offset: (cell, resolution, z) => {
             const d = resolution * (1 - dataset.mixedResolution(cell) / resolution) * 0.5
@@ -55,8 +52,17 @@
         blendOperation: (z) => z < 100 ? "multiply" : "source-over"
     })
 
-    //define stroke style, for high scale only
+    //legend
+    let legend = new gridviz.ColorLegend({
+        title: "Population",
+        colorScale: colorScale,
+        width: 150,
+        ticks: 2,
+        textScale: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
+    })
+    style.legends = [legend]
 
+    //define stroke style, for high scale only
     const strokeStyle = new gridviz.StrokeStyle({
         strokeColor: (c) => '#666',
         size: style.size,
