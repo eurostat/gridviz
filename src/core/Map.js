@@ -304,7 +304,7 @@ export class Map {
 
             //rare case for a dataset with mixed resolutions
             if (dsc.mixedResolution) {
-                const r = dsc.mixedResolution(cell)
+                const r = +dsc.mixedResolution(cell)
                 const html = layer.cellInfoHTML(cell, r)
                 if (!html) return undefined
                 return { cell: cell, html: html, resolution: r }

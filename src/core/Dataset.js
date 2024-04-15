@@ -107,7 +107,7 @@ export class Dataset {
         if (this.mixedResolution) {
             for (const c of cells) {
                 /** @type {number} */
-                const r = this.mixedResolution(c)
+                const r = +this.mixedResolution(c)
                 if (posGeo.x < c.x) continue
                 else if (c.x + r < posGeo.x) continue
                 else if (posGeo.y < c.y) continue
