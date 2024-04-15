@@ -1,4 +1,4 @@
-<div id="map" style="height: 800px; width: 1000px"></div>
+<div id="map" style="height: 600px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
@@ -65,7 +65,9 @@
     })
 
     //make layer
-    const layer = new gridviz.GridLayer(dataset, [style, strokeStyle])
+    const layer = new gridviz.GridLayer(dataset, [style, strokeStyle], {
+        cellInfoHTML: (c) => c.ms_pop + ' inhabitants',
+    })
 
     //define background layers
     const backgroundLayer1 = new gridviz.BackgroundLayer({
