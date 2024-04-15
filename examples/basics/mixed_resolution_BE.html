@@ -2,10 +2,13 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 3920000, y: 3070000, z: 400 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 3922000, y: 3099000, z: 20 })
         .addZoomButtons()
 
     //define dataset
@@ -21,10 +24,11 @@
     )
 
     //make style
+    const colorScale = t=> d3.interpolateYlGnBu(t>1?0.8:t*0.8)
     const style = new gridviz.ShapeColorSizeStyle({
 
-        //color, based on value property
-        color: (cell) => "rgb(100,100," + Math.floor(255 * cell.ms_pop / (cell.resolution * cell.resolution) * 200) + ")",
+        //color, based on population
+        color: cell => colorScale( +cell.ms_pop / (cell.resolution * cell.resolution) * 100  ),
 
         //size the cells according to their resolution
         size: dataset.mixedResolution,
@@ -34,10 +38,20 @@
             const d = resolution * (1 - dataset.mixedResolution(cell) / resolution) * 0.5
             return { dx: -d, dy: -d }
         },
+        blendOperation: (z) => z < 100 ? "multiply" : "source-over"
+    })
+
+    //define stroke style, for high scale only
+
+    const strokeStyle = new gridviz.StrokeStyle({
+        strokeColor: (c) => '#666',
+        size: style.size,
+        offset: style.offset,
+        visible: z => z < 10
     })
 
     //make layer
-    const layer = new gridviz.GridLayer(dataset, [style])
+    const layer = new gridviz.GridLayer(dataset, [style, strokeStyle])
 
     //define background layers
     const backgroundLayer1 = new gridviz.BackgroundLayer({
