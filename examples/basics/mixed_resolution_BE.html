@@ -1,4 +1,4 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<div id="map" style="height: 800px; width: 1000px"></div>
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
@@ -19,16 +19,30 @@
         1000,
         {
             //the function returning the cell resolutions: the "resolution" property
-            mixedResolution: (cell) => cell.resolution
+            mixedResolution: (cell) => cell.resolution,
+            preprocess: cell => {
+                cell.density = +cell.ms_pop / (cell.resolution * cell.resolution)
+            }
         }
     )
 
     //make style
-    const colorScale = t=> d3.interpolateYlGnBu(t>1?0.8:t*0.8)
+    const scale = gridviz.logarithmicScale(-4)
     const style = new gridviz.ShapeColorSizeStyle({
 
+        //compute [min,max] population within the map view
+        viewScale: (cells) => {
+            let max, min
+            for (let cell of cells) {
+                const v = cell.density
+                if (max == undefined || max < v) max = v
+                if (min == undefined || min > v) min = v
+            }
+            return [min, max]
+        },
+
         //color, based on population
-        color: cell => colorScale( +cell.ms_pop / (cell.resolution * cell.resolution) * 100  ),
+        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.density - min) / (max - min))),
 
         //size the cells according to their resolution
         size: dataset.mixedResolution,
