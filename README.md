@@ -37,6 +37,8 @@
 -   [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/demos/HR.html)
 -   [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
 -   [Europe population as a mosaic](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
+-   [Belgium population](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html), as mixed resolution layer.
+
 
 ## Installation
 

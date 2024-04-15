@@ -461,6 +461,7 @@ Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://g
 A mixed-resolution grid is a grid which contains cells with different sizes.
 
 - See [this example](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/mixed_resolution.html)).
+- See [this other example](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/mixed_resolution_BE.html)).
 
 Note that most pre-defined styles of GridViz may not apply for mixed-resolution grids. [Custom styles](#custom-styles) can be defined.
 
