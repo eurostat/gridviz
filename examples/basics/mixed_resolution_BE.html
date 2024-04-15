@@ -5,7 +5,7 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 3900000, y: 3100000, z: 200 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 3920000, y: 3070000, z: 400 })
         .addZoomButtons()
 
     //define dataset
@@ -16,16 +16,7 @@
         1000,
         {
             //the function returning the cell resolutions: the "resolution" property
-            mixedResolution: (cell) => cell.resolution,
-            preprocess: (cell) => {
-                //ensure those are numbers, and not string
-                //cell.x = +cell.x
-                //cell.y = +cell.y
-                //cell.resolution = +cell.resolution
-
-                //compute cell area, in km2
-                //let areaKM2 = (cell.resolution * cell.resolution) / 1000000;
-            }
+            mixedResolution: (cell) => cell.resolution
         }
     )
 
