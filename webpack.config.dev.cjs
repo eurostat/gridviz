@@ -23,7 +23,7 @@ module.exports = {
             //directory: '/home/juju/workspace/',
             //directory: '/home/juju/workspace/tiled-grid-france-filosofi/out/csv/',
             //directory: '/home/juju/Bureau/geodata/IFS/',
-            directory: '/home/juju/gisco/grid_pop_c2021/tiled/',
+            directory: '/home/juju/gisco/grid_pop_c2021/',
         },
         port: 1234,
         headers: { 'Access-Control-Allow-Origin': '*', },
