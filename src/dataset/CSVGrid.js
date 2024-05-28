@@ -71,7 +71,7 @@ export class CSVGrid extends Dataset {
                     //TODO check if redraw is necessary
                     //that is if the dataset belongs to a layer which is visible at the current zoom level
 
-                    //execute the callback, usually a draw function
+                    //redraw map
                     if (this.map) this.map.redraw()
 
                     this.infoLoadingStatus = 'loaded'
