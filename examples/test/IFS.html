@@ -6,7 +6,6 @@
     <title>IFS gridviz map</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="" />
-    <link rel="icon" href="favicon.png" />
 </head>
 <style>
     main {
@@ -27,7 +26,7 @@
         <div class='wrapper'>
             <div id="map" style="height: 100%; width: 100%"></div>
 
-    <div style="
+            <div style="
         position: absolute;
         left: 20px;
         top: 20px;
@@ -39,31 +38,32 @@
         background: #ffffffcc;
         line-height: 1.6;
         box-shadow: 5px 5px 5px grey;
-    ">        <div id="layer">
+    ">
+                <div id="layer">
 
-            <span style="font-size: 1em">
-                <input type="radio" name="layer" id="HOLDING_PER_KM2" value="HOLDING_PER_KM2" checked />
-                <label for="HOLDING_PER_KM2">Farms</label>
-                <br />
-                <input type="radio" name="layer" id="LSU_PER_KM2" value="LSU_PER_KM2" />
-                <label for="LSU_PER_KM2">Livestock</label>
-                <br />
-                <input type="radio" name="layer" id="LSU_PER_HOLDING" value="LSU_PER_HOLDING" />
-                <label for="LSU_PER_HOLDING">Livestock per farm</label>
-                <br />
-                <input type="radio" name="layer" id="LSD" value="LSD" />
-                <label for="LSD">Livestock density index</label>
+                    <span style="font-size: 1em">
+                        <input type="radio" name="layer" id="HOLDING_PER_KM2" value="HOLDING_PER_KM2" checked />
+                        <label for="HOLDING_PER_KM2">Farms</label>
+                        <br />
+                        <input type="radio" name="layer" id="LSU_PER_KM2" value="LSU_PER_KM2" />
+                        <label for="LSU_PER_KM2">Livestock</label>
+                        <br />
+                        <input type="radio" name="layer" id="LSU_PER_HOLDING" value="LSU_PER_HOLDING" />
+                        <label for="LSU_PER_HOLDING">Livestock per farm</label>
+                        <br />
+                        <input type="radio" name="layer" id="LSD" value="LSD" />
+                        <label for="LSD">Livestock density index</label>
+                </div>
+                <hr />
+                <input type="checkbox" id="label" checked />
+                <label for="label">City names</label><br />
+                <input type="checkbox" id="boundary" checked />
+                <label for="boundary">Boundaries</label><br />
+                <input type="checkbox" id="background" checked />
+                <label for="background">Background</label>
+                </span>
+            </div>
         </div>
-        <hr />
-        <input type="checkbox" id="label" checked />
-        <label for="label">City names</label><br />
-        <input type="checkbox" id="boundary" checked />
-        <label for="boundary">Boundaries</label><br />
-        <input type="checkbox" id="background" checked />
-        <label for="background">Background</label>
-        </span>
-     </div>
-     </div>
 
 
         </div>
@@ -71,11 +71,24 @@
 
 </body>
 
+<!--
 <script src="./gridviz.min.js"></script>
 <script src="./d3.min.js"></script>
 <script src="./gridviz-eurostat.js"></script>
+-->
+<script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+
 <script>
 
+    //const IFSdatasetURL = "./IFS.csv"
+    const IFSdatasetURL = "http://127.0.0.1:5500/IFS.csv"
     const attribute = 'HOLDING_PER_KM2'
 
     //define map with initial view
@@ -90,37 +103,37 @@
     }).addZoomButtons().setViewFromURL()
 
 
-        const backgroundLayer1 = new gridviz.BackgroundLayer({
-            url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
-            resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
-            origin: [0, 6000000],
-            filterColor: () => '#ffffffc0',
-            visible: (z) => z > 50,
+    const backgroundLayer1 = new gridviz.BackgroundLayer({
+        url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+        resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+        origin: [0, 6000000],
+        filterColor: () => '#ffffffc0',
+        visible: (z) => z > 50,
+    })
+
+    const backgroundLayer2 = new gridviz.BackgroundLayer(
+        gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 18, "EPSG3035", {
+            visible: (z) => z <= 50,
         })
+    )
 
-        const backgroundLayer2 = new gridviz.BackgroundLayer(
-            gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 18, "EPSG3035", {
-                visible: (z) => z <= 50,
-            })
-        )
+    //define boundaries layer
+    const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
 
-        //define boundaries layer
-        const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
-
-        //make label layer
-        const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer())
+    //make label layer
+    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer())
 
 
 
     //define mixed-resolution dataset
     const maxResolution = 128000
-    const dataset = new gridviz.CSVGrid(map, "./IFS.csv", maxResolution, {
+    const dataset = new gridviz.CSVGrid(map, IFSdatasetURL, maxResolution, {
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
             //ensure those are numbers, and not string
-            cell.x = +cell.x*1000;
-            cell.y = +cell.y*1000;
-            cell.RES = +cell.RES*1000;
+            cell.x = +cell.x * 1000;
+            cell.y = +cell.y * 1000;
+            cell.RES = +cell.RES * 1000;
 
             //compute cell area, in km2
             let areaKM2 = (cell.RES * cell.RES) / 1000000;
@@ -137,18 +150,18 @@
     //make layer
     const gridLayer = new gridviz.GridLayer(dataset, []);
 
-        //add layers to map
-        map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundariesLayer, labelLayer]
+    //add layers to map
+    map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundariesLayer, labelLayer]
 
-//define style template
+    //define style template
     const maxValues = {
         HOLDING_PER_KM2: 3,
         LSU_PER_KM2: 100,
         LSU_PER_HOLDING: 200,
         LSD: 3,
     };
-const colorScale = t=> d3.interpolateYlGnBu(t>1?0.8:t*0.8)
-const style = new gridviz.ShapeColorSizeStyle({
+    const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
+    const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, z, max) => "red",
 
         //size the cells according to their resolution
@@ -166,96 +179,96 @@ const style = new gridviz.ShapeColorSizeStyle({
         blendOperation: (z) => z < 300 ? "multiply" : "source-over"
     })
 
-//define stroke style, for high scale only
-        const strokeStyle = new gridviz.StrokeStyle({
-            strokeColor: (c) => '#666',
-size: style.size,
-offset: style.offset,
-            visible: z => z < 150
-        })
+    //define stroke style, for high scale only
+    const strokeStyle = new gridviz.StrokeStyle({
+        strokeColor: (c) => '#666',
+        size: style.size,
+        offset: style.offset,
+        visible: z => z < 150
+    })
 
-//set grid styles
-gridLayer.styles = [style, strokeStyle]
+    //set grid styles
+    gridLayer.styles = [style, strokeStyle]
 
-//prepare legend
-let legend = new gridviz.ColorLegend({
-	title: "-",
-	colorScale: colorScale,
-	width: 200,
-	ticks: 2,
-	textScale: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
-})
-//set legend
-style.legends = [legend]
-
-
-//
-const update = () => {
-//read GUI selection
-const layCode = document.querySelector('input[name="layer"]:checked').value
-
-//set style color
-style.color = c => (c[layCode]=="" || c[layCode]===undefined || isNaN(c[layCode]))? "#aaa" : colorScale( +c[layCode] / maxValues[layCode]  )
-
-if(layCode  == "HOLDING_PER_KM2") {
-	gridLayer.cellInfoHTML = (c) => "<b>"+(c.HOLDING? c.HOLDING : "NA")+"</b> farms" + "<br>resolution: "+c.RES+"<br>lower left corner: ("+c.x+", "+c.y+")"
-	legend.title = "Number of farms"
-}
-else if(layCode  == "LSU_PER_KM2") {
-	gridLayer.cellInfoHTML = (c) => "<b>"+(c.LSU? c.LSU: "NA")+"</b> livestock units" + "<br>resolution: "+c.RES+"<br>lower left corner: ("+c.x+", "+c.y+")"
-	legend.title = "Number of livestock units"
-}
-else if(layCode  == "LSU_PER_HOLDING") {
-	gridLayer.cellInfoHTML = (c) => "<b>"+(c.LSU_PER_HOLDING? Math.round(c.LSU_PER_HOLDING) : "NA")+"</b> livestock units per farm, in average" + "<br>resolution: "+c.RES+"<br>lower left corner: ("+c.x+", "+c.y+")"
-	legend.title = "Average livestock units per farm"
-}
-else if(layCode  == "LSD") {
-	gridLayer.cellInfoHTML = (c) => "<b>"+(c.LSD? c.LSD : "NA")+"</b> livestock density index" + "<br>resolution: "+c.RES+"<br>lower left corner: ("+c.x+", "+c.y+")"
-	legend.title = "Livestock density index"
-}
-else { console.error("Unexpected layer code: "+ layCode) }
-
-//redraw
-map.redraw()
-}
+    //prepare legend
+    let legend = new gridviz.ColorLegend({
+        title: "-",
+        colorScale: colorScale,
+        width: 200,
+        ticks: 2,
+        textScale: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
+    })
+    //set legend
+    style.legends = [legend]
 
 
-        //layer update
-        document.querySelector('#layer').addEventListener('change', update)
+    //
+    const update = () => {
+        //read GUI selection
+        const layCode = document.querySelector('input[name="layer"]:checked').value
 
-        // show/hide labels
-        document.querySelector('#label').addEventListener('change', function () {
-            labelLayer.visible = () => this.checked
-            map.redraw()
-        })
+        //set style color
+        style.color = c => (c[layCode] == "" || c[layCode] === undefined || isNaN(c[layCode])) ? "#aaa" : colorScale(+c[layCode] / maxValues[layCode])
 
-        // show/hide boundaries
-        document.querySelector('#boundary').addEventListener('change', function () {
-            boundariesLayer.visible = () => this.checked
-            map.redraw()
-        })
-
-        // show/hide background layer
-        document.querySelector('#background').addEventListener('change', function () {
-            if (this.checked) {
-                backgroundLayer1.visible = (z) => z > 50
-                backgroundLayer2.visible = (z) => z <= 50
-            } else {
-                backgroundLayer1.visible = () => false
-                backgroundLayer2.visible = () => false
-            }
-            map.redraw()
-        })
-
-        //select layer from URL
-        const ls = gridviz.getParameterByName('lay')
-        if (ls) {
-            const b = document.querySelector('#' + ls)
-            if (b) b.checked = true
+        if (layCode == "HOLDING_PER_KM2") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HOLDING ? c.HOLDING : "NA") + "</b> farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            legend.title = "Number of farms"
         }
+        else if (layCode == "LSU_PER_KM2") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU ? c.LSU : "NA") + "</b> livestock units" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            legend.title = "Number of livestock units"
+        }
+        else if (layCode == "LSU_PER_HOLDING") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU_PER_HOLDING ? Math.round(c.LSU_PER_HOLDING) : "NA") + "</b> livestock units per farm, in average" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            legend.title = "Average livestock units per farm"
+        }
+        else if (layCode == "LSD") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSD ? c.LSD : "NA") + "</b> livestock density index" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            legend.title = "Livestock density index"
+        }
+        else { console.error("Unexpected layer code: " + layCode) }
 
-       //initialise
-        update()
+        //redraw
+        map.redraw()
+    }
+
+
+    //layer update
+    document.querySelector('#layer').addEventListener('change', update)
+
+    // show/hide labels
+    document.querySelector('#label').addEventListener('change', function () {
+        labelLayer.visible = () => this.checked
+        map.redraw()
+    })
+
+    // show/hide boundaries
+    document.querySelector('#boundary').addEventListener('change', function () {
+        boundariesLayer.visible = () => this.checked
+        map.redraw()
+    })
+
+    // show/hide background layer
+    document.querySelector('#background').addEventListener('change', function () {
+        if (this.checked) {
+            backgroundLayer1.visible = (z) => z > 50
+            backgroundLayer2.visible = (z) => z <= 50
+        } else {
+            backgroundLayer1.visible = () => false
+            backgroundLayer2.visible = () => false
+        }
+        map.redraw()
+    })
+
+    //select layer from URL
+    const ls = gridviz.getParameterByName('lay')
+    if (ls) {
+        const b = document.querySelector('#' + ls)
+        if (b) b.checked = true
+    }
+
+    //initialise
+    update()
 
 </script>
 
