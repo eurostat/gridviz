@@ -76,7 +76,7 @@
 <script src="./d3.min.js"></script>
 <script src="./gridviz-eurostat.js"></script>
 -->
-<script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.9"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
@@ -152,6 +152,7 @@
 
     //organic
     const datasetOrganic = new gridviz.CSVGrid(map, IFSOrganicDatasetURL, maxResolution, {
+        separator: ";",
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
             cell.x = +(cell.X.substring(1));
@@ -172,6 +173,7 @@
 
     //organic
     const datasetSOUAA = new gridviz.CSVGrid(map, IFSSOUAADatasetURL, maxResolution, {
+        separator: ";",
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
             cell.x = +(cell.X.substring(1));
