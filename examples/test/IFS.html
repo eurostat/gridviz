@@ -209,6 +209,8 @@
         LSU_PER_KM2: 100,
         LSU_PER_HOLDING: 200,
         LSD: 3,
+        HLD_ORG_PER_KM2: 3,
+        ratio: 1,
     };
     const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
     const style = new gridviz.ShapeColorSizeStyle({
@@ -268,7 +270,8 @@
         const indicatorCode = sel.substring(2)
 
         //set style color
-        style.color = c => (c[indicatorCode] == "" || c[indicatorCode] === undefined || isNaN(c[indicatorCode])) ? "#aaa" : colorScale(+c[indicatorCode] / maxValues[indicatorCode])
+        const max = maxValues[indicatorCode]
+        style.color = c => (c[indicatorCode] == "" || c[indicatorCode] === undefined || isNaN(c[indicatorCode])) ? "#aaa" : colorScale(+c[indicatorCode] / max)
 
         if (indicatorCode == "HOLDING_PER_KM2") {
             gridLayer.cellInfoHTML = (c) => "<b>" + (c.HOLDING ? c.HOLDING : "NA") + "</b> farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
