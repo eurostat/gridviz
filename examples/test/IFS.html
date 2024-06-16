@@ -57,8 +57,8 @@
                         <input type="radio" name="layer" id="O_HLD_ORG_PER_KM2" value="O_HLD_ORG_PER_KM2" />
                         <label for="O_HLD_ORG_PER_KM2">Organic farms</label>
                         <br />
-                        <input type="radio" name="layer" id="O_ratio" value="O_ratio" />
-                        <label for="O_ratio">Share of organic farming in utilised agricultural area</label>
+                        <input type="radio" name="layer" id="O_ratio_org_uaa" value="O_ratio_org_uaa" />
+                        <label for="O_ratio_org_uaa">Share of organic farming in utilised agricultural area</label>
                 </div>
                 <hr />
                 <input type="checkbox" id="label" checked />
@@ -171,7 +171,8 @@
             cell.HLD_ORG = +cell.HLD_ORG
             cell.UAAXK0000_ORG = +cell.UAAXK0000_ORG
             cell.ratio = cell.ratio.replace(",", ".")
-            cell.ratio = +cell.ratio
+            cell.ratio_org_uaa = +cell.ratio
+            delete cell.ratio
 
             //compute cell area, in km2
             let areaKM2 = (cell.RES * cell.RES) / 1000000;
@@ -210,7 +211,7 @@
         LSU_PER_HOLDING: 200,
         LSD: 3,
         HLD_ORG_PER_KM2: 0.7,
-        ratio: 0.6,
+        ratio_org_uaa: 0.6,
     };
     const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
     const style = new gridviz.ShapeColorSizeStyle({
@@ -274,29 +275,29 @@
         style.color = c => (c[indicatorCode] == "" || c[indicatorCode] === undefined || isNaN(c[indicatorCode])) ? "#aaa" : colorScale(+c[indicatorCode] / max)
 
         if (indicatorCode == "HOLDING_PER_KM2") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HOLDING ? c.HOLDING : "NA") + "</b> farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HOLDING ? c.HOLDING : "NA") + "</b> farms"
+            //+ "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
             legend.title = "Number of farms"
         }
         else if (indicatorCode == "LSU_PER_KM2") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU ? c.LSU : "NA") + "</b> livestock units" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU ? c.LSU : "NA") + "</b> livestock units"
             legend.title = "Number of livestock units"
         }
         else if (indicatorCode == "LSU_PER_HOLDING") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU_PER_HOLDING ? Math.round(c.LSU_PER_HOLDING) : "NA") + "</b> livestock units per farm, in average" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU_PER_HOLDING ? Math.round(c.LSU_PER_HOLDING) : "NA") + "</b> livestock units per farm, in average"
             legend.title = "Average livestock units per farm"
         }
         else if (indicatorCode == "LSD") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSD ? c.LSD : "NA") + "</b> livestock density index" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSD ? c.LSD : "NA") + "</b> livestock density index"
             legend.title = "Livestock density index"
         }
         else if (indicatorCode == "HLD_ORG_PER_KM2") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms"
             legend.title = "Number of organic farms"
         }
-        else if (indicatorCode == "ratio") {
-            //TODO
-            gridLayer.cellInfoHTML = (c) => "TODO"
-            //gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+        else if (indicatorCode == "ratio_org_uaa") {
+            //organic farming in utilised agricultural area UAAXK0000_ORG
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.ratio_org_uaa ? Math.round(100*c.ratio_org_uaa) : "NA") + "</b> % of agricultural area for organic farming"
             legend.title = "Share of organic farming"
         }
         else { console.error("Unexpected indicator code: " + indicatorCode) }
