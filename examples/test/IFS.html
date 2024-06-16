@@ -102,10 +102,15 @@
 
 <script>
 
-    //const IFSdatasetURL = "./IFS.csv"
+    /*
+    const IFSdatasetURL = "./IFS.csv"
+    const IFSOrganicDatasetURL = "./organic.csv"
+    const IFSSOUAADatasetURL = "./SO_UAA.csv"
+    */
     const IFSdatasetURL = "http://127.0.0.1:5500/IFS.csv"
     const IFSOrganicDatasetURL = "http://127.0.0.1:5500/organic.csv"
     const IFSSOUAADatasetURL = "http://127.0.0.1:5500/SO_UAA.csv"
+
     const attribute = 'HOLDING_PER_KM2'
 
     //define map with initial view
@@ -228,7 +233,7 @@
         ratio_org_uaa: 0.6,
         PHY_SIZE: 100,
         EC_SIZE: 300000,
-        yield: 3000
+        yield: 250
     };
     const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
     const style = new gridviz.ShapeColorSizeStyle({
@@ -314,7 +319,7 @@
         }
         else if (indicatorCode == "ratio_org_uaa") {
             //organic farming in utilised agricultural area UAAXK0000_ORG
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.ratio_org_uaa ? Math.round(100*c.ratio_org_uaa) : "NA") + "</b> % of agricultural area for organic farming"
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.ratio_org_uaa ? Math.round(100 * c.ratio_org_uaa) : "NA") + "</b> % of agricultural area for organic farming"
             legend.title = "Share of organic farming"
         }
         else if (indicatorCode == "PHY_SIZE") {
