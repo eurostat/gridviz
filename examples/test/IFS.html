@@ -209,8 +209,8 @@
         LSU_PER_KM2: 100,
         LSU_PER_HOLDING: 200,
         LSD: 3,
-        HLD_ORG_PER_KM2: 3,
-        ratio: 1,
+        HLD_ORG_PER_KM2: 0.7,
+        ratio: 0.6,
     };
     const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
     const style = new gridviz.ShapeColorSizeStyle({
@@ -295,6 +295,7 @@
         }
         else if (indicatorCode == "ratio") {
             //TODO
+            gridLayer.cellInfoHTML = (c) => "TODO"
             //gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
             legend.title = "Share of organic farming"
         }
