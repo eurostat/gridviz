@@ -17,7 +17,7 @@ export class CSVGrid extends Dataset {
      * @param {import("../core/Map.js").Map} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean),separator?:string}} opts
+     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean),delimiter?:string}} opts
      */
     constructor(map, url, resolution, opts = {}) {
         super(map, url, resolution, opts)
@@ -30,7 +30,7 @@ export class CSVGrid extends Dataset {
         /**
          * @private
          * @type {string} */
-         this.separator = opts.separator || ","
+         this.delimiter = opts.delimiter || ","
 
         /**
          * @type {string}
@@ -53,7 +53,7 @@ export class CSVGrid extends Dataset {
         this.infoLoadingStatus = 'loading'
             ; (async () => {
                 try {
-                    const data = await dsv(this.separator, this.url)
+                    const data = await dsv(this.delimiter, this.url)
 
                     //convert coordinates in numbers
                     for (const c of data) {
