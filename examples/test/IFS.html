@@ -253,10 +253,10 @@
 
         //set dataset
         const datasetCode = sel[0]
-        if(datasetCode == "I")
-            gridLayer.dataset = datasetIFS
-        else
-            console.error("Unexpected dataset code:", datasetCode)
+        if (datasetCode == "I") gridLayer.dataset = datasetIFS
+        else if (datasetCode == "O") gridLayer.dataset = datasetOrganic
+        else if (datasetCode == "S") gridLayer.dataset = datasetSOUAA
+        else console.error("Unexpected dataset code:", datasetCode)
 
         //get indicatot code
         const indicatorCode = sel.substring(2)
