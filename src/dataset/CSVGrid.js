@@ -3,7 +3,7 @@
 
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../core/GeoCanvas.js").Envelope }} GridInfo */
 
-import { csv } from 'd3-fetch'
+import { dsv } from 'd3-fetch'
 import { Dataset } from '../core/Dataset.js'
 
 /**
@@ -17,7 +17,7 @@ export class CSVGrid extends Dataset {
      * @param {import("../core/Map.js").Map} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean)}} opts
+     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean),separator?:string}} opts
      */
     constructor(map, url, resolution, opts = {}) {
         super(map, url, resolution, opts)
@@ -26,6 +26,11 @@ export class CSVGrid extends Dataset {
          * @private
          * @type {Array.<import("../core/Dataset.js").Cell>} */
         this.cells = []
+
+        /**
+         * @private
+         * @type {string} */
+         this.separator = opts.separator || ","
 
         /**
          * @type {string}
@@ -48,7 +53,7 @@ export class CSVGrid extends Dataset {
         this.infoLoadingStatus = 'loading'
             ; (async () => {
                 try {
-                    const data = await csv(this.url)
+                    const data = await dsv(this.separator, this.url)
 
                     //convert coordinates in numbers
                     for (const c of data) {
