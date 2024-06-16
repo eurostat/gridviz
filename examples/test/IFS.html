@@ -89,6 +89,8 @@
 
     //const IFSdatasetURL = "./IFS.csv"
     const IFSdatasetURL = "http://127.0.0.1:5500/IFS.csv"
+    const IFSOrganicDatasetURL = "http://127.0.0.1:5500/organic.csv"
+    const IFSSOUAADatasetURL = "http://127.0.0.1:5500/SO_UAA.csv"
     const attribute = 'HOLDING_PER_KM2'
 
     //define map with initial view
@@ -125,8 +127,10 @@
 
 
 
-    //define mixed-resolution dataset
+    //define mixed-resolution datasets
     const maxResolution = 128000
+
+    //IFS
     const dataset = new gridviz.CSVGrid(map, IFSdatasetURL, maxResolution, {
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
@@ -145,6 +149,48 @@
             cell.LSU_PER_HOLDING = cell.LSU / cell.HOLDING;
         },
     });
+
+    //organic
+    const datasetOrganic = new gridviz.CSVGrid(map, IFSOrganicDatasetURL, maxResolution, {
+        mixedResolution: (cell) => +cell.RES,
+        preprocess: (cell) => {
+            cell.x = +(cell.X.substring(1));
+            delete cell.X
+            cell.y = +(cell.Y.substring(1));
+            delete cell.Y
+            cell.RES = +cell.RES;
+
+            //compute cell area, in km2
+            //let areaKM2 = (cell.RES * cell.RES) / 1000000;
+
+            //compute densities
+            //cell.HOLDING_PER_KM2 = cell.HOLDING / areaKM2;
+            //compute ratio
+            //cell.LSU_PER_HOLDING = cell.LSU / cell.HOLDING;
+        },
+    });
+
+    //organic
+    const datasetSOUAA = new gridviz.CSVGrid(map, IFSSOUAADatasetURL, maxResolution, {
+        mixedResolution: (cell) => +cell.RES,
+        preprocess: (cell) => {
+            cell.x = +(cell.X.substring(1));
+            delete cell.X
+            cell.y = +(cell.Y.substring(1));
+            delete cell.Y
+            cell.RES = +cell.RES;
+
+            //compute cell area, in km2
+            //let areaKM2 = (cell.RES * cell.RES) / 1000000;
+
+            //compute densities
+            //cell.HOLDING_PER_KM2 = cell.HOLDING / areaKM2;
+            //compute ratio
+            //cell.LSU_PER_HOLDING = cell.LSU / cell.HOLDING;
+        },
+    });
+
+
 
 
     //make layer
