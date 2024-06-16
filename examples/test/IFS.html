@@ -286,6 +286,15 @@
             gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSD ? c.LSD : "NA") + "</b> livestock density index" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
             legend.title = "Livestock density index"
         }
+        else if (indicatorCode == "HLD_ORG_PER_KM2") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            legend.title = "Number of organic farms"
+        }
+        else if (indicatorCode == "ratio") {
+            //TODO
+            //gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+            legend.title = "Share of organic farming"
+        }
         else { console.error("Unexpected indicator code: " + indicatorCode) }
 
         //redraw
