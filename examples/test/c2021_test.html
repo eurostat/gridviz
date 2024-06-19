@@ -38,11 +38,11 @@
                 </select>
                 <br>
                 <input type="checkbox" id="sbtp" checked />
-                <label for="sbtp">Size by total population</label>
+                <label for="sbtp">Dot proportional to population</label>
                 <br />
                 <hr />
                 <input type="radio" name="layer" id="trivariate" value="trivariate" />
-                <label for="trivariate">Trivariate color of</label>
+                <label for="trivariate">Trivariate color by</label>
                 <select id="trivariate_theme">
                     <option value="age" selected>Age</option>
                     <option value="mobility">Mobility</option>
@@ -50,7 +50,7 @@
                 </select>
                 <br />
                 <input type="checkbox" id="sbtp_tri" checked />
-                <label for="sbtp_tri">Size by total population</label>
+                <label for="sbtp">Dot proportional to population</label>
 <hr>
 <input type="radio" name="layer" id="sex" value="sex" />
 <label for="sex">Sex</label>
@@ -285,7 +285,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: gridviz.nice //Math.round,
                     })
                 )
 
@@ -332,7 +332,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: gridviz.nice //Math.round,
                     })
                 )
 
@@ -384,7 +384,7 @@
                         title: "Population",
                         shape: "square",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: gridviz.nice //Math.round,
                     })
                 )
 
@@ -428,7 +428,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: gridviz.nice //Math.round,
                     })
                 )
 
@@ -472,7 +472,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: gridviz.nice //Math.round,
                     })
                 )
 
@@ -552,7 +552,7 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: Math.round,
+                            labelFormat: gridviz.nice //Math.round,
                         })
                     )
 
@@ -640,7 +640,7 @@
                             "center": "Balanced representation of age groups",
                         },
                         leftText: "Under 15",
-                        topText: "Age 15 to 64",
+                        topText: "15 to 64",
                         rightText: "65 and older",
                         centerCoefficient: 0.5,
                     })]
@@ -692,7 +692,7 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: Math.round,
+                            labelFormat: gridviz.nice //Math.round,
                         })
                     )
 
