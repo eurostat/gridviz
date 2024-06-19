@@ -204,6 +204,10 @@
         //format function for percentages
         const formatPercentage = d3.format('.1f')
 
+        //format function for large numbers
+        const _f = d3.format(",.0f");
+        const formatLarge = v => _f(v).replace(/,/g, ' ');
+
         //
         const update = () => {
             //read GUI selection
@@ -241,15 +245,16 @@
                 gridLayer.styles[0].legends = [
                     new gridviz.ColorDiscreteLegend({
                         title: "Population",
-                        width: 300,
+                        width: 350,
                         colors: () => colors,
                         breaks: (viewScale) => viewScale?.breaks.map(b => gridviz.nice(b) /*Math.round(b)*/),
+                        labelFormat: formatLarge,
                     })
                 ]
 
                 gridLayer.minPixelsPerCell = 1.5
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(c.T) + '</b> person' + (+c.T == 1 ? '' : 's')
 
             } else if (layCode === 'sex') {
 
