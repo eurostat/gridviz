@@ -1,4 +1,112 @@
-<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+  <head>
+    <meta charset="utf-8" />
+    <title>Census 2021 - main map</title>
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <script>
+      var cl = document.querySelector("html").classList;
+      cl.remove("no-js");
+      cl.add("has-js");
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdn1.fpfis.tech.ec.europa.eu/ecl/v3.7.1/ec/styles/ecl-ec.css"
+      integrity="sha256-I0/BnlrDCgIBe/HVW7FgKzkKiS0aUYobVacFdMDtcBE= sha384-GhNsxvo1nhuyhc2GCq1MrtBBkpWINHv70NHvJSAJcc+TJVtLtzwPIM0LkeO1KJjV
+sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4EcmXS7LUDVV4A=="
+      crossorigin="anonymous"
+      media="screen"
+    />
+
+    <!-- custom styles -->
+    <style>
+      .toc-element {
+        margin-top: 0rem !important;
+      }
+      .gridviz-slider {
+        margin-left: 15px;
+        margin-top: 0rem !important;
+        width: 100px;
+      }
+      #gridviz-fullscreen {
+        position: absolute;
+        top: 95px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        padding: 4px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        cursor: pointer;
+      }
+      #gridviz-zoom-btns {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: auto;
+        height: auto;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .gridviz-zoom-button {
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        border: none;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        padding: 4px;
+      }
+      #gridviz-attribution {
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        width: auto;
+        height: auto;
+        padding: 1px;
+        border: 0px;
+        background: #ffffffcc;
+      }
+      #legendPop {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        padding: 5px;
+      }
+      #legendPop text {
+        display: inline-flex;
+        font: normal normal 400 1rem/1.5rem arial, sans-serif;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        fill: #404040;
+      }
+      #legendPop g text {
+        font-weight: normal !important;
+      }
+      #tooltip_eurostat {
+        box-shadow: 0 2px 4px rgba(0, 47, 103, 0.08),
+          0 0 10px rgba(0, 47, 103, 0.04), 0 4px 5px rgba(0, 47, 103, 0.04),
+          0 -4px 4px rgba(0, 47, 103, 0.04) !important;
+        background-color: white !important;
+        border-radius: 0px !important;
+        /* border: 2px solid #004494 !important; */
+      }
+    </style>
+  </head>
+
+  <body
+    style="
+      margin: 0;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    "
+  >
     <div id="map" style="height: 100%; width: 100%"></div>
 
     <div style="
@@ -41,7 +149,7 @@
                     <option value="F">Women</option>
                     <option value="M">Men</option>
                     <option value="Y_LT15">Age under 15 years</option>
-                    <option value="Y15-64">Age 15 to 64 years</option>
+                    <option value="Y_1564">Age 15 to 64 years</option>
                     <option value="Y_GE65">Age 65 years and older</option>
                     <option value="EMP" selected>Employed</option>
                     <option value="SAME">Residence unchanged (2020/2021)</option>
@@ -67,6 +175,7 @@
                 <input type="checkbox" id="sbtp_tri" checked />
                 <label for="sbtp_tri">Size by total population</label>
                 <br />
+                <!--
                 <hr />
                 <input type="radio" name="layer" id="emp_age" value="emp_age" />
                 <label for="emp_age">Employment and age</label>
@@ -76,6 +185,7 @@
                 <br />
                 <input type="radio" name="layer" id="chernoff" value="chernoff" />
                 <label for="chernoff">Chernoff faces for sex, age, employment</label>
+            -->
         </div>
         <hr />
         <input type="checkbox" id="label" checked />
@@ -88,6 +198,7 @@
     </div>
 
     <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -96,6 +207,11 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
     <script>
+
+        //const urlTiled = "./tiled/"
+        const urlTiled = "http://127.0.0.1:5500/"
+
+
 
         /*
         "T" >= Total population
@@ -106,7 +222,7 @@
         "EMP" >= Employed (working population)
 
         "Y_LT15" >= Age under 15 years
-        "Y15-64" >= Age 15 to 64 years
+        "Y_1564" >= Age 15 to 64 years
         "Y_GE65" >= Age 65 years and older
 
         "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
@@ -155,9 +271,11 @@
         //define multi resolution dataset
         const dataset = new gridviz.MultiResolutionDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            resolution => new gridviz.TiledGrid(map, 'http://localhost:1234/tiled_csv/' + resolution + '/'),
+            resolution => new gviz_par.TiledParquetGrid(map, urlTiled + resolution + '/'), //, { extension: "data" }
             {
                 preprocess: (c) => {
+                    //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
+
                     if (!c.T || +c.T == 0) return false
 
                     //male/female index
@@ -169,9 +287,9 @@
                     //compute percentages
                     computePercentage(c, "F", c => +c.F + +c.M)
                     computePercentage(c, "M", c => +c.F + +c.M)
-                    computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
-                    computePercentage(c, "Y15-64", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
-                    computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
+                    computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "Y_1564", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
                     computePercentage(c, "EMP", c => c.T) //TODO sure?
                     computePercentage(c, "NAT", c => +c.NAT + +c.EU_OTH + +c.OTH)
                     computePercentage(c, "EU_OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
@@ -340,7 +458,7 @@
                     new gridviz.CompositionStyle({
                         color: {
                             Y_LT15: colAge(0.2),
-                            "Y15-64": colAge(0.4),
+                            Y_1564: colAge(0.4),
                             Y_GE65: colAge(0.9),
                         },
                         type: () => 'flag',
@@ -376,9 +494,9 @@
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
+                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
                     c.Y_LT15 + " under 15 years<br>" +
-                    c["Y15-64"] + " 15 to 64 years<br>" +
+                    c.Y_1564 + " 15 to 64 years<br>" +
                     c.Y_GE65 + " 65 years and older"
 
             } else if (layCode === 'mobility') {
@@ -489,7 +607,7 @@
                     case 'F': breaks = [40, 45, 49, 50, 51, 55, 60]; break;
                     case 'M': breaks = [40, 45, 49, 50, 51, 55, 60]; break;
                     case 'Y_LT15': breaks = [5, 10, 15, 20, 30]; break;
-                    case 'Y15-64': breaks = [50, 60, 65, 70, 80]; break;
+                    case 'Y_1564': breaks = [50, 60, 65, 70, 80]; break;
                     case 'Y_GE65': breaks = [10, 20, 30, 40, 50]; break;
                     case 'EMP': breaks = [30, 40, 45, 50, 55, 60, 70]; break;
                     case 'SAME': breaks = [70, 80, 90, 95, 99]; break;
@@ -567,7 +685,7 @@
                 let colorTrivariateFun
                 if (theme == "age")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["sY_LT15", "sY15-64", "sY_GE65"],
+                        ["sY_LT15", "sY_1564", "sY_GE65"],
                         c => 100,
                         ["#4daf4a", "#377eb8", "#e41a1c"], {
                         center: [0.15, 0.6, 0.25],
@@ -687,10 +805,10 @@
                 //tooltip text
                 if (theme == "age")
                     gridLayer.cellInfoHTML = (c) => {
-                        const total = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
+                        const total = +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65
                         return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sY_LT15) + "% under 15 years<br>" +
-                            formatPercentage(c["sY15-64"]) + "% 15 to 64 years<br>" +
+                            formatPercentage(c["sY_1564"]) + "% 15 to 64 years<br>" +
                             formatPercentage(c.sY_GE65) + "% 65 years and older"
                     }
                 else if (theme == "mobility")
@@ -723,7 +841,7 @@
 
                 //age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     //centerColor: "#999",
@@ -761,7 +879,7 @@
 
                 /*/age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     //centerColor: "#999",
@@ -796,7 +914,7 @@
 
                 //age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     withMixedClasses: false,
@@ -858,7 +976,7 @@
 
                 //age classifier
                 const ageTrivariateClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     withMixedClasses: false,
@@ -959,5 +1077,5 @@
             ©<a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span>
     </div>
 
-
 </body>
+</html>

@@ -65,9 +65,6 @@
                         <br />
                         <input type="radio" name="layer" id="E_EC_SIZE" value="E_EC_SIZE" />
                         <label for="E_EC_SIZE">Average economic farm size</label>
-                        <br />
-                        <input type="radio" name="layer" id="E_yield" value="E_yield" />
-                        <label for="E_yield">Yield ?</label>
                 </div>
                 <hr />
                 <input type="checkbox" id="label" checked />
@@ -209,8 +206,6 @@
 
             cell.PHY_SIZE = +cell.PHY_SIZE;
             cell.EC_SIZE = +cell.EC_SIZE;
-
-            cell.yield = +cell.EC_SIZE / +cell.UAA
         },
     });
 
@@ -233,7 +228,6 @@
         ratio_org_uaa: 0.6,
         PHY_SIZE: 100,
         EC_SIZE: 300000,
-        yield: 250
     };
     const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
     const style = new gridviz.ShapeColorSizeStyle({
@@ -329,10 +323,6 @@
         else if (indicatorCode == "EC_SIZE") {
             gridLayer.cellInfoHTML = (c) => "<b>" + (c.EC_SIZE ? c.EC_SIZE : "NA") + "€</b> per farm, in average"
             legend.title = "Average physical size"
-        }
-        else if (indicatorCode == "yield") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.EC_SIZE ? c.EC_SIZE : "NA") + "</b>€ per UAA unit, in average"
-            legend.title = "Yield"
         }
         else { console.error("Unexpected indicator code: " + indicatorCode) }
 
