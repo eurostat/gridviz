@@ -295,9 +295,9 @@
                 )
 
                 gridLayer.cellInfoHTML = (c) =>
-                    '<b>' + (+c.F + +c.M) + '</b> person' + (+c.F + +c.M == 1 ? '' : 's') + '<br>' +
-                    c.M + ' m' + (c.M == 1 ? "a" : "e") + 'n<br>' +
-                    c.F + ' wom' + (c.F == 1 ? 'a' : 'e') + 'n<br>' +
+                    '<b>' + formatLarge(+c.F + +c.M) + '</b> person' + (+c.F + +c.M == 1 ? '' : 's') + '<br>' +
+                    formatLarge(c.M) + ' m' + (c.M == 1 ? "a" : "e") + 'n<br>' +
+                    formatLarge(c.F) + ' wom' + (c.F == 1 ? 'a' : 'e') + 'n<br>' +
                     'Difference: <b>' + (c.indMF > 0 ? '+' : '') + formatPercentage(c.indMF) + ' % men</b>'
 
 
@@ -705,7 +705,7 @@
                 if (theme == "age")
                     gridLayer.cellInfoHTML = (c) => {
                         const total = +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65
-                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                        return '<b>' + formatLarge(total) + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sY_LT15) + "% under 15 years<br>" +
                             formatPercentage(c["sY_1564"]) + "% 15 to 64 years<br>" +
                             formatPercentage(c.sY_GE65) + "% 65 years and older"
@@ -713,7 +713,7 @@
                 else if (theme == "mobility")
                     gridLayer.cellInfoHTML = (c) => {
                         const total = +c.CHG_IN + +c.SAME + +c.CHG_OUT
-                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                        return '<b>' + formatLarge(total) + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sSAME) + "% residence unchanged<br>" +
                             formatPercentage(c.sCHG_IN) + "% moved within the country<br>" +
                             formatPercentage(c.sCHG_OUT) + "% moved from outside the country"
@@ -721,7 +721,7 @@
                 else if (theme == "pob")
                     gridLayer.cellInfoHTML = (c) => {
                         const total = +c.NAT + +c.EU_OTH + +c.OTH
-                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                        return '<b>' + formatLarge(total) + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sNAT) + "% born in the country<br>" +
                             formatPercentage(c.sEU_OTH) + "% born in another EU member state<br>" +
                             formatPercentage(c.sOTH) + "% born outside the EU"
