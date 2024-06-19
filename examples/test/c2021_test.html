@@ -1,113 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-  <head>
-    <meta charset="utf-8" />
-    <title>Census 2021 - main map</title>
-    <meta content="width=device-width,initial-scale=1" name="viewport" />
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <script>
-      var cl = document.querySelector("html").classList;
-      cl.remove("no-js");
-      cl.add("has-js");
-    </script>
-    <link
-      rel="stylesheet"
-      href="https://cdn1.fpfis.tech.ec.europa.eu/ecl/v3.7.1/ec/styles/ecl-ec.css"
-      integrity="sha256-I0/BnlrDCgIBe/HVW7FgKzkKiS0aUYobVacFdMDtcBE= sha384-GhNsxvo1nhuyhc2GCq1MrtBBkpWINHv70NHvJSAJcc+TJVtLtzwPIM0LkeO1KJjV
-sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4EcmXS7LUDVV4A=="
-      crossorigin="anonymous"
-      media="screen"
-    />
-
-    <!-- custom styles -->
-    <style>
-      .toc-element {
-        margin-top: 0rem !important;
-      }
-      .gridviz-slider {
-        margin-left: 15px;
-        margin-top: 0rem !important;
-        width: 100px;
-      }
-      #gridviz-fullscreen {
-        position: absolute;
-        top: 95px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
-        padding: 4px;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        cursor: pointer;
-      }
-      #gridviz-zoom-btns {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        width: auto;
-        height: auto;
-        font-size: 20px;
-        font-weight: bold;
-      }
-      .gridviz-zoom-button {
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        border: none;
-        color: black;
-        text-align: center;
-        text-decoration: none;
-        padding: 4px;
-      }
-      #gridviz-attribution {
-        position: absolute;
-        left: 0px;
-        bottom: 0px;
-        width: auto;
-        height: auto;
-        padding: 1px;
-        border: 0px;
-        background: #ffffffcc;
-      }
-      #legendPop {
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
-        padding: 5px;
-      }
-      #legendPop text {
-        display: inline-flex;
-        font: normal normal 400 1rem/1.5rem arial, sans-serif;
-        font-weight: 700 !important;
-        font-size: 15px !important;
-        fill: #404040;
-      }
-      #legendPop g text {
-        font-weight: normal !important;
-      }
-      #tooltip_eurostat {
-        box-shadow: 0 2px 4px rgba(0, 47, 103, 0.08),
-          0 0 10px rgba(0, 47, 103, 0.04), 0 4px 5px rgba(0, 47, 103, 0.04),
-          0 -4px 4px rgba(0, 47, 103, 0.04) !important;
-        background-color: white !important;
-        border-radius: 0px !important;
-        /* border: 2px solid #004494 !important; */
-      }
-    </style>
-  </head>
-
-  <body
-    style="
-      margin: 0;
-      height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      overflow: hidden;
-    "
-  >
-    <div id="map" style="height: 100%; width: 100%"></div>
+<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+    <div id="map" style="height: 630; width: 800"></div>
 
     <div style="
         position: absolute;
@@ -126,25 +18,10 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
             <span style="font-size: 1em">
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label>
-                <br />
-                <input type="radio" name="layer" id="sex" value="sex" />
-                <label for="sex">Sex</label>
-                <br />
-                <input type="radio" name="layer" id="emp" value="emp" />
-                <label for="emp">Employment</label>
-                <br />
-                <input type="radio" name="layer" id="age" value="age" />
-                <label for="age">Age</label>
-                <br />
-                <input type="radio" name="layer" id="mobility" value="mobility" />
-                <label for="mobility">Mobility</label>
-                <br />
-                <input type="radio" name="layer" id="pob" value="pob" />
-                <label for="pob">Birth place</label>
-                <br />
                 <hr />
                 <input type="radio" name="layer" id="share" value="share" />
                 <label for="share">Share of</label>
+                <br>
                 <select id="share_">
                     <option value="F">Women</option>
                     <option value="M">Men</option>
@@ -152,14 +29,14 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     <option value="Y_1564">Age 15 to 64 years</option>
                     <option value="Y_GE65">Age 65 years and older</option>
                     <option value="EMP" selected>Employed</option>
-                    <option value="SAME">Residence unchanged (2020/2021)</option>
-                    <option value="CHG_IN">Moved within the country (2020/2021)</option>
-                    <option value="CHG_OUT">Moved from outside the country (2020/2021)</option>
+                    <option value="SAME">Residence unchanged</option>
+                    <option value="CHG_IN">Moved within the country</option>
+                    <option value="CHG_OUT">Moved from other country</option>
                     <option value="NAT">Born in the country</option>
                     <option value="EU_OTH">Born in another EU member state</option>
                     <option value="OTH">Born outside the EU</option>
                 </select>
-                <br />
+                <br>
                 <input type="checkbox" id="sbtp" checked />
                 <label for="sbtp">Size by total population</label>
                 <br />
@@ -174,8 +51,26 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                 <br />
                 <input type="checkbox" id="sbtp_tri" checked />
                 <label for="sbtp_tri">Size by total population</label>
-                <br />
+<hr>
+<input type="radio" name="layer" id="sex" value="sex" />
+<label for="sex">Sex</label>
+<br />
+<input type="radio" name="layer" id="emp" value="emp" />
+<label for="emp">Employment</label>
+<br />
+<input type="radio" name="layer" id="age" value="age" />
+<label for="age">Age</label>
+<br />
+<input type="radio" name="layer" id="mobility" value="mobility" />
+<label for="mobility">Mobility</label>
+<br />
+<input type="radio" name="layer" id="pob" value="pob" />
+<label for="pob">Birth place</label>
+
+
+
                 <!--
+                <br />
                 <hr />
                 <input type="radio" name="layer" id="emp_age" value="emp_age" />
                 <label for="emp_age">Employment and age</label>
@@ -208,7 +103,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
     <script>
 
-        //const urlTiled = "./tiled/"
+        //const urlTiled = "https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/tile/"
         const urlTiled = "http://127.0.0.1:5500/"
 
 
@@ -271,7 +166,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
         //define multi resolution dataset
         const dataset = new gridviz.MultiResolutionDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            resolution => new gviz_par.TiledParquetGrid(map, urlTiled + resolution + '/'), //, { extension: "data" }
+            resolution => new gviz_par.TiledParquetGrid(map, urlTiled + resolution + '/'),
             {
                 preprocess: (c) => {
                     //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
@@ -1077,5 +972,5 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
             ©<a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span>
     </div>
 
+
 </body>
-</html>
