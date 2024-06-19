@@ -252,7 +252,7 @@
                     })
                 ]
 
-                gridLayer.minPixelsPerCell = 1.5
+                gridLayer.minPixelsPerCell = 1.4
 
                 gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(c.T) + '</b> person' + (+c.T == 1 ? '' : 's')
 
@@ -290,7 +290,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: gridviz.nice //Math.round,
+                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
@@ -337,7 +337,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: gridviz.nice //Math.round,
+                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
@@ -389,7 +389,7 @@
                         title: "Population",
                         shape: "square",
                         fillColor: "lightgray",
-                        labelFormat: gridviz.nice //Math.round,
+                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
@@ -433,7 +433,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: gridviz.nice //Math.round,
+                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
@@ -477,7 +477,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: gridviz.nice //Math.round,
+                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
@@ -557,14 +557,14 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: gridviz.nice //Math.round,
+                            labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                         })
                     )
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + formatPercentage(c[shareB]) + ' %</b><br>' +
-                    c[shareA] + '<br>' //+
-                    + c.T + " person(s)"
+                    formatLarge(c[shareA]) + '<br>' //+
+                    + formatLarge(c.T) + " person(s)"
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
@@ -697,7 +697,7 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: gridviz.nice //Math.round,
+                            labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
                         })
                     )
 
