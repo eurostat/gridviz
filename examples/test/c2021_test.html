@@ -51,21 +51,21 @@
                 <br />
                 <input type="checkbox" id="sbtp_tri" checked />
                 <label for="sbtp">Dot proportional to population</label>
-<hr>
-<input type="radio" name="layer" id="sex" value="sex" />
-<label for="sex">Sex</label>
-<br />
-<input type="radio" name="layer" id="emp" value="emp" />
-<label for="emp">Employment</label>
-<br />
-<input type="radio" name="layer" id="age" value="age" />
-<label for="age">Age</label>
-<br />
-<input type="radio" name="layer" id="mobility" value="mobility" />
-<label for="mobility">Mobility</label>
-<br />
-<input type="radio" name="layer" id="pob" value="pob" />
-<label for="pob">Birth place</label>
+                <hr>
+                <input type="radio" name="layer" id="sex" value="sex" />
+                <label for="sex">Sex</label>
+                <br />
+                <input type="radio" name="layer" id="emp" value="emp" />
+                <label for="emp">Employment</label>
+                <br />
+                <input type="radio" name="layer" id="age" value="age" />
+                <label for="age">Age</label>
+                <br />
+                <input type="radio" name="layer" id="mobility" value="mobility" />
+                <label for="mobility">Mobility</label>
+                <br />
+                <input type="radio" name="layer" id="pob" value="pob" />
+                <label for="pob">Birth place</label>
 
                 <!--
                 <br />
@@ -290,7 +290,7 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
@@ -337,14 +337,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + formatPercentage(c.sEMP) + ' %</b> employment<br>' +
                     //c.EMP + '<br>' +
-                    (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
+                    formatLarge(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
 
@@ -389,14 +389,14 @@
                         title: "Population",
                         shape: "square",
                         fillColor: "lightgray",
-                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
-                    c.Y_LT15 + " under 15 years<br>" +
-                    c.Y_1564 + " 15 to 64 years<br>" +
-                    c.Y_GE65 + " 65 years and older"
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
+                    formatLarge(c.Y_LT15) + " - under 15 years<br>" +
+                    formatLarge(c.Y_1564) + " - 15 to 64 years<br>" +
+                    formatLarge(c.Y_GE65) + " - 65 years and older"
 
             } else if (layCode === 'mobility') {
 
@@ -433,14 +433,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.SAME + +c.CHG_IN + +c.CHG_OUT) + '</b> person' + ((+c.SAME + +c.CHG_IN + +c.CHG_OUT) == 1 ? '' : 's') + "<br>" +
-                    c.SAME + " residence unchanged<br>" +
-                    c.CHG_IN + " moved within the country<br>" +
-                    c.CHG_OUT + " moved from outside the country"
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(+c.SAME + +c.CHG_IN + +c.CHG_OUT) + '</b> person' + ((+c.SAME + +c.CHG_IN + +c.CHG_OUT) == 1 ? '' : 's') + "<br>" +
+                    formatLarge(c.SAME) + " residence unchanged<br>" +
+                    formatLarge(c.CHG_IN) + " moved within the country<br>" +
+                    formatLarge(c.CHG_OUT) + " moved from outside the country"
 
             } else if (layCode === 'pob') {
 
@@ -477,14 +477,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.NAT + +c.EU_OTH + +c.OTH) + '</b> person' + ((+c.NAT + +c.EU_OTH + +c.OTH) == 1 ? '' : 's') + "<br>" +
-                    c.NAT + " born in the country<br>" +
-                    c.EU_OTH + " born in another EU member state<br>" +
-                    c.OTH + " born outside the EU"
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(+c.NAT + +c.EU_OTH + +c.OTH) + '</b> person' + ((+c.NAT + +c.EU_OTH + +c.OTH) == 1 ? '' : 's') + "<br>" +
+                    formatLarge(c.NAT) + " born in the country<br>" +
+                    formatLarge(c.EU_OTH) + " born in another EU member state<br>" +
+                    formatLarge(c.OTH) + " born outside the EU"
 
 
             } else if (layCode === 'share') {
@@ -557,7 +557,7 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                            labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                         })
                     )
 
@@ -697,7 +697,7 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: v=> formatLarge(gridviz.nice(v)) //Math.round,
+                            labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                         })
                     )
 
