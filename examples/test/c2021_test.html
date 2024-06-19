@@ -1,10 +1,27 @@
-<body style="height: 100%; font-family: Arial, Helvetica, sans-serif">
-    <div id="map" style="height: 630; width: 800"></div>
+<html>
 
-    <div style="
+<head>
+    <style>
+        #gridviz-attribution {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: auto;
+            height: auto;
+            padding: 1px;
+            border: 0px;
+            background: #ffffffcc;
+        }
+    </style>
+</head>
+
+<body style="height: 100%; font-family: Arial, Helvetica, sans-serif">
+    <div id="map" style="height: 630; width: 800;">
+
+        <div style="
         position: absolute;
-        left: 20px;
-        top: 20px;
+        left: 5px;
+        top: 5px;
         width: auto;
         height: auto;
         padding: 10px;
@@ -12,62 +29,61 @@
         border-radius: 5px;
         background: #ffffffcc;
         line-height: 1.6;
-        box-shadow: 5px 5px 5px grey;
-    ">
-        <div id="layer">
-            <span style="font-size: 1em">
-                <input type="radio" name="layer" id="pop" value="pop" checked />
-                <label for="pop">Total population</label>
-                <hr />
-                <input type="radio" name="layer" id="share" value="share" />
-                <label for="share">Share of</label>
-                <br>
-                <select id="share_">
-                    <option value="F">Women</option>
-                    <option value="M">Men</option>
-                    <option value="Y_LT15">Age under 15 years</option>
-                    <option value="Y_1564">Age 15 to 64 years</option>
-                    <option value="Y_GE65">Age 65 years and older</option>
-                    <option value="EMP" selected>Employed</option>
-                    <option value="SAME">Residence unchanged</option>
-                    <option value="CHG_IN">Moved within the country</option>
-                    <option value="CHG_OUT">Moved from other country</option>
-                    <option value="NAT">Born in the country</option>
-                    <option value="EU_OTH">Born in another EU member state</option>
-                    <option value="OTH">Born outside the EU</option>
-                </select>
-                <br>
-                <input type="checkbox" id="sbtp" checked />
-                <label for="sbtp">Dot proportional to population</label>
-                <br />
-                <hr />
-                <input type="radio" name="layer" id="trivariate" value="trivariate" />
-                <label for="trivariate">Trivariate color by</label>
-                <select id="trivariate_theme">
-                    <option value="age" selected>Age</option>
-                    <option value="mobility">Mobility</option>
-                    <option value="pob">Birth place</option>
-                </select>
-                <br />
-                <input type="checkbox" id="sbtp_tri" checked />
-                <label for="sbtp_tri">Dot proportional to population</label>
-                <hr>
-                <input type="radio" name="layer" id="sex" value="sex" />
-                <label for="sex">Sex</label>
-                <br />
-                <input type="radio" name="layer" id="emp" value="emp" />
-                <label for="emp">Employment</label>
-                <br />
-                <input type="radio" name="layer" id="age" value="age" />
-                <label for="age">Age</label>
-                <br />
-                <input type="radio" name="layer" id="mobility" value="mobility" />
-                <label for="mobility">Mobility</label>
-                <br />
-                <input type="radio" name="layer" id="pob" value="pob" />
-                <label for="pob">Birth place</label>
+        box-shadow: 5px 5px 5px grey;">
+            <div id="layer">
+                <span style="font-size: 1em">
+                    <input type="radio" name="layer" id="pop" value="pop" checked />
+                    <label for="pop">Total population</label>
+                    <hr />
+                    <input type="radio" name="layer" id="share" value="share" />
+                    <label for="share">Share of</label>
+                    <br>
+                    <select id="share_">
+                        <option value="F">Women</option>
+                        <option value="M">Men</option>
+                        <option value="Y_LT15">Age under 15 years</option>
+                        <option value="Y_1564">Age 15 to 64 years</option>
+                        <option value="Y_GE65">Age 65 years and older</option>
+                        <option value="EMP" selected>Employed</option>
+                        <option value="SAME">Residence unchanged</option>
+                        <option value="CHG_IN">Moved within the country</option>
+                        <option value="CHG_OUT">Moved from other country</option>
+                        <option value="NAT">Born in the country</option>
+                        <option value="EU_OTH">Born in another EU member state</option>
+                        <option value="OTH">Born outside the EU</option>
+                    </select>
+                    <br>
+                    <input type="checkbox" id="sbtp" checked />
+                    <label for="sbtp">Dot proportional to population</label>
+                    <br />
+                    <hr />
+                    <input type="radio" name="layer" id="trivariate" value="trivariate" />
+                    <label for="trivariate">Trivariate color by</label>
+                    <select id="trivariate_theme">
+                        <option value="age" selected>Age</option>
+                        <option value="mobility">Mobility</option>
+                        <option value="pob">Birth place</option>
+                    </select>
+                    <br />
+                    <input type="checkbox" id="sbtp_tri" checked />
+                    <label for="sbtp_tri">Dot proportional to population</label>
+                    <hr>
+                    <input type="radio" name="layer" id="sex" value="sex" />
+                    <label for="sex">Sex</label>
+                    <br />
+                    <input type="radio" name="layer" id="emp" value="emp" />
+                    <label for="emp">Employment</label>
+                    <br />
+                    <input type="radio" name="layer" id="age" value="age" />
+                    <label for="age">Age</label>
+                    <br />
+                    <input type="radio" name="layer" id="mobility" value="mobility" />
+                    <label for="mobility">Mobility</label>
+                    <br />
+                    <input type="radio" name="layer" id="pob" value="pob" />
+                    <label for="pob">Birth place</label>
 
-                <!--
+                    <!--
                 <br />
                 <hr />
                 <input type="radio" name="layer" id="emp_age" value="emp_age" />
@@ -79,15 +95,30 @@
                 <input type="radio" name="layer" id="chernoff" value="chernoff" />
                 <label for="chernoff">Chernoff faces for sex, age, employment</label>
             -->
+            </div>
+            <hr />
+            <input type="checkbox" id="label" checked />
+            <label for="label">City names</label><br />
+            <input type="checkbox" id="boundary" checked />
+            <label for="boundary">Boundaries</label><br />
+            <input type="checkbox" id="background" checked />
+            <label for="background">Background</label>
+            </span>
         </div>
-        <hr />
-        <input type="checkbox" id="label" checked />
-        <label for="label">City names</label><br />
-        <input type="checkbox" id="boundary" checked />
-        <label for="boundary">Boundaries</label><br />
-        <input type="checkbox" id="background" checked />
-        <label for="background">Background</label>
-        </span>
+
+        <div id="gridviz-attribution">
+            <span style="font-size: 0.8em; font-family: sans-serif"><a target="_blank"
+                    rel="nofollow noreferrer noopener" href="https://github.com/eurostat/gridviz"
+                    style="text-decoration: none">GridViz</a>
+                | ©
+                <a target="_blank" rel="nofollow noreferrer noopener" href="https://eurogeographics.org"
+                    style="text-decoration: none">EuroGeographics</a>
+                | ©
+                <a target="_blank" rel="nofollow noreferrer noopener" href="https://www.tuik.gov.tr"
+                    style="text-decoration: none">Turkstat</a>
+            </span>
+        </div>
+
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -995,20 +1026,7 @@
         update()
 
     </script>
-    <div style="
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    width: auto;
-    height: auto;
-    padding: 1px;
-    border: 0px;
-    background: #ffffffcc;
-">
-        <span style="font-size: 0.8em">
-            <a href="https://github.com/eurostat/gridviz" style="text-decoration: none">GridViz</a> |
-            ©<a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span>
-    </div>
-
 
 </body>
+
+</html>
