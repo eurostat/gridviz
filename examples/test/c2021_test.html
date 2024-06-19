@@ -158,7 +158,7 @@
             const total = totalFunction(c)
             if (total == 0) { c["s" + col] = undefined; return }
             c["s" + col] = +c[col] / total * 100
-            if (c["s" + col] < 0 || c["s" + col] > 100 || isNaN(total)) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], total)
+            //if (c["s" + col] < 0 || c["s" + col] > 100 || isNaN(total)) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], total)
             c["s" + col] = c["s" + col] > 100 ? 100 : c["s" + col] < 0 ? 0 : c["s" + col]
         }
 
