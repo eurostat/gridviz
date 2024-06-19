@@ -50,7 +50,7 @@
                 </select>
                 <br />
                 <input type="checkbox" id="sbtp_tri" checked />
-                <label for="sbtp">Dot proportional to population</label>
+                <label for="sbtp_tri">Dot proportional to population</label>
                 <hr>
                 <input type="radio" name="layer" id="sex" value="sex" />
                 <label for="sex">Sex</label>
@@ -108,6 +108,20 @@
     -->
     <script>
 
+        /*/urls for production
+        const tiledGridsURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/tile/"
+        const nuts2jsonURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/";
+        const euronymURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/";
+        const bgLayerURL = "https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/";
+        */
+
+        //urls for development
+        const tiledGridsURL = "http://127.0.0.1:5500/"
+        const nuts2jsonURL = undefined
+        const euronymURL = undefined
+        const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/'
+
+
         /*
         "T" >= Total population
 
@@ -128,16 +142,6 @@
         "EU_OTH" >= Born in another EU member state
         "OTH" >= Born outside the EU
         */
-
-
-        const tiledGridsURL = "http://127.0.0.1:5500/"
-        //const tiledGridsURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/tile/"
-        const nuts2jsonURL = undefined
-        //const nuts2jsonURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/";
-        const euronymURL = undefined
-        //const euronymURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/";
-        const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/'
-        //const bgLayerURL = "https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/";
 
 
         //define map with initial view
