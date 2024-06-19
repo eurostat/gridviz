@@ -67,8 +67,6 @@
 <input type="radio" name="layer" id="pob" value="pob" />
 <label for="pob">Birth place</label>
 
-
-
                 <!--
                 <br />
                 <hr />
@@ -132,6 +130,7 @@
         //define map with initial view
         const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700, zoomExtent: [10, 10000] })
             .addZoomButtons()
+            .addFullscreenButton()
             .setViewFromURL()
 
         const backgroundLayer1 = new gridviz.BackgroundLayer({
@@ -244,7 +243,7 @@
                         title: "Population",
                         width: 300,
                         colors: () => colors,
-                        breaks: (viewScale) => viewScale?.breaks.map(b => Math.round(b)),
+                        breaks: (viewScale) => viewScale?.breaks.map(b => gridviz.nice(b) /*Math.round(b)*/),
                     })
                 ]
 
@@ -274,7 +273,7 @@
 
                 //sex color legend
                 style.legends.push(new gridviz.ColorDiscreteLegend({
-                    title: "Sex balance, in %",
+                    title: "Women / men balance, in %",
                     width: 300,
                     colors: () => sexColorClassifier.colors,
                     breaks: () => sexColorClassifier.breaks,
