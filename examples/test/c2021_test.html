@@ -629,7 +629,7 @@
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + formatPercentage(c[shareB]) + ' %</b><br>' +
                     formatLarge(c[shareA]) + '<br>' //+
-                    + formatLarge(c.T) + " person(s)"
+                    + formatLarge(c.T) + " person" + (c.T==1?"":"s")
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
