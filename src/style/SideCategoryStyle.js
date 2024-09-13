@@ -51,6 +51,7 @@ export class SideCategoryStyle extends SideStyle {
         //draw sides
 
         geoCanvas.ctx.lineCap = 'butt'
+        const r2 = resolution*0.5
         for (let side of sides) {
 
             //get category codes for both cells
@@ -73,8 +74,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code2) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code2]
-                    geoCanvas.ctx.moveTo(side.x, side.y + w2)
-                    geoCanvas.ctx.lineTo(side.x + resolution, side.y + w2)
+                    geoCanvas.ctx.moveTo(side.x-r2, side.y + w2)
+                    geoCanvas.ctx.lineTo(side.x+r2, side.y + w2)
                     geoCanvas.ctx.stroke()
                 }
 
@@ -82,8 +83,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code1) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code1]
-                    geoCanvas.ctx.moveTo(side.x, side.y - w2)
-                    geoCanvas.ctx.lineTo(side.x + resolution, side.y - w2)
+                    geoCanvas.ctx.moveTo(side.x-r2, side.y - w2)
+                    geoCanvas.ctx.lineTo(side.x+r2, side.y - w2)
                     geoCanvas.ctx.stroke()
                 }
             } else {
@@ -91,8 +92,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code2) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code2]
-                    geoCanvas.ctx.moveTo(side.x + w2, side.y)
-                    geoCanvas.ctx.lineTo(side.x + w2, side.y + resolution)
+                    geoCanvas.ctx.moveTo(side.x + w2, side.y-r2)
+                    geoCanvas.ctx.lineTo(side.x + w2, side.y+r2)
                     geoCanvas.ctx.stroke()
                 }
 
@@ -100,8 +101,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code1) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code1]
-                    geoCanvas.ctx.moveTo(side.x - w2, side.y)
-                    geoCanvas.ctx.lineTo(side.x - w2, side.y + resolution)
+                    geoCanvas.ctx.moveTo(side.x - w2, side.y-r2)
+                    geoCanvas.ctx.lineTo(side.x - w2, side.y+r2)
                     geoCanvas.ctx.stroke()
                 }
             }
