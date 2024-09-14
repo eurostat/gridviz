@@ -1,10 +1,27 @@
-<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="map" style="height: 100%; width: 100%"></div>
+<html>
 
-    <div style="
+<head>
+    <style>
+        #gridviz-attribution {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: auto;
+            height: auto;
+            padding: 1px;
+            border: 0px;
+            background: #ffffffcc;
+        }
+    </style>
+</head>
+
+<body style="height: 100%; font-family: Arial, Helvetica, sans-serif">
+    <div id="map" style="height: 630; width: 800;">
+
+        <div style="
         position: absolute;
-        left: 20px;
-        top: 20px;
+        left: 5px;
+        top: 5px;
         width: auto;
         height: auto;
         padding: 10px;
@@ -12,60 +29,61 @@
         border-radius: 5px;
         background: #ffffffcc;
         line-height: 1.6;
-        box-shadow: 5px 5px 5px grey;
-    ">
-        <div id="layer">
-            <span style="font-size: 1em">
-                <input type="radio" name="layer" id="pop" value="pop" checked />
-                <label for="pop">Total population</label>
-                <br />
-                <input type="radio" name="layer" id="sex" value="sex" />
-                <label for="sex">Sex</label>
-                <br />
-                <input type="radio" name="layer" id="emp" value="emp" />
-                <label for="emp">Employment</label>
-                <br />
-                <input type="radio" name="layer" id="age" value="age" />
-                <label for="age">Age</label>
-                <br />
-                <input type="radio" name="layer" id="mobility" value="mobility" />
-                <label for="mobility">Mobility</label>
-                <br />
-                <input type="radio" name="layer" id="pob" value="pob" />
-                <label for="pob">Birth place</label>
-                <br />
-                <hr />
-                <input type="radio" name="layer" id="share" value="share" />
-                <label for="share">Share of</label>
-                <select id="share_">
-                    <option value="F">Women</option>
-                    <option value="M">Men</option>
-                    <option value="Y_LT15">Age under 15 years</option>
-                    <option value="Y15-64">Age 15 to 64 years</option>
-                    <option value="Y_GE65">Age 65 years and older</option>
-                    <option value="EMP" selected>Employed</option>
-                    <option value="SAME">Residence unchanged (2020/2021)</option>
-                    <option value="CHG_IN">Moved within the country (2020/2021)</option>
-                    <option value="CHG_OUT">Moved from outside the country (2020/2021)</option>
-                    <option value="NAT">Born in the country</option>
-                    <option value="EU_OTH">Born in another EU member state</option>
-                    <option value="OTH">Born outside the EU</option>
-                </select>
-                <br />
-                <input type="checkbox" id="sbtp" checked />
-                <label for="sbtp">Size by total population</label>
-                <br />
-                <hr />
-                <input type="radio" name="layer" id="trivariate" value="trivariate" />
-                <label for="trivariate">Trivariate color of</label>
-                <select id="trivariate_theme">
-                    <option value="age" selected>Age</option>
-                    <option value="mobility">Mobility</option>
-                    <option value="pob">Birth place</option>
-                </select>
-                <br />
-                <input type="checkbox" id="sbtp_tri" checked />
-                <label for="sbtp_tri">Size by total population</label>
+        box-shadow: 5px 5px 5px grey;">
+            <div id="layer">
+                <span style="font-size: 1em">
+                    <input type="radio" name="layer" id="pop" value="pop" checked />
+                    <label for="pop">Total population</label>
+                    <hr />
+                    <input type="radio" name="layer" id="share" value="share" />
+                    <label for="share">Share of</label>
+                    <br>
+                    <select id="share_">
+                        <option value="F">Women</option>
+                        <option value="M">Men</option>
+                        <option value="Y_LT15">Age under 15 years</option>
+                        <option value="Y_1564">Age 15 to 64 years</option>
+                        <option value="Y_GE65">Age 65 years and older</option>
+                        <option value="EMP" selected>Employed</option>
+                        <option value="SAME">Residence unchanged</option>
+                        <option value="CHG_IN">Moved within the country</option>
+                        <option value="CHG_OUT">Moved from other country</option>
+                        <option value="NAT">Born in the country</option>
+                        <option value="EU_OTH">Born in another EU member state</option>
+                        <option value="OTH">Born outside the EU</option>
+                    </select>
+                    <br>
+                    <input type="checkbox" id="sbtp" checked />
+                    <label for="sbtp">Dot proportional to population</label>
+                    <br />
+                    <hr />
+                    <input type="radio" name="layer" id="trivariate" value="trivariate" />
+                    <label for="trivariate">Trivariate color by</label>
+                    <select id="trivariate_theme">
+                        <option value="age" selected>Age</option>
+                        <option value="mobility">Mobility</option>
+                        <option value="pob">Birth place</option>
+                    </select>
+                    <br />
+                    <input type="checkbox" id="sbtp_tri" checked />
+                    <label for="sbtp_tri">Dot proportional to population</label>
+                    <hr>
+                    <input type="radio" name="layer" id="sex" value="sex" />
+                    <label for="sex">Sex</label>
+                    <br />
+                    <input type="radio" name="layer" id="emp" value="emp" />
+                    <label for="emp">Employment</label>
+                    <br />
+                    <input type="radio" name="layer" id="age" value="age" />
+                    <label for="age">Age</label>
+                    <br />
+                    <input type="radio" name="layer" id="mobility" value="mobility" />
+                    <label for="mobility">Mobility</label>
+                    <br />
+                    <input type="radio" name="layer" id="pob" value="pob" />
+                    <label for="pob">Birth place</label>
+
+                    <!--
                 <br />
                 <hr />
                 <input type="radio" name="layer" id="emp_age" value="emp_age" />
@@ -76,18 +94,35 @@
                 <br />
                 <input type="radio" name="layer" id="chernoff" value="chernoff" />
                 <label for="chernoff">Chernoff faces for sex, age, employment</label>
+            -->
+            </div>
+            <hr />
+            <input type="checkbox" id="label" checked />
+            <label for="label">City names</label><br />
+            <input type="checkbox" id="boundary" checked />
+            <label for="boundary">Boundaries</label><br />
+            <input type="checkbox" id="background" checked />
+            <label for="background">Background</label>
+            </span>
         </div>
-        <hr />
-        <input type="checkbox" id="label" checked />
-        <label for="label">City names</label><br />
-        <input type="checkbox" id="boundary" checked />
-        <label for="boundary">Boundaries</label><br />
-        <input type="checkbox" id="background" checked />
-        <label for="background">Background</label>
-        </span>
+
+        <div id="gridviz-attribution">
+            <span style="font-size: 0.8em; font-family: sans-serif"><a target="_blank"
+                    rel="nofollow noreferrer noopener" href="https://github.com/eurostat/gridviz"
+                    style="text-decoration: none">GridViz</a>
+                | ©
+                <a target="_blank" rel="nofollow noreferrer noopener" href="https://eurogeographics.org"
+                    style="text-decoration: none">EuroGeographics</a>
+                | ©
+                <a target="_blank" rel="nofollow noreferrer noopener" href="https://www.tuik.gov.tr"
+                    style="text-decoration: none">Turkstat</a>
+            </span>
+        </div>
+
     </div>
 
     <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -95,7 +130,28 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
+
+    <!--
+    <script src="gridviz.min.js"></script>
+    <script src="gridviz-parquet.min.js"></script>
+    <script src="gridviz-eurostat.min.js"></script>
+    <script src="d3@7.js"></script>
+    -->
     <script>
+
+        /*/urls for production
+        const tiledGridsURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/tile/"
+        const nuts2jsonURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/";
+        const euronymURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/";
+        const bgLayerURL = "https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/";
+        */
+
+        //urls for development
+        const tiledGridsURL = "http://127.0.0.1:5500/"
+        const nuts2jsonURL = undefined
+        const euronymURL = undefined
+        const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/'
+
 
         /*
         "T" >= Total population
@@ -106,7 +162,7 @@
         "EMP" >= Employed (working population)
 
         "Y_LT15" >= Age under 15 years
-        "Y15-64" >= Age 15 to 64 years
+        "Y_1564" >= Age 15 to 64 years
         "Y_GE65" >= Age 65 years and older
 
         "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
@@ -118,13 +174,15 @@
         "OTH" >= Born outside the EU
         */
 
+
         //define map with initial view
         const map = new gridviz.Map(document.getElementById('map'), { x: 4598000, y: 2715000, z: 700, zoomExtent: [10, 10000] })
             .addZoomButtons()
+            .addFullscreenButton()
             .setViewFromURL()
 
         const backgroundLayer1 = new gridviz.BackgroundLayer({
-            url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+            url: bgLayerURL,
             resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
             origin: [0, 6000000],
             filterColor: () => '#ffffffc0',
@@ -138,26 +196,45 @@
         )
 
         //define boundaries layer
-        const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+        const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer({
+            baseURL: nuts2jsonURL,
+            showOth: false,
+            color: (f, zf) => {
+                const p = f.properties;
+                if (p.id >= 100000) return "#bcbcbc";
+                if (p.co === "T") return "#888";
+                if (zf < 400) return "#888";
+                else if (zf < 1000) return p.lvl >= 3 ? "" : "#888";
+                else if (zf < 2000) return p.lvl >= 2 ? "" : "#888";
+                else return p.lvl >= 1 ? "" : "#888";
+            },
+        }))
 
         //make label layer
-        const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer())
+        const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer(
+            "EUR", 50, {
+            ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "NO", "LI"],
+            baseURL: euronymURL,
+        }
+        ))
 
         //function to compute the percentage of a cell value
         const computePercentage = (c, col, totalFunction) => {
             const total = totalFunction(c)
             if (total == 0) { c["s" + col] = undefined; return }
             c["s" + col] = +c[col] / total * 100
-            if (c["s" + col] < 0 || c["s" + col] > 100 || isNaN(total)) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], total)
+            //if (c["s" + col] < 0 || c["s" + col] > 100 || isNaN(total)) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], total)
             c["s" + col] = c["s" + col] > 100 ? 100 : c["s" + col] < 0 ? 0 : c["s" + col]
         }
 
         //define multi resolution dataset
         const dataset = new gridviz.MultiResolutionDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            resolution => new gridviz.TiledGrid(map, 'http://localhost:1234/tiled_csv/' + resolution + '/'),
+            resolution => new gviz_par.TiledParquetGrid(map, tiledGridsURL + resolution + '/'),
             {
                 preprocess: (c) => {
+                    //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
+
                     if (!c.T || +c.T == 0) return false
 
                     //male/female index
@@ -169,9 +246,9 @@
                     //compute percentages
                     computePercentage(c, "F", c => +c.F + +c.M)
                     computePercentage(c, "M", c => +c.F + +c.M)
-                    computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
-                    computePercentage(c, "Y15-64", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
-                    computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65)
+                    computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "Y_1564", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
                     computePercentage(c, "EMP", c => c.T) //TODO sure?
                     computePercentage(c, "NAT", c => +c.NAT + +c.EU_OTH + +c.OTH)
                     computePercentage(c, "EU_OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
@@ -191,6 +268,10 @@
 
         //format function for percentages
         const formatPercentage = d3.format('.1f')
+
+        //format function for large numbers
+        const _f = d3.format(",.0f");
+        const formatLarge = v => _f(v).replace(/,/g, ' ');
 
         //
         const update = () => {
@@ -229,15 +310,16 @@
                 gridLayer.styles[0].legends = [
                     new gridviz.ColorDiscreteLegend({
                         title: "Population",
-                        width: 300,
+                        width: 350,
                         colors: () => colors,
-                        breaks: (viewScale) => viewScale?.breaks.map(b => Math.round(b)),
+                        breaks: (viewScale) => viewScale?.breaks.map(b => gridviz.nice(b) /*Math.round(b)*/),
+                        labelFormat: formatLarge,
                     })
                 ]
 
-                gridLayer.minPixelsPerCell = 1.5
+                gridLayer.minPixelsPerCell = 1.4
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(c.T) + '</b> person' + (+c.T == 1 ? '' : 's')
 
             } else if (layCode === 'sex') {
 
@@ -261,7 +343,7 @@
 
                 //sex color legend
                 style.legends.push(new gridviz.ColorDiscreteLegend({
-                    title: "Sex balance, in %",
+                    title: "Women / men balance, in %",
                     width: 300,
                     colors: () => sexColorClassifier.colors,
                     breaks: () => sexColorClassifier.breaks,
@@ -273,14 +355,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
                 gridLayer.cellInfoHTML = (c) =>
-                    '<b>' + (+c.F + +c.M) + '</b> person' + (+c.F + +c.M == 1 ? '' : 's') + '<br>' +
-                    c.M + ' m' + (c.M == 1 ? "a" : "e") + 'n<br>' +
-                    c.F + ' wom' + (c.F == 1 ? 'a' : 'e') + 'n<br>' +
+                    '<b>' + formatLarge(+c.F + +c.M) + '</b> person' + (+c.F + +c.M == 1 ? '' : 's') + '<br>' +
+                    formatLarge(c.M) + ' m' + (c.M == 1 ? "a" : "e") + 'n<br>' +
+                    formatLarge(c.F) + ' wom' + (c.F == 1 ? 'a' : 'e') + 'n<br>' +
                     'Difference: <b>' + (c.indMF > 0 ? '+' : '') + formatPercentage(c.indMF) + ' % men</b>'
 
 
@@ -320,14 +402,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + formatPercentage(c.sEMP) + ' %</b> employment<br>' +
                     //c.EMP + '<br>' +
-                    (+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
+                    formatLarge(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
 
@@ -340,7 +422,7 @@
                     new gridviz.CompositionStyle({
                         color: {
                             Y_LT15: colAge(0.2),
-                            "Y15-64": colAge(0.4),
+                            Y_1564: colAge(0.4),
                             Y_GE65: colAge(0.9),
                         },
                         type: () => 'flag',
@@ -372,14 +454,14 @@
                         title: "Population",
                         shape: "square",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
-                    c.Y_LT15 + " under 15 years<br>" +
-                    c["Y15-64"] + " 15 to 64 years<br>" +
-                    c.Y_GE65 + " 65 years and older"
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) + '</b> person' + ((+c.Y_LT15 + +c.Y_1564 + +c.Y_GE65) == 1 ? '' : 's') + "<br>" +
+                    formatLarge(c.Y_LT15) + " - under 15 years<br>" +
+                    formatLarge(c.Y_1564) + " - 15 to 64 years<br>" +
+                    formatLarge(c.Y_GE65) + " - 65 years and older"
 
             } else if (layCode === 'mobility') {
 
@@ -416,14 +498,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.SAME + +c.CHG_IN + +c.CHG_OUT) + '</b> person' + ((+c.SAME + +c.CHG_IN + +c.CHG_OUT) == 1 ? '' : 's') + "<br>" +
-                    c.SAME + " residence unchanged<br>" +
-                    c.CHG_IN + " moved within the country<br>" +
-                    c.CHG_OUT + " moved from outside the country"
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(+c.SAME + +c.CHG_IN + +c.CHG_OUT) + '</b> person' + ((+c.SAME + +c.CHG_IN + +c.CHG_OUT) == 1 ? '' : 's') + "<br>" +
+                    formatLarge(c.SAME) + " residence unchanged<br>" +
+                    formatLarge(c.CHG_IN) + " moved within the country<br>" +
+                    formatLarge(c.CHG_OUT) + " moved from outside the country"
 
             } else if (layCode === 'pob') {
 
@@ -460,14 +542,14 @@
                         classNumberSize, {
                         title: "Population",
                         fillColor: "lightgray",
-                        labelFormat: Math.round,
+                        labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                     })
                 )
 
-                gridLayer.cellInfoHTML = (c) => '<b>' + (+c.NAT + +c.EU_OTH + +c.OTH) + '</b> person' + ((+c.NAT + +c.EU_OTH + +c.OTH) == 1 ? '' : 's') + "<br>" +
-                    c.NAT + " born in the country<br>" +
-                    c.EU_OTH + " born in another EU member state<br>" +
-                    c.OTH + " born outside the EU"
+                gridLayer.cellInfoHTML = (c) => '<b>' + formatLarge(+c.NAT + +c.EU_OTH + +c.OTH) + '</b> person' + ((+c.NAT + +c.EU_OTH + +c.OTH) == 1 ? '' : 's') + "<br>" +
+                    formatLarge(c.NAT) + " born in the country<br>" +
+                    formatLarge(c.EU_OTH) + " born in another EU member state<br>" +
+                    formatLarge(c.OTH) + " born outside the EU"
 
 
             } else if (layCode === 'share') {
@@ -489,7 +571,7 @@
                     case 'F': breaks = [40, 45, 49, 50, 51, 55, 60]; break;
                     case 'M': breaks = [40, 45, 49, 50, 51, 55, 60]; break;
                     case 'Y_LT15': breaks = [5, 10, 15, 20, 30]; break;
-                    case 'Y15-64': breaks = [50, 60, 65, 70, 80]; break;
+                    case 'Y_1564': breaks = [50, 60, 65, 70, 80]; break;
                     case 'Y_GE65': breaks = [10, 20, 30, 40, 50]; break;
                     case 'EMP': breaks = [30, 40, 45, 50, 55, 60, 70]; break;
                     case 'SAME': breaks = [70, 80, 90, 95, 99]; break;
@@ -540,14 +622,14 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: Math.round,
+                            labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                         })
                     )
 
                 gridLayer.cellInfoHTML = (c) =>
                     '<b>' + formatPercentage(c[shareB]) + ' %</b><br>' +
-                    c[shareA] + '<br>' //+
-                    + c.T + " person(s)"
+                    formatLarge(c[shareA]) + '<br>' //+
+                    + formatLarge(c.T) + " person" + (c.T==1?"":"s")
                 //(+c.F + +c.M) + ' person' + (+c.F + +c.M == 1 ? '' : 's')
 
 
@@ -567,7 +649,7 @@
                 let colorTrivariateFun
                 if (theme == "age")
                     colorTrivariateFun = gridviz.trivariateColorClassifier(
-                        ["sY_LT15", "sY15-64", "sY_GE65"],
+                        ["sY_LT15", "sY_1564", "sY_GE65"],
                         c => 100,
                         ["#4daf4a", "#377eb8", "#e41a1c"], {
                         center: [0.15, 0.6, 0.25],
@@ -628,7 +710,7 @@
                             "center": "Balanced representation of age groups",
                         },
                         leftText: "Under 15",
-                        topText: "Age 15 to 64",
+                        topText: "15 to 64",
                         rightText: "65 and older",
                         centerCoefficient: 0.5,
                     })]
@@ -680,23 +762,23 @@
                             classNumberSize, {
                             title: "Population",
                             fillColor: "lightgray",
-                            labelFormat: Math.round,
+                            labelFormat: v => formatLarge(gridviz.nice(v)) //Math.round,
                         })
                     )
 
                 //tooltip text
                 if (theme == "age")
                     gridLayer.cellInfoHTML = (c) => {
-                        const total = +c.Y_LT15 + +c["Y15-64"] + +c.Y_GE65
-                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                        const total = +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65
+                        return '<b>' + formatLarge(total) + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sY_LT15) + "% under 15 years<br>" +
-                            formatPercentage(c["sY15-64"]) + "% 15 to 64 years<br>" +
+                            formatPercentage(c["sY_1564"]) + "% 15 to 64 years<br>" +
                             formatPercentage(c.sY_GE65) + "% 65 years and older"
                     }
                 else if (theme == "mobility")
                     gridLayer.cellInfoHTML = (c) => {
                         const total = +c.CHG_IN + +c.SAME + +c.CHG_OUT
-                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                        return '<b>' + formatLarge(total) + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sSAME) + "% residence unchanged<br>" +
                             formatPercentage(c.sCHG_IN) + "% moved within the country<br>" +
                             formatPercentage(c.sCHG_OUT) + "% moved from outside the country"
@@ -704,7 +786,7 @@
                 else if (theme == "pob")
                     gridLayer.cellInfoHTML = (c) => {
                         const total = +c.NAT + +c.EU_OTH + +c.OTH
-                        return '<b>' + total + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
+                        return '<b>' + formatLarge(total) + '</b> person' + (total == 1 ? '' : 's') + "<br>" +
                             formatPercentage(c.sNAT) + "% born in the country<br>" +
                             formatPercentage(c.sEU_OTH) + "% born in another EU member state<br>" +
                             formatPercentage(c.sOTH) + "% born outside the EU"
@@ -723,7 +805,7 @@
 
                 //age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     //centerColor: "#999",
@@ -761,7 +843,7 @@
 
                 /*/age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     //centerColor: "#999",
@@ -796,7 +878,7 @@
 
                 //age color - 3/4 classes
                 const ageClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     withMixedClasses: false,
@@ -858,7 +940,7 @@
 
                 //age classifier
                 const ageTrivariateClassifier = gridviz.trivariateClassifier(
-                    ["sY_LT15", "sY15-64", "sY_GE65"],
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
                     withMixedClasses: false,
@@ -944,20 +1026,7 @@
         update()
 
     </script>
-    <div style="
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    width: auto;
-    height: auto;
-    padding: 1px;
-    border: 0px;
-    background: #ffffffcc;
-">
-        <span style="font-size: 0.8em">
-            <a href="https://github.com/eurostat/gridviz" style="text-decoration: none">GridViz</a> |
-            ©<a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span>
-    </div>
-
 
 </body>
+
+</html>

@@ -42,17 +42,29 @@
                 <div id="layer">
 
                     <span style="font-size: 1em">
-                        <input type="radio" name="layer" id="HOLDING_PER_KM2" value="HOLDING_PER_KM2" checked />
-                        <label for="HOLDING_PER_KM2">Farms</label>
+                        <input type="radio" name="layer" id="I_HOLDING_PER_KM2" value="I_HOLDING_PER_KM2" checked />
+                        <label for="I_HOLDING_PER_KM2">Farms</label>
                         <br />
-                        <input type="radio" name="layer" id="LSU_PER_KM2" value="LSU_PER_KM2" />
-                        <label for="LSU_PER_KM2">Livestock</label>
+                        <input type="radio" name="layer" id="I_LSU_PER_KM2" value="I_LSU_PER_KM2" />
+                        <label for="I_LSU_PER_KM2">Livestock</label>
                         <br />
-                        <input type="radio" name="layer" id="LSU_PER_HOLDING" value="LSU_PER_HOLDING" />
-                        <label for="LSU_PER_HOLDING">Livestock per farm</label>
+                        <input type="radio" name="layer" id="I_LSU_PER_HOLDING" value="I_LSU_PER_HOLDING" />
+                        <label for="I_LSU_PER_HOLDING">Livestock per farm</label>
                         <br />
-                        <input type="radio" name="layer" id="LSD" value="LSD" />
-                        <label for="LSD">Livestock density index</label>
+                        <input type="radio" name="layer" id="I_LSD" value="I_LSD" />
+                        <label for="I_LSD">Livestock density index</label>
+                        <hr>
+                        <input type="radio" name="layer" id="O_HLD_ORG_PER_KM2" value="O_HLD_ORG_PER_KM2" />
+                        <label for="O_HLD_ORG_PER_KM2">Organic farms</label>
+                        <br />
+                        <input type="radio" name="layer" id="O_ratio_org_uaa" value="O_ratio_org_uaa" />
+                        <label for="O_ratio_org_uaa">Share of organic farming</label>
+                        <hr>
+                        <input type="radio" name="layer" id="E_PHY_SIZE" value="E_PHY_SIZE" />
+                        <label for="E_PHY_SIZE">Average farm size</label>
+                        <br />
+                        <input type="radio" name="layer" id="E_EC_SIZE" value="E_EC_SIZE" />
+                        <label for="E_EC_SIZE">Average economic farm size</label>
                 </div>
                 <hr />
                 <input type="checkbox" id="label" checked />
@@ -76,7 +88,7 @@
 <script src="./d3.min.js"></script>
 <script src="./gridviz-eurostat.js"></script>
 -->
-<script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.9"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
@@ -87,10 +99,15 @@
 
 <script>
 
-    //const IFSdatasetURL = "./IFS.csv"
+    /*
+    const IFSdatasetURL = "./IFS.csv"
+    const IFSOrganicDatasetURL = "./organic.csv"
+    const IFSSOUAADatasetURL = "./SO_UAA.csv"
+    */
     const IFSdatasetURL = "http://127.0.0.1:5500/IFS.csv"
     const IFSOrganicDatasetURL = "http://127.0.0.1:5500/organic.csv"
     const IFSSOUAADatasetURL = "http://127.0.0.1:5500/SO_UAA.csv"
+
     const attribute = 'HOLDING_PER_KM2'
 
     //define map with initial view
@@ -131,7 +148,7 @@
     const maxResolution = 128000
 
     //IFS
-    const dataset = new gridviz.CSVGrid(map, IFSdatasetURL, maxResolution, {
+    const datasetIFS = new gridviz.CSVGrid(map, IFSdatasetURL, maxResolution, {
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
             //ensure those are numbers, and not string
@@ -152,6 +169,7 @@
 
     //organic
     const datasetOrganic = new gridviz.CSVGrid(map, IFSOrganicDatasetURL, maxResolution, {
+        separator: ";",
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
             cell.x = +(cell.X.substring(1));
@@ -160,18 +178,24 @@
             delete cell.Y
             cell.RES = +cell.RES;
 
-            //compute cell area, in km2
-            //let areaKM2 = (cell.RES * cell.RES) / 1000000;
+            //format
+            cell.HLD_ORG = +cell.HLD_ORG
+            cell.UAAXK0000_ORG = +cell.UAAXK0000_ORG
+            cell.ratio = cell.ratio.replace(",", ".")
+            cell.ratio_org_uaa = +cell.ratio
+            delete cell.ratio
 
-            //compute densities
-            //cell.HOLDING_PER_KM2 = cell.HOLDING / areaKM2;
-            //compute ratio
-            //cell.LSU_PER_HOLDING = cell.LSU / cell.HOLDING;
+            //compute cell area, in km2
+            let areaKM2 = (cell.RES * cell.RES) / 1000000;
+
+            //compute density
+            cell.HLD_ORG_PER_KM2 = +cell.HLD_ORG / areaKM2;
         },
     });
 
-    //organic
+    //economic size
     const datasetSOUAA = new gridviz.CSVGrid(map, IFSSOUAADatasetURL, maxResolution, {
+        separator: ";",
         mixedResolution: (cell) => +cell.RES,
         preprocess: (cell) => {
             cell.x = +(cell.X.substring(1));
@@ -180,21 +204,16 @@
             delete cell.Y
             cell.RES = +cell.RES;
 
-            //compute cell area, in km2
-            //let areaKM2 = (cell.RES * cell.RES) / 1000000;
-
-            //compute densities
-            //cell.HOLDING_PER_KM2 = cell.HOLDING / areaKM2;
-            //compute ratio
-            //cell.LSU_PER_HOLDING = cell.LSU / cell.HOLDING;
+            cell.PHY_SIZE = +cell.PHY_SIZE;
+            cell.EC_SIZE = +cell.EC_SIZE;
         },
     });
 
 
 
 
-    //make layer
-    const gridLayer = new gridviz.GridLayer(dataset, []);
+    //make layes
+    const gridLayer = new gridviz.GridLayer(datasetIFS, []);
 
     //add layers to map
     map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundariesLayer, labelLayer]
@@ -205,19 +224,23 @@
         LSU_PER_KM2: 100,
         LSU_PER_HOLDING: 200,
         LSD: 3,
+        HLD_ORG_PER_KM2: 0.7,
+        ratio_org_uaa: 0.6,
+        PHY_SIZE: 100,
+        EC_SIZE: 300000,
     };
     const colorScale = t => d3.interpolateYlGnBu(t > 1 ? 0.8 : t * 0.8)
     const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, z, max) => "red",
 
         //size the cells according to their resolution
-        size: dataset.mixedResolution,
+        size: gridLayer.dataset.mixedResolution,
 
         //apply an offset to ensure cell position
         offset: (cell, maxResolution, z) => {
             const d =
                 maxResolution *
-                (1 - dataset.mixedResolution(cell) / maxResolution) *
+                (1 - gridLayer.dataset.mixedResolution(cell) / maxResolution) *
                 0.5;
             return { dx: -d, dy: -d };
         },
@@ -251,28 +274,57 @@
     //
     const update = () => {
         //read GUI selection
-        const layCode = document.querySelector('input[name="layer"]:checked').value
+        const sel = document.querySelector('input[name="layer"]:checked').value
+
+        //set dataset
+        const datasetCode = sel[0]
+        if (datasetCode == "I") gridLayer.dataset = datasetIFS
+        else if (datasetCode == "O") gridLayer.dataset = datasetOrganic
+        else if (datasetCode == "E") gridLayer.dataset = datasetSOUAA
+        else console.error("Unexpected dataset code:", datasetCode)
+
+        //get indicatot code
+        const indicatorCode = sel.substring(2)
 
         //set style color
-        style.color = c => (c[layCode] == "" || c[layCode] === undefined || isNaN(c[layCode])) ? "#aaa" : colorScale(+c[layCode] / maxValues[layCode])
+        const max = maxValues[indicatorCode]
+        style.color = c => (c[indicatorCode] == "" || c[indicatorCode] === undefined || isNaN(c[indicatorCode])) ? "#aaa" : colorScale(+c[indicatorCode] / max)
 
-        if (layCode == "HOLDING_PER_KM2") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HOLDING ? c.HOLDING : "NA") + "</b> farms" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+        if (indicatorCode == "HOLDING_PER_KM2") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HOLDING ? c.HOLDING : "NA") + "</b> farms"
+            //+ "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
             legend.title = "Number of farms"
         }
-        else if (layCode == "LSU_PER_KM2") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU ? c.LSU : "NA") + "</b> livestock units" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+        else if (indicatorCode == "LSU_PER_KM2") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU ? c.LSU : "NA") + "</b> livestock units"
             legend.title = "Number of livestock units"
         }
-        else if (layCode == "LSU_PER_HOLDING") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU_PER_HOLDING ? Math.round(c.LSU_PER_HOLDING) : "NA") + "</b> livestock units per farm, in average" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+        else if (indicatorCode == "LSU_PER_HOLDING") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSU_PER_HOLDING ? Math.round(c.LSU_PER_HOLDING) : "NA") + "</b> livestock units per farm, in average"
             legend.title = "Average livestock units per farm"
         }
-        else if (layCode == "LSD") {
-            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSD ? c.LSD : "NA") + "</b> livestock density index" + "<br>resolution: " + c.RES + "<br>lower left corner: (" + c.x + ", " + c.y + ")"
+        else if (indicatorCode == "LSD") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.LSD ? c.LSD : "NA") + "</b> livestock density index"
             legend.title = "Livestock density index"
         }
-        else { console.error("Unexpected layer code: " + layCode) }
+        else if (indicatorCode == "HLD_ORG_PER_KM2") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.HLD_ORG ? c.HLD_ORG : "NA") + "</b> organic farms"
+            legend.title = "Number of organic farms"
+        }
+        else if (indicatorCode == "ratio_org_uaa") {
+            //organic farming in utilised agricultural area UAAXK0000_ORG
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.ratio_org_uaa ? Math.round(100 * c.ratio_org_uaa) : "NA") + "</b> % of agricultural area for organic farming"
+            legend.title = "Share of organic farming"
+        }
+        else if (indicatorCode == "PHY_SIZE") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.PHY_SIZE ? c.PHY_SIZE : "NA") + "?</b> per farm, in average"
+            legend.title = "Average physical size"
+        }
+        else if (indicatorCode == "EC_SIZE") {
+            gridLayer.cellInfoHTML = (c) => "<b>" + (c.EC_SIZE ? c.EC_SIZE : "NA") + "€</b> per farm, in average"
+            legend.title = "Average physical size"
+        }
+        else { console.error("Unexpected indicator code: " + indicatorCode) }
 
         //redraw
         map.redraw()
