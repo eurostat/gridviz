@@ -1,7 +1,12 @@
+geojson layer - for points
+
+analyse possiblility to migrate toward openlayer ?
+
+trivariate map - example france
+
 BE multi
 prom reun mart
 FR income: see error messages
-trivariate map - example france
 
 upgrade DE demos
 chernoff: example (FR), document, publish
