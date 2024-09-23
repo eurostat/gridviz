@@ -53,6 +53,7 @@ export class GeoJSONLayer extends Layer {
         this.loadingStatus = 'notLoaded'
     }
 
+
     /**
      * Draw the layer.
      * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas The canvas where to draw the layer.
