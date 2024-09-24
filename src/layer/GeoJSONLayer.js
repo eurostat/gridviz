@@ -75,7 +75,23 @@ export class GeoJSONLayer extends Layer {
             const gt = f.geometry.type
 
             if (gt == "Point") {
-                console.log("TODO")
+                const c = f.geometry.coordinates
+
+                geoCanvas.ctx.strokeStyle = "red"
+                geoCanvas.ctx.fillStyle = "black"
+                geoCanvas.ctx.lineWidth = 3000
+                const sG = 10000
+/*
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.arc(c[0], c[1], sG/2, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.stroke()
+                geoCanvas.ctx.fill()
+*/
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.rect(c[0]-sG/2, c[1]-sG/2, sG, sG)
+                geoCanvas.ctx.stroke()
+                geoCanvas.ctx.fill()
+
             } else if (gt == "LineString") {
 
                 const cs = f.geometry.coordinates
