@@ -77,20 +77,29 @@ export class GeoJSONLayer extends Layer {
             if (gt == "Point") {
                 const c = f.geometry.coordinates
 
-                geoCanvas.ctx.strokeStyle = "red"
-                geoCanvas.ctx.fillStyle = "black"
-                geoCanvas.ctx.lineWidth = 3000
-                const sG = 10000
-/*
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.arc(c[0], c[1], sG/2, 0, 2 * Math.PI, false)
-                geoCanvas.ctx.stroke()
-                geoCanvas.ctx.fill()
-*/
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.rect(c[0]-sG/2, c[1]-sG/2, sG, sG)
-                geoCanvas.ctx.stroke()
-                geoCanvas.ctx.fill()
+                const shape = "circle"
+                const strokeStyle = "red"
+                const fillStyle = "black"
+                const lineWidth = 5 * z
+                const size = 15 * z
+
+                geoCanvas.ctx.strokeStyle = strokeStyle
+                geoCanvas.ctx.fillStyle = fillStyle
+                geoCanvas.ctx.lineWidth = lineWidth
+
+                if (shape == "circle") {
+                    geoCanvas.ctx.beginPath()
+                    geoCanvas.ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
+                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
+                    if(fillStyle) geoCanvas.ctx.fill()
+                } else if (shape == "square") {
+                    geoCanvas.ctx.beginPath()
+                    geoCanvas.ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
+                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
+                    if(fillStyle) geoCanvas.ctx.fill()
+                } else {
+                    console.error("Unexpected shape for point geojson: " + shape)
+                }
 
             } else if (gt == "LineString") {
 
