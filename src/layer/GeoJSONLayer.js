@@ -72,28 +72,38 @@ export class GeoJSONLayer extends Layer {
         const z = geoCanvas.view.z
 
         for (const f of this.fs) {
-            const cs = f.geometry.coordinates
-            if (cs.length < 2) continue
+            const gt = f.geometry.type
 
-            //set color
-            const col = this.color(f, z)
-            if (!col || col == 'none') continue
-            geoCanvas.ctx.strokeStyle = col
+            if (gt == "Point") {
+                console.log("TODO")
+            } else if (gt == "LineString") {
 
-            //set linewidth
-            const wP = this.width(f, z)
-            if (!wP || wP < 0) continue
-            geoCanvas.ctx.lineWidth = wP * z
+                const cs = f.geometry.coordinates
+                if (cs.length < 2) continue
 
-            //set line dash
-            const ldP = this.lineDash(f, z)
-            if (ldP) geoCanvas.ctx.setLineDash(ldP)
+                //set color
+                const col = this.color(f, z)
+                if (!col || col == 'none') continue
+                geoCanvas.ctx.strokeStyle = col
 
-            //draw line
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(cs[0][0], cs[0][1])
-            for (let i = 1; i < cs.length; i++) geoCanvas.ctx.lineTo(cs[i][0], cs[i][1])
-            geoCanvas.ctx.stroke()
+                //set linewidth
+                const wP = this.width(f, z)
+                if (!wP || wP < 0) continue
+                geoCanvas.ctx.lineWidth = wP * z
+
+                //set line dash
+                const ldP = this.lineDash(f, z)
+                if (ldP) geoCanvas.ctx.setLineDash(ldP)
+
+                //draw line
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cs[0][0], cs[0][1])
+                for (let i = 1; i < cs.length; i++) geoCanvas.ctx.lineTo(cs[i][0], cs[i][1])
+                geoCanvas.ctx.stroke()
+            } else {
+                console.log("Unsupported geometry type in GeoJSONLayer: " + gt)
+            }
+
         }
 
         //...
