@@ -96,8 +96,6 @@ export class GeoJSONLayer extends Layer {
             return
         }
 
-        //TODO sort lines by width ?
-
         //
         const z = geoCanvas.view.z
 
@@ -107,6 +105,7 @@ export class GeoJSONLayer extends Layer {
             if (gt == "Point") {
                 const c = f.geometry.coordinates
 
+                //get style parameters for the point feature
                 const shape = this.shape(f,z)
                 if(!shape || shape=="none") continue
                 const size = this.size(f,z) * z
@@ -115,16 +114,19 @@ export class GeoJSONLayer extends Layer {
                 const fillStyle = this.fillStyle(f,z)
                 const lineWidth = this.lineWidth(f,z) * z
 
-                geoCanvas.ctx.strokeStyle = strokeStyle
-                geoCanvas.ctx.fillStyle = fillStyle
-                geoCanvas.ctx.lineWidth = lineWidth
+                //set canvas drawing parameters
+                if(strokeStyle) geoCanvas.ctx.strokeStyle = strokeStyle
+                if(fillStyle) geoCanvas.ctx.fillStyle = fillStyle
+                if(lineWidth) geoCanvas.ctx.lineWidth = lineWidth
 
                 if (shape == "circle") {
+                    //draw circle - fill and stroke
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
                     if(fillStyle) geoCanvas.ctx.fill()
                     if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
                 } else if (shape == "square") {
+                    //draw square - fill and stroke
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
                     if(fillStyle) geoCanvas.ctx.fill()
