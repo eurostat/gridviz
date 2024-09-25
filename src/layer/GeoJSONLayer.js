@@ -108,7 +108,9 @@ export class GeoJSONLayer extends Layer {
                 const c = f.geometry.coordinates
 
                 const shape = this.shape(f,z)
+                if(!shape || shape=="none") continue
                 const size = this.size(f,z) * z
+                if(!size) continue
                 const strokeStyle = this.strokeStyle(f,z)
                 const fillStyle = this.fillStyle(f,z)
                 const lineWidth = this.lineWidth(f,z) * z
