@@ -107,11 +107,11 @@ export class GeoJSONLayer extends Layer {
             if (gt == "Point") {
                 const c = f.geometry.coordinates
 
-                const shape = "circle"
-                const strokeStyle = "red"
-                const fillStyle = "black"
-                const lineWidth = 5 * z
-                const size = 15 * z
+                const shape = this.shape(f,z)
+                const size = this.size(f,z) * z
+                const strokeStyle = this.strokeStyle(f,z)
+                const fillStyle = this.fillStyle(f,z)
+                const lineWidth = this.lineWidth(f,z) * z
 
                 geoCanvas.ctx.strokeStyle = strokeStyle
                 geoCanvas.ctx.fillStyle = fillStyle
