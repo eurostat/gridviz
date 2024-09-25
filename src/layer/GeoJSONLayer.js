@@ -122,13 +122,13 @@ export class GeoJSONLayer extends Layer {
                 if (shape == "circle") {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
-                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
                     if(fillStyle) geoCanvas.ctx.fill()
+                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
                 } else if (shape == "square") {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
-                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
                     if(fillStyle) geoCanvas.ctx.fill()
+                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
                 } else {
                     console.error("Unexpected shape for point geojson: " + shape)
                 }
