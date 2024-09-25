@@ -29,11 +29,40 @@ export class GeoJSONLayer extends Layer {
          * @type {function(object):boolean} */
         this.preprocess = opts.preprocess
 
+        //for points
+        /**
+         * @private
+         * @type {function(object,number):string} */
+        this.shape = opts.shape || ((f, z) => 'circle')
+        /**
+         * In pixel
+         * @private
+         * @type {function(object,number):number} */
+        this.size = opts.size || ((f, z) => 10)
+        /**
+         * @private
+         * @type {function(object,number):string} */
+        this.strokeStyle = opts.strokeStyle || ((f, z) => 'red')
+        /**
+         * @private
+         * @type {function(object,number):string} */
+        this.fillStyle = opts.fillStyle || ((f, z) => 'black')
+        /**
+         * In pixel
+         * @private
+         * @type {function(object,number):number} */
+        this.lineWidth = opts.lineWidth || ((f, z) => 2)
+
+
+
+        //for lines
+
         /**
          * @private
          * @type {function(object,number):string} */
         this.color = opts.color || ((f, z) => 'gray')
         /**
+         * In pixel
          * @private
          * @type {function(object,number):number} */
         this.width = opts.width || ((f, z) => 2)
