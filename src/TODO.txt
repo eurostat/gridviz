@@ -1,5 +1,3 @@
-geojson layer - for points
-
 analyse possiblility to migrate toward openlayer ?
 
 trivariate map - example france
