@@ -10,42 +10,11 @@
     //make point layer
     const pointLayer = new gridviz.GeoJSONLayer({
         url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/nutspt_3.json',
-        /*color: (f, zoom) => {
-            const p = f.properties
-            if (p.co === 'T') return '#888'
-            if (zoom < 400) return '#888'
-            else if (zoom < 1000) return p.lvl >= 3 ? '' : '#888'
-            else if (zoom < 2000) return p.lvl >= 2 ? '' : '#888'
-            else return p.lvl >= 1 ? '' : '#888'
-        },
-        width: (f, zoom) => {
-            const p = f.properties
-            if (p.co === 'T') return 0.5
-            if (zoom < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
-            else if (zoom < 1000) return p.lvl == 2 ? 1.8 : p.lvl == 1 ? 1.8 : 2.5
-            else if (zoom < 2000) return p.lvl == 1 ? 1.8 : 2.5
-            else return 1.2
-        },
-        lineDash: (f, zoom) => {
-            const p = f.properties
-            if (p.co === 'T') return []
-            if (zoom < 400)
-                return p.lvl == 3
-                    ? [2 * zoom, 2 * zoom]
-                    : p.lvl == 2
-                        ? [5 * zoom, 2 * zoom]
-                        : p.lvl == 1
-                            ? [5 * zoom, 2 * zoom]
-                            : [10 * zoom, 3 * zoom]
-            else if (zoom < 1000)
-                return p.lvl == 2
-                    ? [5 * zoom, 2 * zoom]
-                    : p.lvl == 1
-                        ? [5 * zoom, 2 * zoom]
-                        : [10 * zoom, 3 * zoom]
-            else if (zoom < 2000) return p.lvl == 1 ? [5 * zoom, 2 * zoom] : [10 * zoom, 3 * zoom]
-            else return [10 * zoom, 3 * zoom]
-        },*/
+        shape: (f,z) => f.properties.id.includes("DE") ? "square" : "circle",
+        size: (f,z) => Math.max(2, 10000/z),
+        strokeStyle: (f, z) => "black",
+        fillStyle: (f, z) => "red",
+        lineWidth: (f,z) => z<2000? 2 : 0,
     })
 
     //add layer to map
