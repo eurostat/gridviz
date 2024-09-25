@@ -71,6 +71,7 @@ export class GeoJSONLayer extends Layer {
          * @type {function(object,number):Array.<number>|undefined} */
         this.lineDash = opts.lineDash || ((f, z) => undefined)
 
+
         /**
          * @private
          * @type {Array.<object> | undefined} */
