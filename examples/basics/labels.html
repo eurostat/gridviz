@@ -10,7 +10,7 @@
     //define label layer
     const labelLayer = new gridviz.LabelLayer({
         //input csv file with label data
-        url: 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/50/EUR.csv',
+        url: 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v3/UTF_LATIN/50/EUR.csv',
         //set x,y position for each label
         preprocess: (label) => { label.x = label.lon; label.y = label.lat },
         //set label style depending on zoom level
