@@ -1047,7 +1047,7 @@ To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, 
 new gridviz.Map(containerDiv)
     (...)
     .setLabelLayer({
-        url: "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/50/EUR.csv",
+        url: "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v3/UTF_LATIN/50/EUR.csv",
          preprocess: lb => {
             //project from geo coordinates to ETRS89-LAEA
             const p = proj([lb.lon, lb.lat])
