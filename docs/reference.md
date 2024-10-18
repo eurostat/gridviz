@@ -18,6 +18,7 @@
     - [Pillars style](#pillars-style)
     - [Trivariate style](#trivariate-style)
     - [Text style](#text-style)
+    - [Image style](#image-style)
     - [Time series style](#time-series-style)
   - [Side styles](#side-styles)
     - [Side style](#side-style)
