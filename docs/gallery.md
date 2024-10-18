@@ -19,7 +19,7 @@ Here are some examples of the different styles available in gridviz!
 
 [Isometric fence](https://eurostat.github.io/gridviz/docs/reference#isometric-fence-style)  
 [![isometric fence map](img/overviews/ov_isofence.png)](https://eurostat.github.io/gridviz/docs/reference#isometric-fence-style)
- 
+
 [Joyplot](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)  
 [![joyplot map](img/overviews/ov_joyplot_shade.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
 [![joyplot map](img/overviews/ov_joyplot.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
