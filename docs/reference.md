@@ -217,6 +217,12 @@ This style shows the grid cells as text labels. The text, its color and font siz
 - See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text_elevation.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/text_elevation.html)).
 - See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/text.html)).
 
+### Image style
+
+This style shows the grid cells as an image. The image and its size can be set according to some cell values.
+
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/image.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/image.html)).
+
 ### Time series style
 
 [![time series style](img/styles/timeseries.png)](https://eurostat.github.io/gridviz/examples/styles/time_series.html)
