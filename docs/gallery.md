@@ -2,7 +2,6 @@
 
 Here are some examples of the different styles available in gridviz!
 
-
 [Shape/Color/Size](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)  
 [![](img/overviews/ov_accessibility.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
 [![](img/overviews/ov_donut.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
@@ -66,8 +65,5 @@ Here are some examples of the different styles available in gridviz!
 [Stroke](https://eurostat.github.io/gridviz/docs/reference#stroke-style)  
 [![](img/overviews/ov_stroke.png)](https://eurostat.github.io/gridviz/docs/reference#stroke-style)
 
-
-
-
-
-
+[Image](https://eurostat.github.io/gridviz/docs/reference#image-style)  
+[![](img/overviews/ov_image_kitten.png)](https://eurostat.github.io/gridviz/docs/reference#image-style)
