@@ -5,7 +5,7 @@ import { interpolateLab } from "d3-interpolate"
 
 
 
-export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
+export const ternaryClassifier = (properties, totalFunction, opts = {}) => {
 
     //the three properties
     const p0 = properties[0], p1 = properties[1], p2 = properties[2]
@@ -83,7 +83,7 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
 
 
 
-export const trivariateColorClassifier = (properties, totalFunction, colors, opts = {}) => {
+export const ternaryColorClassifier = (properties, totalFunction, colors, opts = {}) => {
 
     //the three colors
     const [color0, color1, color2] = colors || ["red", "green", "blue"]
@@ -102,7 +102,7 @@ export const trivariateColorClassifier = (properties, totalFunction, colors, opt
     const centerColor = opts.centerColor || colorInterpolation(mixColorFunction(color0, color1), color2)(0.333)
 
     //make classifier
-    const classifier = trivariateClassifier(properties, totalFunction, opts)
+    const classifier = ternaryClassifier(properties, totalFunction, opts)
 
     //the output color classifier method
     const fun = c => {
@@ -134,7 +134,7 @@ export const trivariateColorClassifier = (properties, totalFunction, colors, opt
 const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
 const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
 
-export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
+export const ternaryClassifier = (properties, totalFunction, opts = {}) => {
     const lowThreshold = opts.lowThreshold || [1 / 3, 1 / 3, 1 / 3]
     const highThreshold = opts.highThreshold || [2 / 3, 2 / 3, 2 / 3]
     const colors = opts.colors || ["red", "green", "blue"]
@@ -175,7 +175,7 @@ export const trivariateClassifier = (properties, totalFunction, opts = {}) => {
 */
 
 /*
-export const trivariateClassifier3 = (properties, totalFunction, opts = {}) => {
+export const ternaryClassifier3 = (properties, totalFunction, opts = {}) => {
     const [a01, a12, a20] = opts.thresholds || [1/3, 1/3, 1/3]
     const [c0, c1, c2] = opts.colors || ["red", "green", "blue"]
     const centerColor = opts.centerColor || "gray"

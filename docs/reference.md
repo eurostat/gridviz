@@ -16,7 +16,7 @@
   - [Advanced styles](#advanced-styles)
     - [Dot density style](#dot-density-style)
     - [Pillars style](#pillars-style)
-    - [Trivariate style](#trivariate-style)
+    - [Ternary style](#ternary-style)
     - [Text style](#text-style)
     - [Image style](#image-style)
     - [Time series style](#time-series-style)
@@ -48,7 +48,7 @@
     - [Orientation legend](#orientation-legend)
     - [Size legend](#size-legend)
     - [Width legend](#width-legend)
-    - [Trivariate color legend](#trivariate-color-legend)
+    - [Ternary color legend](#ternary-color-legend)
   - [Leaflet](#leaflet)
   - [Mixed resolution grids](#mixed-resolution-grids)
   - [Alright?](#alright)
@@ -198,13 +198,13 @@ This style shows the grid cells as 3D pillars or, with changeable height, width 
 - See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar.html)).
 - See [this basic example with simple style](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar_simple.html)).
 
-### Trivariate style
+### Ternary style
 
-[![trivariate map style](img/styles/trivariate.png)](https://eurostat.github.io/gridviz/examples/styles/trivariate.html)
+[![ternary map style](img/styles/ternary.png)](https://eurostat.github.io/gridviz/examples/styles/ternary.html)
 
-Trivariate maps use color to show a composition according to three categories. Three different color hue are defined, that correspond to each of the three categories. The cells color is then selected according to the relative importance of the three categories. When two of the three categories are more important that the third, a color mix is used. A central class may be defined to show cases where the three categories are relativelly well balanced.
+Ternary maps use color to show a composition according to three categories. Three different color hue are defined, that correspond to each of the three categories. The cells color is then selected according to the relative importance of the three categories. When two of the three categories are more important that the third, a color mix is used. A central class may be defined to show cases where the three categories are relativelly well balanced.
 
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/trivariate.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/trivariate.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary.html)).
 
 Note that this style is not really a new style - it relies on a specific classifier.
 
@@ -468,11 +468,11 @@ new gridviz.SizeLegend({
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/widthQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthQuantileLegendViewScale.html)) for a quantile view scale based style.
 
 
-### Trivariate color legend
+### Ternary color legend
 
-![](img/legends/trivariate_legend.png)
+![](img/legends/ternary_legend.png)
 
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/trivariate.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/trivariate.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary.html)).
 
 ## Leaflet
 

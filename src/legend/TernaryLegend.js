@@ -9,7 +9,7 @@ import { Legend } from '../core/Legend.js'
  * @module legend
  * @author Julien Gaffuri
  */
-export class TrivariateLegend extends Legend {
+export class TernaryLegend extends Legend {
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)

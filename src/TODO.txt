@@ -1,6 +1,6 @@
 analyse possiblility to migrate toward openlayer ?
 
-trivariate map - example france
+ternary map - example france
 
 BE multi
 prom reun mart
@@ -10,7 +10,7 @@ upgrade DE demos
 chernoff: example (FR), document, publish
 
 *** census 2021
-trivariate: legend center hexagon. legend uncentered
+ternary: legend center hexagon. legend uncentered
 eldering indicator - old/young
 dep persons indicator - old+young / others
 emp: 15-65 ?
@@ -20,7 +20,7 @@ bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS colo
 by size / by alpha
 
 
-trivariate: extract ?
+ternary: extract ?
 contour style
 getCellFocusInfo should be moved to gridlayer ?
 reorganise map - simplify constructor

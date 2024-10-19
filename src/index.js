@@ -50,12 +50,12 @@ export { ColorDiscreteLegend } from './legend/ColorDiscreteLegend.js'
 export { ColorCategoryLegend } from './legend/ColorCategoryLegend.js'
 export { SizeLegend, sizeLegend, sizeLegendViewScale, sizeDiscreteLegend, sizeDiscreteViewScaleLegend } from './legend/SizeLegend.js'
 export { OrientationLegend, orientationLegend } from './legend/OrientationLegend.js'
-export { TrivariateLegend } from './legend/TrivariateLegend.js'
+export { TernaryLegend } from './legend/TernaryLegend.js'
 
 // export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
-export * from './utils/trivariate.js'
+export * from './utils/ternary.js'
 export { nice } from './utils/utils.js'
 
 import { GeoCanvas } from './core/GeoCanvas.js'
