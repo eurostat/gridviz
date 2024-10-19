@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.0.2"></script>
 <script>
 
     //define map with initial view
@@ -9,6 +10,46 @@
 
     //define dataset
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+
+/*
+        const tiledGridsURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/tile/"
+
+        //define multi resolution dataset
+        const dataset = new gridviz.MultiResolutionDataset(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            resolution => new gviz_par.TiledParquetGrid(map, tiledGridsURL + resolution + '/'),
+            {
+                preprocess: (c) => {
+                    //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
+
+                    if (!c.T || +c.T == 0) return false
+
+                    //male/female index
+                    //if (+c.F + +c.M != c.T) console.error("Error found in sex total")
+                    c.indMF = +c.M - (+c.F)
+                    c.indMF = (100 * c.indMF) / (+c.M + +c.F)
+                    if (isNaN(c.indMF)) c.indMF = 0
+
+                    //compute percentages
+                    computePercentage(c, "F", c => +c.F + +c.M)
+                    computePercentage(c, "M", c => +c.F + +c.M)
+                    computePercentage(c, "Y_LT15", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "Y_1564", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "Y_GE65", c => +c.Y_LT15 + +c.Y_1564 + +c.Y_GE65)
+                    computePercentage(c, "EMP", c => c.T) //TODO sure?
+                    computePercentage(c, "NAT", c => +c.NAT + +c.EU_OTH + +c.OTH)
+                    computePercentage(c, "EU_OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
+                    computePercentage(c, "OTH", c => +c.NAT + +c.EU_OTH + +c.OTH)
+                    computePercentage(c, "SAME", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
+                    computePercentage(c, "CHG_IN", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
+                    computePercentage(c, "CHG_OUT", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
+                }
+            }
+        )
+
+
+
+*/
 
     //define image style
     const style = new gridviz.ImageStyle({
@@ -28,6 +69,53 @@
 }
 */
 
+/*
+
+                //age color - 3/4 classes
+                const ageClassifier = gridviz.trivariateClassifier(
+                    ["sY_LT15", "sY_1564", "sY_GE65"],
+                    c => 100, {
+                    center: [0.15, 0.6, 0.25],
+                    withMixedClasses: false,
+                })
+
+                //sex code
+                const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
+
+                //employment class
+                const breaks = [45, 55]
+                const empClassifier = gridviz.classifier(breaks)
+
+                const classNumberSize = 3
+                const style = new gridviz.ImageStyle({
+                    imageCode: (c) => {
+                        const a = +ageClassifier(c)
+                        const ageCode = a == 0 ? "y" : a == 1 ? "m" : "o"
+                        const sexCode = sexClassifier(c)
+                        const empCode = empClassifier(c.sEMP)
+                        return sexCode + ageCode + empCode
+                    },
+                    images: chernoffImages,
+                    size: (c, r, z, viewScale) => viewScale(c.T),
+                    viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 30, maxSizeFactor: 0.9 }),
+                    blendOperation: (z) => z < 50 ? "multiply" : "source-over",
+                })
+                gridLayer.styles = [style]
+
+                gridLayer.minPixelsPerCell = 40
+
+                gridLayer.cellInfoHTML = (c) => {
+                    const a = ageClassifier(c)
+                    const s = sexClassifier(c)
+                    const e = empClassifier(c.sEMP)
+                    return ""
+                        + c.T + " person" + (c.T ? "s" : "")
+                        + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
+                        + "<br>" + (a == "0" ? "younger than <b>15</b>" : a == "1" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
+                        + "<br>with <b>" + (e == 0 ? "low" : e == 1 ? "average" : "high") + "</b> employment"
+                }
+
+*/
         // image URL from cell
         image: (cell) => {
             if (cell.population > 70000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png"
