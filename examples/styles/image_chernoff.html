@@ -19,14 +19,17 @@
             )
     )
 
+    //function to compute the percentage of a cell value
+    const computePercentage = (c, col, totalFunction) => {
+        const total = totalFunction(c)
+        if (total == 0) { c["s" + col] = undefined; return }
+        c["s" + col] = +c[col] / total * 100
+        //if (c["s" + col] < 0 || c["s" + col] > 100 || isNaN(total)) console.log("Unexpected rate for " + col + ": " + c["s" + col], c[col], total)
+        c["s" + col] = c["s" + col] > 100 ? 100 : c["s" + col] < 0 ? 0 : c["s" + col]
+    }
+
+
     /*
-            const tiledGridsURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/tile/"
-    
-            //define multi resolution dataset
-            const dataset = new gridviz.MultiResolutionDataset(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                resolution => new gviz_par.TiledParquetGrid(map, tiledGridsURL + resolution + '/'),
-                {
                     preprocess: (c) => {
                         //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
     
@@ -52,12 +55,29 @@
                         computePercentage(c, "CHG_IN", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
                         computePercentage(c, "CHG_OUT", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
                     }
-                }
-            )
-    
-    
+
     
     */
+
+
+    //age color - 3/4 classes
+    const ageClassifier = gridviz.ternaryClassifier(
+        ["sY_LT15", "sY_1564", "sY_GE65"],
+        c => 100, {
+        center: [0.15, 0.64, 0.21],
+        withMixedClasses: false,
+    })
+
+    //sex code
+    const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
+
+    //employment class
+    const breaks = [45, 55]
+    const empClassifier = gridviz.classifier(breaks)
+
+    const classNumberSize = 3
+
+
 
     //define image style
     const style = new gridviz.ImageStyle({
@@ -79,22 +99,6 @@
 
         /*
         
-                        //age color - 3/4 classes
-                        const ageClassifier = gridviz.ternaryClassifier(
-                            ["sY_LT15", "sY_1564", "sY_GE65"],
-                            c => 100, {
-                            center: [0.15, 0.6, 0.25],
-                            withMixedClasses: false,
-                        })
-        
-                        //sex code
-                        const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
-        
-                        //employment class
-                        const breaks = [45, 55]
-                        const empClassifier = gridviz.classifier(breaks)
-        
-                        const classNumberSize = 3
                         const style = new gridviz.ImageStyle({
                             imageCode: (c) => {
                                 const a = +ageClassifier(c)
