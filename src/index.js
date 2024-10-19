@@ -56,8 +56,9 @@ export { TrivariateLegend } from './legend/TrivariateLegend.js'
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
 export * from './utils/trivariate.js'
-export * from './utils/chernoff.js'
-export { nice, loadImage } from './utils/utils.js'
+//export * from './utils/chernoff.js'
+export { nice } from './utils/utils.js'
+//loadImage
 
 import { GeoCanvas } from './core/GeoCanvas.js'
 export const getParameterByName = GeoCanvas.getParameterByName
