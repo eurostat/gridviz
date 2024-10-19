@@ -1,7 +1,9 @@
 //@ts-check
 'use strict'
 
+import { map } from 'd3-array'
 import { Style } from '../core/Style.js'
+import { loadImage } from '../utils/utils.js'
 
 /**
  * @module style
@@ -14,17 +16,19 @@ export class ImageStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the image code of a cell.
+        /** A function returning the image URL of a cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.imageCode = opts.imageCode || (() => '') //(c,r,z,vs) => {}
-
-        /** The dictionnary code -> image
-         *  @type {object}        */
-        this.images = opts.images || {}
+        this.image = opts.image || (() => '') //(c,r,z,vs) => {}
 
         /** The image size in ground meters
          *  @type {function(import('../core/Dataset.js').Cell, number, number, object):number}        */
         this.size = opts.size || ((cell, resolution) => resolution)
+
+        /** Dictionnary of preloaded images. url -> image
+         * @private
+         * @type {object} */
+        this.cache = {}
+
     }
 
     /**
@@ -33,7 +37,7 @@ export class ImageStyle extends Style {
      * @param {number} resolution
      * @override
      */
-    draw(cells, geoCanvas, resolution) {
+    async draw(cells, geoCanvas, resolution) {
 
         //
         const z = geoCanvas.view.z,
@@ -48,28 +52,47 @@ export class ImageStyle extends Style {
         //
         for (let cell of cells) {
 
-            //get cell image code
-            const code = this.imageCode(cell, resolution, z, viewScale)
-
-            //get image
-            const image = this.images[code]
-            if (!image) continue
+            //get cell image url
+            const url = this.image(cell, resolution, z, viewScale)
+            if (!url) continue
 
             //size and position values
             let sizePix = this.size(cell, resolution, z, viewScale) / z
             if (!sizePix) continue
-            const d = (resolutionPix - sizePix) / 2
 
-            try {
-                geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d -resolutionPix, sizePix, sizePix)
+            //get image from cache
+            const image = this.cache[url]
 
-                /*/red color filter
-                geoCanvas.ctx.globalCompositeOperation = 'source-in';
-                geoCanvas.ctx.fillStyle = 'red';
-                geoCanvas.ctx.fillRect(geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d, sizePix, sizePix);
-                geoCanvas.ctx.globalCompositeOperation = 'source-over';*/
-            } catch (error) {
-                console.error(error)
+            //loading, keep waiting
+            if (image == "loading") return;
+
+            //no image: load it
+            else if (!image) {
+                //tag as loading
+                this.cache[url] = "loading"
+
+                //define image
+                const img = new Image()
+                img.onload = () => {
+                    //store image data in cache and redraw
+                    this.cache[url] = img
+                    geoCanvas.redraw()
+                }
+                img.onerror = () => {
+                    //case when no image
+                    console.warn("Could not retrieve image from", url)
+                }
+                //set URL to launch the download
+                img.src = url
+
+            } else {
+                //draw image
+                const d = (resolutionPix - sizePix) / 2
+                try {
+                    geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d - resolutionPix, sizePix, sizePix)
+                } catch (error) {
+                    console.error(error)
+                }
             }
 
         }
