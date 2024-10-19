@@ -57,9 +57,9 @@
                     <label for="sbtp">Dot proportional to population</label>
                     <br />
                     <hr />
-                    <input type="radio" name="layer" id="trivariate" value="trivariate" />
-                    <label for="trivariate">Trivariate color by</label>
-                    <select id="trivariate_theme">
+                    <input type="radio" name="layer" id="ternary" value="ternary" />
+                    <label for="ternary">Ternary color by</label>
+                    <select id="ternary_theme">
                         <option value="age" selected>Age</option>
                         <option value="mobility">Mobility</option>
                         <option value="pob">Birth place</option>
@@ -282,8 +282,8 @@
                 document.getElementById('share_').disabled = true
                 document.getElementById('sbtp').disabled = true
             }
-            if (layCode != 'trivariate') {
-                document.getElementById('trivariate_theme').disabled = true
+            if (layCode != 'ternary') {
+                document.getElementById('ternary_theme').disabled = true
                 document.getElementById('sbtp_tri').disabled = true
             }
 
@@ -635,20 +635,20 @@
 
 
 
-            } else if (layCode === 'trivariate') {
+            } else if (layCode === 'ternary') {
 
                 //unfreeze GUI
-                document.getElementById('trivariate_theme').disabled = false
+                document.getElementById('ternary_theme').disabled = false
                 document.getElementById('sbtp_tri').disabled = false
 
                 //get gui info
-                const theme = document.querySelector('#trivariate_theme').value
+                const theme = document.querySelector('#ternary_theme').value
                 //age, mobility, pob
                 const sbtp = document.getElementById('sbtp_tri').checked
 
-                let colorTrivariateFun
+                let colorTernaryFun
                 if (theme == "age")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                    colorTernaryFun = gridviz.ternaryColorClassifier(
                         ["sY_LT15", "sY_1564", "sY_GE65"],
                         c => 100,
                         ["#4daf4a", "#377eb8", "#e41a1c"], {
@@ -657,7 +657,7 @@
                         centerCoefficient: 0.25,
                     })
                 else if (theme == "mobility")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                    colorTernaryFun = gridviz.ternaryColorClassifier(
                         ["sCHG_OUT", "sSAME", "sCHG_IN"],
                         c => 100,
                         ["#4daf4a", "#377eb8", "#e41a1c"], {
@@ -666,7 +666,7 @@
                         //centerCoefficient: 0.7,
                     })
                 else if (theme == "pob")
-                    colorTrivariateFun = gridviz.trivariateColorClassifier(
+                    colorTernaryFun = gridviz.ternaryColorClassifier(
                         ["sOTH", "sNAT", "sEU_OTH"],
                         c => 100,
                         ["#4daf4a", "#377eb8", "#e41a1c"], {
@@ -677,7 +677,7 @@
 
                 const classNumberSize = 4
                 const style = new gridviz.ShapeColorSizeStyle({
-                    color: (c) => colorTrivariateFun(c) || "black",
+                    color: (c) => colorTernaryFun(c) || "black",
                     viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
                     size: sbtp ? (c, r, z, viewScale) => viewScale(c.T) : (c, r) => r,
                     shape: sbtp ? () => 'circle' : () => "square",
@@ -695,9 +695,9 @@
 
                 const legendWidth = 150
                 if (theme == "age")
-                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                    gridLayer.styles[0].legends = [new gridviz.TernaryLegend({
                         title: "Age",
-                        classifier: colorTrivariateFun,
+                        classifier: colorTernaryFun,
                         width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
@@ -715,9 +715,9 @@
                         centerCoefficient: 0.5,
                     })]
                 else if (theme == "mobility")
-                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                    gridLayer.styles[0].legends = [new gridviz.TernaryLegend({
                         title: "Mobility (2020-2021)",
-                        classifier: colorTrivariateFun,
+                        classifier: colorTernaryFun,
                         width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
@@ -735,9 +735,9 @@
                         //centerCoefficient: 0.5,
                     })]
                 else if (theme == "pob")
-                    gridLayer.styles[0].legends = [new gridviz.TrivariateLegend({
+                    gridLayer.styles[0].legends = [new gridviz.TernaryLegend({
                         title: "Birth place",
-                        classifier: colorTrivariateFun,
+                        classifier: colorTernaryFun,
                         width: legendWidth,
                         tooltip: map.tooltip,
                         texts: {
@@ -804,7 +804,7 @@
                 //const empClassifier = gridviz.classifier(breaks)
 
                 //age color - 3/4 classes
-                const ageClassifier = gridviz.trivariateClassifier(
+                const ageClassifier = gridviz.ternaryClassifier(
                     ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
@@ -842,7 +842,7 @@
                 //TODO
 
                 /*/age color - 3/4 classes
-                const ageClassifier = gridviz.trivariateClassifier(
+                const ageClassifier = gridviz.ternaryClassifier(
                     ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
@@ -877,7 +877,7 @@
                 if (!chernoffImages) return
 
                 //age color - 3/4 classes
-                const ageClassifier = gridviz.trivariateClassifier(
+                const ageClassifier = gridviz.ternaryClassifier(
                     ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
@@ -939,7 +939,7 @@
                 const empMaleColorClassifier = gridviz.colorClassifier(empBreaks, d3.schemeBlues[empBreaks.length + 1])
 
                 //age classifier
-                const ageTrivariateClassifier = gridviz.trivariateClassifier(
+                const ageTernaryClassifier = gridviz.ternaryClassifier(
                     ["sY_LT15", "sY_1564", "sY_GE65"],
                     c => 100, {
                     center: [0.15, 0.6, 0.25],
@@ -959,7 +959,7 @@
                         if (sexI == 2) return empMaleColorClassifier(c.sEMP)
                     },
                     size: (c, r) => {
-                        const i = ageTrivariateClassifier(c)
+                        const i = ageTernaryClassifier(c)
                         if (i == "square") return r * 0.7071
                         if (i == "circle") return r * 0.7979
                         if (i == "diamond") return r
@@ -967,7 +967,7 @@
                     },
                     //size: (c, r, z, viewScale) => viewScale(c.T),
                     //viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 4, maxSizeFactor: 0.9 }),
-                    shape: (c) => ageTrivariateClassifier(c),
+                    shape: (c) => ageTernaryClassifier(c),
                     blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                 })
                 gridLayer.styles = [style]
