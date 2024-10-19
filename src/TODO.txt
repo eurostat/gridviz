@@ -1,17 +1,17 @@
-analyse possiblility to migrate toward openlayer ?
+census2021 new tiled dataset
 
-ternary map - example france
+example chernoff, for image style
+on census2021.
+
+ternary map - example france, germany
+
+analyse possiblility to migrate toward openlayer ?
 
 BE multi
 prom reun mart
 FR income: see error messages
 
-upgrade DE demos
-chernoff: example (FR), document, publish
-
 *** census 2021
-ternary: legend center hexagon. legend uncentered
-eldering indicator - old/young
 dep persons indicator - old+young / others
 emp: 15-65 ?
 sex: shape - emp: value - age hue
@@ -20,7 +20,6 @@ bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS colo
 by size / by alpha
 
 
-ternary: extract ?
 contour style
 getCellFocusInfo should be moved to gridlayer ?
 reorganise map - simplify constructor
@@ -141,9 +140,6 @@ https://github.com/amilajack/gaussian-blur
 
 Joyplot as nicer thick slices, with shadow effect
 Test segment orientation / color / thickness
-
-TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
-https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/chernoff-faces/
 
 jsdoc
 JSDOC bug: https://stackoverflow.com/questions/25773222/
