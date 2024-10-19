@@ -1,4 +1,4 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<div id="map" style="height: 600px; width: 1000px"></div>
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.0.2"></script>
@@ -7,7 +7,6 @@
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 200 })
         .addZoomButtons()
-
 
     //function to compute the percentage of a cell value
     const computePercentage = (c, col, totalFunction) => {
@@ -18,18 +17,17 @@
         c["s" + col] = c["s" + col] > 100 ? 100 : c["s" + col] < 0 ? 0 : c["s" + col]
     }
 
-
     //define dataset
-    const dataset = new g.MultiResolutionDataset(
+    const dataset = new gridviz.MultiResolutionDataset(
+        //the resolutions
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        //the dataset for each resolution
         (resolution) =>
-            new gp.TiledParquetGrid(
-                map,
-                "https://raw.githubusercontent.com/jgaffuri/tiled-census2021/main/pub/v2/parquet/" + resolution + "/",
+            new gviz_par.TiledParquetGrid(
+                map, "https://raw.githubusercontent.com/jgaffuri/tiled-census2021/main/pub/v2/parquet/" + resolution + "/",
                 {
+                    //process the grid cells
                     preprocess: (c) => {
-                        //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
-
                         if (!c.T || +c.T == 0) return false
 
                         //male/female index
@@ -56,7 +54,7 @@
             )
     )
 
-    //age color - 3/4 classes
+    //age classifier - 3/4 classes
     const ageClassifier = gridviz.ternaryClassifier(
         ["sY_LT15", "sY_1564", "sY_GE65"],
         c => 100, {
@@ -64,48 +62,48 @@
         withMixedClasses: false,
     })
 
-    //sex code
+    //sex classifier
     const sexClassifier = (c) => c.indMF <= 0 ? "f" : "m"
 
-    //employment class
+    //employment classifier
     const breaks = [45, 55]
     const empClassifier = gridviz.classifier(breaks)
 
+    //classificatio for size / total population
     const classNumberSize = 3
-
-
 
     //define image style
     const style = new gridviz.ImageStyle({
+        //return image URL from cell, using https://github.com/jgaffuri/chernoff-faces
         image: (c) => {
+            //age
             const a = +ageClassifier(c)
             const ageCode = a == 0 ? "y" : a == 1 ? "m" : "o"
+            //sex
             const sexCode = sexClassifier(c)
+            //employment
             const empCode = empClassifier(c.sEMP)
-            const code = sexCode + ageCode + empCode
-            return "https://jgaffuri.github.io/chernoff-faces/out/v1/" + code + ".png"
+            return "https://jgaffuri.github.io/chernoff-faces/out/v1/" + sexCode + ageCode + empCode + ".png"
         },
+        //return image size, based on total population
         size: (c, r, z, viewScale) => viewScale(c.T),
         viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 30, maxSizeFactor: 0.9 }),
+
         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
     })
 
     const gridLayer = new gridviz.GridLayer(dataset, [style])
     gridLayer.minPixelsPerCell = 40
-
-    /*
-                    gridLayer.cellInfoHTML = (c) => {
-                        const a = ageClassifier(c)
-                        const s = sexClassifier(c)
-                        const e = empClassifier(c.sEMP)
-                        return ""
-                            + c.T + " person" + (c.T ? "s" : "")
-                            + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
-                            + "<br>" + (a == "0" ? "younger than <b>15</b>" : a == "1" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
-                            + "<br>with <b>" + (e == 0 ? "low" : e == 1 ? "average" : "high") + "</b> employment"
-                    }
-    
-    */
+    gridLayer.cellInfoHTML = (c) => {
+        const a = ageClassifier(c)
+        const s = sexClassifier(c)
+        const e = empClassifier(c.sEMP)
+        return ""
+            + c.T + " person" + (c.T ? "s" : "")
+            + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
+            + "<br>" + (a == "0" ? "younger than <b>15</b>" : a == "1" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
+            + "<br>with <b>" + (e == 0 ? "low" : e == 1 ? "average" : "high") + "</b> employment"
+    }
 
     //add layer to map
     map.layers = [gridLayer]
