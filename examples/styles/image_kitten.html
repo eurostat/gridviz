@@ -13,17 +13,14 @@
     //define image style
     const style = new gridviz.ImageStyle({
 
-        imageCode: (cell) => {
-            if (cell.population > 70000) return "kitten_dark"
-            else if (cell.population > 7000) return "kitten_gray"
-            else if (cell.population > 1500) return "kitten_white"
+        // image URL from cell
+        image: (cell) => {
+            if (cell.population > 70000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png"
+            else if (cell.population > 7000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_gray.png"
+            else if (cell.population > 1500) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_white.png"
         },
 
-        images: {
-            kitten_dark: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png",
-            kitten_gray: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_gray.png",
-            kitten_white: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_white.png",
-        },
+        // cell size
         size: (c, r, z, viewScale) => r * 0.9,
     })
 
