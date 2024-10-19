@@ -1,0 +1,45 @@
+<div id="map" style="height: 500px; width: 800px"></div>
+
+<script src="../../dist/gridviz.js"></script>
+<script>
+
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 200 })
+        .addZoomButtons()
+
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+
+    //define image style
+    const style = new gridviz.ImageStyle({
+
+
+        /*
+        https://jgaffuri.github.io/chernoff-faces/out/v1/fy2.png
+
+        export async function loadChernoffFacesImages(out, baseURL, callback = undefined) {
+    out = out || {}
+    for (let s of ["f", "m"])
+        for (let a of ["y", "m", "o"])
+            for (let i = 0; i <= 2; i++)
+                out[s + a + i] = await loadImage(baseURL + (s + a + i) + ".png")
+    if (callback) callback()
+    return out
+}
+*/
+
+        // image URL from cell
+        image: (cell) => {
+            if (cell.population > 70000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png"
+            else if (cell.population > 7000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_gray.png"
+            else if (cell.population > 1500) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_white.png"
+        },
+
+        // cell size
+        size: (c, r, z, viewScale) => r * 0.9,
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+
+</script>
