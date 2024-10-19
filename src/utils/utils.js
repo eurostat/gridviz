@@ -29,6 +29,8 @@ export function nice(v, multiples = [8, 6, 5, 4, 2.5, 2]) {
 }
 
 
+/*
+//no longer used
 export function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -37,7 +39,7 @@ export function loadImage(src) {
         img.src = src;
     });
 }
-
+*/
 
 
 /*

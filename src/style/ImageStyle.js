@@ -1,9 +1,7 @@
 //@ts-check
 'use strict'
 
-import { map } from 'd3-array'
 import { Style } from '../core/Style.js'
-import { loadImage } from '../utils/utils.js'
 
 /**
  * @module style
