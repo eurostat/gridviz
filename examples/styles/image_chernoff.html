@@ -8,16 +8,6 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 200 })
         .addZoomButtons()
 
-    //define dataset
-    const dataset = new g.MultiResolutionDataset(
-        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) =>
-            new gp.TiledParquetGrid(
-                map,
-                "https://raw.githubusercontent.com/jgaffuri/tiled-census2021/main/pub/v2/parquet/" + resolution + "/",
-                //{ preprocess: preprocess }
-            )
-    )
 
     //function to compute the percentage of a cell value
     const computePercentage = (c, col, totalFunction) => {
@@ -29,18 +19,25 @@
     }
 
 
-    /*
+    //define dataset
+    const dataset = new g.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        (resolution) =>
+            new gp.TiledParquetGrid(
+                map,
+                "https://raw.githubusercontent.com/jgaffuri/tiled-census2021/main/pub/v2/parquet/" + resolution + "/",
+                {
                     preprocess: (c) => {
                         //'x', 'y', 'T', 'M', 'F', 'Y_LT15', 'Y_1564', 'Y_GE65', 'EMP', 'NAT', 'EU_OTH', 'OTH', 'SAME', 'CHG_IN', 'CHG_OUT'
-    
+
                         if (!c.T || +c.T == 0) return false
-    
+
                         //male/female index
                         //if (+c.F + +c.M != c.T) console.error("Error found in sex total")
                         c.indMF = +c.M - (+c.F)
                         c.indMF = (100 * c.indMF) / (+c.M + +c.F)
                         if (isNaN(c.indMF)) c.indMF = 0
-    
+
                         //compute percentages
                         computePercentage(c, "F", c => +c.F + +c.M)
                         computePercentage(c, "M", c => +c.F + +c.M)
@@ -55,10 +52,9 @@
                         computePercentage(c, "CHG_IN", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
                         computePercentage(c, "CHG_OUT", c => +c.SAME + +c.CHG_IN + +c.CHG_OUT)
                     }
-
-    
-    */
-
+                }
+            )
+    )
 
     //age color - 3/4 classes
     const ageClassifier = gridviz.ternaryClassifier(
@@ -81,65 +77,37 @@
 
     //define image style
     const style = new gridviz.ImageStyle({
-
-
-        /*
-        https://jgaffuri.github.io/chernoff-faces/out/v1/fy2.png
-
-        export async function loadChernoffFacesImages(out, baseURL, callback = undefined) {
-    out = out || {}
-    for (let s of ["f", "m"])
-        for (let a of ["y", "m", "o"])
-            for (let i = 0; i <= 2; i++)
-                out[s + a + i] = await loadImage(baseURL + (s + a + i) + ".png")
-    if (callback) callback()
-    return out
-}
-*/
-
-        /*
-        
-                        const style = new gridviz.ImageStyle({
-                            imageCode: (c) => {
-                                const a = +ageClassifier(c)
-                                const ageCode = a == 0 ? "y" : a == 1 ? "m" : "o"
-                                const sexCode = sexClassifier(c)
-                                const empCode = empClassifier(c.sEMP)
-                                return sexCode + ageCode + empCode
-                            },
-                            images: chernoffImages,
-                            size: (c, r, z, viewScale) => viewScale(c.T),
-                            viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 30, maxSizeFactor: 0.9 }),
-                            blendOperation: (z) => z < 50 ? "multiply" : "source-over",
-                        })
-                        gridLayer.styles = [style]
-        
-                        gridLayer.minPixelsPerCell = 40
-        
-                        gridLayer.cellInfoHTML = (c) => {
-                            const a = ageClassifier(c)
-                            const s = sexClassifier(c)
-                            const e = empClassifier(c.sEMP)
-                            return ""
-                                + c.T + " person" + (c.T ? "s" : "")
-                                + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
-                                + "<br>" + (a == "0" ? "younger than <b>15</b>" : a == "1" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
-                                + "<br>with <b>" + (e == 0 ? "low" : e == 1 ? "average" : "high") + "</b> employment"
-                        }
-        
-        */
-        // image URL from cell
-        image: (cell) => {
-            if (cell.population > 70000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png"
-            else if (cell.population > 7000) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_gray.png"
-            else if (cell.population > 1500) return "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_white.png"
+        image: (c) => {
+            const a = +ageClassifier(c)
+            const ageCode = a == 0 ? "y" : a == 1 ? "m" : "o"
+            const sexCode = sexClassifier(c)
+            const empCode = empClassifier(c.sEMP)
+            const code = sexCode + ageCode + empCode
+            return "https://jgaffuri.github.io/chernoff-faces/out/v1/" + code + ".png"
         },
-
-        // cell size
-        size: (c, r, z, viewScale) => r * 0.9,
+        size: (c, r, z, viewScale) => viewScale(c.T),
+        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: classNumberSize, minSizePix: 30, maxSizeFactor: 0.9 }),
+        blendOperation: (z) => z < 50 ? "multiply" : "source-over",
     })
 
+    const gridLayer = new gridviz.GridLayer(dataset, [style])
+    gridLayer.minPixelsPerCell = 40
+
+    /*
+                    gridLayer.cellInfoHTML = (c) => {
+                        const a = ageClassifier(c)
+                        const s = sexClassifier(c)
+                        const e = empClassifier(c.sEMP)
+                        return ""
+                            + c.T + " person" + (c.T ? "s" : "")
+                            + "<br>Over representation of <b>" + (s == "m" ? "men" : "women") + "</b>"
+                            + "<br>" + (a == "0" ? "younger than <b>15</b>" : a == "1" ? "aged between <b>15 and 64</b>" : "aged <b>65</b> and older")
+                            + "<br>with <b>" + (e == 0 ? "low" : e == 1 ? "average" : "high") + "</b> employment"
+                    }
+    
+    */
+
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [gridLayer]
 
 </script>
