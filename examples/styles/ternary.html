@@ -24,15 +24,15 @@
         }
     })
 
-    //define trivariate classifier
-    const trivariateClassifier = gridviz.trivariateColorClassifier(
+    //define ternary classifier
+    const ternaryClassifier = gridviz.ternaryColorClassifier(
         //the three groups
         ["yo", "mi", "ol"],
         //the function returning the total of the three
         c => c.TOT,
         //the colors
         ["#4daf4a", "#377eb8", "#e41a1c"], {
-        //the center point of the trivariate classification
+        //the center point of the ternary classification
         center: [0.17, 0.63, 0.2],
         //the size of the central class
         centerCoefficient: 0.15,
@@ -41,7 +41,7 @@
     //define style
     const classNumberSize = 4
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (c) => trivariateClassifier(c) || "black",
+        color: (c) => ternaryClassifier(c) || "black",
         viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
         size: (c, r, z, viewScale) => viewScale(c.TOT),
         shape: () => "circle",
@@ -52,9 +52,9 @@
 
 
     //legend
-    style.legends = [new gridviz.TrivariateLegend({
+    style.legends = [new gridviz.TernaryLegend({
         title: "Age",
-        classifier: trivariateClassifier,
+        classifier: ternaryClassifier,
         width: 90,
         tooltip: map.tooltip,
         texts: {
