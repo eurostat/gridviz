@@ -224,8 +224,8 @@ This style shows the grid cells as text labels. The text, its color and font siz
 
 This style shows the grid cells as an image. The image and its size can be set according to some cell values.
 
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/image_kitten.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/image_kitten.html)).
-- See [this example other example, with Chernoff faces](https://eurostat.github.io/gridviz/examples/styles/image_chernoff.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/image_chernoff.html)).
+- See [this basic example](https://eurostat.github.io/gridviz/examples/styles/image_kitten.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/image_kitten.html)).
+- See [this example, with Chernoff faces](https://eurostat.github.io/gridviz/examples/styles/image_chernoff.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/image_chernoff.html)).
 
 ### Time series style
 
