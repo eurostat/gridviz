@@ -1,5 +1,3 @@
-example chernoff, for image style on census2021.
-
 ternary map - example france, germany
 
 analyse possiblility to migrate toward openlayer ?
