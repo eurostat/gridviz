@@ -1,14 +1,10 @@
-census2021 new tiled dataset
-
-example chernoff, for image style
-on census2021.
+example chernoff, for image style on census2021.
 
 ternary map - example france, germany
 
 analyse possiblility to migrate toward openlayer ?
 
 BE multi
-prom reun mart
 FR income: see error messages
 
 *** census 2021
