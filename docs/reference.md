@@ -221,6 +221,7 @@ This style shows the grid cells as text labels. The text, its color and font siz
 ### Image style
 
 [![image style](img/styles/image_kitten.png)](https://eurostat.github.io/gridviz/examples/styles/image_kitten.html)
+[![chernoff faces image style](img/styles/image_chernoff.png)](https://eurostat.github.io/gridviz/examples/styles/image_chernoff.html)
 
 This style shows the grid cells as an image. The image and its size can be set according to some cell values.
 
