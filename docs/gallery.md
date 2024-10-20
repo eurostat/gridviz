@@ -66,4 +66,5 @@ Here are some examples of the different styles available in gridviz!
 [![](img/overviews/ov_stroke.png)](https://eurostat.github.io/gridviz/docs/reference#stroke-style)
 
 [Image](https://eurostat.github.io/gridviz/docs/reference#image-style)  
-[![](img/overviews/ov_image_kitten.png)](https://eurostat.github.io/gridviz/docs/reference#image-style)
+[![kitten map](img/overviews/ov_image_kitten.png)](https://eurostat.github.io/gridviz/docs/reference#image-style)
+[![chernoff faces map](img/overviews/ov_image_chernoff.png)](https://eurostat.github.io/gridviz/docs/reference#image-style)
