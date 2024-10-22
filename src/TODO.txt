@@ -1,3 +1,5 @@
+x/y limit
+
 ternary map - example france, germany
 
 analyse possiblility to migrate toward openlayer ?
