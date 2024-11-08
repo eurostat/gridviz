@@ -1,3 +1,4 @@
+see joe's tickets
 x/y limit
 
 ternary map - example france, germany
@@ -7,14 +8,6 @@ analyse possiblility to migrate toward openlayer ?
 BE multi
 FR income: see error messages
 
-*** census 2021
-dep persons indicator - old+young / others
-emp: 15-65 ?
-sex: shape - emp: value - age hue
-sex: hue - emp: value - age shape (circle,square,triangle)
-bivariate to show correlation: emp VS age, emp VS sex. orientation/shape VS color
-by size / by alpha
-
 
 contour style
 getCellFocusInfo should be moved to gridlayer ?
@@ -23,7 +16,7 @@ population.csv files: make 2021 ones
 legends: add scale.invert everywhere ?
 make parameter both a function and a static value - check how it is done in d3
 bug un fullscreen button. On fullscreen exit.
-geojson
+geojson: handle also polygons ?
 
 integrate scale and color-scale: colors scale should be based on size scale, with [0,1] color scale as range ?
 extract modules ?
