@@ -133,10 +133,17 @@ export class GeoCanvas {
          *  @type {Array.<number>} */
         this.zoomExtent = opts.zoomExtent || [0, Infinity]
 
-        this.xMin = undefined
-        this.xMax = undefined
-        this.yMin = undefined
-        this.yMax = undefined
+        /** @type {number|undefined} */
+        this.xMin = opts.limits? opts.limits[0] : undefined
+        /** @type {number|undefined} */
+        this.yMin = opts.limits? opts.limits[1] : undefined
+        /** @type {number|undefined} */
+        this.xMax = opts.limits? opts.limits[2] : undefined
+        /** @type {number|undefined} */
+        this.yMax = opts.limits? opts.limits[3] : undefined
+
+        console.log(this.xMin, this.xMax)
+        console.log(this.yMin, this.yMax)
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
@@ -201,10 +208,10 @@ export class GeoCanvas {
     pan(dxGeo = 0, dyGeo = 0) {
 
         //ensures x/y extent
-        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
         if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
         if(this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
 
         //pan
         this.view.x += dxGeo
@@ -245,10 +252,10 @@ export class GeoCanvas {
         let dyGeo = (yGeo - this.view.y) * (1 - f)
 
         //ensures x/y extent
-        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
         if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
         if(this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
 
         //pan
         this.view.x += dxGeo
