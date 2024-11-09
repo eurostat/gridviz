@@ -134,16 +134,13 @@ export class GeoCanvas {
         this.zoomExtent = opts.zoomExtent || [0, Infinity]
 
         /** @type {number|undefined} */
-        this.xMin = opts.limits? opts.limits[0] : undefined
+        this.xMin = opts.centerLimits? opts.centerLimits[0] : undefined
         /** @type {number|undefined} */
-        this.yMin = opts.limits? opts.limits[1] : undefined
+        this.yMin = opts.centerLimits? opts.centerLimits[1] : undefined
         /** @type {number|undefined} */
-        this.xMax = opts.limits? opts.limits[2] : undefined
+        this.xMax = opts.centerLimits? opts.centerLimits[2] : undefined
         /** @type {number|undefined} */
-        this.yMax = opts.limits? opts.limits[3] : undefined
-
-        console.log(this.xMin, this.xMax)
-        console.log(this.yMin, this.yMax)
+        this.yMax = opts.centerLimits? opts.centerLimits[3] : undefined
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
