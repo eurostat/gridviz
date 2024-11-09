@@ -200,7 +200,7 @@ export class GeoCanvas {
      */
     pan(dxGeo = 0, dyGeo = 0) {
 
-        //ensures extent
+        //ensures x/y extent
         if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
         if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
         if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
@@ -239,9 +239,19 @@ export class GeoCanvas {
         if (newZf > this.zoomExtent[1]) f = this.zoomExtent[1] / this.view.z
 
         this.view.z *= f
-        const dxGeo = (xGeo - this.view.x) * (1 - f)
+
+        //compute pan
+        let dxGeo = (xGeo - this.view.x) * (1 - f)
+        let dyGeo = (yGeo - this.view.y) * (1 - f)
+
+        //ensures x/y extent
+        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
+        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
+        if(this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+
+        //pan
         this.view.x += dxGeo
-        const dyGeo = (yGeo - this.view.y) * (1 - f)
         this.view.y += dyGeo
         this.updateExtentGeo()
 
