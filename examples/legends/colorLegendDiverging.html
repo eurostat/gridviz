@@ -38,10 +38,15 @@
     const stretchingScale = gridviz.powerScale(0.4)
     const style = new gridviz.ShapeColorSizeStyle({
         color: (cell, r, z, [min, max]) => {
+            //get the value
             const value = cell.change
+            //set t to middle
             let t = 0.5
+            //for negative values, normalise with the min, apply stretching scale from there, take half and substracts to t
             if (min < 0 && value < 0) t -= stretchingScale(value / min) / 2
+            //for positive values, normalise with the max, apply stretching scale from there, take half and add to t
             else t += stretchingScale(value / max) / 2
+            //return corresponding color
             return colorRamp(t)
         },
         viewScale: (cells) => d3.extent(cells, c => +c.change),
@@ -53,7 +58,9 @@
         colorScale: colorRamp,
         ticks: 5,
         textScale: (t, [min,max]) => {
-            return t
+            if (t < 0.5) return (min * stretchingScale.invert(1 - 2 * t)).toFixed(0)
+            if (t > 0.5) return (max * stretchingScale.invert(2 * t - 1)).toFixed(0)
+            return 0
         }
     })
 
