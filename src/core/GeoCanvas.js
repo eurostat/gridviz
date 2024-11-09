@@ -133,6 +133,11 @@ export class GeoCanvas {
          *  @type {Array.<number>} */
         this.zoomExtent = opts.zoomExtent || [0, Infinity]
 
+        this.xMin = undefined
+        this.xMax = undefined
+        this.yMin = undefined
+        this.yMax = undefined
+
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
@@ -194,7 +199,14 @@ export class GeoCanvas {
      * @param {number} dyGeo
      */
     pan(dxGeo = 0, dyGeo = 0) {
-        //TODO force extend to remain
+
+        //ensures extent
+        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
+        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
+        if(this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+
+        //pan
         this.view.x += dxGeo
         this.view.y += dyGeo
         this.updateExtentGeo()
@@ -210,7 +222,7 @@ export class GeoCanvas {
 
     /**
      * Zoom.
-     * @param {number} f The , within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
+     * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
      * @param {number} xGeo The x geo position fixed in the screen.
      * @param {number} yGeo The y geo position fixed in the screen.
      */
