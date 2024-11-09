@@ -58,6 +58,7 @@
         colorScale: colorRamp,
         ticks: 5,
         textScale: (t, [min,max]) => {
+            //use stretching scale inverse to compute label value
             if (t < 0.5) return (min * stretchingScale.invert(1 - 2 * t)).toFixed(0)
             if (t > 0.5) return (max * stretchingScale.invert(2 * t - 1)).toFixed(0)
             return 0
