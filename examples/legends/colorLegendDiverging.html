@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
@@ -16,24 +17,34 @@
         resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/',
             {
                 preprocess: (c) => {
-                    //for each cell, compute 2011 -> 2021 change and store it in a new "change" column
+                    for(ex of ['UK','RS','BA','IM','ME','AL','MK'])
+                        if(c.CNTR_ID.includes(ex)) return false
                     if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
                     else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
                     else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
                     else c.change = c.TOT_P_2021 - c.TOT_P_2011
                     //remove unused information
                     delete c.TOT_P_2006
-                    delete c.TOT_P_2011
+                    //delete c.TOT_P_2011
                     delete c.TOT_P_2018
-                    delete c.TOT_P_2021
+                    //delete c.TOT_P_2021
                     delete c.CNTR_ID
                 }
             })
     )
 
     //define style
+    const colorRamp = d3.interpolateRdBu
+    const stretchingScale = gridviz.powerScale(0.5)
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => d3.interpolateYlOrRd(cell.population / 20000)
+        color: (cell, r, z, [min, max]) => {
+            const value = cell.change
+            let t = 0.5
+            if (min < 0 && value < 0) t -= stretchingScale(value / min) / 2
+            else t += stretchingScale(value / max) / 2
+            return colorRamp(t)
+        },
+        viewScale: (cells) => d3.extent(cells, c => +c.change),
     })
 
     /*/define legend
