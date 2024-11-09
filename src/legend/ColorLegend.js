@@ -16,11 +16,12 @@ export class ColorLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        //a function [0,1]->color for continuous colors
-        //or array of colors for discrete colors
+        //a function [0,1]->color for continuous colors.
+        //it can take as second argument the viewscale.
         this.colorScale = opts.colorScale
 
         //function (t[0,1]) -> value (for label text)
+        //it can take as second argument the viewscale.
         this.textScale = opts.textScale || (t => t)
 
         this.margin = opts.margin || 5
