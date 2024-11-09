@@ -430,6 +430,7 @@ new gridviz.SizeLegend({
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegend.html)).
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendViewScale.html)) for a view scale based style.
 - See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendText.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendText.html)) for a legend with static text.
+- See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendDiverging.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendDiverging.html)) for a legend with diverging color ramp.
 
 ### Color discrete legend
 
