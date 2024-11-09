@@ -35,7 +35,7 @@
 
     //define style
     const colorRamp = d3.interpolateRdBu
-    const stretchingScale = gridviz.powerScale(0.5)
+    const stretchingScale = gridviz.powerScale(0.4)
     const style = new gridviz.ShapeColorSizeStyle({
         color: (cell, r, z, [min, max]) => {
             const value = cell.change
@@ -47,16 +47,16 @@
         viewScale: (cells) => d3.extent(cells, c => +c.change),
     })
 
-    /*/define legend
+    //define legend
     const legend = new gridviz.ColorLegend({
-        title: "Population",
-        colorScale: d3.interpolateYlOrRd,
+        title: "Population change",
+        colorScale: colorRamp,
         ticks: 5,
-        textScale: (t) => t * 20000
+        textScale: (t) => t
     })
 
     //link legend to style
-    style.legends = [legend]*/
+    style.legends = [legend]
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
