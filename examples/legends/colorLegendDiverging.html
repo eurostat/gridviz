@@ -52,7 +52,9 @@
         title: "Population change",
         colorScale: colorRamp,
         ticks: 5,
-        textScale: (t) => t
+        textScale: (t, [min,max]) => {
+            return t
+        }
     })
 
     //link legend to style
