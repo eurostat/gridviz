@@ -1,5 +1,3 @@
-see joe's tickets
-x/y limit
 
 ternary map - example france, germany
 
@@ -180,8 +178,6 @@ TODO improve halftone: use Halton sequence
 
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
 TODO test canvas performance improvements: test image drawing https://github.com/uwdata/fast-kde/blob/main/src/heatmap.js
-
-TODO limit pan
 
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 

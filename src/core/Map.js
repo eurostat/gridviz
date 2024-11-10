@@ -343,6 +343,16 @@ export class Map {
     }
 
 
+    /** @returns {Array.<number|undefined>} */
+    getCenterExtent() {
+        return this.geoCanvas.getCenterExtent()
+    }
+    /** @param {Array.<number>} val @returns {this} */
+    setCenterExtent(val) {
+        this.geoCanvas.setCenterExtent(val)
+        return this
+    }
+
     /** @returns {Array.<number>} */
     getZoomExtent() {
         return this.geoCanvas.getZoomExtent()

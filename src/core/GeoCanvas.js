@@ -129,18 +129,19 @@ export class GeoCanvas {
         }
         //select(this.canvas).call(z);
 
+        //center extent
+        /** @type {number|undefined} */
+        this.xMin = opts.centerExtent? opts.centerExtent[0] : undefined
+        /** @type {number|undefined} */
+        this.yMin = opts.centerExtent? opts.centerExtent[1] : undefined
+        /** @type {number|undefined} */
+        this.xMax = opts.centerExtent? opts.centerExtent[2] : undefined
+        /** @type {number|undefined} */
+        this.yMax = opts.centerExtent? opts.centerExtent[3] : undefined
+
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
         this.zoomExtent = opts.zoomExtent || [0, Infinity]
-
-        /** @type {number|undefined} */
-        this.xMin = opts.centerLimits? opts.centerLimits[0] : undefined
-        /** @type {number|undefined} */
-        this.yMin = opts.centerLimits? opts.centerLimits[1] : undefined
-        /** @type {number|undefined} */
-        this.xMax = opts.centerLimits? opts.centerLimits[2] : undefined
-        /** @type {number|undefined} */
-        this.yMax = opts.centerLimits? opts.centerLimits[3] : undefined
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
@@ -150,6 +151,18 @@ export class GeoCanvas {
     /** @returns {View} */
     getView() { return this.view }
 
+
+    /** @param {Array.<number>} v */
+    setCenterExtent(v) {
+        this.xMin = v[0]
+        this.yMin = v[1]
+        this.xMax = v[2]
+        this.yMax = v[3]
+    }
+    /** @returns {Array.<number|undefined>} */
+    getCenterExtent() {
+        return [this.xMin, this.yMin, this.xMax, this.yMax]
+    }
 
     /** @param {Array.<number>} v */
     setZoomExtent(v) {
