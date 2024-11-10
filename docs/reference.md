@@ -481,6 +481,10 @@ new gridviz.SizeLegend({
 
 Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
 
+## Limit paning and zooming
+
+See [this example](https://eurostat.github.io/gridviz/examples/basics/limits.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/limits.html)) to limit the paning and zooming to some limit values, in order to prevent the user to move toward undesired positions and zoom levels. Note that the paning limit applies to the map center, not the map borders. The paning limit is specified as an array *[xMin, yMin, xMax, yMax]*.
+
 ## Mixed resolution grids
 
 ![mixed resolution grid](img/mixedresolution.png)
