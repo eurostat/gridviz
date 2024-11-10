@@ -1,0 +1,26 @@
+<div id="map" style="height: 500px; width: 800px"></div>
+
+<script src="../../dist/gridviz.js"></script>
+<script>
+
+    //define map
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
+
+    //define center extent: xmin, ymin, xmax, ymax
+    map.setCenterExtent([4000000, 2400000, 5000000, 3400000])
+
+    //define zoom extent
+    map.setZoomExtent([10, 1500])
+
+    //add layer to map
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+    const colorFunction = (cell) => {
+        if (cell.population > 60000) return "#d95f0e"
+        else if (cell.population > 6000) return "#fec44f"
+        else return "#ffffd4"
+    }
+    map.layers = [new gridviz.GridLayer(dataset, [
+        new gridviz.ShapeColorSizeStyle({ color: colorFunction })
+    ])]
+
+</script>
