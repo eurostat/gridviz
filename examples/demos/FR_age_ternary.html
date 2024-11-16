@@ -94,8 +94,8 @@
         minPixelsPerCell: 4,
         cellInfoHTML: c => {
             const out = []
-            const cl = ternaryColorClassifier(c)
-            out.push(cl)
+            const cla = ternaryColorClassifier.classifier(c)
+            out.push("<b>" + classLabels[cla] + "</b>")
             out.push("Total population: <b>" + c.TOT.toFixed(0) + "</b>")
             out.push("Population <18: <b>" + c.yo.toFixed(0) + "</b>")
             out.push("Population 18 to 64: <b>" + c.mi.toFixed(0) + "</b>")
