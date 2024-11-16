@@ -53,21 +53,21 @@ export const ternaryClassifier = (properties, totalFunction, opts = {}) => {
         if (s0 <= c0 && s1 >= c1 && s2 >= c2) {
             //central class
             if (cc != undefined && s0 > cc * c0) return "center"
-            if (withMixedClasses) return "m0"
+            if (withMixedClasses) return "m12"
             return s1 > s2 ? "1" : "2"
         }
         //middle class 1 - intersection class 0 and 1
         if (s0 >= c0 && s1 <= c1 && s2 >= c2) {
             //central class
             if (cc != undefined && s1 > cc * c1) return "center"
-            if (withMixedClasses) return "m1"
+            if (withMixedClasses) return "m02"
             return s0 > s2 ? "0" : "2"
         }
         //middle class 2 - intersection class 0 and 1
         if (s0 >= c0 && s1 >= c1 && s2 <= c2) {
             //central class
             if (cc != undefined && s2 > cc * c2) return "center"
-            if (withMixedClasses) return "m2"
+            if (withMixedClasses) return "m01"
             return s1 > s0 ? "1" : "0"
         }
         //should not happen
@@ -110,9 +110,9 @@ export const ternaryColorClassifier = (properties, totalFunction, colors, opts =
         if (cla == "0") return color0
         if (cla == "1") return color1
         if (cla == "2") return color2
-        if (cla == "m0") return mixColor0
-        if (cla == "m1") return mixColor1
-        if (cla == "m2") return mixColor2
+        if (cla == "m12") return mixColor0
+        if (cla == "m02") return mixColor1
+        if (cla == "m01") return mixColor2
         if (cla == "center") return centerColor
         return opts.defaultColor || "black"
     }

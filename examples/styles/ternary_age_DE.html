@@ -53,7 +53,7 @@
 
     //legend
     style.legends = [new gridviz.TernaryLegend({
-        title: "Age",
+        title: "Predominant age group",
         classifier: ternaryClassifier,
         width: 90,
         tooltip: map.tooltip,
@@ -61,9 +61,9 @@
             "0": "Over representation of persons aged <18",
             "1": "Over representation of persons aged 18 to 64",
             "2": "Over representation of persons aged >=65",
-            "12": "Under representation of persons aged <18",
-            "02": "Under representation of<br>persons aged 18 to 64",
-            "01": "Under representation of persons aged >=65",
+            "m12": "Under representation of persons aged <18",
+            "m02": "Under representation of<br>persons aged 18 to 64",
+            "m01": "Under representation of persons aged >=65",
             "center": "Balanced representation of age groups",
         },
         leftText: "<18",

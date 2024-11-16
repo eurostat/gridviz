@@ -50,7 +50,7 @@
     ind_11_17     5476468.8
     13586243.6
     21.6
-    
+
     ind_18_24     4657461.3
     ind_25_39    11412924.0
     ind_40_54    12475174.9
@@ -83,9 +83,9 @@
         "0": "Over representation of persons aged <18",
         "1": "Over representation of persons aged 18 to 64",
         "2": "Over representation of persons aged >=65",
-        "12": "Under representation of persons aged <18",
-        "02": "Under representation of<br>persons aged 18 to 64",
-        "01": "Under representation of persons aged >=65",
+        "m12": "Under representation of persons aged <18",
+        "m02": "Under representation of<br>persons aged 18 to 64",
+        "m01": "Under representation of persons aged >=65",
         "center": "Balanced representation of age groups",
     }
 
@@ -95,6 +95,7 @@
         cellInfoHTML: c => {
             const out = []
             const cla = ternaryColorClassifier.classifier(c)
+            console.log(cla)
             out.push("<b>" + classLabels[cla] + "</b>")
             out.push("Total population: <b>" + c.TOT.toFixed(0) + "</b>")
             out.push("Population <18: <b>" + c.yo.toFixed(0) + "</b>")
@@ -127,7 +128,7 @@
 
     //legend
     style.legends = [new gridviz.TernaryLegend({
-        title: "Age",
+        title: "Predominant age group",
         classifier: ternaryColorClassifier,
         width: 90,
         tooltip: map.tooltip,
