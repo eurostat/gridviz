@@ -77,6 +77,7 @@ ind_inc         74714.6
         viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
         size: (c, r, z, viewScale) => viewScale(c.TOT),
         shape: () => "circle",
+        blendOperation: (z) => z < 20 ? "multiply" : "source-over"
     })
 
     //create grid layer
