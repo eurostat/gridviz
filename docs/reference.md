@@ -201,11 +201,11 @@ This style shows the grid cells as 3D pillars or, with changeable height, width 
 
 ### Ternary style
 
-[![ternary map style](img/styles/ternary.png)](https://eurostat.github.io/gridviz/examples/styles/ternary.html)
+[![ternary map style](img/styles/ternary.png)](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html)
 
 Ternary maps use color to show a composition according to three categories. Three different color hue are defined, that correspond to each of the three categories. The cells color is then selected according to the relative importance of the three categories. When two of the three categories are more important that the third, a color mix is used. A central class may be defined to show cases where the three categories are relativelly well balanced.
 
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary_age_DE.html)).
 
 Note that this style is not really a new style - it relies on a specific classifier.
 
@@ -476,7 +476,7 @@ new gridviz.SizeLegend({
 
 ![](img/legends/ternary_legend.png)
 
-- See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary.html)).
+- See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary_age_DE.html)).
 
 ## Leaflet
 
