@@ -30,7 +30,7 @@
     })
 
     //define ternary classifier
-    const ternaryClassifier = gridviz.ternaryColorClassifier(
+    const ternaryColorClassifier = gridviz.ternaryColorClassifier(
         ["yo", "mi", "ol"],
         c => c.TOT,
         ["#18b200", "#005cbf", "#bf0001"],
@@ -72,15 +72,37 @@
     //define style
     const classNumberSize = 4
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (c) => ternaryClassifier(c) || "black",
+        color: (c) => ternaryColorClassifier(c) || "black",
         viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT, classNumber: classNumberSize, minSizePix: 3, maxSizeFactor: 1.1 }),
         size: (c, r, z, viewScale) => viewScale(c.TOT),
         shape: () => "circle",
         blendOperation: (z) => z < 20 ? "multiply" : "source-over"
     })
 
+    const classLabels = {
+        "0": "Over representation of persons aged <18",
+        "1": "Over representation of persons aged 18 to 64",
+        "2": "Over representation of persons aged >=65",
+        "12": "Under representation of persons aged <18",
+        "02": "Under representation of<br>persons aged 18 to 64",
+        "01": "Under representation of persons aged >=65",
+        "center": "Balanced representation of age groups",
+    }
+
     //create grid layer
-    const gridLayer = new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 4 })
+    const gridLayer = new gridviz.GridLayer(dataset, [style], {
+        minPixelsPerCell: 4,
+        cellInfoHTML: c => {
+            const out = []
+            const cl = ternaryColorClassifier(c)
+            out.push(cl)
+            out.push("Total population: <b>" + c.TOT.toFixed(0) + "</b>")
+            out.push("Population <18: <b>" + c.yo.toFixed(0) + "</b>")
+            out.push("Population 18 to 64: <b>" + c.mi.toFixed(0) + "</b>")
+            out.push("Population >64: <b>" + c.ol.toFixed(0) + "</b>")
+            return out.join("<br>")
+        },
+    })
 
     //label layer
     const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('FR', '20'))
@@ -106,18 +128,10 @@
     //legend
     style.legends = [new gridviz.TernaryLegend({
         title: "Age",
-        classifier: ternaryClassifier,
+        classifier: ternaryColorClassifier,
         width: 90,
         tooltip: map.tooltip,
-        texts: {
-            "0": "Over representation of persons aged <18",
-            "1": "Over representation of persons aged 18 to 64",
-            "2": "Over representation of persons aged >=65",
-            "12": "Under representation of persons aged <18",
-            "02": "Under representation of<br>persons aged 18 to 64",
-            "01": "Under representation of persons aged >=65",
-            "center": "Balanced representation of age groups",
-        },
+        texts: classLabels,
         leftText: "<18",
         topText: "18 to 64",
         rightText: ">65",

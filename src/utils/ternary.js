@@ -121,6 +121,7 @@ export const ternaryColorClassifier = (properties, totalFunction, colors, opts =
     fun.colors = [color0, color1, color2]
     fun.mixColors = [mixColor0, mixColor1, mixColor2]
     fun.centerColor = centerColor
+    fun.classifier = classifier
 
     return fun
 }
