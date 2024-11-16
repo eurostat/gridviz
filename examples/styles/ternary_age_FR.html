@@ -12,7 +12,7 @@
     //define dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2015/' + resolution + 'm/'), {
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' + resolution + 'm/'), {
             preprocess: (c) => {
             //imputed	ind	ind_0_3	ind_11_17	ind_18_24	ind_25_39	ind_40_54	ind_4_5	ind_55_64	ind_65_79	ind_6_10	ind_80p	ind_inc
             //define 3 age groups:
@@ -38,10 +38,37 @@
         //the colors
         ["#4daf4a", "#377eb8", "#e41a1c"], {
         //the center point of the ternary classification
-        center: [0.23, 0.57, 0.2],
+        center: [0.22, 0.58, 0.20],
         //the size of the central class
-        centerCoefficient: 0.15,
+        centerCoefficient: 0.2,
     })
+
+/*
+ind          62971073.0
+ind_0_3       2696112.2
+ind_4_5       1486481.0
+ind_6_10      3907181.6
+ind_11_17     5476468.8
+13586243.6
+21.6
+
+ind_18_24     4657461.3
+ind_25_39    11412924.0
+ind_40_54    12475174.9
+ind_55_64     8059489.7
+36505049.9
+58.1
+
+ind_65_79     9103826.6
+ind_80p       3621238.3
+12725064.9
+20.2
+
+62816358.4
+
+ind_inc         74714.6
+*/
+
 
     //define style
     const classNumberSize = 4
