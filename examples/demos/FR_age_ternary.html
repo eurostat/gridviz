@@ -3,13 +3,49 @@
 
 <head>
     <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title>Carte de la population Française par groupe d'âge prédominant - INSEE Filosofi</title>
+    <title>Population map of France by predominant age group - INSEE Filosofi</title>
 </head>
 
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
 
     <div id="map" style="height: 100%; width: 100%"></div>
 
+    <div style="
+                font-size: 0.9em;
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                width: auto;
+                height: auto;
+                padding: 5px;
+                border: 0px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
+            ">
+        <span style="font-size: 1.3em; font-weight: bold">Population by predominant age group</span>
+        <br />
+        <div id="layer">
+            Année:
+            <select id="year">
+                <option value="2015">2015</option>
+                <option value="2017">2017</option>
+                <option value="2019" selected>2019</option>
+            </select>
+        </div>
+        <hr />
+        <input type="checkbox" id="label" checked />
+        <label for="label">Noms villes</label>
+        <input type="checkbox" id="boundary" checked />
+        <label for="boundary">Limites adm.</label>
+        <input type="checkbox" id="background" checked />
+        <label for="background">Fond</label>
+        <hr />
+        Source:
+        <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
+            Filosofi - 200m</a>
+    </div>
 
 
 
