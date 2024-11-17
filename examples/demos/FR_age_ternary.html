@@ -108,6 +108,9 @@
     //label layer
     const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('FR', '20'))
 
+    //boundary layer
+    const boundaryLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
     //background layers
     const backgroundLayer1 = new gridviz.BackgroundLayer({
         url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMPositronBackground/EPSG3035/",
@@ -124,7 +127,7 @@
     })
 
     //add layers to map
-    map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, labelLayer]
+    map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundaryLayer, labelLayer]
 
     //legend
     style.legends = [new gridviz.TernaryLegend({
