@@ -58,10 +58,10 @@
             .setZoomExtent([3, 1500])
             .addZoomButtons()
 
-        //define dataset
-        const dataset = new gridviz.MultiResolutionDataset(
+        //function to define dataset per year
+        const getDataset = (year) => new gridviz.MultiResolutionDataset(
             [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' + resolution + 'm/'), {
+            resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/' + year + '/' + resolution + 'm/'), {
             preprocess: (c) => {
                 //imputed	ind	ind_0_3	ind_11_17	ind_18_24	ind_25_39	ind_40_54	ind_4_5	ind_55_64	ind_65_79	ind_6_10	ind_80p	ind_inc
                 //define 3 age groups:
@@ -77,6 +77,9 @@
                 if (c.TOT == 0) return false
             }
         })
+
+        //define datasets
+        const datasets = { "2015": getDataset(2015), "2017": getDataset(2017), "2019": getDataset(2019) }
 
         //define ternary classifier
         const ternaryColorClassifier = gridviz.ternaryColorClassifier(
@@ -186,13 +189,11 @@
         //
         const update = () => {
 
-            console.log(document.getElementById("background").checked)
-
             //read GUI selection
-            const year_ = document.querySelector('#year').value
+            const year = document.querySelector('#year').value
 
             //create grid layer
-            const gridLayer = new gridviz.GridLayer(dataset, [style], {
+            const gridLayer = new gridviz.GridLayer(datasets[year], [style], {
                 minPixelsPerCell: 4,
                 cellInfoHTML: cellInfoHTMLFun
             })
