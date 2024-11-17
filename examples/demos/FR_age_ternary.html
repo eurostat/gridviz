@@ -138,21 +138,16 @@
             "center": "Balanced representation of age groups",
         }
 
-        //create grid layer
-        const gridLayer = new gridviz.GridLayer(dataset, [style], {
-            minPixelsPerCell: 4,
-            cellInfoHTML: c => {
-                const out = []
-                const cla = ternaryColorClassifier.classifier(c)
-                console.log(cla)
-                out.push("<b>" + classLabels[cla] + "</b>")
-                out.push("Total population: <b>" + c.TOT.toFixed(0) + "</b>")
-                out.push("Population <18: <b>" + c.yo.toFixed(0) + "</b>")
-                out.push("Population 18 to 64: <b>" + c.mi.toFixed(0) + "</b>")
-                out.push("Population >64: <b>" + c.ol.toFixed(0) + "</b>")
-                return out.join("<br>")
-            },
-        })
+        const cellInfoHTMLFun = c => {
+            const out = []
+            const cla = ternaryColorClassifier.classifier(c)
+            out.push("<b>" + classLabels[cla] + "</b>")
+            out.push("Total population: <b>" + c.TOT.toFixed(0) + "</b>")
+            out.push("Population <18: <b>" + c.yo.toFixed(0) + "</b>")
+            out.push("Population 18 to 64: <b>" + c.mi.toFixed(0) + "</b>")
+            out.push("Population >64: <b>" + c.ol.toFixed(0) + "</b>")
+            return out.join("<br>")
+        }
 
         //label layer
         const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('FR', '20'))
@@ -175,9 +170,6 @@
             visible: z => z >= 50
         })
 
-        //add layers to map
-        map.layers = [backgroundLayer1, backgroundLayer2, gridLayer, boundaryLayer, labelLayer]
-
         //legend
         style.legends = [new gridviz.TernaryLegend({
             title: "Predominant age group",
@@ -191,6 +183,50 @@
             centerCoefficient: 0.5,
         })]
 
+        //
+        const update = () => {
+
+            console.log(document.getElementById("background").checked)
+
+            //read GUI selection
+            const year_ = document.querySelector('#year').value
+
+            //create grid layer
+            const gridLayer = new gridviz.GridLayer(dataset, [style], {
+                minPixelsPerCell: 4,
+                cellInfoHTML: cellInfoHTMLFun
+            })
+
+            //add layers to map
+            map.layers = []
+
+            //fill layer stack
+            if (document.getElementById("background").checked) {
+                map.layers.push(backgroundLayer1)
+                map.layers.push(backgroundLayer2)
+            }
+            map.layers.push(gridLayer)
+            if (document.getElementById("boundary").checked)
+                if (boundaryLayer) map.layers.push(boundaryLayer)
+            if (document.getElementById("label").checked)
+                if (labelLayer) map.layers.push(labelLayer)
+
+            //redraw
+            map.redraw()
+        }
+
+        //layer and year update
+        document.querySelector('#year').addEventListener('change', update)
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', update)
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', update)
+        // show/hide background
+        document.querySelector('#background').addEventListener('change', update)
+
+        //initialise
+        update()
+        map.setViewFromURL()
 
     </script>
 
