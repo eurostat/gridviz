@@ -1,6 +1,4 @@
 
-ternary map - example france, germany
-
 analyse possiblility to migrate toward openlayer ?
 
 BE multi
@@ -28,7 +26,6 @@ style: bi-symbol map
 replace GreyEarth with own shaded relief
 income change: double smoothing map ?
 legend for bivariate map
-upgrade modules:  gridviz-parquet
 
 NO
 POP Pop
