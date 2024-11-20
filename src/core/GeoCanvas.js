@@ -44,7 +44,7 @@ export class GeoCanvas {
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx
 
-        /** 
+        /**
          * z: pixel size, in m/pix
          * @type {View}  */
         this.view = { x: x, y: y, z: z }
@@ -91,6 +91,7 @@ export class GeoCanvas {
                                 this.pixToGeoY(e.sourceEvent.offsetY)
                             )
                         } else if (se instanceof TouchEvent) {
+                            if (!se.targetTouches.length) return
                             //compute average position of the touches
                             let tx = 0,
                                 ty = 0
@@ -110,12 +111,12 @@ export class GeoCanvas {
                 })
                 .on('start', (e) => {
                     this.canvasSave.c = document.createElement('canvas')
-                    this.canvasSave.c.setAttribute('width', '' + this.w);
-                    this.canvasSave.c.setAttribute('height', '' + this.h);
-                    this.canvasSave.c.getContext('2d')?.drawImage(this.canvas, 0, 0);
-                    this.canvasSave.dx = 0;
-                    this.canvasSave.dy = 0;
-                    this.canvasSave.f = 1;
+                    this.canvasSave.c.setAttribute('width', '' + this.w)
+                    this.canvasSave.c.setAttribute('height', '' + this.h)
+                    this.canvasSave.c.getContext('2d')?.drawImage(this.canvas, 0, 0)
+                    this.canvasSave.dx = 0
+                    this.canvasSave.dy = 0
+                    this.canvasSave.f = 1
 
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
@@ -131,13 +132,13 @@ export class GeoCanvas {
 
         //center extent
         /** @type {number|undefined} */
-        this.xMin = opts.centerExtent? opts.centerExtent[0] : undefined
+        this.xMin = opts.centerExtent ? opts.centerExtent[0] : undefined
         /** @type {number|undefined} */
-        this.yMin = opts.centerExtent? opts.centerExtent[1] : undefined
+        this.yMin = opts.centerExtent ? opts.centerExtent[1] : undefined
         /** @type {number|undefined} */
-        this.xMax = opts.centerExtent? opts.centerExtent[2] : undefined
+        this.xMax = opts.centerExtent ? opts.centerExtent[2] : undefined
         /** @type {number|undefined} */
-        this.yMax = opts.centerExtent? opts.centerExtent[3] : undefined
+        this.yMax = opts.centerExtent ? opts.centerExtent[3] : undefined
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
@@ -149,8 +150,9 @@ export class GeoCanvas {
     }
 
     /** @returns {View} */
-    getView() { return this.view }
-
+    getView() {
+        return this.view
+    }
 
     /** @param {Array.<number>} v */
     setCenterExtent(v) {
@@ -216,12 +218,11 @@ export class GeoCanvas {
      * @param {number} dyGeo
      */
     pan(dxGeo = 0, dyGeo = 0) {
-
         //ensures x/y extent
-        if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if(this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
-        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
-        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
+        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
+        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
 
         //pan
         this.view.x += dxGeo
@@ -262,10 +263,10 @@ export class GeoCanvas {
         let dyGeo = (yGeo - this.view.y) * (1 - f)
 
         //ensures x/y extent
-        if(this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if(this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
-        if(this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
-        if(this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
+        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
+        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
 
         //pan
         this.view.x += dxGeo
