@@ -8,7 +8,6 @@
     <img src="docs/img/banner.png">
 </p>
 
-
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser using a large variety of [cartographic styles and techniques](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md). Unlike traditional raster-based web mapping tools, Gridviz renders everything client-side, on the fly.
 
 ## Styles
@@ -27,7 +26,6 @@
 [<img src="docs/img/overviews/ov_dotdensity.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
 [<img src="docs/img/overviews/ov_joyplot.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
 
-
 ## Live Demos
 
 -   [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/demos/EUR.html)
@@ -38,7 +36,6 @@
 -   [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
 -   [Europe population as a mosaic](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 -   [Belgium population](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html), as mixed resolution layer.
-
 
 ## Installation
 
@@ -69,16 +66,20 @@ Here’s a basic example that loads a CSV file of a European population grid (5k
 const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
 
 //define dataset
-const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+const dataset = new gridviz.CSVGrid(
+    map,
+    'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+    10000
+)
 
 //define color for each cell
 const colorFunction = (cell) => {
-    if (cell.population > 150000) return "#993404"
-    else if (cell.population > 60000) return "#d95f0e"
-    else if (cell.population > 20000) return "#fe9929"
-    else if (cell.population > 6000) return "#fec44f"
-    else if (cell.population > 1500) return "#fee391"
-    else return "#ffffd4"
+    if (cell.population > 150000) return '#993404'
+    else if (cell.population > 60000) return '#d95f0e'
+    else if (cell.population > 20000) return '#fe9929'
+    else if (cell.population > 6000) return '#fec44f'
+    else if (cell.population > 1500) return '#fee391'
+    else return '#ffffd4'
 }
 
 //define style
@@ -108,12 +109,12 @@ In order to visualize large grids efficiently, you can produce tiled grids in a 
 
 ## About
 
-|                |        |
-| -------------- | ----------- |
+|                |                                                                                                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _contributors_ | [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) |
-| _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)            |
-| _status_       | Since 2020         |
-| _license_      | [EUPL 1.2](LICENSE)            |
+| _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
+| _status_       | Since 2020                                                                                                                                                                            |
+| _license_      | [EUPL 1.2](LICENSE)                                                                                                                                                                   |
 
 ### Support and contribution
 

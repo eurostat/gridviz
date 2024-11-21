@@ -26,6 +26,6 @@ module.exports = {
             directory: '/home/juju/gisco/grid_pop_c2021/',
         },
         port: 1234,
-        headers: { 'Access-Control-Allow-Origin': '*', },
+        headers: { 'Access-Control-Allow-Origin': '*' },
     },
 }

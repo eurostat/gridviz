@@ -25,21 +25,20 @@ export class MultiResolutionDataset {
 
         /** The datasets. If the list is not explictely defined, build it from the resolution list with the function
          * @type {Array.<import("./Dataset").Dataset>} */
-        this.datasets = (typeof datasets === 'function') ? this.resolutions.map(datasets) : datasets
+        this.datasets = typeof datasets === 'function' ? this.resolutions.map(datasets) : datasets
 
         //there must be as many datasets as resolutions
         if (this.datasets.length > 1 && this.datasets.length != this.resolutions.length)
             throw new Error(
                 'Uncompatible number of datasets and resolutions: ' +
-                this.datasets.length +
-                ' ' +
-                this.resolutions.length
+                    this.datasets.length +
+                    ' ' +
+                    this.resolutions.length
             )
 
         //set dataset preprocesses if specified
         if (opts.preprocess) this.setPrepocesses(opts.preprocess)
     }
-
 
     /**
      * Return the relevant dataset for a specified zoom.
@@ -48,7 +47,6 @@ export class MultiResolutionDataset {
      * @returns {import("./Dataset").Dataset|undefined}
      * */
     getDataset(z, minPixelsPerCell) {
-
         //special case whith single dataset
         if (this.datasets.length == 1) return this.datasets[0]
 
@@ -64,8 +62,6 @@ export class MultiResolutionDataset {
         if (i == rs.length) return this.datasets[rs.length - 1]
         return this.datasets[i]
     }
-
-
 
     /**
      * Set a preprocess function for all datasets.

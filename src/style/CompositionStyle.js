@@ -28,7 +28,7 @@ export class CompositionStyle extends Style {
         /**
          * A function returning the type of decomposition symbol of a cell, @see CompositionType
          * @type {function(import("../core/Dataset.js").Cell,number, number,object):CompositionType} */
-        this.type = opts.type || (() => "flag") //(c,r,z,vs) => {}
+        this.type = opts.type || (() => 'flag') //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
@@ -61,7 +61,6 @@ export class CompositionStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -76,7 +75,6 @@ export class CompositionStyle extends Style {
 
         //draw calls
         for (let cell of cells) {
-
             //size
             const sG = this.size ? this.size(cell, resolution, z, viewScale) : resolution
             if (!sG) continue
@@ -92,7 +90,9 @@ export class CompositionStyle extends Style {
             const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : resolution * 0.5)
 
             //compute offset angle, when relevant
-            const offAng = this.offsetAngle ? (this.offsetAngle(cell, resolution, z, viewScale) * Math.PI) / 180 : 0
+            const offAng = this.offsetAngle
+                ? (this.offsetAngle(cell, resolution, z, viewScale) * Math.PI) / 180
+                : 0
 
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
@@ -111,10 +111,12 @@ export class CompositionStyle extends Style {
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
                     type_ === 'agepyramid'
-                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, resolution, z, viewScale) : resolution) / nbCat
+                        ? (this.agePyramidHeight
+                              ? this.agePyramidHeight(cell, resolution, z, viewScale)
+                              : resolution) / nbCat
                         : type_ === 'radar' || type_ === 'halftone'
-                            ? (2 * Math.PI) / nbCat
-                            : undefined
+                        ? (2 * Math.PI) / nbCat
+                        : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_)
 
                 for (let [column, color] of Object.entries(this.color)) {

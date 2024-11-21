@@ -42,7 +42,8 @@
         "server": "webpack serve -c webpack.config.dev.cjs",
         "doc": "jsdoc -c docs/jsdoc/jsdoc.conf.json",
         "bp": "webpack --config webpack.config.prod.cjs",
-        "test": "jest"
+        "test": "jest",
+        "format": "prettier --write ."
     },
     "files": [
         "dist/**/*.js",
@@ -62,7 +63,7 @@
         "@babel/preset-env": "^7.25.4",
         "babel-loader": "^8.1.0",
         "jshint": "^2.12.0",
-        "prettier": "2.8.8",
+        "prettier": "^2.8.8",
         "webpack": "^5.96.1",
         "webpack-cli": "^5.1.4",
         "webpack-dev-server": "^5.1.0",

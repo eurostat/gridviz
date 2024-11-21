@@ -23,7 +23,6 @@ export class SideCategoryStyle extends SideStyle {
          * The dictionary (string -> color) which give the color of each category.
          * @type {object} */
         this.color = opts.color
-
     }
 
     /**
@@ -32,7 +31,6 @@ export class SideCategoryStyle extends SideStyle {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -51,9 +49,8 @@ export class SideCategoryStyle extends SideStyle {
         //draw sides
 
         geoCanvas.ctx.lineCap = 'butt'
-        const r2 = resolution*0.5
+        const r2 = resolution * 0.5
         for (let side of sides) {
-
             //get category codes for both cells
             const code1 = side.c1 ? this.code(side.c1, resolution, z) : undefined
             const code2 = side.c2 ? this.code(side.c2, resolution, z) : undefined
@@ -74,8 +71,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code2) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code2]
-                    geoCanvas.ctx.moveTo(side.x-r2, side.y + w2)
-                    geoCanvas.ctx.lineTo(side.x+r2, side.y + w2)
+                    geoCanvas.ctx.moveTo(side.x - r2, side.y + w2)
+                    geoCanvas.ctx.lineTo(side.x + r2, side.y + w2)
                     geoCanvas.ctx.stroke()
                 }
 
@@ -83,8 +80,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code1) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code1]
-                    geoCanvas.ctx.moveTo(side.x-r2, side.y - w2)
-                    geoCanvas.ctx.lineTo(side.x+r2, side.y - w2)
+                    geoCanvas.ctx.moveTo(side.x - r2, side.y - w2)
+                    geoCanvas.ctx.lineTo(side.x + r2, side.y - w2)
                     geoCanvas.ctx.stroke()
                 }
             } else {
@@ -92,8 +89,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code2) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code2]
-                    geoCanvas.ctx.moveTo(side.x + w2, side.y-r2)
-                    geoCanvas.ctx.lineTo(side.x + w2, side.y+r2)
+                    geoCanvas.ctx.moveTo(side.x + w2, side.y - r2)
+                    geoCanvas.ctx.lineTo(side.x + w2, side.y + r2)
                     geoCanvas.ctx.stroke()
                 }
 
@@ -101,8 +98,8 @@ export class SideCategoryStyle extends SideStyle {
                 if (code1) {
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.strokeStyle = this.color[code1]
-                    geoCanvas.ctx.moveTo(side.x - w2, side.y-r2)
-                    geoCanvas.ctx.lineTo(side.x - w2, side.y+r2)
+                    geoCanvas.ctx.moveTo(side.x - w2, side.y - r2)
+                    geoCanvas.ctx.lineTo(side.x - w2, side.y + r2)
                     geoCanvas.ctx.stroke()
                 }
             }

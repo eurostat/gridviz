@@ -34,7 +34,6 @@ export class ColorDiscreteLegend extends Legend {
      * @param {{viewScale:import('../core/Style').ViewScale} } opts
      */
     update(opts) {
-
         //clear
         this.div.selectAll('*').remove()
 
@@ -79,10 +78,9 @@ export class ColorDiscreteLegend extends Legend {
 
         //labels
         for (let i = 1; i < nb; i++) {
-
             let label = breaks[i - 1]
             if (isNaN(label) || label == undefined) continue
-            if(this.labelFormat) label = this.labelFormat(label)
+            if (this.labelFormat) label = this.labelFormat(label)
 
             //label
             svg.append('text')

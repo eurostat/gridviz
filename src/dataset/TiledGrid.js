@@ -55,7 +55,7 @@ export class TiledGrid extends Dataset {
      */
     loadInfo() {
         if (!this.info && this.infoLoadingStatus === 'notLoaded') {
-            ; (async () => {
+            ;(async () => {
                 try {
                     const data = await json(this.url + 'info.json')
                     this.info = data
@@ -67,7 +67,7 @@ export class TiledGrid extends Dataset {
                     this.infoLoadingStatus = 'failed'
                 }
             })()
-        } else if ((this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed'))
+        } else if (this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed')
             this.map.redraw()
         return this
     }
@@ -129,8 +129,8 @@ export class TiledGrid extends Dataset {
                 if (tile) continue
 
                 //mark tile as loading
-                this.cache[xT][yT] = "loading";
-                (async () => {
+                this.cache[xT][yT] = 'loading'
+                ;(async () => {
                     //request tile
                     /** @type {Array.<import("../core/Dataset.js").Cell>}  */
                     let cells
@@ -257,7 +257,6 @@ export class TiledGrid extends Dataset {
 }
 
 function getGridTile(cells, xT, yT, gridInfo) {
-
     const tile = {}
 
     /** @type {Array.<import("../core/Dataset").Cell>} */

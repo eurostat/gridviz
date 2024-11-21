@@ -2,23 +2,24 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 1000,
+    }).addZoomButtons()
 
     //make point layer
     const pointLayer = new gridviz.GeoJSONLayer({
         url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/nutspt_3.json',
-        shape: (f,z) => f.properties.id.includes("DE") ? "square" : "circle",
-        size: (f,z) => Math.max(2, 10000/z),
-        strokeStyle: (f, z) => "black",
-        fillStyle: (f, z) => "red",
-        lineWidth: (f,z) => z<2000? 2 : 0,
+        shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
+        size: (f, z) => Math.max(2, 10000 / z),
+        strokeStyle: (f, z) => 'black',
+        fillStyle: (f, z) => 'red',
+        lineWidth: (f, z) => (z < 2000 ? 2 : 0),
     })
 
     //add layer to map
     map.layers = [pointLayer]
     map.redraw()
-
 </script>

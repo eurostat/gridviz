@@ -1,13 +1,13 @@
 //@ts-check
 'use strict'
 
-import { Drawable } from "./Drawable.js"
+import { Drawable } from './Drawable.js'
 
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"triangle_up"|"triangle_down"|"triangle_left"|"triangle_right"|"none"} Shape */
 
 /**
  * viewScale type
- * Returns an object from a list of cells, 
+ * Returns an object from a list of cells,
  * @typedef {function(Array.<import('./Dataset.js').Cell>,number, number):*} ViewScale */
 
 /**
@@ -26,12 +26,12 @@ export class Style extends Drawable {
         opts = opts || {}
 
         /**
-        * @type {ViewScale|undefined} */
+         * @type {ViewScale|undefined} */
         this.viewScale = opts.viewScale
 
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
-        * @protected
-        * @type {function(import('./Dataset').Cell):boolean} */
+         * @protected
+         * @type {function(import('./Dataset').Cell):boolean} */
         this.filter = opts.filter || (() => true)
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
@@ -92,8 +92,7 @@ export class Style extends Drawable {
      * @param {Array.<import("./Legend").Legend>} legends
      * @returns {this} */
     addLegends(legends) {
-        for (let legend of legends)
-            this.legends.push(legend)
+        for (let legend of legends) this.legends.push(legend)
         return this
     }
 }

@@ -20,7 +20,7 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the number of dots for a cell value.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
-        this.dotNumber = opts.dotNumber || ((cell, resolution) => resolution / 100)//(c,r,z,vs) => {}
+        this.dotNumber = opts.dotNumber || ((cell, resolution) => resolution / 100) //(c,r,z,vs) => {}
 
         /** The color of the dots. Same color for all dots within a cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
@@ -32,7 +32,7 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the sigma of the dots distribution. Same value for all cells.
          * @type {function(number, number,object):number} */
-        this.sigma = opts.sigma || ((resolution, z) => resolution / 2)//(c,r,z,vs) => {}
+        this.sigma = opts.sigma || ((resolution, z) => resolution / 2) //(c,r,z,vs) => {}
     }
 
     /**
@@ -43,7 +43,6 @@ export class DotDensityStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -103,10 +102,8 @@ export class DotDensityStyle extends Style {
             //draw in canvas geo
             geoCanvas.initCanvasTransform()
             geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
-
         } else {
             for (let cell of cells) {
-
                 //get color
                 const col = this.color(cell, resolution, z, viewScale)
                 if (!col || col === 'none') continue

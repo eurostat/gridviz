@@ -38,8 +38,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         /** @type { Array.<string> } @private */
         this.colors = []
-        for (const code of codes)
-            this.colors.push(opts.color['' + code])
+        for (const code of codes) this.colors.push(opts.color['' + code])
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
@@ -58,7 +57,6 @@ export class SquareColorCategoryWebGLStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -67,7 +65,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         //add vertice and fragment data
         const r2 = resolution / 2
-        let c, nb = cells.length
+        let c,
+            nb = cells.length
         const verticesBuffer = []
         const iBuffer = []
         for (let i = 0; i < nb; i++) {

@@ -22,7 +22,7 @@ export class ColorLegend extends Legend {
 
         //function (t[0,1]) -> value (for label text)
         //it can take as second argument the viewscale.
-        this.textScale = opts.textScale || (t => t)
+        this.textScale = opts.textScale || ((t) => t)
 
         this.margin = opts.margin || 5
 
@@ -43,7 +43,6 @@ export class ColorLegend extends Legend {
      * @param {{viewScale:import('../core/Style').ViewScale} } opts
      */
     update(opts) {
-
         //clear
         this.div.selectAll('*').remove()
 
@@ -55,9 +54,7 @@ export class ColorLegend extends Legend {
         const svg = this.div.append('svg').attr('width', svgW).attr('height', svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
-        const g = svg
-            .append('g')
-            .attr('transform', 'translate(' + this.margin + ' ' + 0 + ')')
+        const g = svg.append('g').attr('transform', 'translate(' + this.margin + ' ' + 0 + ')')
 
         //draw color bar
         const w = this.width,

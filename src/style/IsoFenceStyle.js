@@ -11,7 +11,6 @@ import { SideStyle } from './SideStyle.js'
  * @author Julien Gaffuri
  */
 export class IsoFenceStyle extends Style {
-
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
@@ -32,20 +31,20 @@ export class IsoFenceStyle extends Style {
 
         /** A function returning the corner line stroke style.
          * @type {function(import('../core/Dataset.js').Cell,number,number,number):string} */
-        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, z, angle) => "#999")
+        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, z, angle) => '#999')
 
         /** A function returning the corner line width.
-        * @type {function(import('../core/Dataset.js').Cell,number,number,number):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number,number,number):number} */
         this.cornerLineWidth = opts.cornerLineWidth || ((c, r, z, angle) => (angle % 90 == 0 ? 0 : 0.8 * z))
 
         /**
-        * Show vertical cross-sections.
-        * @type {boolean} */
+         * Show vertical cross-sections.
+         * @type {boolean} */
         this.sVert = opts.sVert != undefined ? opts.sVert : true
 
         /**
-        * Show horizontal cross-sections.
-        * @type {boolean} */
+         * Show horizontal cross-sections.
+         * @type {boolean} */
         this.sHor = opts.sHor != undefined ? opts.sHor : true
     }
 
@@ -56,7 +55,6 @@ export class IsoFenceStyle extends Style {
      * @override
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -74,32 +72,45 @@ export class IsoFenceStyle extends Style {
 
         //get offset
         // @ts-ignore
-        const offset = this.offset(undefined, resolution, z), dx = offset.dx, dy = offset.dy
+        const offset = this.offset(undefined, resolution, z),
+            dx = offset.dx,
+            dy = offset.dy
 
         //make sides
         /**  @type {Array.<Side>} */
-        const sides = SideStyle.buildSides(cells, resolution, this.angle % 180 != 90 && this.sVert, this.angle % 180 != 0 && this.sHor)
+        const sides = SideStyle.buildSides(
+            cells,
+            resolution,
+            this.angle % 180 != 90 && this.sVert,
+            this.angle % 180 != 0 && this.sHor
+        )
 
         //
         if (sides.length == 0) return
 
         //angle in radians
-        const aRad = this.angle * Math.PI / 180, cos = Math.cos(aRad), sin = Math.sin(aRad)
+        const aRad = (this.angle * Math.PI) / 180,
+            cos = Math.cos(aRad),
+            sin = Math.sin(aRad)
 
         //sort sides so that the back ones are drawn first. This depends on the angle.
         //depending on distance to the reference corner point
         const xCorner = Math.abs(this.angle) < 90 ? geoCanvas.extGeo.xMin : geoCanvas.extGeo.xMax
         const yCorner = this.angle < 0 ? geoCanvas.extGeo.yMax : geoCanvas.extGeo.yMin
-        sides.sort((s1, s2) => (Math.hypot(s2.x - xCorner, s2.y - yCorner) - Math.hypot(s1.x - xCorner, s1.y - yCorner)))
+        sides.sort(
+            (s1, s2) =>
+                Math.hypot(s2.x - xCorner, s2.y - yCorner) - Math.hypot(s1.x - xCorner, s1.y - yCorner)
+        )
 
         //prepare function to draw corner line for a cell *c*
         const drawCornerLine = (cell) => {
-
             if (!cell) return
             //line style
             const lw = this.cornerLineWidth ? this.cornerLineWidth(cell, resolution, z, this.angle) : 0.8 * z
             if (lw == 0) return
-            geoCanvas.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(cell, resolution, z, this.angle) : "#333"
+            geoCanvas.ctx.strokeStyle = this.cornerLineStrokeColor
+                ? this.cornerLineStrokeColor(cell, resolution, z, this.angle)
+                : '#333'
             geoCanvas.ctx.lineWidth = lw
 
             //height - in geo
@@ -113,9 +124,12 @@ export class IsoFenceStyle extends Style {
         }
 
         //draw sides
-        geoCanvas.ctx.lineCap = "round";
+        geoCanvas.ctx.lineCap = 'round'
         for (let side of sides) {
-            const c1 = side.c1, c2 = side.c2, x = side.x, y = side.y
+            const c1 = side.c1,
+                c2 = side.c2,
+                x = side.x,
+                y = side.y
 
             //heights - in geo
             const hG1 = c1 ? this.height(c1, resolution, z, viewScale) : 0,
@@ -126,7 +140,8 @@ export class IsoFenceStyle extends Style {
                 total2 = computeTotal(c2, cats)
             if (total1 == 0 && total2 == 0) continue
 
-            let cumul1 = 0, cumul2 = 0
+            let cumul1 = 0,
+                cumul2 = 0
             for (let [column, color] of Object.entries(this.color)) {
                 //draw stripe of side s and category column
 
@@ -136,14 +151,14 @@ export class IsoFenceStyle extends Style {
                 if (v1 == 0 && v2 == 0) continue
 
                 //compute heights
-                const h1 = hG1 * cumul1 / total1 || 0
-                const h1n = hG1 * (cumul1 + v1) / total1 || 0
-                const h2 = hG2 * cumul2 / total2 || 0
-                const h2n = hG2 * (cumul2 + v2) / total2 || 0
+                const h1 = (hG1 * cumul1) / total1 || 0
+                const h1n = (hG1 * (cumul1 + v1)) / total1 || 0
+                const h2 = (hG2 * cumul2) / total2 || 0
+                const h2n = (hG2 * (cumul2 + v2)) / total2 || 0
 
                 //make path
                 geoCanvas.ctx.beginPath()
-                if (side.or == "h") {
+                if (side.or == 'h') {
                     //horizontal side - vertical section
                     //bottom left
                     geoCanvas.ctx.moveTo(x + h1 * cos + dx, y - r2 + h1 * sin + dy)
@@ -188,8 +203,6 @@ export class IsoFenceStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
-
-
 
 const computeTotal = (cell, categories) => {
     if (!cell) return 0

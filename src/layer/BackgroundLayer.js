@@ -8,7 +8,7 @@ import { Layer } from '../core/Layer.js'
  * A map background layer in "Slippy map" XYZ standard.
  * See https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
  * https://www.maptiler.com/google-maps-coordinates-tile-bounds-projection/#6/27.88/44.48
- * 
+ *
  * @module layer
  * @author Julien Gaffuri
  */
@@ -79,7 +79,6 @@ export class BackgroundLayer extends Layer {
      * @returns {void}
      */
     draw(geoCanvas) {
-
         if (!this.resolutions || this.resolutions.length == 0) {
             console.error('No resolutions provided for background layer')
             return
@@ -146,13 +145,18 @@ export class BackgroundLayer extends Layer {
                 const yGeo = y0 - y * sizeG
                 try {
                     geoCanvas.initCanvasTransform()
-                    geoCanvas.ctx.drawImage(img, geoCanvas.geoToPixX(xGeo), geoCanvas.geoToPixY(yGeo), size, size)
+                    geoCanvas.ctx.drawImage(
+                        img,
+                        geoCanvas.geoToPixX(xGeo),
+                        geoCanvas.geoToPixY(yGeo),
+                        size,
+                        size
+                    )
                     //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
                 } catch (error) {
                     console.error(error)
                 }
             }
         }
-
     }
 }

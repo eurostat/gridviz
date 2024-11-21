@@ -17,15 +17,15 @@ export class SegmentStyle extends Style {
 
         /** A function returning the color of the cell segment.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => '#EA6BAC') //(c,r,z,vs) => {}
 
         /** A function returning the width of the segment representing a cell, in geo unit
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
-        this.width = opts.width || ((cell, resolution) => resolution * 0.1)  //(c,r,z,vs) => {}
+        this.width = opts.width || ((cell, resolution) => resolution * 0.1) //(c,r,z,vs) => {}
 
         /** A function returning the length of the segment representing a cell, in geo unit
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
-        this.length = opts.length || ((cell, resolution) => resolution * 0.9)  //(c,r,z,vs) => {}
+        this.length = opts.length || ((cell, resolution) => resolution * 0.9) //(c,r,z,vs) => {}
 
         /** A function returning the orientation (in degrees) of the segment representing a cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
@@ -40,7 +40,6 @@ export class SegmentStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 

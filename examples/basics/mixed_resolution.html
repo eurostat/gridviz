@@ -2,10 +2,8 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 50, y: 50, z: 0.3 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), { x: 50, y: 50, z: 0.3 }).addZoomButtons()
 
     //define mixed-resolution dataset
     const dataset = new gridviz.JSGrid(
@@ -32,9 +30,8 @@
 
     //make style
     const style = new gridviz.ShapeColorSizeStyle({
-
         //color, based on value property
-        color: (cell) => "rgb(100,100," + Math.floor(255 * cell.value / 70) + ")",
+        color: (cell) => 'rgb(100,100,' + Math.floor((255 * cell.value) / 70) + ')',
 
         //size the cells according to their resolution
         size: dataset.mixedResolution,
@@ -54,5 +51,4 @@
 
     //
     map.redraw()
-
 </script>

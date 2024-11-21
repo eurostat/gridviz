@@ -7,21 +7,30 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000, backgroundColor: "black" })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 1000,
+        backgroundColor: 'black',
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/'),
-        { preprocess: cell => +cell.TOT_P_2021 > 0 }
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/'
+            ),
+        { preprocess: (cell) => +cell.TOT_P_2021 > 0 }
     )
 
     //define style
     const style = new gridviz.SquareColorWebGLStyle({
-        viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
+        viewScale: (cells) => d3.max(cells, (cell) => +cell.TOT_P_2021),
         tFun: (cell, resolution, z, max) => cell.TOT_P_2021 / max,
         color: d3.interpolateMagma,
         stretching: { fun: 'log', alpha: -7 },
@@ -33,19 +42,23 @@
     //define grid layer
     const gridLayer = new gridviz.GridLayer(dataset, [style, strokeStyle], {
         minPixelsPerCell: 1.5,
-        cellInfoHTML: (cell) => '<b>' + cell.TOT_P_2021 + '</b> inhabitant' + (cell.TOT_P_2021 == 1 ? '' : 's')
+        cellInfoHTML: (cell) =>
+            '<b>' + cell.TOT_P_2021 + '</b> inhabitant' + (cell.TOT_P_2021 == 1 ? '' : 's'),
     })
 
     //define background layer
-    const backgroundLayer = new gridviz.BackgroundLayer(gridviz_eurostat.giscoBackgroundLayer("GreyEarth", 7, "EPSG3035", { filterColor: () => '#000000d1' }))
+    const backgroundLayer = new gridviz.BackgroundLayer(
+        gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', { filterColor: () => '#000000d1' })
+    )
 
     //define boundaries layer
     const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
 
     //define label layer
-    const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true }))
+    const labelLayer = new gridviz.LabelLayer(
+        gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true })
+    )
 
     //add layers to map
     map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
-
 </script>

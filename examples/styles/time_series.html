@@ -3,25 +3,34 @@
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 30 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 30,
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/'
+            )
     )
 
     //define style
     const style = new gridviz.TimeSeriesStyle({
-        ts: ["TOT_P_2006", "TOT_P_2011", "TOT_P_2018", "TOT_P_2021"],
-        lineWidth: (cell, resolution, z, max) => { return z * (1 + 7 * (cell.TOT_P_2021 / max)) },
-        viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
+        ts: ['TOT_P_2006', 'TOT_P_2011', 'TOT_P_2018', 'TOT_P_2021'],
+        lineWidth: (cell, resolution, z, max) => {
+            return z * (1 + 7 * (cell.TOT_P_2021 / max))
+        },
+        viewScale: (cells) => d3.max(cells, (cell) => +cell.TOT_P_2021),
     })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 10 })]
-
 </script>
