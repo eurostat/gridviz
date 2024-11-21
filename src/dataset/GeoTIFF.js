@@ -12,7 +12,6 @@ import { Dataset } from '../core/Dataset.js'
  * @author Joseph Davies, Julien Gaffuri
  */
 export class GeoTIFF extends Dataset {
-
     constructor(map, url, resolution, opts = {}) {
         super(map, url, resolution, opts)
 

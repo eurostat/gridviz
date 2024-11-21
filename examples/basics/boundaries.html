@@ -2,10 +2,12 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 1000,
+    }).addZoomButtons()
 
     //make boundary layer, with a different style depending on the zoom level and line type.
     const boundaryLayer = new gridviz.GeoJSONLayer({
@@ -33,16 +35,16 @@
                 return p.lvl == 3
                     ? [2 * zoom, 2 * zoom]
                     : p.lvl == 2
-                        ? [5 * zoom, 2 * zoom]
-                        : p.lvl == 1
-                            ? [5 * zoom, 2 * zoom]
-                            : [10 * zoom, 3 * zoom]
+                    ? [5 * zoom, 2 * zoom]
+                    : p.lvl == 1
+                    ? [5 * zoom, 2 * zoom]
+                    : [10 * zoom, 3 * zoom]
             else if (zoom < 1000)
                 return p.lvl == 2
                     ? [5 * zoom, 2 * zoom]
                     : p.lvl == 1
-                        ? [5 * zoom, 2 * zoom]
-                        : [10 * zoom, 3 * zoom]
+                    ? [5 * zoom, 2 * zoom]
+                    : [10 * zoom, 3 * zoom]
             else if (zoom < 2000) return p.lvl == 1 ? [5 * zoom, 2 * zoom] : [10 * zoom, 3 * zoom]
             else return [10 * zoom, 3 * zoom]
         },
@@ -51,5 +53,4 @@
     //add layer to map
     map.layers = [boundaryLayer]
     map.redraw()
-
 </script>

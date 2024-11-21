@@ -10,14 +10,13 @@ import { Dataset } from '../core/Dataset.js'
  * @author Joseph Davies, Julien Gaffuri
  */
 export class JSGrid extends Dataset {
-
     /**
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {Array.<Object>} cells The cells.
      * @param {} opts
      */
     constructor(resolution, cells, opts = {}) {
-        super(undefined, "", resolution, opts)
+        super(undefined, '', resolution, opts)
 
         /**
          * @private
@@ -30,7 +29,9 @@ export class JSGrid extends Dataset {
      *
      * @param {import("../core/GeoCanvas.js").Envelope|undefined} e
      */
-    getData(e) { return this }
+    getData(e) {
+        return this
+    }
 
     /**
      * Fill the view cache with all cells which are within a geographical envelope.

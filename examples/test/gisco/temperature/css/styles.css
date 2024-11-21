@@ -72,7 +72,7 @@ main {
 
 #estat-ribbon-svg {
     height: 73px;
-    width:106px;
+    width: 106px;
 }
 
 #gridviz-legend {
@@ -84,15 +84,14 @@ main {
     box-shadow: rgb(221, 221, 221) 0px 0px 3px 3px;
 }
 
-#gridviz-legend>div>div {
+#gridviz-legend > div > div {
     display: flex;
 }
 
 #tooltip_eurostat {
     z-index: 999;
-    box-shadow: 0 2px 4px rgba(0, 47, 103, 0.08),
-        0 0 10px rgba(0, 47, 103, 0.04), 0 4px 5px rgba(0, 47, 103, 0.04),
-        0 -4px 4px rgba(0, 47, 103, 0.04) !important;
+    box-shadow: 0 2px 4px rgba(0, 47, 103, 0.08), 0 0 10px rgba(0, 47, 103, 0.04),
+        0 4px 5px rgba(0, 47, 103, 0.04), 0 -4px 4px rgba(0, 47, 103, 0.04) !important;
     background-color: white !important;
     border-radius: 0px !important;
     font-size: 1rem !important;
@@ -148,6 +147,6 @@ main {
     background: #ffffffcc;
 }
 
-#gridviz-attribution>span {
+#gridviz-attribution > span {
     align-self: center;
 }

@@ -24,7 +24,7 @@ export class TimeSeriesStyle extends Style {
 
         /** A function specifying when a value should be considered as "no data" and thus not ignored. The line will have a break at these values.
          * @type {function(string):boolean} */
-        this.noData = opts.noData || ((v) => v === undefined || v == "" || v === null || isNaN(+v))
+        this.noData = opts.noData || ((v) => v === undefined || v == '' || v === null || isNaN(+v))
 
         //x
         /** in geo unit
@@ -40,7 +40,7 @@ export class TimeSeriesStyle extends Style {
         /** @type {function(import("../core/Dataset.js").Cell,number,number):number} */
         this.height = opts.height || ((c, r, z) => r)
         /** @type {function(import("../core/Dataset.js").Cell,number,number):AnchorModeYEnum} */
-        this.anchorModeY = opts.anchorModeY || ((c, r, z) => "center")
+        this.anchorModeY = opts.anchorModeY || ((c, r, z) => 'center')
 
         /** A function returning the width of the line, in geo unit
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
@@ -48,7 +48,7 @@ export class TimeSeriesStyle extends Style {
 
         /** A function returning the color of the chart.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "black") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => 'black') //(c,r,z,vs) => {}
     }
 
     /**
@@ -59,7 +59,6 @@ export class TimeSeriesStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -70,10 +69,10 @@ export class TimeSeriesStyle extends Style {
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //compute cell amplitude
-        const getAmplitude = c => {
+        const getAmplitude = (c) => {
             let min, max
             for (let t of this.ts) {
-                const val = c[t];
+                const val = c[t]
                 if (val == undefined) continue
                 if (min == undefined || val < min) min = val
                 if (max == undefined || val > max) max = val
@@ -93,9 +92,8 @@ export class TimeSeriesStyle extends Style {
 
         const nb = this.ts.length
 
-        geoCanvas.ctx.lineCap = "butt"
+        geoCanvas.ctx.lineCap = 'butt'
         for (let c of cells) {
-
             //line width
             /** @type {number|undefined} */
             const wG = this.lineWidth ? this.lineWidth(c, resolution, z, viewScale) : undefined
@@ -105,7 +103,6 @@ export class TimeSeriesStyle extends Style {
             /** @type {string|undefined} */
             const col = this.color ? this.color(c, resolution, z, viewScale) : undefined
             if (!col) continue
-
 
             //x
             const offX = this.offsetX ? this.offsetX(c, resolution, z) : 0
@@ -118,7 +115,7 @@ export class TimeSeriesStyle extends Style {
             if (offY == undefined || isNaN(offY)) continue
             const h = this.height ? this.height(c, resolution, z) : resolution
             if (h == undefined || isNaN(h)) continue
-            const anchY = this.anchorModeY ? this.anchorModeY(c, resolution, z) : "center"
+            const anchY = this.anchorModeY ? this.anchorModeY(c, resolution, z) : 'center'
             if (!anchY) continue
 
             geoCanvas.ctx.lineWidth = wG
@@ -126,35 +123,35 @@ export class TimeSeriesStyle extends Style {
 
             //compute anchor Y figures
             let val0, y0
-            if (anchY === "first") {
+            if (anchY === 'first') {
                 //get first value
                 val0 = c[this.ts[0]]
                 y0 = 0
-            } else if (anchY === "last") {
+            } else if (anchY === 'last') {
                 //get last value
                 val0 = c[this.ts[this.ts.length - 1]]
                 y0 = 0
-            } else if (anchY === "bottom") {
+            } else if (anchY === 'bottom') {
                 //get min
                 for (let t of this.ts) {
-                    const val = +c[t];
+                    const val = +c[t]
                     if (val == undefined) continue
                     if (val0 == undefined || val < val0) val0 = val
                 }
                 y0 = 0
-            } else if (anchY === "top") {
+            } else if (anchY === 'top') {
                 //get max
                 for (let t of this.ts) {
-                    const val = +c[t];
+                    const val = +c[t]
                     if (val == undefined) continue
                     if (val0 == undefined || val > val0) val0 = val
                 }
                 y0 = resolution
-            } else if (anchY === "center") {
+            } else if (anchY === 'center') {
                 //get min and max
                 let min, max
                 for (let t of this.ts) {
-                    const val = c[t];
+                    const val = c[t]
                     if (val == undefined) continue
                     if (min == undefined || val < min) min = val
                     if (max == undefined || val > max) max = val
@@ -162,8 +159,8 @@ export class TimeSeriesStyle extends Style {
                 val0 = (+max + +min) * 0.5
                 y0 = resolution / 2
             } else {
-                console.log("Unexpected anchorModeY: " + anchY)
-                continue;
+                console.log('Unexpected anchorModeY: ' + anchY)
+                continue
             }
 
             /*/draw line
@@ -180,7 +177,6 @@ export class TimeSeriesStyle extends Style {
             }
             cg.ctx.stroke()*/
 
-
             //draw line, segment by segment
             const sX = w / (nb - 1)
 
@@ -188,7 +184,7 @@ export class TimeSeriesStyle extends Style {
             let v0 = c[this.ts[0]]
             if (!this.noData(v0)) {
                 geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x + offX, c.y + y0 + (v0 - val0) * h / ampMax + offY)
+                geoCanvas.ctx.moveTo(c.x + offX, c.y + y0 + ((v0 - val0) * h) / ampMax + offY)
             }
             //console.log(v0, isNaN(v0))
 
@@ -200,7 +196,6 @@ export class TimeSeriesStyle extends Style {
 
                 //both points 'no data'
                 if (this.noData(v0) && this.noData(v1)) {
-
                     //second point 'no data'
                 } else if (!this.noData(v0) && this.noData(v1)) {
                     geoCanvas.ctx.stroke()
@@ -208,22 +203,19 @@ export class TimeSeriesStyle extends Style {
                     //first point 'no data'
                 } else if (this.noData(v0) && !this.noData(v1)) {
                     geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (v1 - val0) * h / ampMax + offY)
+                    geoCanvas.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + ((v1 - val0) * h) / ampMax + offY)
 
                     //both points have data: trace line
                 } else {
-                    geoCanvas.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (v1 - val0) * h / ampMax + offY)
+                    geoCanvas.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + ((v1 - val0) * h) / ampMax + offY)
                     //if it is the last point, stroke
                     if (i == nb - 1) geoCanvas.ctx.stroke()
                 }
                 v0 = v1
             }
-
         }
 
         //update legend, if any
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
-
 }
-

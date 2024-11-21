@@ -4,10 +4,7 @@
     "source": {
         "includePattern": ".+\\.js(doc|x)?$",
         "excludePattern": "(^|\\/|\\\\)_",
-        "exclude": [
-            "src/dataset/COGeo.js",
-            "src/dataset/GeoTIFF.js"
-        ],
+        "exclude": ["src/dataset/COGeo.js", "src/dataset/GeoTIFF.js"],
         "include": [
             "src/core",
             "src/button",
@@ -28,10 +25,7 @@
     "sourceType": "module",
     "tags": {
         "allowUnknownTags": true,
-        "dictionaries": [
-            "jsdoc",
-            "closure"
-        ]
+        "dictionaries": ["jsdoc", "closure"]
     },
     "templates": {
         "cleverLinks": false,

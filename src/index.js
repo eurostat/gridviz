@@ -48,7 +48,13 @@ export { GeoJSONLayer } from './layer/GeoJSONLayer.js'
 export { ColorLegend } from './legend/ColorLegend.js'
 export { ColorDiscreteLegend } from './legend/ColorDiscreteLegend.js'
 export { ColorCategoryLegend } from './legend/ColorCategoryLegend.js'
-export { SizeLegend, sizeLegend, sizeLegendViewScale, sizeDiscreteLegend, sizeDiscreteViewScaleLegend } from './legend/SizeLegend.js'
+export {
+    SizeLegend,
+    sizeLegend,
+    sizeLegendViewScale,
+    sizeDiscreteLegend,
+    sizeDiscreteViewScaleLegend,
+} from './legend/SizeLegend.js'
 export { OrientationLegend, orientationLegend } from './legend/OrientationLegend.js'
 export { TernaryLegend } from './legend/TernaryLegend.js'
 

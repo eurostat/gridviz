@@ -253,7 +253,9 @@
                         if (!keep) return false
                         //classify
                         c.cH =
-                            c.avg_time_nearest_h == 'NA' ? 'NA' : gridviz.getClass(c.avg_time_nearest_h, breaksH)
+                            c.avg_time_nearest_h == 'NA'
+                                ? 'NA'
+                                : gridviz.getClass(c.avg_time_nearest_h, breaksH)
                         c.cE =
                             c.avg_time_nearest_ep == 'NA'
                                 ? 'NA'
@@ -272,7 +274,11 @@
             })
             //set legend
             popStyle.legends.push(
-                new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#000000dd' })
+                new gridviz.SizeLegend({
+                    shape: 'circle',
+                    labelUnitText: 'inhabitants',
+                    fillColor: '#000000dd',
+                })
             )
 
             //

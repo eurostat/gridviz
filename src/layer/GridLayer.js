@@ -25,7 +25,7 @@ export class GridLayer extends Layer {
         /** @type {Array.<import("../core/Style").Style>} */
         this.styles = styles
 
-        /** 
+        /**
          * This parameter is used when the dataset is a MultiResolutionDataset.
          * It defines the minimum number of pixels a grid cell should have to select the dataset to display based on its resolution.
          * A low value, means that the map will be more detailled (smaller cells).
@@ -44,7 +44,6 @@ export class GridLayer extends Layer {
 
     /** */
     draw(geoCanvas, legend) {
-
         //get zoom level
         const z = geoCanvas.view.z
 
@@ -61,15 +60,13 @@ export class GridLayer extends Layer {
 
         //draw cells, style by style
         for (const s of this.styles) {
-
             //check if style is visible
             if (s.visible && !s.visible(z)) continue
 
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?
             geoCanvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
-            if (s.blendOperation)
-                geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
+            if (s.blendOperation) geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             geoCanvas.setCanvasTransform()
@@ -78,8 +75,7 @@ export class GridLayer extends Layer {
             s.draw(dsc.getViewCache(), geoCanvas, dsc.getResolution())
 
             //draw style filter
-            if (s.filterColor)
-                s.drawFilter(geoCanvas)
+            if (s.filterColor) s.drawFilter(geoCanvas)
         }
 
         //add legend element
@@ -99,7 +95,6 @@ export class GridLayer extends Layer {
                 }
             }
         }
-
     }
 
     /** @private */
@@ -108,7 +103,6 @@ export class GridLayer extends Layer {
         else legendComp.node().append(lg.div.node())
     }
 
-
     /**
      * Return the relevant dataset component for a specified zoom.
      *
@@ -116,15 +110,13 @@ export class GridLayer extends Layer {
      * @returns {import("../core/Dataset").Dataset|undefined}
      * */
     getDataset(z) {
-        return this.dataset.getDataset(z, this.minPixelsPerCell);
+        return this.dataset.getDataset(z, this.minPixelsPerCell)
     }
-
-
 
     /**
      * Set/get style stack.
-     * 
-     * @param {undefined|import("../core/Style").Style|Array.<import("../core/Style").Style>} styles 
+     *
+     * @param {undefined|import("../core/Style").Style|Array.<import("../core/Style").Style>} styles
      * @returns { this | Array.<import("../core/Style").Style> }
      */
     styles_(styles) {
@@ -135,8 +127,6 @@ export class GridLayer extends Layer {
         else this.styles = arguments
         return this
     }
-
-
 
     /**
      * The default function returning cell information as HTML.

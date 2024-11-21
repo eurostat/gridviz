@@ -38,7 +38,7 @@ export class Map {
         }
 
         //https://css-tricks.com/absolute-positioning-inside-relative-positioning/
-        this.container.style.position = "relative"; // container element must have relative positioning
+        this.container.style.position = 'relative' // container element must have relative positioning
 
         //set dimensions
         /** @type {number} */
@@ -54,13 +54,14 @@ export class Map {
          * @type {GeoCanvas}
          * @private */
         this.geoCanvas = new GeoCanvas(this._canvas, opts.x, opts.y, opts.z, opts)
-        this.geoCanvas.redraw = () => { this.redraw() }
+        this.geoCanvas.redraw = () => {
+            this.redraw()
+        }
 
         // legend div
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
         if (this.legend.empty()) this.initialiseLegend()
-
 
         //tooltip
 
@@ -104,10 +105,10 @@ export class Map {
             opts.defaultGlobalCompositeOperation || this.geoCanvas.ctx.globalCompositeOperation
     }
 
-    /** 
-     * @protected 
+    /**
+     * @protected
      * @returns {HTMLCanvasElement}
-    */
+     */
     initialiseCanvas() {
         const canvas = document.createElement('canvas')
         canvas.setAttribute('width', '' + this.w)
@@ -115,7 +116,6 @@ export class Map {
         this.container.appendChild(canvas)
         return canvas
     }
-
 
     initialiseLegend() {
         this.legend = select(this.container.id && this.container.id != '' ? '#' + this.container.id : 'body')
@@ -138,8 +138,8 @@ export class Map {
 
     /**
      * Set/get layer stack.
-     * 
-     * @param {undefined|import("./Layer.js").Layer|import("./Layer.js").Layer[]} layers 
+     *
+     * @param {undefined|import("./Layer.js").Layer|import("./Layer.js").Layer[]} layers
      * @returns { this | import("./Layer.js").Layer[] }
      */
     layers_(layers) {
@@ -165,14 +165,12 @@ export class Map {
 
         //go through the layers
         for (const layer of this.layers) {
-
             //check if layer is visible
             if (layer.visible && !layer.visible(z)) continue
 
             //set layer alpha and blend mode
             this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-            if (layer.blendOperation)
-                this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
+            if (layer.blendOperation) this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
@@ -181,8 +179,7 @@ export class Map {
             layer.draw(this.geoCanvas, this.legend)
 
             //draw layer filter
-            if (layer.filterColor)
-                layer.drawFilter(this.geoCanvas)
+            if (layer.filterColor) layer.drawFilter(this.geoCanvas)
 
             //restore default alpha and blend operation
             this.geoCanvas.ctx.globalAlpha = 1.0
@@ -198,7 +195,6 @@ export class Map {
         return this
     }
 
-
     /**
      * @param {number} marginPx
      * @returns {import('./GeoCanvas.js').Envelope}
@@ -207,8 +203,6 @@ export class Map {
     updateExtentGeo(marginPx = 20) {
         return this.geoCanvas.updateExtentGeo(marginPx)
     }
-
-
 
     /** @param {MouseEvent} e */
     focusCell(e) {
@@ -274,7 +268,6 @@ export class Map {
         }
     }
 
-
     /**
      * Return the cell HTML info at a given geo position.
      * This is usefull for user interactions, to show this info where the user clicks for example.
@@ -316,8 +309,7 @@ export class Map {
         }
     }
 
-
-    /** 
+    /**
      * @param {number} x
      * @param {number} y
      * @param {number|undefined} z
@@ -330,7 +322,9 @@ export class Map {
     }
 
     /** @returns {import('./GeoCanvas.js').View} */
-    getView() { return this.geoCanvas.view }
+    getView() {
+        return this.geoCanvas.view
+    }
 
     /** @returns {number} */
     getZoom() {
@@ -341,7 +335,6 @@ export class Map {
         this.geoCanvas.view.z = z
         return this
     }
-
 
     /** @returns {Array.<number|undefined>} */
     getCenterExtent() {
@@ -362,8 +355,6 @@ export class Map {
         this.geoCanvas.setZoomExtent(val)
         return this
     }
-
-
 
     /** @returns {string} */
     getBackgroundColor() {
@@ -395,7 +386,7 @@ export class Map {
             x: opts?.x,
             y: opts?.y,
             onZoom: opts?.onZoom,
-            delta: opts?.delta || 0.2
+            delta: opts?.delta || 0.2,
         })
 
         return this
@@ -418,7 +409,7 @@ export class Map {
             id: opts?.id || 'gridviz-fullscreen-button',
             class: opts?.class,
             x: opts?.x,
-            y: opts?.y
+            y: opts?.y,
         })
 
         return this

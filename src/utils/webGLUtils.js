@@ -7,7 +7,7 @@
  * @param {object} opts
  * @returns {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext}}
  */
-export function makeWebGLCanvas(width, height, opts={}) {
+export function makeWebGLCanvas(width, height, opts = {}) {
     const canvas = document.createElement('canvas')
     canvas.setAttribute('width', width)
     canvas.setAttribute('height', height)
@@ -62,8 +62,10 @@ export function createShader(gl, type, ...sources) {
 export function checkWebGLSupport() {
     try {
         const canvas = document.createElement('canvas')
-        return !!(!!window.WebGLRenderingContext &&
-            (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')))
+        return !!(
+            !!window.WebGLRenderingContext &&
+            (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+        )
     } catch (err) {
         return false
     }

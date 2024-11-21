@@ -8,7 +8,6 @@ import { Style } from '../core/Style.js'
  * @author Julien Gaffuri
  */
 export class ImageStyle extends Style {
-
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
@@ -26,7 +25,6 @@ export class ImageStyle extends Style {
          * @private
          * @type {object} */
         this.cache = {}
-
     }
 
     /**
@@ -36,7 +34,6 @@ export class ImageStyle extends Style {
      * @override
      */
     async draw(cells, geoCanvas, resolution) {
-
         //
         const z = geoCanvas.view.z,
             resolutionPix = resolution / z
@@ -49,7 +46,6 @@ export class ImageStyle extends Style {
 
         //
         for (let cell of cells) {
-
             //get cell image url
             const url = this.image(cell, resolution, z, viewScale)
             if (!url) continue
@@ -62,12 +58,11 @@ export class ImageStyle extends Style {
             const image = this.cache[url]
 
             //loading, keep waiting
-            if (image == "loading") return;
-
+            if (image == 'loading') return
             //no image: load it
             else if (!image) {
                 //tag as loading
-                this.cache[url] = "loading"
+                this.cache[url] = 'loading'
 
                 //define image
                 const img = new Image()
@@ -78,23 +73,26 @@ export class ImageStyle extends Style {
                 }
                 img.onerror = () => {
                     //case when no image
-                    console.warn("Could not retrieve image from", url)
+                    console.warn('Could not retrieve image from', url)
                 }
                 //set URL to launch the download
                 img.src = url
-
             } else {
                 //draw image
                 const d = (resolutionPix - sizePix) / 2
                 try {
-                    geoCanvas.ctx.drawImage(image, geoCanvas.geoToPixX(cell.x) + d, geoCanvas.geoToPixY(cell.y) + d - resolutionPix, sizePix, sizePix)
+                    geoCanvas.ctx.drawImage(
+                        image,
+                        geoCanvas.geoToPixX(cell.x) + d,
+                        geoCanvas.geoToPixY(cell.y) + d - resolutionPix,
+                        sizePix,
+                        sizePix
+                    )
                 } catch (error) {
                     console.error(error)
                 }
             }
-
         }
-
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })

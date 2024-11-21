@@ -221,14 +221,15 @@
             )
 
             //add legend
-            let colCat = colors.map((color,i)=> [color,categories[i]])
+            let colCat = colors.map((color, i) => [color, categories[i]])
 
             map.layers[0].styles[0].legends.push(
                 new gridviz.ColorCategoryLegend({
-                title: 'Ranking since 1991',
-                colCat: colCat,
-                shape: 'square',
-            }))
+                    title: 'Ranking since 1991',
+                    colCat: colCat,
+                    shape: 'square',
+                })
+            )
 
             // map.layers[0].styles[0].legends.push(
             //     new gridviz.ColorDiscreteLegend({

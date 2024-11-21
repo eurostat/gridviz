@@ -76,7 +76,6 @@ export class Legend {
         this.labelFormat = opts.labelFormat
     }
 
-
     makeTitle() {
         if (!this.title) return
         this.div
@@ -86,7 +85,6 @@ export class Legend {
             .style('margin-bottom', '7px')
             .text(this.title)
     }
-
 
     /**
      * Apply a style to the legend div.

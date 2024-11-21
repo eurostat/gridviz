@@ -2,63 +2,63 @@
 
 ## Table of contents
 
-- [Gridviz API reference](#gridviz-api-reference)
-  - [Table of contents](#table-of-contents)
-  - [Usage](#usage)
-  - [Map Configuration](#map-configuration)
-    - [Map options object](#map-options-object)
-  - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
-  - [Adding data](#adding-data)
-    - [Single CSV file](#single-csv-file)
-    - [Multi scale CSV data](#multi-scale-csv-data)
-    - [Tiled data](#tiled-data)
-    - [Multi scale tiled data](#multi-scale-tiled-data)
-    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
-  - [Basic styles](#basic-styles)
-    - [Shape/Color/Size Style](#shapecolorsize-style)
-    - [Square color WebGL Style](#square-color-webgl-style)
-    - [Square color category WebGL style](#square-color-category-webgl-style)
-    - [Composition style](#composition-style)
-    - [Segment style](#segment-style)
-    - [Stroke style](#stroke-style)
-  - [Advanced styles](#advanced-styles)
-    - [Tanaka style](#tanaka-style)
-    - [Dot density style](#dot-density-style)
-    - [Pillars style](#pillars-style)
-    - [Text style](#text-style)
-    - [Time series style](#time-series-style)
-  - [Side styles](#side-styles)
-    - [Side style](#side-style)
-    - [Side category style](#side-category-style)
-    - [Contour style](#contour-style)
-    - [Isometric fence style](#isometric-fence-style)
-  - [Esthetic styles](#esthetic-styles)
-    - [JoyPlot Style](#joyplot-style)
-    - [Mosaic style](#mosaic-style)
-    - [Ninja star style](#ninja-star-style)
-    - [Lego style](#lego-style)
-    - [Lego category style](#lego-category-style)
-  - [Kernel smoothing](#kernel-smoothing)
-  - [Custom styles](#custom-styles)
-  - [Legends](#legends)
-    - [ColorCategoryLegend](#colorcategorylegend)
-    - [ColorDiscreteLegend](#colordiscretelegend)
-    - [ColorLegend](#colorlegend)
-    - [SegmentOrientationLegend](#segmentorientationlegend)
-    - [SegmentWidthLegend](#segmentwidthlegend)
-    - [SizeLegend](#sizelegend)
-    - [Legend styling](#legend-styling)
-  - [Stretching](#stretching)
-  - [Background layer](#background-layer)
-    - [Tiled layer](#tiled-layer)
-    - [WMS](#wms)
-  - [Foreground information](#foreground-information)
-    - [Showing labels](#showing-labels)
-    - [Showing boundaries](#showing-boundaries)
-  - [Transparency](#transparency)
-  - [Tooltip](#tooltip)
-  - [Leaflet](#leaflet)
-  - [Alright?](#alright)
+-   [Gridviz API reference](#gridviz-api-reference)
+    -   [Table of contents](#table-of-contents)
+    -   [Usage](#usage)
+    -   [Map Configuration](#map-configuration)
+        -   [Map options object](#map-options-object)
+    -   [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
+    -   [Adding data](#adding-data)
+        -   [Single CSV file](#single-csv-file)
+        -   [Multi scale CSV data](#multi-scale-csv-data)
+        -   [Tiled data](#tiled-data)
+        -   [Multi scale tiled data](#multi-scale-tiled-data)
+        -   [Data pre-processing and filtering](#data-pre-processing-and-filtering)
+    -   [Basic styles](#basic-styles)
+        -   [Shape/Color/Size Style](#shapecolorsize-style)
+        -   [Square color WebGL Style](#square-color-webgl-style)
+        -   [Square color category WebGL style](#square-color-category-webgl-style)
+        -   [Composition style](#composition-style)
+        -   [Segment style](#segment-style)
+        -   [Stroke style](#stroke-style)
+    -   [Advanced styles](#advanced-styles)
+        -   [Tanaka style](#tanaka-style)
+        -   [Dot density style](#dot-density-style)
+        -   [Pillars style](#pillars-style)
+        -   [Text style](#text-style)
+        -   [Time series style](#time-series-style)
+    -   [Side styles](#side-styles)
+        -   [Side style](#side-style)
+        -   [Side category style](#side-category-style)
+        -   [Contour style](#contour-style)
+        -   [Isometric fence style](#isometric-fence-style)
+    -   [Esthetic styles](#esthetic-styles)
+        -   [JoyPlot Style](#joyplot-style)
+        -   [Mosaic style](#mosaic-style)
+        -   [Ninja star style](#ninja-star-style)
+        -   [Lego style](#lego-style)
+        -   [Lego category style](#lego-category-style)
+    -   [Kernel smoothing](#kernel-smoothing)
+    -   [Custom styles](#custom-styles)
+    -   [Legends](#legends)
+        -   [ColorCategoryLegend](#colorcategorylegend)
+        -   [ColorDiscreteLegend](#colordiscretelegend)
+        -   [ColorLegend](#colorlegend)
+        -   [SegmentOrientationLegend](#segmentorientationlegend)
+        -   [SegmentWidthLegend](#segmentwidthlegend)
+        -   [SizeLegend](#sizelegend)
+        -   [Legend styling](#legend-styling)
+    -   [Stretching](#stretching)
+    -   [Background layer](#background-layer)
+        -   [Tiled layer](#tiled-layer)
+        -   [WMS](#wms)
+    -   [Foreground information](#foreground-information)
+        -   [Showing labels](#showing-labels)
+        -   [Showing boundaries](#showing-boundaries)
+    -   [Transparency](#transparency)
+    -   [Tooltip](#tooltip)
+    -   [Leaflet](#leaflet)
+    -   [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -99,20 +99,20 @@ new gridviz.Map(containerDiv)
 
 The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) map:
 
-| Method                                                                      | Type                                                                           | Default       | Description                                                                                        |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------- |
-| _map_.**getGeoCenter**()<br />_map_.**setGeoCenter**([value])               | { x:number, y:number }                                                         | { x:0, y:0 }  | Get/set the geographical coordinates of the view center.                                           |
-| _map_.**getZoom**()<br />_map_.**setZoom**([value])             | number                                                                         | 1             | Get/set the view zoom. This  is expressed as the size of a pixel in ground distance.    |
-| _map_.**getZoomExtent**()<br />_map_.**setZoomExtent**([value]) | Array(number)                                                                  | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels. |
-| _map_.**getBackgroundColor**()<br />_map_.**setBackgroundColor**([value])   | string                                                                         | "white"       | Get/set the map background color.                                                                  |
-| _map_.**getBoundaryLayer**()<br />_map_.**setBoundaryLayer**([value])       | LineLayer / object                                                             | undefined     | A layer for boundary lines, see [here](#showing-boundaries).                                       |
-| _map_.**getLabelLayer**()<br />_map_.**setLabelLayer**([value])             | LabelLayer / object                                                            | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                              |
-| _map_.**addBackgroundLayer**([options])                                     | object                                                                         |               | Add a background image layer, see [here](#background-layer).                                       |
-| _map_.**addZoomButtons**([options])                                         | All properties are optional <br> {  **id**: `HTML element id`, **class**: `HTML element CSS class`, **x**: `CSS 'left' property`,  **y**: ```CSS 'top' property```,  **onZoom**: `Custom event handler when user clicks zoom in or out`,  <br /> **delta**: `The delta applied to each zoom event.`  } | {  **id**: 'gridviz-zoom-buttons',  **x**: map width - 50,   **y**: 10,  **onZoom**: undefined,  **delta**: 0.2  }| Add zoom in and zoom out buttons to the viewer. |
-| _map_.**addFullscreenButton**([options])                                         | All properties are optional <br>  {  **id**: `HTML element id`, **class**: `HTML element CSS class` **x**: `CSS 'left' property`,  **y**: ```CSS 'top' property``` } | {  **id**: 'gridviz-zoom-buttons',  **x**: map width - 50,  **y**: 10  }| Add a button to the viewer that toggles fullscreen mode. |
-| _map_.**setViewFromURL**() | | | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
-| _map_.**redraw**() | | | Force the map to redraw. |
-| _map_.**destroy**() | | | Destroy the map, canvas, legend and tooltip and remove their event listeners. |
+| Method                                                                    | Type                                                                                                                                                                                                                                                                                          | Default                                                                                                     | Description                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _map_.**getGeoCenter**()<br />_map_.**setGeoCenter**([value])             | { x:number, y:number }                                                                                                                                                                                                                                                                        | { x:0, y:0 }                                                                                                | Get/set the geographical coordinates of the view center.                                                                                                                                                               |
+| _map_.**getZoom**()<br />_map_.**setZoom**([value])                       | number                                                                                                                                                                                                                                                                                        | 1                                                                                                           | Get/set the view zoom. This is expressed as the size of a pixel in ground distance.                                                                                                                                    |
+| _map_.**getZoomExtent**()<br />_map_.**setZoomExtent**([value])           | Array(number)                                                                                                                                                                                                                                                                                 | [0, Infinity]                                                                                               | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.                                                                                                                     |
+| _map_.**getBackgroundColor**()<br />_map_.**setBackgroundColor**([value]) | string                                                                                                                                                                                                                                                                                        | "white"                                                                                                     | Get/set the map background color.                                                                                                                                                                                      |
+| _map_.**getBoundaryLayer**()<br />_map_.**setBoundaryLayer**([value])     | LineLayer / object                                                                                                                                                                                                                                                                            | undefined                                                                                                   | A layer for boundary lines, see [here](#showing-boundaries).                                                                                                                                                           |
+| _map_.**getLabelLayer**()<br />_map_.**setLabelLayer**([value])           | LabelLayer / object                                                                                                                                                                                                                                                                           | undefined                                                                                                   | A layer for labels (such as placenames), see [here](#showing-labels).                                                                                                                                                  |
+| _map_.**addBackgroundLayer**([options])                                   | object                                                                                                                                                                                                                                                                                        |                                                                                                             | Add a background image layer, see [here](#background-layer).                                                                                                                                                           |
+| _map_.**addZoomButtons**([options])                                       | All properties are optional <br> { **id**: `HTML element id`, **class**: `HTML element CSS class`, **x**: `CSS 'left' property`, **y**: `CSS 'top' property`, **onZoom**: `Custom event handler when user clicks zoom in or out`, <br /> **delta**: `The delta applied to each zoom event.` } | { **id**: 'gridviz-zoom-buttons', **x**: map width - 50, **y**: 10, **onZoom**: undefined, **delta**: 0.2 } | Add zoom in and zoom out buttons to the viewer.                                                                                                                                                                        |
+| _map_.**addFullscreenButton**([options])                                  | All properties are optional <br> { **id**: `HTML element id`, **class**: `HTML element CSS class` **x**: `CSS 'left' property`, **y**: `CSS 'top' property` }                                                                                                                                 | { **id**: 'gridviz-zoom-buttons', **x**: map width - 50, **y**: 10 }                                        | Add a button to the viewer that toggles fullscreen mode.                                                                                                                                                               |
+| _map_.**setViewFromURL**()                                                |                                                                                                                                                                                                                                                                                               |                                                                                                             | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
+| _map_.**redraw**()                                                        |                                                                                                                                                                                                                                                                                               |                                                                                                             | Force the map to redraw.                                                                                                                                                                                               |
+| _map_.**destroy**()                                                       |                                                                                                                                                                                                                                                                                               |                                                                                                             | Destroy the map, canvas, legend and tooltip and remove their event listeners.                                                                                                                                          |
 
 ### Map options object
 
@@ -151,7 +151,7 @@ new gridviz.Map(containerDiv, {
 | _opts_.**h**                          | number            | container.offsetHeight           | The height of the canvas.                                                                                                                                           |
 | _opts_.**legendDivId**                | string            | 'gvizLegend'                     | The identifier of the element upon which the legend will be appended.                                                                                               |
 | _opts_.**selectionRectangleColor**    | string            | 'red'                            | The colour of the outline when a cell is highlighted.                                                                                                               |
-| _opts_.**selectionRectangleWidthPix** | Function          | (r,z) => 4                      | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _z_ is the zoom level. |
+| _opts_.**selectionRectangleWidthPix** | Function          | (r,z) => 4                       | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _z_ is the zoom level.  |
 | _opts_.**transparentbackground**      | boolean           | false                            | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
 | _opts_.**backgroundColor**            | string            | 'white'                          | The background color of the canvas when transparentBackground is set to false.                                                                                      |
 | _opts_.**disableZoom**                | Boolean           | false                            | Disables d3 pan and zoom when set to true.                                                                                                                          |
@@ -167,7 +167,7 @@ A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of
 -   Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
 -   The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
 -   Most style parameters are not static values, but _functions_ of various parameters, including the map , usually noted **z** (for "") which represent the size of a pixel screen in ground meter. Style parameters can thus be defined depending on the zoom level so that they adapt to the visualisation scale.
--   Transparency can be defined at layer or style level with their **alpha** and **blendOperation** properties (see CanvasRenderingContext2D [globalAlpha](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha) and [globalCompositeOperation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation) properties). These values are also not static, but functions of the  **z**. It is thus possible to define the transparency depending on the zoom level,so that a layer or a style fades away when zooming in or out.
+-   Transparency can be defined at layer or style level with their **alpha** and **blendOperation** properties (see CanvasRenderingContext2D [globalAlpha](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha) and [globalCompositeOperation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation) properties). These values are also not static, but functions of the **z**. It is thus possible to define the transparency depending on the zoom level,so that a layer or a style fades away when zooming in or out.
 
 For further information, see the [examples](../examples/).
 
@@ -287,7 +287,7 @@ To manage creation of datasets and their possible reuse accross different layers
 
 | Method                                           | Arguments | Description                            |
 | ------------------------------------------------ | --------- | -------------------------------------- |
-| _map_.**addLayer**([args])            | -         | Add a layer to the map.                |
+| _map_.**addLayer**([args])                       | -         | Add a layer to the map.                |
 | _map_.**makeCSVGridDataset**([args])             | -         | Make a CSV grid dataset.               |
 | _map_.**makeTiledGridDataset**([args])           | -         | Make a tiled grid dataset.             |
 | _map_.**makeMultiScaleCSVGridDataset**([args])   | -         | Make a multi scale CSV grid dataset.   |
@@ -383,11 +383,11 @@ See [this example with changing size and color](https://eurostat.github.io/gridv
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_random.html)).
 
-| Property     | Type                      | Default                 | Description                                                                                                                           |
-| ------------ | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **color**    | function(c,r,z,vs):string | () => "#EA6BAC" | A function computing the color of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
-| **size**     | function(c,r,z,vs):number | (c,r) => r         | A function computing the size of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
-| **shape**    | function(c,r,z,vs):string        | () => "square"          | A function computing the shape of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_        |
+| Property  | Type                      | Default         | Description                                                                                                                                                                                                               |
+| --------- | ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **color** | function(c,r,z,vs):string | () => "#EA6BAC" | A function computing the color of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**.                                                                               |
+| **size**  | function(c,r,z,vs):number | (c,r) => r      | A function computing the size of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**.                                                           |
+| **shape** | function(c,r,z,vs):string | () => "square"  | A function computing the shape of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_ |
 
 ### Square color WebGL Style
 
@@ -400,15 +400,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 
 See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl_dark.html)).
 
-| Property       | Type                       | Default                                                                                             | Description                                                                                                                                                                                                                                                                                                      |
-| -------------- | -------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **colorCol**   | string                     | undefined                                                                                           | The name of the column used for the color.                                                                                                                                                                                                                                                                       |
-| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max                                                                              | A function computing the cell color parameter **t** (whithin [0,1]) from its **colorCol** value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.                                                                            |
+| Property       | Type                       | Default                                                                                             | Description                                                                                                                                                                                                                                                                                                   |
+| -------------- | -------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **colorCol**   | string                     | undefined                                                                                           | The name of the column used for the color.                                                                                                                                                                                                                                                                    |
+| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max                                                                              | A function computing the cell color parameter **t** (whithin [0,1]) from its **colorCol** value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.                                                                         |
 | **stretching** | {fun:string, alpha:number} | undefined                                                                                           | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among _{"pow", "powInv", "exp", "log"}_ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
-| **colors**     | Array(string)              | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                    |
-| **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].                                                                                                                                                                          |
-| **opacity**    | function(r,z):number      | undefined                                                                                           | A function returning the opacity of the style from the resolution **r** and  **z**, within [0,1]. NB: If this opacity is defined, the individual color opacity will be ignored.                                                                                                                      |
-| **size**       | function(r,z):number      | (r,z) => r + 0.2 \* z                                                                             | A function returning the size of the cells from the resolution **r** and  **z**, in geographical unit. All cells have the same size.                                                                                                                                                                 |
+| **colors**     | Array(string)              | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                 |
+| **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].                                                                                                                                                                       |
+| **opacity**    | function(r,z):number       | undefined                                                                                           | A function returning the opacity of the style from the resolution **r** and **z**, within [0,1]. NB: If this opacity is defined, the individual color opacity will be ignored.                                                                                                                                |
+| **size**       | function(r,z):number       | (r,z) => r + 0.2 \* z                                                                               | A function returning the size of the cells from the resolution **r** and **z**, in geographical unit. All cells have the same size.                                                                                                                                                                           |
 
 ### Square color category WebGL style
 
@@ -418,11 +418,11 @@ This style displays each cell as a square, with a changing color based on a cate
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorcatwgl.html)).
 
-| Property     | Type                    | Default                 | Description                                                                                                                                      |
-| ------------ | ----------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --- |
-| **colorCol** | string                  | undefined               | The name of the column used to retrieve each cell category.                                                                                      |
-| **color**    | Object, string -> color | undefined               | The dictionary (string -> color) which give the color of each category.                                                                          |     |
-| **size**     | function(r,z):number   | (r,z) => r + 0.2 \* z | A function returning the size of the cells from the resolution **r** and  **z**, in geographical unit. All cells have the same size. |
+| Property     | Type                    | Default               | Description                                                                                                                         |
+| ------------ | ----------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --- |
+| **colorCol** | string                  | undefined             | The name of the column used to retrieve each cell category.                                                                         |
+| **color**    | Object, string -> color | undefined             | The dictionary (string -> color) which give the color of each category.                                                             |     |
+| **size**     | function(r,z):number    | (r,z) => r + 0.2 \* z | A function returning the size of the cells from the resolution **r** and **z**, in geographical unit. All cells have the same size. |
 
 ### Composition style
 
@@ -436,15 +436,15 @@ This style shows a composition at cell level in various different ways: Flags, p
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/composition_types.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/composition_types.html)).
 
-| Property                         | Type                        | Default         | Description                                                                                                                                                                                                       |
-| -------------------------------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                           |
-| **type**                         | function(c,r,z,vs):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                                        |
-| **size**    | function(c,r,z,vs):number  | ((c,r) => r)  | A function computing the size of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
-| **stripesOrientation**           | function(c,r,z,vs):number     | () => 0         | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
-| **offsetAngle**                  | function(c,r,z,vs):number     | () => 0         | For radar, halftone or pie chart style, a function returning the offset angle for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. The angle is specified in degree. The rotation is anti-clockwise. |
-| **agePyramidHeight**             | function(c,r,z,vs):number     | (c,r,z) => r   | The function specifying the height of the age pyramid for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |   |
-| **pieChartInternalRadiusFactor** | number                      | 0               | For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut. 0 for normal pie charts, 0.5 to empty half of the radius.                                                         |
+| Property                         | Type                               | Default      | Description                                                                                                                                                                                                                                                   |
+| -------------------------------- | ---------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| **color**                        | Object, string -> color            | undefined    | The dictionary (string -> color) which give the color of each category.                                                                                                                                                                                       |
+| **type**                         | function(c,r,z,vs):CompositionType | () => "flag  | A function returning the symbol type of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_        |
+| **size**                         | function(c,r,z,vs):number          | ((c,r) => r) | A function computing the size of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**.                                                                                               |
+| **stripesOrientation**           | function(c,r,z,vs):number          | () => 0      | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**.        |
+| **offsetAngle**                  | function(c,r,z,vs):number          | () => 0      | For radar, halftone or pie chart style, a function returning the offset angle for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. The angle is specified in degree. The rotation is anti-clockwise. |
+| **agePyramidHeight**             | function(c,r,z,vs):number          | (c,r,z) => r | The function specifying the height of the age pyramid for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**.                                                                                           |     |
+| **pieChartInternalRadiusFactor** | number                             | 0            | For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut. 0 for normal pie charts, 0.5 to empty half of the radius.                                                                                                     |
 
 ### Segment style
 
@@ -457,15 +457,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segm
 
 See [this example with random segment orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/segment_random.html)).
 
-| Property        | Type                      | Default         | Description                                                                                                                                |
-| --------------- | ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **orientation** | function(c):number        | () => 0         | A function computing the orientation (in degrees) of the segment representing a cell **c**.                                                |
-| **colorCol**    | string                    | undefined       | The name of the column used for the color.                                                                                                 |
-| **color**       | function(v,r,s):string    | () => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.                         |
-| **lengthCol**   | string                    | undefined       | The name of the column used for the segment length.                                                                                        |
-| **length**      | function(v,r,s,z):number | (v,r,s,z) => r | A function computing the segment length from its **lengthCol** value **v**, the resolution **r**, statistics **s** and  **z**. |
-| **widthCol**    | string                    | undefined       | The name of the column used for the segment width.                                                                                         |
-| **width**       | function(v,r,s,z):number | (v,r,s,z) => r | A function computing the segment width from its **widthCol** value **v**, the resolution **r**, statistics **s** and  **z**.   |
+| Property        | Type                     | Default         | Description                                                                                                                   |
+| --------------- | ------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **orientation** | function(c):number       | () => 0         | A function computing the orientation (in degrees) of the segment representing a cell **c**.                                   |
+| **colorCol**    | string                   | undefined       | The name of the column used for the color.                                                                                    |
+| **color**       | function(v,r,s):string   | () => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.            |
+| **lengthCol**   | string                   | undefined       | The name of the column used for the segment length.                                                                           |
+| **length**      | function(v,r,s,z):number | (v,r,s,z) => r  | A function computing the segment length from its **lengthCol** value **v**, the resolution **r**, statistics **s** and **z**. |
+| **widthCol**    | string                   | undefined       | The name of the column used for the segment width.                                                                            |
+| **width**       | function(v,r,s,z):number | (v,r,s,z) => r  | A function computing the segment width from its **widthCol** value **v**, the resolution **r**, statistics **s** and **z**.   |
 
 ### Stroke style
 
@@ -478,15 +478,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stro
 
 See [this an example with random color, size, width and shape](https://eurostat.github.io/gridviz/examples/styles/stroke_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/stroke_random.html)).
 
-| Property           | Type                      | Default          | Description                                                                                                                                 |
-| ------------------ | ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **strokeColorCol** | string                    | undefined        | The name of the column used for the stroke color.                                                                                           |
-| **strokeColor**    | function(v,r,s):string    | () => "#666"     | A function computing the cell stroke color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.                   |
-| **sizeCol**        | string                    | undefined        | The name of the column used for the size.                                                                                                   |
-| **size**           | function(v,r,s,z):number | (v,r,s,z) => r  | A function computing the cell size from its **sizeCol** value **v**, the resolution **r**, statistics **s** and  **z**.         |
-| **strokeWidthCol** | string                    | undefined        | The name of the column used for the stroke width.                                                                                           |
-| **strokeWidth**    | function(v,r,s,z):number | (v,r,s,z) => z | A function computing the cell stroke width from its **sizeCol** value **v**, the resolution **r**, statistics **s** and  **z**. |
-| **shape**          | function(c):string        | () => "square"   | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "none"}_                          |
+| Property           | Type                     | Default        | Description                                                                                                                    |
+| ------------------ | ------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **strokeColorCol** | string                   | undefined      | The name of the column used for the stroke color.                                                                              |
+| **strokeColor**    | function(v,r,s):string   | () => "#666"   | A function computing the cell stroke color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.      |
+| **sizeCol**        | string                   | undefined      | The name of the column used for the size.                                                                                      |
+| **size**           | function(v,r,s,z):number | (v,r,s,z) => r | A function computing the cell size from its **sizeCol** value **v**, the resolution **r**, statistics **s** and **z**.         |
+| **strokeWidthCol** | string                   | undefined      | The name of the column used for the stroke width.                                                                              |
+| **strokeWidth**    | function(v,r,s,z):number | (v,r,s,z) => z | A function computing the cell stroke width from its **sizeCol** value **v**, the resolution **r**, statistics **s** and **z**. |
+| **shape**          | function(c):string       | () => "square" | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "none"}_             |
 
 ## Advanced styles
 
@@ -523,13 +523,13 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 
 See [this example with random colors](https://eurostat.github.io/gridviz/examples/styles/dotdensity_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/dotdensity_random.html)).
 
-| Property    | Type                      | Default                                              | Description                                                                                                                                                                                         |
-| ----------- | ------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **nbCol**   | string                    | undefined                                            | The name of the column used for the dot number.                                                                                                                                                     |
-| **nb**      | function(v,r,s,z):number | (v, r, s, z) => 0.3 _ r _ r / (z _ z) _ v / s.max | A function computing the number of dots for a cell, from its **nbCol** value **v**, the resolution **r**, statistics **s** and  **z**.                                                  |
-| **color**   | function(c):string        | () => "#FF5733"                                      | A function returning the color of the dots of a cell. Note that it is the same color for all dots within a cell.                                                                                    |
-| **dotSize** | function(r,z):number     | (r,z) => 2 \* z                                    | A function computing the dot size from the resolution **r** and  **z**. It is the same size for all dots.                                                                               |
-| **sigma**   | function(r,z):number     | (r, z) => r \* 0.4                                  | A function computing the sigma parameter of the dispertion (gaussian) of the dots around the cell center, from from the resolution **r** and  **z**. It is the same sigma for all dots. |
+| Property    | Type                     | Default                                           | Description                                                                                                                                                                            |
+| ----------- | ------------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **nbCol**   | string                   | undefined                                         | The name of the column used for the dot number.                                                                                                                                        |
+| **nb**      | function(v,r,s,z):number | (v, r, s, z) => 0.3 _ r _ r / (z _ z) _ v / s.max | A function computing the number of dots for a cell, from its **nbCol** value **v**, the resolution **r**, statistics **s** and **z**.                                                  |
+| **color**   | function(c):string       | () => "#FF5733"                                   | A function returning the color of the dots of a cell. Note that it is the same color for all dots within a cell.                                                                       |
+| **dotSize** | function(r,z):number     | (r,z) => 2 \* z                                   | A function computing the dot size from the resolution **r** and **z**. It is the same size for all dots.                                                                               |
+| **sigma**   | function(r,z):number     | (r, z) => r \* 0.4                                | A function computing the sigma parameter of the dispertion (gaussian) of the dots around the cell center, from from the resolution **r** and **z**. It is the same sigma for all dots. |
 
 ### Pillars style
 
@@ -542,23 +542,23 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 
 See [this basic example with simple style](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar_simple.html)).
 
-| Property             | Type                      | Default                  | Description                                                                                                                               |
-| -------------------- | ------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| **heightCol**        | string                    | undefined                | The name of the column used for the pillar height.                                                                                        |
-| **height**           | function(v,r,s,z):number | (v,r,s,z) => r          | A function computing the pillar height from its **heightCol** value **v**, the resolution **r**, statistics **s** and  **z**. |
-| **colorCol**         | string                    | undefined                | The name of the column used for the color.                                                                                                |
-| **color**            | function(v,r,s):string    | () => "#c08c59"          | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.                        |
-| **widthCol**         | string                    | undefined                | The name of the column used for the pillar width.                                                                                         |
-| **width**            | function(v,r,s,z):number | (v,r,s,z) => 0.5\*r     | A function computing the pillar width from its **widthCol** value **v**, the resolution **r**, statistics **s** and  **z**.   |
-| **simple**           | boolean                   | false                    | Set to true for a simplified drawing (as segments only, not entire pillar).                                                               |
-| **viewHeightFactor** | number                    | 1.5                      | The view height.                                                                                                                          |
-| **viewSX**           | number                    | 0                        | The view X position.                                                                                                                      |
-| **viewSY**           | number                    | -0.5                     | The view Y position.                                                                                                                      |
-| **shadowDirection**  | number                    | -40.3 \* Math.PI / 180.0 | The shadow direction, in radian.                                                                                                          |
-| **shadowFactor**     | number                    | 0.3                      | A factor specifying the shadow length.                                                                                                    |
-| **shadowColor**      | string                    | "#00000033"              | The shadow color.                                                                                                                         |
-| **outlineCol**       | string                    | "#FFFFFF"                | The pillar outline color.                                                                                                                 |
-| **outlineWidthPix**  | number                    | 0.5                      | The pillar outline width, in pixels.                                                                                                      |
+| Property             | Type                     | Default                  | Description                                                                                                                  |
+| -------------------- | ------------------------ | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| **heightCol**        | string                   | undefined                | The name of the column used for the pillar height.                                                                           |
+| **height**           | function(v,r,s,z):number | (v,r,s,z) => r           | A function computing the pillar height from its **heightCol** value **v**, the resolution **r**, statistics **s** and **z**. |
+| **colorCol**         | string                   | undefined                | The name of the column used for the color.                                                                                   |
+| **color**            | function(v,r,s):string   | () => "#c08c59"          | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.           |
+| **widthCol**         | string                   | undefined                | The name of the column used for the pillar width.                                                                            |
+| **width**            | function(v,r,s,z):number | (v,r,s,z) => 0.5\*r      | A function computing the pillar width from its **widthCol** value **v**, the resolution **r**, statistics **s** and **z**.   |
+| **simple**           | boolean                  | false                    | Set to true for a simplified drawing (as segments only, not entire pillar).                                                  |
+| **viewHeightFactor** | number                   | 1.5                      | The view height.                                                                                                             |
+| **viewSX**           | number                   | 0                        | The view X position.                                                                                                         |
+| **viewSY**           | number                   | -0.5                     | The view Y position.                                                                                                         |
+| **shadowDirection**  | number                   | -40.3 \* Math.PI / 180.0 | The shadow direction, in radian.                                                                                             |
+| **shadowFactor**     | number                   | 0.3                      | A factor specifying the shadow length.                                                                                       |
+| **shadowColor**      | string                   | "#00000033"              | The shadow color.                                                                                                            |
+| **outlineCol**       | string                   | "#FFFFFF"                | The pillar outline color.                                                                                                    |
+| **outlineWidthPix**  | number                   | 0.5                      | The pillar outline width, in pixels.                                                                                         |
 
 ### Text style
 
@@ -571,16 +571,16 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/text.html)).
 
-| Property        | Type                      | Default                  | Description                                                                                                                                                   |
-| --------------- | ------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **textCol**     | string                    | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for text.                                                                 |
-| **text**        | function(v,r,s,z):string | (v, r, s, z) => "X"      | A function returning the text of a cell from its **textCol** value **v**, the resolution **r**, statistics **s** and  **z**.                      |
-| **colorCol**    | string                    | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for color.                                                                |
-| **color**       | function(v,r,s,z):string | () => "#EA6BAC"          | A function returning the color of the cell from its **colorCol** value **v**, the resolution **r**, statistics **s** and  **z**.                  |
-| **fontSizeCol** | string                    | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for font size.                                                            |
-| **fontSize**    | function(v,r,s,z):number | (v, r, s, z) => r \* 0.8 | A function returning the font size of a cell in geo unit from its **fontSizeCol** value **v**, the resolution **r**, statistics **s** and  **z**. |
-| **fontFamily**  | string                    | "Arial"                  | The text font family.                                                                                                                                         |
-| **fontWeight**  | string                    | "bold"                   | The text font weight.                                                                                                                                         |
+| Property        | Type                     | Default                  | Description                                                                                                                                      |
+| --------------- | ------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **textCol**     | string                   | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for text.                                                    |
+| **text**        | function(v,r,s,z):string | (v, r, s, z) => "X"      | A function returning the text of a cell from its **textCol** value **v**, the resolution **r**, statistics **s** and **z**.                      |
+| **colorCol**    | string                   | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for color.                                                   |
+| **color**       | function(v,r,s,z):string | () => "#EA6BAC"          | A function returning the color of the cell from its **colorCol** value **v**, the resolution **r**, statistics **s** and **z**.                  |
+| **fontSizeCol** | string                   | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for font size.                                               |
+| **fontSize**    | function(v,r,s,z):number | (v, r, s, z) => r \* 0.8 | A function returning the font size of a cell in geo unit from its **fontSizeCol** value **v**, the resolution **r**, statistics **s** and **z**. |
+| **fontFamily**  | string                   | "Arial"                  | The text font family.                                                                                                                            |
+| **fontWeight**  | string                   | "bold"                   | The text font weight.                                                                                                                            |
 
 ### Time series style
 
@@ -594,15 +594,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time
 | ---------------- | ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **ts**           | Array(string)            | undefined                                                    | The columns of the time series, ordered in chronological order. Note that the style currently requires full time series, without missing data.                                                                                        |
 | **noData**       | function(string):boolean | (v) => v === undefined or v == "" or v === null or isNaN(+v) | A function specifying when a value should be considered as "no data" and thus not ignored. The line will have a break at these values.                                                                                                |
-| **offsetX**      | function(c,r,z):string  | ()=>0                                                        | A fonction computing the offset along X axis, in geographical unit, from origin point (lower left cell corner). This value is computed from the cell **c**, resolution **r** and  **z**.                                  |
-| **width**        | function(c,r,z):string  | ()=>r                                                        | A fonction computing the chart width, in geographical unit. This value is computed from the cell **c**, resolution **r** and  **z**.                                                                                      |
-| **offsetY**      | function(c,r,z):string  | ()=>0                                                        | Same as **offsetX** but along Y axis.                                                                                                                                                                                                 |
-| **height**       | function(c,r,z):string  | ()=>r                                                        | Same as **width**, but for the chart height.                                                                                                                                                                                          |
-| **anchorModeY**  | function(c,r,z):string  | (c, r, z) => "center"                                       | The anchor mode along Y axis: _first_ to anchor to the first value, _last_ for the last, _bottom_ to anchor the minimum value to the bottom, _top_ to anchor the maximum value to the top, _center_ to center the chart along Y axis. |
+| **offsetX**      | function(c,r,z):string   | ()=>0                                                        | A fonction computing the offset along X axis, in geographical unit, from origin point (lower left cell corner). This value is computed from the cell **c**, resolution **r** and **z**.                                               |
+| **width**        | function(c,r,z):string   | ()=>r                                                        | A fonction computing the chart width, in geographical unit. This value is computed from the cell **c**, resolution **r** and **z**.                                                                                                   |
+| **offsetY**      | function(c,r,z):string   | ()=>0                                                        | Same as **offsetX** but along Y axis.                                                                                                                                                                                                 |
+| **height**       | function(c,r,z):string   | ()=>r                                                        | Same as **width**, but for the chart height.                                                                                                                                                                                          |
+| **anchorModeY**  | function(c,r,z):string   | (c, r, z) => "center"                                        | The anchor mode along Y axis: _first_ to anchor to the first value, _last_ for the last, _bottom_ to anchor the minimum value to the bottom, _top_ to anchor the maximum value to the top, _center_ to center the chart along Y axis. |
 | **lineWidthCol** | string                   | undefined                                                    | The name of the column used for the line width.                                                                                                                                                                                       |
-| **lineWidth**    | string                   | (v, r, s, z) => 1.5 \* z                                     | A function computing the cell chart line width in geographical unit from its **sizeCol** value **v**, the resolution **r**, statistics **s** and  **z**.                                                                  |
+| **lineWidth**    | string                   | (v, r, s, z) => 1.5 \* z                                     | A function computing the cell chart line width in geographical unit from its **sizeCol** value **v**, the resolution **r**, statistics **s** and **z**.                                                                               |
 | **colorCol**     | string                   | undefined                                                    | The name of the column used for the color.                                                                                                                                                                                            |
-| **color**        | string                   | (v, r, s, z) => 'black'                                     | A function computing the cell chart color from its **colorCol** value **v**, the resolution **r**, statistics **s** and  **z**.                                                                                           |
+| **color**        | string                   | (v, r, s, z) => 'black'                                      | A function computing the cell chart color from its **colorCol** value **v**, the resolution **r**, statistics **s** and **z**.                                                                                                        |
 
 ## Side styles
 
@@ -616,14 +616,14 @@ This style displays the sides of the cells as segments with different colors and
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/side.html)).
 
-| Property        | Type                          | Default                                | Description                                                                                                                                                                                                                                                                                                                     |
-| --------------- | ----------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **valueCol**    | string                        | undefined                              | The name of the column used to retrieve the cell values.                                                                                                                                                                                                                                                                        |
-| **value**       | function(v1,v2,r,s,z):number | (v1, v2, r, s, z) => 1                | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
-| **color**       | function(side,r,s,z):string  | () => "#EA6BAC"                        | A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and  **z**. A side is represented as an object \_{x:number,y:number,or:"v"                                                                                                                                       | "h",value:number}\_. |
-| **width**       | function(side,r,s,z):number  | (side, r, s, z) => r \* side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and  **z**. A side is represented as an object \_{x:number,y:number,or:"v"                                                                                                                         | "h",value:number}\_. |
-| **orientation** | number                        | 0                                      | Orientation of the sides. Set to 90 to show sides as slope lines for example.                                                                                                                                                                                                                                                   |
-| **fillColor**   | function(c):string            | undefined                              | A function returning an optional fill color for a cell **c**.                                                                                                                                                                                                                                                                   |
+| Property        | Type                         | Default                                | Description                                                                                                                                                                                                                                                                                                                     |
+| --------------- | ---------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| **valueCol**    | string                       | undefined                              | The name of the column used to retrieve the cell values.                                                                                                                                                                                                                                                                        |
+| **value**       | function(v1,v2,r,s,z):number | (v1, v2, r, s, z) => 1                 | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
+| **color**       | function(side,r,s,z):string  | () => "#EA6BAC"                        | A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and **z**. A side is represented as an object \_{x:number,y:number,or:"v"                                                                                                                                                    | "h",value:number}\_. |
+| **width**       | function(side,r,s,z):number  | (side, r, s, z) => r \* side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and **z**. A side is represented as an object \_{x:number,y:number,or:"v"                                                                                                                                      | "h",value:number}\_. |
+| **orientation** | number                       | 0                                      | Orientation of the sides. Set to 90 to show sides as slope lines for example.                                                                                                                                                                                                                                                   |
+| **fillColor**   | function(c):string           | undefined                              | A function returning an optional fill color for a cell **c**.                                                                                                                                                                                                                                                                   |
 
 ### Side category style
 
@@ -633,12 +633,12 @@ This style displays the sides of the cells as segments with different colors dep
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/sidecat.html)).
 
-| Property      | Type                       | Default                     | Description                                                                                                                                                                           |
-| ------------- | -------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **col**       | string                     | undefined                   | The name of the column used to retrieve the cell category.                                                                                                                            |
-| **color**     | Object, string -> color    | undefined                   | The dictionary (string -> color) which give the color of each category.                                                                                                               |                      |
-| **width**     | function(side,r,z):number | (side, r, s, z) => r \* 0.2 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r** and  **z**. A side is represented as an object \_{x:number,y:number,or:"v" | "h",value:number}\_. |
-| **fillColor** | function(c):string         | undefined                   | A function returning an optional fill color for a cell **c**.                                                                                                                         |
+| Property      | Type                      | Default                     | Description                                                                                                                                                              |
+| ------------- | ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- |
+| **col**       | string                    | undefined                   | The name of the column used to retrieve the cell category.                                                                                                               |
+| **color**     | Object, string -> color   | undefined                   | The dictionary (string -> color) which give the color of each category.                                                                                                  |                      |
+| **width**     | function(side,r,z):number | (side, r, s, z) => r \* 0.2 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r** and **z**. A side is represented as an object \_{x:number,y:number,or:"v" | "h",value:number}\_. |
+| **fillColor** | function(c):string        | undefined                   | A function returning an optional fill color for a cell **c**.                                                                                                            |
 
 ### Contour style
 
@@ -656,16 +656,16 @@ This style shows the composition of a total quantity into categories as vertical
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/isofence.html)).
 
-| Property              | Type                              | Default                                                | Description                                                                                                                             |
-| --------------------- | --------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| color                 | object                            |                                                        | The dictionary (string -> color) which give the color of each category.                                                                 |
-| heightCol             | string                            |                                                        | The column where to get the height values.                                                                                              |
-| height                | function(v,r,s,z):number         | (v, r, s, z) => r \* 0.4                              | A function returning the height of a cell from its value **v**, the resolution **r**, some statistics **s** and the  **z**. |
-| angle                 | number                            | 50                                                     | The isometric perspective angle, in degree, within [-180,180].                                                                          |
-| cornerLineStrokeColor | function(cell,r,z,angle): string | (c, r, z, angle) => "#999"                            | A function returning the corner line stroke style.                                                                                      |
-| cornerLineWidth       | function(cell,r,z,angle): number | (c, r, z, angle) => (angle % 90 == 0 ? 0 : 0.8 \* z) | A function returning the corner line width.                                                                                             |
-| sVert                 | boolean                           | true                                                   | Show vertical cross-sections.                                                                                                           |
-| sHor                  | boolean                           | true                                                   | Show horizontal cross-sections.                                                                                                         |
+| Property              | Type                             | Default                                              | Description                                                                                                                |
+| --------------------- | -------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| color                 | object                           |                                                      | The dictionary (string -> color) which give the color of each category.                                                    |
+| heightCol             | string                           |                                                      | The column where to get the height values.                                                                                 |
+| height                | function(v,r,s,z):number         | (v, r, s, z) => r \* 0.4                             | A function returning the height of a cell from its value **v**, the resolution **r**, some statistics **s** and the **z**. |
+| angle                 | number                           | 50                                                   | The isometric perspective angle, in degree, within [-180,180].                                                             |
+| cornerLineStrokeColor | function(cell,r,z,angle): string | (c, r, z, angle) => "#999"                           | A function returning the corner line stroke style.                                                                         |
+| cornerLineWidth       | function(cell,r,z,angle): number | (c, r, z, angle) => (angle % 90 == 0 ? 0 : 0.8 \* z) | A function returning the corner line width.                                                                                |
+| sVert                 | boolean                          | true                                                 | Show vertical cross-sections.                                                                                              |
+| sHor                  | boolean                          | true                                                 | Show horizontal cross-sections.                                                                                            |
 
 ## Esthetic styles
 
@@ -683,12 +683,12 @@ See [this an example of shaded joyplot](https://eurostat.github.io/gridviz/examp
 
 See [this an example with random colors](https://eurostat.github.io/gridviz/examples/styles/joyplot_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/joyplot_random.html)).
 
-| Property      | Type                       | Default                       | Description                                                                                                                                   |
-| ------------- | -------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **height**    | function(c,r,z,vs):number  | (c,r) => r*Math.random()           | A function computing the height of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
-| **lineColor** | function(y,ys,r,z):string | (y, ys, r, z) => "#BBB"      | A function computing the line color from its **y** coordinate, statistics **ys**, the resolution **r** and  **z**.                |
-| **lineWidth** | function(y,ys,r,z):number | (y, ys, r, z) => z          | A function computing the line width from its **y** coordinate, statistics **ys**, the resolution **r** and  **z**.                |
-| **fillColor** | function(y,ys,r,z):string | (y, ys, r, z) => "#c08c5968" | A function computing the line fill color from its **y** coordinate, statistics **ys**, the resolution **r** and  **z**.           |
+| Property      | Type                      | Default                      | Description                                                                                                                                                       |
+| ------------- | ------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **height**    | function(c,r,z,vs):number | (c,r) => r\*Math.random()    | A function computing the height of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
+| **lineColor** | function(y,ys,r,z):string | (y, ys, r, z) => "#BBB"      | A function computing the line color from its **y** coordinate, statistics **ys**, the resolution **r** and **z**.                                                 |
+| **lineWidth** | function(y,ys,r,z):number | (y, ys, r, z) => z           | A function computing the line width from its **y** coordinate, statistics **ys**, the resolution **r** and **z**.                                                 |
+| **fillColor** | function(y,ys,r,z):string | (y, ys, r, z) => "#c08c5968" | A function computing the line fill color from its **y** coordinate, statistics **ys**, the resolution **r** and **z**.                                            |
 
 ### Mosaic style
 
@@ -720,13 +720,13 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/ninj
 
 See [this other example](https://eurostat.github.io/gridviz/examples/styles/ninja_star_p.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ninja_star_p.html)) with stars parallel to the x/y axes.
 
-| Property     | Type                      | Default                 | Description                                                                                                                                                                                                 |
-| ------------ | ------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                                                                                                  |
-| **color**    | function(v,r,s):string    | (v,r,s,z) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and  **z**.                                                                       |
-| **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                                                                                                   |
-| **size**     | function(v,r,s,z):number | (v,r,s,z) => t         | A function computing the cell size, within [0,1], from its **sizeCol** value **v**, the resolution **r**, statistics **s** and  **z**. 1 corresponds to a square, 0 to an infinitly thin cross. |
-| **shape**    | function(c):string        | (c) => "o"              | A function computing the orientation of the ninja star of a cell **c**: _"o"_ for 45deg oblique star, _"p"_ for a star parallel to the x/y axes.                                                            |
+| Property     | Type                     | Default                | Description                                                                                                                                                                                    |
+| ------------ | ------------------------ | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **colorCol** | string                   | undefined              | The name of the column used for the color.                                                                                                                                                     |
+| **color**    | function(v,r,s):string   | (v,r,s,z) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and **z**.                                                                       |
+| **sizeCol**  | string                   | undefined              | The name of the column used for the size.                                                                                                                                                      |
+| **size**     | function(v,r,s,z):number | (v,r,s,z) => t         | A function computing the cell size, within [0,1], from its **sizeCol** value **v**, the resolution **r**, statistics **s** and **z**. 1 corresponds to a square, 0 to an infinitly thin cross. |
+| **shape**    | function(c):string       | (c) => "o"             | A function computing the orientation of the ninja star of a cell **c**: _"o"_ for 45deg oblique star, _"p"_ for a star parallel to the x/y axes.                                               |
 
 ### Lego style
 
@@ -772,14 +772,14 @@ See [this elementary example](https://eurostat.github.io/gridviz/examples/styles
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/kernelsmoothing.html)).
 
-| Property     | Type                   | Default  | Description                                                                                                                                                                                                                                                                                         |
-| ------------ | ---------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **value**    | function(cel):number   |          | A function returning the value to consider for each cell. This is the value to be smoothed.                                                                                                                                                                                                         |
-| **sigma**    | function(r, z):number |          | The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the  **z**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.                                                |
-| **factor**   | number                 | 2        | The smoothed grid may have a finer resolution than the input grid. This factor defines the smoothed grid resolution. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2. The higher, the more pixelised and the faster to compute. |
-| **filterSm** | function(v):boolean    |          | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise.                                                                                                                                                                  |
-| **sCol**     | string                 | "ksmval" | The name of the attribute where the smoothed value is stored in the output smoothed grid.                                                                                                                                                                                                           |
-| **styles**   | Array(Style)           |          | The styles to represent the smoothed grid.                                                                                                                                                                                                                                                          |
+| Property     | Type                  | Default  | Description                                                                                                                                                                                                                                                                                         |
+| ------------ | --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **value**    | function(cel):number  |          | A function returning the value to consider for each cell. This is the value to be smoothed.                                                                                                                                                                                                         |
+| **sigma**    | function(r, z):number |          | The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the **z**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.                                                             |
+| **factor**   | number                | 2        | The smoothed grid may have a finer resolution than the input grid. This factor defines the smoothed grid resolution. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2. The higher, the more pixelised and the faster to compute. |
+| **filterSm** | function(v):boolean   |          | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise.                                                                                                                                                                  |
+| **sCol**     | string                | "ksmval" | The name of the attribute where the smoothed value is stored in the output smoothed grid.                                                                                                                                                                                                           |
+| **styles**   | Array(Style)          |          | The styles to represent the smoothed grid.                                                                                                                                                                                                                                                          |
 
 The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/package/fast-kde) library, which produces smoothing approximation very fast. Note that the approximation degrades significantly for weak smoothing (for low sigma values).
 
@@ -794,33 +794,31 @@ Any need or idea for a new style ? feel free to [ask](https://github.com/eurosta
 ```javascript
 //create custom style
 const customStyle = new gridviz.Style({
+    //define draw function
+    drawFun: (cells, resolution, cg) => {
+        //draw each cell as an arrow
+        //with a fill color depending on the property "population"
+        for (let cell of cells) {
+            //do not draw cells with no data or no population
+            if (!cell.population) continue
 
-//define draw function
-drawFun : (cells, resolution, cg) => {
+            //set fill color as a shade from cyan to red depending on "population" property
+            const t = Math.floor((255 * Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 6)) / 6)
+            cg.ctx.fillStyle = 'rgb(' + t + ',' + (255 - t) + ',' + (255 - t) + ')'
 
-    //draw each cell as an arrow
-    //with a fill color depending on the property "population"
-    for (let cell of cells) {
-        //do not draw cells with no data or no population
-        if (!cell.population) continue
-
-        //set fill color as a shade from cyan to red depending on "population" property
-        const t = Math.floor((255 * Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 6)) / 6)
-        cg.ctx.fillStyle = 'rgb(' + t + ',' + (255 - t) + ',' + (255 - t) + ')'
-
-        //fill arrow
-        cg.ctx.beginPath()
-        //left point
-        cg.ctx.moveTo(cell.x, cell.y)
-        //bottom center point
-        cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
-        //right point
-        cg.ctx.lineTo(cell.x + resolution, cell.y)
-        //top center point
-        cg.ctx.lineTo(cell.x + resolution / 2, cell.y + (resolution * 4) / 3)
-        cg.ctx.fill()
-    }
-}
+            //fill arrow
+            cg.ctx.beginPath()
+            //left point
+            cg.ctx.moveTo(cell.x, cell.y)
+            //bottom center point
+            cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
+            //right point
+            cg.ctx.lineTo(cell.x + resolution, cell.y)
+            //top center point
+            cg.ctx.lineTo(cell.x + resolution / 2, cell.y + (resolution * 4) / 3)
+            cg.ctx.fill()
+        }
+    },
 })
 ```
 
@@ -955,14 +953,14 @@ new gridviz.SizeLegend({
 
 Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continuous mapping from a statistical variable to a visual variable (color, size, etc.). The statistical distribution can be stretched with one of the _stretching functions_ listed below can be used. These functions have different properties and should be chosen according to the data distribution. The amplitude of the stretching can be adjusted with a parameter.
 
-| Stretching function | Description           | Stretching parameter                                    |
-| ------------------- | ---------------------------------------- | --------------------- |
-| **powerScale**            | Polynomial function            | Power exponent, from 0 to Infinity. No change: 1         |
-| **logarithmicScale**            | Exponential function           | Logarithmic base, from -Infinity to Infinity. No change: 0 |
-| **powerInverseScale**            | Polynomial inverse function    | Power exponent, from 0 to Infinity. No change: 1         |
-| **exponentialScale**         | Exponential    | Logarithmic base, from -Infinity to Infinity. No change: 0 |
-| **circularScale**         | Circular    | 0: no stretching. 1: perfect circle section |
-| **circularInverseScale**         | Circular    | 0: no stretching. 1: perfect circle section |
+| Stretching function      | Description                 | Stretching parameter                                       |
+| ------------------------ | --------------------------- | ---------------------------------------------------------- |
+| **powerScale**           | Polynomial function         | Power exponent, from 0 to Infinity. No change: 1           |
+| **logarithmicScale**     | Exponential function        | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **powerInverseScale**    | Polynomial inverse function | Power exponent, from 0 to Infinity. No change: 1           |
+| **exponentialScale**     | Exponential                 | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **circularScale**        | Circular                    | 0: no stretching. 1: perfect circle section                |
+| **circularInverseScale** | Circular                    | 0: no stretching. 1: perfect circle section                |
 
 For more information on these functions and an overview of how they differ, see:
 
@@ -995,17 +993,17 @@ A background layer must be based on an external [tiled web map](https://en.wikip
 
 The **addBackgroundLayer** method has the following parameters:
 
-| Parameter                   | Type                   | Default                                                | Description                                                                                                                                                                                                                                                                  |
-| --------------------------- | ---------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **url**                     | string                 | undefined                                              | The base URL of the tiled web map.                                                                                                                                                                                                                                           |
-| **urlFun**                  | function(x,y,z):string | (x, y, z) => this.url + z + "/" + x + "/" + y + ".png" | The function returning a specific image URL from its **(x,y,z)** coordinates in the tiling scheme.                                                                                                                                                                           |
-| **resolutions**             | Array(number)          | undefined                                              | The list of resolutions by zoom **z** level, starting with the zoom level with larger resolution to lower resolutions.                                                                                                                                                       |
-| **z0**                      | number                 | 0                                                      | If number of the first zoom level (larger resolution), usually 0.                                                                                                                                                                                                            |
-| **nbPix**                   | number                 | 256                                                    | The size of each tile image, in pixel number, usually 256.                                                                                                                                                                                                                   |
-| **origin**                  | Array(number)          | [0, 0]                                                 | The geographical coordinates of top left corner of the tiling scheme.                                                                                                                                                                                                        |
-| **visible**                 | boolean                | true                                                   | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                                           |
-| **minZoom** and **maxZoom** | number                 | 0 and Infinity                                         | The min/maximum s to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                               |
-| **filterColor**             | function(z):string    | undefined                                              | A function returning a filter color from the  **z**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
+| Parameter                   | Type                   | Default                                                | Description                                                                                                                                                                                                                                                     |
+| --------------------------- | ---------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **url**                     | string                 | undefined                                              | The base URL of the tiled web map.                                                                                                                                                                                                                              |
+| **urlFun**                  | function(x,y,z):string | (x, y, z) => this.url + z + "/" + x + "/" + y + ".png" | The function returning a specific image URL from its **(x,y,z)** coordinates in the tiling scheme.                                                                                                                                                              |
+| **resolutions**             | Array(number)          | undefined                                              | The list of resolutions by zoom **z** level, starting with the zoom level with larger resolution to lower resolutions.                                                                                                                                          |
+| **z0**                      | number                 | 0                                                      | If number of the first zoom level (larger resolution), usually 0.                                                                                                                                                                                               |
+| **nbPix**                   | number                 | 256                                                    | The size of each tile image, in pixel number, usually 256.                                                                                                                                                                                                      |
+| **origin**                  | Array(number)          | [0, 0]                                                 | The geographical coordinates of top left corner of the tiling scheme.                                                                                                                                                                                           |
+| **visible**                 | boolean                | true                                                   | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                              |
+| **minZoom** and **maxZoom** | number                 | 0 and Infinity                                         | The min/maximum s to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                             |
+| **filterColor**             | function(z):string     | undefined                                              | A function returning a filter color from the **z**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 
 For more information, [see the code](../src/BackgroundLayer.js).
 
@@ -1026,12 +1024,12 @@ See [this example](https://eurostat.github.io/gridviz/examples/background_WMS.ht
 
 The **addBackgroundLayer** method has the following parameters:
 
-| Parameter                   | Type                | Default        | Description                                                                                                                                                                                                                                                                  |
-| --------------------------- | ------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **url**                     | string              | undefined      | The base URL of the WMS. This URL must contain all necessary parameters, except _width_, _height_ and _bbox_ which are computed by the application.                                                                                                                          |
-| **visible**                 | boolean             | true           | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                                           |
-| **minZoom** and **maxZoom** | number              | 0 and Infinity | The min/maximum s to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                               |
-| **filterColor**             | function(z):string | undefined      | A function returning a filter color from the  **z**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
+| Parameter                   | Type               | Default        | Description                                                                                                                                                                                                                                                     |
+| --------------------------- | ------------------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **url**                     | string             | undefined      | The base URL of the WMS. This URL must contain all necessary parameters, except _width_, _height_ and _bbox_ which are computed by the application.                                                                                                             |
+| **visible**                 | boolean            | true           | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                              |
+| **minZoom** and **maxZoom** | number             | 0 and Infinity | The min/maximum s to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                             |
+| **filterColor**             | function(z):string | undefined      | A function returning a filter color from the **z**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 
 For more information, [see the code](../src/BackgroundLayerWMS.js).
 
@@ -1055,9 +1053,9 @@ new gridviz.Map(containerDiv)
             delete lb.lon; delete lb.lat;
         },
         style: (lb, z) => {
-            //select label based on 
+            //select label based on
             if (lb.rs < z) return;
-            //set style based on 
+            //set style based on
             if (lb.r1 < z) return "1em Arial";
             return "1.5em Arial";
         },
@@ -1073,17 +1071,17 @@ For European grids based on ETRS89-LAEA CRS, the **gviz_es.getEuronymeLabelLayer
 
 The **setLabelLayer** method has the following parameters:
 
-| Parameter      | Type                   | Default                                           | Description                                                                                                                                                                                                                                                                      |
-| -------------- | ---------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **url**        | string                 | undefined                                         | The URL of the label CSV file. The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level. If necessary, this data can be reformated with the **preprocess** function. |
-| **style**      | function(lb,z):string | () => "bold 1em Arial"                            | A function returning the style of the label **lb** for  **z**.                                                                                                                                                                                                       |
-| **dark**       | boolean                | undefined                                         | Set to true if the map is dark, so that the label default colors are suitable.                                                                                                                                                                                                   |
-| **color**      | function(lb,z):string | opts.dark ? () => "#ddd" : () => "#222"           | A function returning the color of the label **lb** for  **z**.                                                                                                                                                                                                       |
-| **haloColor**  | function(lb,z):string | opts.dark ? () => "#000000BB" : () => "#FFFFFFBB" | A function returning the halo color of the label **lb** for  **z**.                                                                                                                                                                                                  |
-| **haloWidth**  | function(lb,z):string | () => 4                                           | A function returning the halo width of the label **lb** for  **z**.                                                                                                                                                                                                  |
-| **textAlign**  | CanvasTextAlign        | "start"                                           | The anchor where to write the label, from its _(x,y)_ position. See HTML-canvas textAlign property.                                                                                                                                                                              |
-| **offsetPix**  | Array(number)          | [5, 5]                                            | Offset displacement for each label position, in pixel.                                                                                                                                                                                                                           |
-| **preprocess** | function(lb):boolean   | undefined                                         | A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc. This method may also be used to filter unecessary label by returning _false_ for the labels not to keep.               |
+| Parameter      | Type                  | Default                                           | Description                                                                                                                                                                                                                                                                      |
+| -------------- | --------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **url**        | string                | undefined                                         | The URL of the label CSV file. The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level. If necessary, this data can be reformated with the **preprocess** function. |
+| **style**      | function(lb,z):string | () => "bold 1em Arial"                            | A function returning the style of the label **lb** for **z**.                                                                                                                                                                                                                    |
+| **dark**       | boolean               | undefined                                         | Set to true if the map is dark, so that the label default colors are suitable.                                                                                                                                                                                                   |
+| **color**      | function(lb,z):string | opts.dark ? () => "#ddd" : () => "#222"           | A function returning the color of the label **lb** for **z**.                                                                                                                                                                                                                    |
+| **haloColor**  | function(lb,z):string | opts.dark ? () => "#000000BB" : () => "#FFFFFFBB" | A function returning the halo color of the label **lb** for **z**.                                                                                                                                                                                                               |
+| **haloWidth**  | function(lb,z):string | () => 4                                           | A function returning the halo width of the label **lb** for **z**.                                                                                                                                                                                                               |
+| **textAlign**  | CanvasTextAlign       | "start"                                           | The anchor where to write the label, from its _(x,y)_ position. See HTML-canvas textAlign property.                                                                                                                                                                              |
+| **offsetPix**  | Array(number)         | [5, 5]                                            | Offset displacement for each label position, in pixel.                                                                                                                                                                                                                           |
+| **preprocess** | function(lb):boolean  | undefined                                         | A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc. This method may also be used to filter unecessary label by returning _false_ for the labels not to keep.               |
 
 For more information, [see the code](../src/LabelLayer.js).
 
@@ -1133,13 +1131,13 @@ The **gviz_es.getEurostatBoundariesLayer()** function from [gridviz-eurostat](ht
 
 The **setBoundaryLayer** method has the following parameters:
 
-| Parameter      | Type                   | Default              | Description                                                                                                                                                                                                                                                                         |
-| -------------- | ---------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **url**        | string                 | undefined            | The URL of the boundaries GeoJSON file. The file should contain the information for each boundary line, the position and other information for the display of the boundary according to the zoom level. If necessary, this data can be reformated with the **preprocess** function. |
-| **preprocess** | function(bn):void      | undefined            | A preprocess to run on each boundary after loading. It can be used to apply some specific treatment before, format the boundary data, project coordinates, etc.                                                                                                                     |
-| **color**      | function(bn,z):string | (f, z) => "gray"    | A function returning the color of the boundary **bn** for  **z**.                                                                                                                                                                                                       |
-| **width**      | function(bn,z):string | (f, z) => 2         | A function returning the width of the boundary **bn** for  **z**.                                                                                                                                                                                                       |
-| **lineDash**   | function(bn,z):string | (f, z) => undefined | A function returning the dash model of the boundary **bn** for  **z**.                                                                                                                                                                                                  |
+| Parameter      | Type                  | Default             | Description                                                                                                                                                                                                                                                                         |
+| -------------- | --------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **url**        | string                | undefined           | The URL of the boundaries GeoJSON file. The file should contain the information for each boundary line, the position and other information for the display of the boundary according to the zoom level. If necessary, this data can be reformated with the **preprocess** function. |
+| **preprocess** | function(bn):void     | undefined           | A preprocess to run on each boundary after loading. It can be used to apply some specific treatment before, format the boundary data, project coordinates, etc.                                                                                                                     |
+| **color**      | function(bn,z):string | (f, z) => "gray"    | A function returning the color of the boundary **bn** for **z**.                                                                                                                                                                                                                    |
+| **width**      | function(bn,z):string | (f, z) => 2         | A function returning the width of the boundary **bn** for **z**.                                                                                                                                                                                                                    |
+| **lineDash**   | function(bn,z):string | (f, z) => undefined | A function returning the dash model of the boundary **bn** for **z**.                                                                                                                                                                                                               |
 
 For more information, [see the code](../src/LineLayer.js).
 

@@ -18,7 +18,7 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => '#EA6BAC') //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
@@ -26,19 +26,18 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the shape of a cell.
          * @type {function(import("../core/Dataset.js").Cell,number, number,object):import("../core/Style.js").Shape} */
-        this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
+        this.shape = opts.shape || (() => 'square') //(c,r,z,vs) => {}
     }
 
     /**
      * Draw cells as squares, with various colors and sizes.
-     * 
+     *
      * @param {Array.<import("../core/Dataset.js").Cell>} cells
      * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      * @override
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -51,7 +50,7 @@ export class ShapeColorSizeStyle extends Style {
         const r2 = resolution * 0.5
         for (let c of cells) {
             //color
-            let col = this.color ? this.color(c, resolution, z, viewScale) : "black"
+            let col = this.color ? this.color(c, resolution, z, viewScale) : 'black'
             if (!col || col === 'none') continue
 
             //size
@@ -73,7 +72,14 @@ export class ShapeColorSizeStyle extends Style {
             } else if (shape === 'circle') {
                 //draw circle
                 geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.arc(
+                    c.x + r2 + offset.dx,
+                    c.y + r2 + offset.dy,
+                    size * 0.5,
+                    0,
+                    2 * Math.PI,
+                    false
+                )
                 geoCanvas.ctx.fill()
             } else if (shape === 'donut') {
                 //draw donut

@@ -3,22 +3,36 @@
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4000000, y: 2960000, z: 1000, zoomExtent: [30, 7000] })
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4000000,
+        y: 2960000,
+        z: 1000,
+        zoomExtent: [30, 7000],
+    })
         .setViewFromURL()
         .addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/'
+            )
     )
 
     //define style
     const style = new gridviz.JoyPlotStyle({
         height: (c, r, z, scale) => scale(c.TOT_P_2021),
-        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 5, stretching: gridviz.powerScale(0.4) }),
+        viewScale: gridviz.viewScale({
+            valueFunction: (c) => +c.TOT_P_2021,
+            maxSizeFactor: 5,
+            stretching: gridviz.powerScale(0.4),
+        }),
         lineColor: (y, ys, r, z) => {
             const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
             return 'rgb(' + t + ',' + t + ',' + t + ')'
@@ -42,9 +56,9 @@
             color: () => 'black',
             haloColor: () => '#ffffff',
             haloWidth: () => 3,
-        }))
+        })
+    )
 
     //add layers to map
     map.layers = [gridLayer, labelLayer]
-
 </script>

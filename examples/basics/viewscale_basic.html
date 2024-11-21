@@ -5,13 +5,19 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 1000,
+    }).addZoomButtons()
 
     //define dataset
-    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+    const dataset = new gridviz.CSVGrid(
+        map,
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+        10000
+    )
 
     //define color style
 
@@ -30,10 +36,10 @@
             return [min, max]
         },
         //map population figure from [min,max] interval to [0,1], apply the stretching function and return the corresponding color
-        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
+        color: (cell, resolution, z, [min, max]) =>
+            d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
     })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
-
 </script>

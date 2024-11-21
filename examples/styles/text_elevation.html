@@ -6,22 +6,32 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2960000, z: 200, backgroundColor: "black" })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2960000,
+        z: 200,
+        backgroundColor: 'black',
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/' + resolution + 'm/')
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/' +
+                    resolution +
+                    'm/'
+            )
     )
 
     //define style
     const style = new gridviz.TextStyle({
         text: (cell) => cell.elevation,
-        viewScale: (cells) => d3.extent(cells, cell => +cell.elevation),
-        color: (cell, resolution, z, [min, max]) => d3.interpolateSpectral(1 - (cell.elevation - min) / (max - min)),
+        viewScale: (cells) => d3.extent(cells, (cell) => +cell.elevation),
+        color: (cell, resolution, z, [min, max]) =>
+            d3.interpolateSpectral(1 - (cell.elevation - min) / (max - min)),
         fontSize: (cell, r) => 0.4 * r,
     })
 
@@ -41,5 +51,4 @@
 
     //add layer to map
     map.layers = [backgroundLayer, gridLayer]
-
 </script>

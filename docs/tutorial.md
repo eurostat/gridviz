@@ -21,13 +21,8 @@ example with color style
 
 Show on three styles...
 
-
 ## More data
 
 Add background
 
 Add labels
-
-
-
-

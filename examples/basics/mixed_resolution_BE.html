@@ -6,23 +6,26 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 3924500, y: 3097000, z: 20 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 3924500,
+        y: 3097000,
+        z: 20,
+    }).addZoomButtons()
 
     //define dataset
-    const dataset = new gridviz.CSVGrid(map,
+    const dataset = new gridviz.CSVGrid(
+        map,
         //dataset URL
-        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Belgium/be_pop_multi.csv",
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Belgium/be_pop_multi.csv',
         //the cells maximum resolution
         1000,
         {
             //the function returning the cell resolutions: the "resolution" property
             mixedResolution: (cell) => cell.resolution,
-            preprocess: cell => {
+            preprocess: (cell) => {
                 cell.density = +cell.ms_pop / (cell.resolution * cell.resolution)
-            }
+            },
         }
     )
 
@@ -49,12 +52,12 @@
             const d = resolution * (1 - dataset.mixedResolution(cell) / resolution) * 0.5
             return { dx: -d, dy: -d }
         },
-        blendOperation: (z) => z < 100 ? "multiply" : "source-over"
+        blendOperation: (z) => (z < 100 ? 'multiply' : 'source-over'),
     })
 
     //legend
     let legend = new gridviz.ColorLegend({
-        title: "Population",
+        title: 'Population',
         colorScale: colorScale,
         width: 150,
         ticks: 2,
@@ -67,7 +70,7 @@
         strokeColor: (c) => '#666',
         size: style.size,
         offset: style.offset,
-        visible: z => z < 10
+        visible: (z) => z < 10,
     })
 
     //make layer
@@ -84,7 +87,7 @@
         visible: (z) => z > 50,
     })
     const backgroundLayer2 = new gridviz.BackgroundLayer(
-        gridviz_eurostat.giscoBackgroundLayer("OSMPositronBackground", 18, "EPSG3035", {
+        gridviz_eurostat.giscoBackgroundLayer('OSMPositronBackground', 18, 'EPSG3035', {
             visible: (z) => z <= 50,
         })
     )
@@ -93,11 +96,9 @@
     //make labels layer
     const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('BE', '20'))
 
-
     //add layers to map
     map.layers = [backgroundLayer1, backgroundLayer2, layer, boundariesLayer, labelLayer]
 
     //
     map.redraw()
-
 </script>

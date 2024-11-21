@@ -2,20 +2,26 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 3000,
+    }).addZoomButtons()
 
     //define dataset
-    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+    const dataset = new gridviz.CSVGrid(
+        map,
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+        10000
+    )
 
     //define color for each cell c
     const colorFunction = (cell) => {
-        if (cell.population > 60000) return "#d95f0e"
-        else if (cell.population > 20000) return "#fe9929"
-        else if (cell.population > 6000) return "#fec44f"
-        else return "#ffffd4"
+        if (cell.population > 60000) return '#d95f0e'
+        else if (cell.population > 20000) return '#fe9929'
+        else if (cell.population > 6000) return '#fec44f'
+        else return '#ffffd4'
     }
 
     //define style
@@ -23,13 +29,13 @@
 
     //define legend
     const legend = new gridviz.ColorCategoryLegend({
-        title: "Population density",
+        title: 'Population density',
         colorLabel: [
-            ["#d95f0e", "Very high"],
-            ["#fe9929", "High"],
-            ["#fec44f", "Low"],
-            ["#ffffd4", "Very low"],
-        ]
+            ['#d95f0e', 'Very high'],
+            ['#fe9929', 'High'],
+            ['#fec44f', 'Low'],
+            ['#ffffd4', 'Very low'],
+        ],
     })
 
     //link legend to style
@@ -37,5 +43,4 @@
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
-
 </script>

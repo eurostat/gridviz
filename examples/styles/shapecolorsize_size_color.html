@@ -17,16 +17,29 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 3763437, y: 2891045, z: 50.1, zoomExtent: [7, 2000] })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 3763437,
+        y: 2891045,
+        z: 50.1,
+        zoomExtent: [7, 2000],
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' + resolution + 'm/'),
-        { preprocess: (c) => { c.revind = Math.round(c.ind_snv / c.ind / 12) } }
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' +
+                    resolution +
+                    'm/'
+            ),
+        {
+            preprocess: (c) => {
+                c.revind = Math.round(c.ind_snv / c.ind / 12)
+            },
+        }
     )
 
     //define style
@@ -37,8 +50,11 @@
             return d3.interpolateSpectral(1 - t)
         },
         size: (cell, resolution, z, viewScale) => 1.41 * viewScale(cell.ind),
-        viewScale: gridviz.viewScale({ valueFunction: (cell) => +cell.ind, stretching: gridviz.powerScale(0.13) }),
-        shape: () => "circle"
+        viewScale: gridviz.viewScale({
+            valueFunction: (cell) => +cell.ind,
+            stretching: gridviz.powerScale(0.13),
+        }),
+        shape: () => 'circle',
     })
 
     //add layer to map
@@ -52,11 +68,18 @@
         style.shape = () => shape
 
         //set size
-        const sizeFactor = (shape === 'circle' || shape === 'diamond' || shape === 'triangle_up' || shape === 'triangle_down' || shape === 'triangle_left' || shape === 'triangle_right') ? 1.41 : 1
+        const sizeFactor =
+            shape === 'circle' ||
+            shape === 'diamond' ||
+            shape === 'triangle_up' ||
+            shape === 'triangle_down' ||
+            shape === 'triangle_left' ||
+            shape === 'triangle_right'
+                ? 1.41
+                : 1
         style.size = (c, r, z, viewScale) => sizeFactor * viewScale(c.ind)
 
         //redraw
         map.redraw()
     })
-
 </script>

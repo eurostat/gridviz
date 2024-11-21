@@ -33,7 +33,6 @@ export class ColorCategoryLegend extends Legend {
     /**
      */
     update() {
-
         //clear
         this.div.selectAll('*').remove()
 

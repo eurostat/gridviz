@@ -30,7 +30,7 @@ export class CSVGrid extends Dataset {
         /**
          * @private
          * @type {string} */
-         this.delimiter = opts.delimiter || ","
+        this.delimiter = opts.delimiter || ','
 
         /**
          * @type {string}
@@ -51,41 +51,41 @@ export class CSVGrid extends Dataset {
 
         //load data
         this.infoLoadingStatus = 'loading'
-            ; (async () => {
-                try {
-                    const data = await dsv(this.delimiter, this.url)
+        ;(async () => {
+            try {
+                const data = await dsv(this.delimiter, this.url)
 
-                    //convert coordinates in numbers
-                    for (const c of data) {
-                        c.x = +c.x
-                        c.y = +c.y
-                    }
-
-                    //preprocess/filter
-                    if (this.preprocess) {
-                        this.cells = []
-                        for (const c of data) {
-                            const b = this.preprocess(c)
-                            if (b == false) continue
-                            this.cells.push(c)
-                        }
-                    } else {
-                        this.cells = data
-                    }
-
-                    //TODO check if redraw is necessary
-                    //that is if the dataset belongs to a layer which is visible at the current zoom level
-
-                    //redraw map
-                    if (this.map) this.map.redraw()
-
-                    this.infoLoadingStatus = 'loaded'
-                } catch (error) {
-                    //mark as failed
-                    this.infoLoadingStatus = 'failed'
-                    this.cells = []
+                //convert coordinates in numbers
+                for (const c of data) {
+                    c.x = +c.x
+                    c.y = +c.y
                 }
-            })()
+
+                //preprocess/filter
+                if (this.preprocess) {
+                    this.cells = []
+                    for (const c of data) {
+                        const b = this.preprocess(c)
+                        if (b == false) continue
+                        this.cells.push(c)
+                    }
+                } else {
+                    this.cells = data
+                }
+
+                //TODO check if redraw is necessary
+                //that is if the dataset belongs to a layer which is visible at the current zoom level
+
+                //redraw map
+                if (this.map) this.map.redraw()
+
+                this.infoLoadingStatus = 'loaded'
+            } catch (error) {
+                //mark as failed
+                this.infoLoadingStatus = 'failed'
+                this.cells = []
+            }
+        })()
 
         return this
     }
