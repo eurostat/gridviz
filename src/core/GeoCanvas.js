@@ -39,10 +39,19 @@ export class GeoCanvas {
         this.canvas.width = this.w
         this.canvas.height = this.h
 
+        // Create offscreen canvas for drawing operations
+        this.offscreenCanvas = document.createElement('canvas')
+        this.offscreenCanvas.width = this.w
+        this.offscreenCanvas.height = this.h
+
         const ctx = this.canvas.getContext('2d')
+        const offscreenCtx = this.offscreenCanvas.getContext('2d')
         if (!ctx) throw 'Impossible to create canvas 2D context'
+        if (!offscreenCtx) throw 'Impossible to create canvas 2D context'
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx
+        /**@type {CanvasRenderingContext2D} */
+        this.offscreenCtx = offscreenCtx
 
         /**
          * z: pixel size, in m/pix
@@ -178,6 +187,7 @@ export class GeoCanvas {
     /** Initialise canvas transform with identity transformation. */
     initCanvasTransform() {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0)
+        this.offscreenCtx.setTransform(1, 0, 0, 1, 0, 0)
     }
 
     /** Initialise canvas transform with geo to screen transformation, so that geo objects can be drawn directly in geo coordinates. */
@@ -186,6 +196,7 @@ export class GeoCanvas {
         const tx = -this.view.x / this.view.z + this.w * 0.5
         const ty = this.view.y / this.view.z + this.h * 0.5
         this.ctx.setTransform(k, 0, 0, -k, tx, ty)
+        this.offscreenCtx.setTransform(k, 0, 0, -k, tx, ty)
     }
 
     /** Get the transformation matrix to webGL screen coordinates, within [-1,1]*[-1,1] */
@@ -207,9 +218,12 @@ export class GeoCanvas {
     clear(color = 'white') {
         if (this.opts.transparentBackground) {
             this.ctx.clearRect(0, 0, this.w, this.h)
+            this.offscreenCtx.clearRect(0, 0, this.w, this.h)
         } else {
             if (this.ctx) this.ctx.fillStyle = color
+            if (this.offscreenCtx) this.offscreenCtx.fillStyle = color
             this.ctx.fillRect(0, 0, this.w, this.h)
+            this.offscreenCtx.fillRect(0, 0, this.w, this.h)
         }
     }
 
@@ -235,6 +249,7 @@ export class GeoCanvas {
             this.clear(this.backgroundColor)
             // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
             this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+            this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
         }
     }
 
@@ -280,6 +295,13 @@ export class GeoCanvas {
             this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
             this.clear(this.backgroundColor)
             this.ctx.drawImage(
+                this.canvasSave.c,
+                this.canvasSave.dx,
+                this.canvasSave.dy,
+                this.canvasSave.f * this.canvasSave.c.width,
+                this.canvasSave.f * this.canvasSave.c.height
+            )
+            this.offscreenCtx.drawImage(
                 this.canvasSave.c,
                 this.canvasSave.dx,
                 this.canvasSave.dy,

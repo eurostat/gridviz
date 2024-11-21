@@ -50,6 +50,8 @@ export class ShapeColorSizeStyle extends Style {
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         const ctx = geoCanvas.ctx
+        // Get the offscreen context
+        const offscreenCtx = geoCanvas.offscreenCtx
 
         // Loop through cells
         for (const c of cells) {
@@ -69,7 +71,7 @@ export class ShapeColorSizeStyle extends Style {
             const { dx, dy } = this.offset(c, resolution, z)
 
             // Apply color
-            ctx.fillStyle = col
+            offscreenCtx.fillStyle = col
 
             // Draw the appropriate shape
             const x = c.x + dx
@@ -78,69 +80,69 @@ export class ShapeColorSizeStyle extends Style {
             switch (shape) {
                 case 'square': {
                     const d = resolution * (1 - size / resolution) * 0.5
-                    ctx.fillRect(x + d, y + d, size, size)
+                    offscreenCtx.fillRect(x + d, y + d, size, size)
                     break
                 }
                 case 'circle': {
-                    ctx.beginPath()
-                    ctx.arc(x + r2, y + r2, size * 0.5, 0, 2 * Math.PI)
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.arc(x + r2, y + r2, size * 0.5, 0, 2 * Math.PI)
+                    offscreenCtx.fill()
                     break
                 }
                 case 'donut': {
                     const xc = x + r2,
                         yc = y + r2
-                    ctx.beginPath()
-                    ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                    ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
-                    ctx.closePath()
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.arc(xc, yc, r2, 0, 2 * Math.PI)
+                    offscreenCtx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
+                    offscreenCtx.closePath()
+                    offscreenCtx.fill()
                     break
                 }
                 case 'diamond': {
                     const s2 = size * 0.5
-                    ctx.beginPath()
-                    ctx.moveTo(x + r2 - s2, y + r2)
-                    ctx.lineTo(x + r2, y + r2 + s2)
-                    ctx.lineTo(x + r2 + s2, y + r2)
-                    ctx.lineTo(x + r2, y + r2 - s2)
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.moveTo(x + r2 - s2, y + r2)
+                    offscreenCtx.lineTo(x + r2, y + r2 + s2)
+                    offscreenCtx.lineTo(x + r2 + s2, y + r2)
+                    offscreenCtx.lineTo(x + r2, y + r2 - s2)
+                    offscreenCtx.fill()
                     break
                 }
                 case 'triangle_up': {
                     const dr2 = (size - resolution) / 2
-                    ctx.beginPath()
-                    ctx.moveTo(x - dr2, y - dr2)
-                    ctx.lineTo(x + r2, y + resolution + dr2)
-                    ctx.lineTo(x + resolution + dr2, y - dr2)
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.moveTo(x - dr2, y - dr2)
+                    offscreenCtx.lineTo(x + r2, y + resolution + dr2)
+                    offscreenCtx.lineTo(x + resolution + dr2, y - dr2)
+                    offscreenCtx.fill()
                     break
                 }
                 case 'triangle_down': {
                     const dr2 = (size - resolution) / 2
-                    ctx.beginPath()
-                    ctx.moveTo(x - dr2, y + resolution + dr2)
-                    ctx.lineTo(x + r2, y - dr2)
-                    ctx.lineTo(x + resolution + dr2, y + resolution + dr2)
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.moveTo(x - dr2, y + resolution + dr2)
+                    offscreenCtx.lineTo(x + r2, y - dr2)
+                    offscreenCtx.lineTo(x + resolution + dr2, y + resolution + dr2)
+                    offscreenCtx.fill()
                     break
                 }
                 case 'triangle_left': {
                     const dr2 = (size - resolution) / 2
-                    ctx.beginPath()
-                    ctx.moveTo(x + resolution + dr2, y + resolution + dr2)
-                    ctx.lineTo(x - dr2, y + r2)
-                    ctx.lineTo(x + resolution + dr2, y - dr2)
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.moveTo(x + resolution + dr2, y + resolution + dr2)
+                    offscreenCtx.lineTo(x - dr2, y + r2)
+                    offscreenCtx.lineTo(x + resolution + dr2, y - dr2)
+                    offscreenCtx.fill()
                     break
                 }
                 case 'triangle_right': {
                     const dr2 = (size - resolution) / 2
-                    ctx.beginPath()
-                    ctx.moveTo(x - dr2, y - dr2)
-                    ctx.lineTo(x + resolution + dr2, y + r2)
-                    ctx.lineTo(x - dr2, y + resolution + dr2)
-                    ctx.fill()
+                    offscreenCtx.beginPath()
+                    offscreenCtx.moveTo(x - dr2, y - dr2)
+                    offscreenCtx.lineTo(x + resolution + dr2, y + r2)
+                    offscreenCtx.lineTo(x - dr2, y + resolution + dr2)
+                    offscreenCtx.fill()
                     break
                 }
                 default:

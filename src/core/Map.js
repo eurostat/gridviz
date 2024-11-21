@@ -46,14 +46,15 @@ export class Map {
         /** @type {number} */
         this.h = opts.h || this.container.offsetHeight
 
-        //create canvas element if not specified
+        // Create the main canvas (for rendering to screen)
         /** @type {HTMLCanvasElement} */
         this._canvas = opts.canvas || this.initialiseCanvas()
 
-        /** Make geo canvas
+        /**  Initialize GeoCanvas
          * @type {GeoCanvas}
          * @private */
         this.geoCanvas = new GeoCanvas(this._canvas, opts.x, opts.y, opts.z, opts)
+
         this.geoCanvas.redraw = () => {
             this.redraw()
         }
