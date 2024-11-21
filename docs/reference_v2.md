@@ -752,13 +752,13 @@ This style shows the grid cells as lego bricks with changeable colors based on a
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego_category.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_category.html)).
 
-See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_EUR.html)).
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego.html)).
 
-| Property      | Type                    | Default   | Description                                                             |
-| ------------- | ----------------------- | --------- | ----------------------------------------------------------------------- | --- |
-| **color**     | Object, string -> color | undefined | The dictionary (string -> color) which give the color of each category. |     |
-| **colDark**   | string                  | "#333"    | Shadow color: South East side. This should be a dark color.             |
-| **colBright** | string                  | "#aaa"    | Shadow color: North West side. This should be a bright color.           |
+| Property      | Type                    | Default   | Description                                                              |
+| ------------- | ----------------------- | --------- | ------------------------------------------------------------------------ |
+| **color**     | Object, string -> color | undefined | The dictionary (string -> color) which gives the color of each category. |
+| **colDark**   | string                  | "#333"    | Shadow color: South East side. This should be a dark color.              |
+| **colBright** | string                  | "#aaa"    | Shadow color: North West side. This should be a bright color.            |
 
 ## Kernel smoothing
 
