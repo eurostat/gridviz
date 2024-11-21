@@ -17,6 +17,18 @@ module.exports = {
         //syncWebAssembly: true
     },
 
+    // webpack.config.js
+
+    // other config options
+    module: {
+        rules: [
+            {
+                test: /\.worker\.js$/,
+                use: { loader: 'worker-loader' },
+            },
+            // other rules
+        ],
+    },
     //this is to test data from a local folder, exposed via a local server. Replace directory and port on request.
     devServer: {
         static: {
@@ -26,6 +38,6 @@ module.exports = {
             directory: '/home/juju/gisco/grid_pop_c2021/',
         },
         port: 1234,
-        headers: { 'Access-Control-Allow-Origin': '*', },
+        headers: { 'Access-Control-Allow-Origin': '*' },
     },
 }
