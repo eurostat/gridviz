@@ -25,14 +25,13 @@ export class OrientationLegend extends Legend {
         this.length = opts.length || ((resolution, z, viewScale) => resolution)
 
         //label
-        this.label = opts.label || "-"
+        this.label = opts.label || '-'
     }
 
     /**
      * @param {{ style: import("../style/SegmentStyle.js").SegmentStyle, resolution: number, z: number, viewScale:object }} opts
      */
     update(opts) {
-
         //clear
         this.div.selectAll('*').remove()
 
@@ -62,7 +61,6 @@ export class OrientationLegend extends Legend {
             .style('stroke', color)
             .style('stroke-width', widthPix)
 
-
         //label
         d.append('div')
             .style('display', 'inline')
@@ -73,16 +71,16 @@ export class OrientationLegend extends Legend {
 }
 
 /**
- * 
- * @param {Array.<number>} orientations 
- * @param {Array.<string>} labels 
- * @param {object} opts 
+ *
+ * @param {Array.<number>} orientations
+ * @param {Array.<string>} labels
+ * @param {object} opts
  * @returns  { Array.<OrientationLegend> }
  */
 export function orientationLegend(orientations, labels, opts = {}) {
     const legends = []
     for (let i = 0; i < orientations.length; i++) {
-        opts.title = i == 0 ? opts.title : undefined;
+        opts.title = i == 0 ? opts.title : undefined
         opts.orientation = orientations[i]
         opts.label = labels[i]
         legends.push(new OrientationLegend(opts))

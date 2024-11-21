@@ -20,28 +20,29 @@ export class TanakaStyle {
      * @returns {Array.<import("../core/Style").Style>}
      */
     static get(value, breaks, colors, opts = {}) {
-
         //shadow colors
         opts.colorDark = opts.colorDark || '#111'
         opts.colorBright = opts.colorBright || '#ddd'
 
         /** @type { function(number, number):number } */
-        opts.width = opts.width || ((sideValue, resolution, z) => {
-            const minWG = 1 * z
-            const maxWG = 4 * z
-            const step = (maxWG - minWG) / 3
-            return Math.min(minWG + (sideValue - 1) * step, maxWG)
-        })
+        opts.width =
+            opts.width ||
+            ((sideValue, resolution, z) => {
+                const minWG = 1 * z
+                const maxWG = 4 * z
+                const step = (maxWG - minWG) / 3
+                return Math.min(minWG + (sideValue - 1) * step, maxWG)
+            })
 
         //make classifier
         const classifier = clFun(breaks)
         //make colors table
-        const colorsDict = {};
-        for (let i = 0; i < colors.length; i++) colorsDict[i + ""] = colors[i]
+        const colorsDict = {}
+        for (let i = 0; i < colors.length; i++) colorsDict[i + ''] = colors[i]
 
         const cellStyle = new SquareColorCategoryWebGLStyle({
-            code: cell => classifier(value(cell)),
-            color: colorsDict
+            code: (cell) => classifier(value(cell)),
+            color: colorsDict,
         })
 
         const getSideValue = (side) => {
@@ -60,7 +61,7 @@ export class TanakaStyle {
                 return v < 0 ? opts.colorDark : opts.colorBright
             },
             //width depends on the value, that is the number of classes of difference
-            width: (side, resolution, z) => opts.width(Math.abs(getSideValue(side)), resolution, z)
+            width: (side, resolution, z) => opts.width(Math.abs(getSideValue(side)), resolution, z),
         })
 
         return [cellStyle, sideStyle]

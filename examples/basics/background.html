@@ -2,10 +2,12 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 400 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 400,
+    }).addZoomButtons()
 
     //define background layer
     const backgroundLayer = new gridviz.BackgroundLayer({
@@ -17,5 +19,4 @@
     //add layer to map
     map.layers = [backgroundLayer]
     map.redraw()
-
 </script>

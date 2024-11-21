@@ -17,17 +17,13 @@ export function getClass(v, breaks) {
     return breaks.length
 }
 
-
-
 //take 'nice' value (power of ten, or multiple)
 export function nice(v, multiples = [8, 6, 5, 4, 2.5, 2]) {
     //compute bigger power of ten below
     const v_ = Math.pow(10, Math.floor(Math.log10(v)))
-    for (let multiple of multiples)
-        if (v_ * multiple <= v) return v_ * multiple
+    for (let multiple of multiples) if (v_ * multiple <= v) return v_ * multiple
     return v_
 }
-
 
 /*
 //no longer used
@@ -40,7 +36,6 @@ export function loadImage(src) {
     });
 }
 */
-
 
 /*
 export let monitor = false

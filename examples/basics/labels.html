@@ -2,17 +2,18 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 2, y: 46, z: 0.03 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), { x: 2, y: 46, z: 0.03 }).addZoomButtons()
 
     //define label layer
     const labelLayer = new gridviz.LabelLayer({
         //input csv file with label data
         url: 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v3/UTF_LATIN/50/EUR.csv',
         //set x,y position for each label
-        preprocess: (label) => { label.x = label.lon; label.y = label.lat },
+        preprocess: (label) => {
+            label.x = label.lon
+            label.y = label.lat
+        },
         //set label style depending on zoom level
         style: (label, zoom) => {
             if (label.rs < zoom * 70000) return
@@ -25,5 +26,4 @@
     //add layer to map
     map.layers = [labelLayer]
     map.redraw()
-
 </script>

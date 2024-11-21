@@ -39,7 +39,6 @@ export class SideStyle extends Style {
      * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -60,19 +59,18 @@ export class SideStyle extends Style {
         geoCanvas.ctx.lineCap = 'butt'
         const r2 = resolution * 0.5
         for (let side of sides) {
-
             //color
             /** @type {string|undefined} */
             const col = this.color ? this.color(side, resolution, z, viewScale) : undefined
             if (!col || col == 'none') continue
 
             if (this.diamond) {
-
                 //set color
                 geoCanvas.ctx.fillStyle = col
 
                 //draw diamond
-                const x = side.x, y = side.y
+                const x = side.x,
+                    y = side.y
                 geoCanvas.ctx.beginPath()
                 geoCanvas.ctx.moveTo(x - r2, y)
                 geoCanvas.ctx.lineTo(x, y + r2)
@@ -80,9 +78,7 @@ export class SideStyle extends Style {
                 geoCanvas.ctx.lineTo(x, y - r2)
                 geoCanvas.ctx.closePath()
                 geoCanvas.ctx.fill()
-
             } else {
-
                 //width
                 /** @type {number|undefined} */
                 const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
@@ -100,9 +96,10 @@ export class SideStyle extends Style {
                 geoCanvas.ctx.strokeStyle = col
 
                 //draw segment with correct orientation
-                const x = side.x, y = side.y
+                const x = side.x,
+                    y = side.y
                 geoCanvas.ctx.beginPath()
-                if (side.or === "v") {
+                if (side.or === 'v') {
                     geoCanvas.ctx.moveTo(x, y - lG2)
                     geoCanvas.ctx.lineTo(x, y + lG2)
                 } else {
@@ -117,10 +114,8 @@ export class SideStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 
-
-
     /**
-     * 
+     *
      * @param {Array.<import('../core/Dataset').Cell>} cells The cells to use to build the sides.
      * @param {number} resolution The cells resolution
      * @param {boolean} withHorizontal Set to true to build horizontal sides, false otherwise.
@@ -141,26 +136,32 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            if ((c1.y + resolution == c2.y) && (c1.x == c2.x))
+            if (c1.y + resolution == c2.y && c1.x == c2.x)
                 //cells in same column and touch along horizontal side
                 //make shared side
                 sides.push({
                     or: 'h',
-                    x: c1.x + r2, y: c2.y,
-                    c1: c1, c2: c2
+                    x: c1.x + r2,
+                    y: c2.y,
+                    c1: c1,
+                    c2: c2,
                 })
             else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
                 sides.push({
                     or: 'h',
-                    x: c1.x + r2, y: c1.y + resolution,
-                    c1: c1, c2: undefined
+                    x: c1.x + r2,
+                    y: c1.y + resolution,
+                    c1: c1,
+                    c2: undefined,
                 })
                 sides.push({
                     or: 'h',
-                    x: c2.x + r2, y: c2.y,
-                    c1: undefined, c2: c2
+                    x: c2.x + r2,
+                    y: c2.y,
+                    c1: undefined,
+                    c2: c2,
                 })
             }
 
@@ -174,26 +175,32 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            if ((c1.x + resolution == c2.x) && (c1.y == c2.y))
+            if (c1.x + resolution == c2.x && c1.y == c2.y)
                 //cells in same row and touch along vertical side
                 //make shared side
                 sides.push({
                     or: 'v',
-                    x: c1.x + resolution, y: c1.y + r2,
-                    c1: c1, c2: c2
+                    x: c1.x + resolution,
+                    y: c1.y + r2,
+                    c1: c1,
+                    c2: c2,
                 })
             else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
                 sides.push({
                     or: 'v',
-                    x: c1.x + resolution, y: c1.y + r2,
-                    c1: c1, c2: undefined
+                    x: c1.x + resolution,
+                    y: c1.y + r2,
+                    c1: c1,
+                    c2: undefined,
                 })
                 sides.push({
                     or: 'v',
-                    x: c2.x, y: c2.y + r2,
-                    c1: undefined, c2: c2
+                    x: c2.x,
+                    y: c2.y + r2,
+                    c1: undefined,
+                    c2: c2,
                 })
             }
 
@@ -201,5 +208,4 @@ export class SideStyle extends Style {
         }
         return sides
     }
-
 }

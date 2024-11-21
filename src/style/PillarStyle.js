@@ -8,7 +8,6 @@ import { Style } from '../core/Style.js'
  * @author Julien Gaffuri
  */
 export class PillarStyle extends Style {
-
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
@@ -20,7 +19,7 @@ export class PillarStyle extends Style {
 
         /** A function returning the color of the line representing a cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#c08c59") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => '#c08c59') //(c,r,z,vs) => {}
 
         /** A function returning the width of the line representing a cell, in geo unit
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
@@ -61,7 +60,6 @@ export class PillarStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -115,7 +113,10 @@ export class PillarStyle extends Style {
             //draw segment
             geoCanvas.ctx.beginPath()
             geoCanvas.ctx.moveTo(cx, cy)
-            geoCanvas.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection))
+            geoCanvas.ctx.lineTo(
+                cx + ls * Math.cos(this.shadowDirection),
+                cy + ls * Math.sin(this.shadowDirection)
+            )
             geoCanvas.ctx.stroke()
 
             /*

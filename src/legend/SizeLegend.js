@@ -44,7 +44,6 @@ export class SizeLegend extends Legend {
      * @param {{ viewScale:object, resolution: number, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
      */
     update(opts) {
-
         //clear
         this.div.selectAll('*').remove()
 
@@ -56,10 +55,8 @@ export class SizeLegend extends Legend {
 
         //compute size of symbol, in pix
         let sizePix
-        if (this.size)
-            sizePix = this.size(opts.viewScale, opts.resolution, opts.z) / opts.z
-        else
-            sizePix = opts.viewScale(+label) / opts.z
+        if (this.size) sizePix = this.size(opts.viewScale, opts.resolution, opts.z) / opts.z
+        else sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
 
         //format label, if specified and possible
@@ -70,14 +67,16 @@ export class SizeLegend extends Legend {
         //.style("position", "relative")
 
         //default svg construction, for square and circle
-        const svg = () => d
-            .append('svg')
-            .attr('width', sizePix + this.strokeWidth + 2)
-            .attr('height', sizePix + this.strokeWidth + 2)
-            .style('', 'inline-block')
+        const svg = () =>
+            d
+                .append('svg')
+                .attr('width', sizePix + this.strokeWidth + 2)
+                .attr('height', sizePix + this.strokeWidth + 2)
+                .style('', 'inline-block')
 
         if (this.shape === 'square') {
-            svg().append('rect')
+            svg()
+                .append('rect')
                 .attr('x', 0)
                 .attr('y', 0)
                 .attr('width', sizePix)
@@ -88,7 +87,8 @@ export class SizeLegend extends Legend {
         } else if (this.shape === 'circle') {
             // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
             const r = (sizePix + this.strokeWidth) * 0.5
-            svg().append('circle')
+            svg()
+                .append('circle')
                 .attr('cx', r + 1)
                 .attr('cy', r + 1)
                 .attr('r', r)
@@ -100,12 +100,17 @@ export class SizeLegend extends Legend {
         } else if (this.shape === 'diamond') {
             //TODO
         } else if (this.shape === 'line') {
-
             //get segment length
-            let lengthPix = this.length ? this.length(opts.resolution, opts.z, opts.viewScale) : opts.resolution
+            let lengthPix = this.length
+                ? this.length(opts.resolution, opts.z, opts.viewScale)
+                : opts.resolution
             lengthPix /= opts.z
 
-            const svg = d.append('svg').attr('width', lengthPix).attr('height', sizePix).style('', 'inline-block')
+            const svg = d
+                .append('svg')
+                .attr('width', lengthPix)
+                .attr('height', sizePix)
+                .style('', 'inline-block')
 
             //TODO orientation
             //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
@@ -129,22 +134,16 @@ export class SizeLegend extends Legend {
     }
 }
 
-
-
-
-
-
-
 /**
- * @param {Array.<number>} values 
- * @param {function(number):number} size 
- * @param { object } opts 
+ * @param {Array.<number>} values
+ * @param {function(number):number} size
+ * @param { object } opts
  * @returns {Array.<SizeLegend>}
  */
 export function sizeLegend(values, size, opts = {}) {
     const legends = []
     for (let value of values) {
-        opts.title = value == values[0] ? opts.title : undefined;
+        opts.title = value == values[0] ? opts.title : undefined
         opts.size = () => size(value)
         opts.label = () => value
         legends.push(new SizeLegend(opts))
@@ -153,8 +152,8 @@ export function sizeLegend(values, size, opts = {}) {
 }
 
 /**
- * @param { function(import('../core/Dataset.js').Cell):number } value 
- * @param {*} opts 
+ * @param { function(import('../core/Dataset.js').Cell):number } value
+ * @param {*} opts
  * @returns {Array.<SizeLegend>}
  */
 export function sizeLegendViewScale(value, opts = {}) {
@@ -170,14 +169,14 @@ export function sizeLegendViewScale(value, opts = {}) {
 
 /**
  * A function which return a stack of size legends for a discrete classification.
- * 
- * @param { Array.<number> } breaks 
- * @param { Array.<number> } sizes 
- * @param { object } opts 
+ *
+ * @param { Array.<number> } breaks
+ * @param { Array.<number> } sizes
+ * @param { object } opts
  * @returns {Array.<SizeLegend>}
  */
 export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
-    const f = opts.labelFormat || (x => x)
+    const f = opts.labelFormat || ((x) => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
     for (let i = sizes.length - 1; i >= 0; i--) {
@@ -191,19 +190,20 @@ export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
 
 /**
  * A function which return a stack of size legends for a discrete classification using a viewscale.
- * @param { number } classNumber 
- * @param { object } opts 
+ * @param { number } classNumber
+ * @param { object } opts
  * @returns {Array.<SizeLegend>}
  */
 export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
-    const f = opts.labelFormat || (x => x)
+    const f = opts.labelFormat || ((x) => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
-    const viewScaleFun = opts.viewScaleFun || (t => t) //TODO do it differently? At sizelegend level !
+    const viewScaleFun = opts.viewScaleFun || ((t) => t) //TODO do it differently? At sizelegend level !
     for (let i = classNumber - 1; i >= 0; i--) {
         opts.title = i == classNumber - 1 ? opts.title : undefined
         opts.size = (viewScale) => viewScaleFun(viewScale).values[i]
-        opts.label = (viewScale) => labelText(viewScaleFun(viewScale).breaks[i - 1], viewScaleFun(viewScale).breaks[i])
+        opts.label = (viewScale) =>
+            labelText(viewScaleFun(viewScale).breaks[i - 1], viewScaleFun(viewScale).breaks[i])
         legends.push(new SizeLegend(opts))
     }
     return legends
@@ -211,14 +211,14 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
 
 /**
  * A function that returns a function to format laberls for discrete scale legends.
- * @param { function(number):string } format 
+ * @param { function(number):string } format
  * @returns { function(number|undefined, number|undefined): string }
  */
 function defaultLabelText(format) {
     return (v0, v1) => {
-        if (v0 == undefined && v1 == undefined) return ""
-        if (v1 == undefined) return "> " + format(v0)
-        if (v0 == undefined) return "< " + format(v1)
-        return format(v0) + " - " + format(v1)
+        if (v0 == undefined && v1 == undefined) return ''
+        if (v1 == undefined) return '> ' + format(v0)
+        if (v0 == undefined) return '< ' + format(v1)
+        return format(v0) + ' - ' + format(v1)
     }
 }

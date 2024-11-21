@@ -15,7 +15,7 @@ export class StrokeStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell,number,number,object):string} */
-        this.strokeColor = opts.strokeColor || (() => "#666") //(c,r,z,vs) => {}
+        this.strokeColor = opts.strokeColor || (() => '#666') //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../core/Dataset.js').Cell,number,number,object):number} */
@@ -26,8 +26,8 @@ export class StrokeStyle extends Style {
         this.strokeWidth = opts.strokeWidth || ((cell, resolution, z) => z * 1.5) //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
-        * @type {function(import("../core/Dataset.js").Cell,number,number,object):import("../core/Style.js").Shape} */
-        this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
+         * @type {function(import("../core/Dataset.js").Cell,number,number,object):import("../core/Style.js").Shape} */
+        this.shape = opts.shape || (() => 'square') //(c,r,z,vs) => {}
     }
 
     /**
@@ -38,7 +38,6 @@ export class StrokeStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -50,7 +49,6 @@ export class StrokeStyle extends Style {
 
         const r2 = resolution * 0.5
         for (let c of cells) {
-
             //color
             const col = this.strokeColor ? this.strokeColor(c, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
@@ -80,7 +78,14 @@ export class StrokeStyle extends Style {
             } else if (shape === 'circle') {
                 //draw circle
                 geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.arc(
+                    c.x + r2 + offset.dx,
+                    c.y + r2 + offset.dy,
+                    size * 0.5,
+                    0,
+                    2 * Math.PI,
+                    false
+                )
                 geoCanvas.ctx.stroke()
             } else if (shape === 'diamond') {
                 const s2 = size * 0.5

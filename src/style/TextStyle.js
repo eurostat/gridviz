@@ -19,7 +19,7 @@ export class TextStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "black") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => 'black') //(c,r,z,vs) => {}
 
         /** A function returning the font size of a cell in geo unit.
          * @type {function(import('../core/Dataset.js').Cell, number, number,object):number} */
@@ -42,7 +42,6 @@ export class TextStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -103,7 +102,7 @@ export class TextStyle extends Style {
         const nb = chars.length
         return (t) => {
             if (scale) t = scale(t)
-            if (t == 0) return ""
+            if (t == 0) return ''
             if (t >= 1) return chars[nb - 1]
             return chars[Math.floor(t * nb)]
         }

@@ -11,7 +11,6 @@ import { Style } from '../core/Style.js'
  * @author Julien Gaffuri
  */
 export class LegoStyle {
-
     static get(value, breaks, colors, opts = {}) {
         opts = opts || {}
 
@@ -95,7 +94,14 @@ class LegoTopStyle extends Style {
         geoCanvas.ctx.strokeStyle = this.colDark
         for (let c of cells) {
             geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), true)
+            geoCanvas.ctx.arc(
+                c.x + r * 0.5,
+                c.y + r * 0.5,
+                r * 0.55 * 0.5,
+                Math.PI / 4,
+                -Math.PI * (3 / 4),
+                true
+            )
             geoCanvas.ctx.stroke()
         }
 
@@ -103,7 +109,14 @@ class LegoTopStyle extends Style {
         geoCanvas.ctx.strokeStyle = this.colBright
         for (let c of cells) {
             geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), false)
+            geoCanvas.ctx.arc(
+                c.x + r * 0.5,
+                c.y + r * 0.5,
+                r * 0.55 * 0.5,
+                Math.PI / 4,
+                -Math.PI * (3 / 4),
+                false
+            )
             geoCanvas.ctx.stroke()
         }
     }

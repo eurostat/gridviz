@@ -1,4 +1,5 @@
-<div>Style<br /><select id="style">
+<div>
+    Style<br /><select id="style">
         <option value="color" selected>Color - continuous</option>
         <option value="color_discrete">Color - discrete</option>
         <option value="size">Circle size - continuous</option>
@@ -16,15 +17,23 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 3000,
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/'
+            )
     )
 
     //define style
@@ -38,7 +47,6 @@
 
     //
     const update = () => {
-
         //set sigma
         const sig = +document.querySelector('#sigma').value
         smoothingStyle.sigma = (resolution, z) => (resolution * sig) / 10
@@ -51,7 +59,7 @@
             smoothingStyle.styles = [
                 new gridviz.SquareColorWebGLStyle({
                     color: (t) => d3.interpolateYlOrRd(t), //d3.interpolateCividis, interpolateSpectral
-                    viewScale: (cells) => d3.max(cells, cell => +cell.ksmval),
+                    viewScale: (cells) => d3.max(cells, (cell) => +cell.ksmval),
                     tFun: (cell, resolution, z, max) => {
                         const t = scale(cell.ksmval / max)
                         return t
@@ -63,17 +71,26 @@
             smoothingStyle.styles = [
                 new gridviz.ShapeColorSizeStyle({
                     color: (c, r, z, viewScale) => viewScale(c.ksmval),
-                    viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.ksmval, colors: d3.schemeYlOrRd[7], stretching: gridviz.logarithmicScale(-7) }),
-                })
+                    viewScale: gridviz.viewScaleColor({
+                        valueFunction: (c) => +c.ksmval,
+                        colors: d3.schemeYlOrRd[7],
+                        stretching: gridviz.logarithmicScale(-7),
+                    }),
+                }),
             ]
         } else if (sty == 'size') {
             smoothingStyle.factor = 8
             smoothingStyle.styles = [
                 new gridviz.ShapeColorSizeStyle({
                     size: (c, r, z, viewScale) => viewScale(c.ksmval),
-                    viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ksmval, maxSizeFactor: 1.3, minSizePix: 1, stretching: gridviz.logarithmicScale(-7) }),
-                    shape: () => "circle",
-                    color: () => "black"
+                    viewScale: gridviz.viewScale({
+                        valueFunction: (c) => +c.ksmval,
+                        maxSizeFactor: 1.3,
+                        minSizePix: 1,
+                        stretching: gridviz.logarithmicScale(-7),
+                    }),
+                    shape: () => 'circle',
+                    color: () => 'black',
                 }),
             ]
         } else if (sty == 'size_discrete') {
@@ -81,9 +98,15 @@
             smoothingStyle.styles = [
                 new gridviz.ShapeColorSizeStyle({
                     size: (c, r, z, viewScale) => viewScale(c.ksmval),
-                    viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ksmval, maxSizeFactor: 1.3, minSizePix: 1, stretching: gridviz.logarithmicScale(-7), classNumber: 7 }),
-                    shape: () => "circle",
-                    color: () => "black"
+                    viewScale: gridviz.viewScale({
+                        valueFunction: (c) => +c.ksmval,
+                        maxSizeFactor: 1.3,
+                        minSizePix: 1,
+                        stretching: gridviz.logarithmicScale(-7),
+                        classNumber: 7,
+                    }),
+                    shape: () => 'circle',
+                    color: () => 'black',
                 }),
             ]
         }
@@ -99,5 +122,4 @@
     document.getElementById('sigma').oninput = update
 
     update()
-
 </script>

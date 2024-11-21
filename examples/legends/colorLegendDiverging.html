@@ -6,31 +6,39 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 3000,
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/',
-            {
-                preprocess: (c) => {
-                    for(ex of ['UK','RS','BA','IM','ME','AL','MK'])
-                        if(c.CNTR_ID.includes(ex)) return false
-                    if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
-                    else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
-                    else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
-                    else c.change = c.TOT_P_2021 - c.TOT_P_2011
-                    //remove unused information
-                    delete c.TOT_P_2006
-                    //delete c.TOT_P_2011
-                    delete c.TOT_P_2018
-                    //delete c.TOT_P_2021
-                    delete c.CNTR_ID
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/',
+                {
+                    preprocess: (c) => {
+                        for (ex of ['UK', 'RS', 'BA', 'IM', 'ME', 'AL', 'MK'])
+                            if (c.CNTR_ID.includes(ex)) return false
+                        if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
+                        else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
+                        else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
+                        else c.change = c.TOT_P_2021 - c.TOT_P_2011
+                        //remove unused information
+                        delete c.TOT_P_2006
+                        //delete c.TOT_P_2011
+                        delete c.TOT_P_2018
+                        //delete c.TOT_P_2021
+                        delete c.CNTR_ID
+                    },
                 }
-            })
+            )
     )
 
     //define style
@@ -49,20 +57,20 @@
             //return corresponding color
             return colorRamp(t)
         },
-        viewScale: (cells) => d3.extent(cells, c => +c.change),
+        viewScale: (cells) => d3.extent(cells, (c) => +c.change),
     })
 
     //define legend
     const legend = new gridviz.ColorLegend({
-        title: "Population change",
+        title: 'Population change',
         colorScale: colorRamp,
         ticks: 5,
-        textScale: (t, [min,max]) => {
+        textScale: (t, [min, max]) => {
             //use stretching scale inverse to compute label value
             if (t < 0.5) return (min * stretchingScale.invert(1 - 2 * t)).toFixed(0)
             if (t > 0.5) return (max * stretchingScale.invert(2 * t - 1)).toFixed(0)
             return 0
-        }
+        },
     })
 
     //link legend to style
@@ -70,5 +78,4 @@
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
-
 </script>

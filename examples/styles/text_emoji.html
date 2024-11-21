@@ -3,16 +3,24 @@
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 900 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 900,
+    }).addZoomButtons()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/'),
-        { preprocess: cell => +cell.TOT_P_2021 > 0 }
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/'
+            ),
+        { preprocess: (cell) => +cell.TOT_P_2021 > 0 }
     )
 
     //define text scale: a function [0,1] => text
@@ -23,14 +31,15 @@
 
     //define style
     const style = new gridviz.TextStyle({
-        viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
+        viewScale: (cells) => d3.max(cells, (cell) => +cell.TOT_P_2021),
         text: (cell, resolution, z, max) => textScale(cell.TOT_P_2021 / max),
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], {
-        minPixelsPerCell: 15,
-        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-    })]
-
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            minPixelsPerCell: 15,
+            cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
+        }),
+    ]
 </script>

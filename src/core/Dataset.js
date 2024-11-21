@@ -21,7 +21,6 @@ export class Dataset {
      * @abstract
      */
     constructor(map, url, resolution, opts = {}) {
-
         /**
          * The map.
          * @protected
@@ -41,10 +40,10 @@ export class Dataset {
         this.resolution = resolution
 
         /**
-        * In case the dataset is a dataset with cells having different resolution,
-        * this is the function returning the resolution of each cell.
-        * @protected
-        * @type {(function(Cell):number )| undefined } */
+         * In case the dataset is a dataset with cells having different resolution,
+         * this is the function returning the resolution of each cell.
+         * @protected
+         * @type {(function(Cell):number )| undefined } */
         this.mixedResolution = opts.mixedResolution
 
         /**
@@ -129,7 +128,6 @@ export class Dataset {
             else return cell
         }
         return undefined
-
     }
 
     //getters and setters
@@ -153,5 +151,4 @@ export class Dataset {
     getDataset(z, minPixelsPerCell) {
         return this
     }
-
 }

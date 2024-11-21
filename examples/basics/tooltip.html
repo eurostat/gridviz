@@ -2,20 +2,27 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script>
-
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 4000 })
-        .addZoomButtons()
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4500000,
+        y: 2900000,
+        z: 4000,
+    }).addZoomButtons()
 
     //define dataset
-    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+    const dataset = new gridviz.CSVGrid(
+        map,
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+        10000
+    )
 
     //define style
-    const style = new gridviz.ShapeColorSizeStyle({ color: () => "#333" })
+    const style = new gridviz.ShapeColorSizeStyle({ color: () => '#333' })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], {
-        cellInfoHTML: (c) => 'The population of this cell is: <b>' + c.population + '</b> !',
-    })]
-
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) => 'The population of this cell is: <b>' + c.population + '</b> !',
+        }),
+    ]
 </script>

@@ -15,7 +15,7 @@ export class MosaicStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => '#EA6BAC') //(c,r,z,vs) => {}
 
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
          * @type {number} */
@@ -37,7 +37,6 @@ export class MosaicStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -79,7 +78,10 @@ export class MosaicStyle extends Style {
                 geoCanvas.ctx.beginPath()
                 geoCanvas.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
                 geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
-                geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
+                geoCanvas.ctx.lineTo(
+                    cell.x + offset.dx + resolution - ur.x,
+                    cell.y + offset.dy + resolution - ur.y
+                )
                 geoCanvas.ctx.stroke()
             }
 
@@ -88,7 +90,10 @@ export class MosaicStyle extends Style {
             geoCanvas.ctx.beginPath()
             geoCanvas.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
             geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
-            geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
+            geoCanvas.ctx.lineTo(
+                cell.x + offset.dx + resolution - ur.x,
+                cell.y + offset.dy + resolution - ur.y
+            )
             geoCanvas.ctx.lineTo(cell.x + offset.dx + ul.x, cell.y + offset.dy + resolution - ul.y)
             geoCanvas.ctx.fill()
         }

@@ -15,12 +15,12 @@ export class NinjaStarStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => '#EA6BAC') //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell, within [0,1]:
          *  - 0, nothing shown
          *  - 1, entire square
-          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
         this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** A function returning the shape.
@@ -35,7 +35,6 @@ export class NinjaStarStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 

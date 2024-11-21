@@ -6,7 +6,7 @@ import { Layer } from '../core/Layer.js'
 /**
  *
  * A map background layer composed of a single image file, geolocated.
- * 
+ *
  * @module layer
  * @author Julien Gaffuri
  */
@@ -24,10 +24,10 @@ export class BackgroundLayerImage extends Layer {
 
         /** The image left coordinate
          * @type {number} */
-        this.xMin = opts.xMin || 0;
+        this.xMin = opts.xMin || 0
         /** The image top coordinate
          *  @type {number} */
-        this.yMax = opts.yMax || 0;
+        this.yMax = opts.yMax || 0
 
         /** The image width, in geo unit
          * @type {number} */
@@ -38,7 +38,7 @@ export class BackgroundLayerImage extends Layer {
 
         /** The image object
          * @type {HTMLImageElement|undefined} */
-        this.img = undefined;
+        this.img = undefined
     }
 
     /**
@@ -46,7 +46,6 @@ export class BackgroundLayerImage extends Layer {
      * @returns {void}
      */
     draw(geoCanvas) {
-
         //update map extent
         //geoCanvas.updateExtentGeo(0)
 
@@ -61,7 +60,6 @@ export class BackgroundLayerImage extends Layer {
             //draw image
             geoCanvas.initCanvasTransform()
             geoCanvas.ctx.drawImage(this.img, x, y, this.width / z, this.height / z)
-
         } else {
             //retrieve image
 
@@ -72,13 +70,12 @@ export class BackgroundLayerImage extends Layer {
                 }
                 this.img.onerror = () => {
                     //case when no image
-                    console.warn("Could not retrieve background image from", this.url)
+                    console.warn('Could not retrieve background image from', this.url)
                 }
             }
 
             //set URL to launch the download
             this.img.src = this.url
         }
-
     }
 }

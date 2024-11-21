@@ -53,8 +53,6 @@ export class GeoJSONLayer extends Layer {
          * @type {function(object,number):number} */
         this.lineWidth = opts.lineWidth || ((f, z) => 2)
 
-
-
         //for lines
 
         /**
@@ -71,7 +69,6 @@ export class GeoJSONLayer extends Layer {
          * @type {function(object,number):Array.<number>|undefined} */
         this.lineDash = opts.lineDash || ((f, z) => undefined)
 
-
         /**
          * @private
          * @type {Array.<object> | undefined} */
@@ -82,7 +79,6 @@ export class GeoJSONLayer extends Layer {
          * @type {string} */
         this.loadingStatus = 'notLoaded'
     }
-
 
     /**
      * Draw the layer.
@@ -102,41 +98,39 @@ export class GeoJSONLayer extends Layer {
         for (const f of this.fs) {
             const gt = f.geometry.type
 
-            if (gt == "Point") {
+            if (gt == 'Point') {
                 const c = f.geometry.coordinates
 
                 //get style parameters for the point feature
-                const shape = this.shape(f,z)
-                if(!shape || shape=="none") continue
-                const size = this.size(f,z) * z
-                if(!size) continue
-                const strokeStyle = this.strokeStyle(f,z)
-                const fillStyle = this.fillStyle(f,z)
-                const lineWidth = this.lineWidth(f,z) * z
+                const shape = this.shape(f, z)
+                if (!shape || shape == 'none') continue
+                const size = this.size(f, z) * z
+                if (!size) continue
+                const strokeStyle = this.strokeStyle(f, z)
+                const fillStyle = this.fillStyle(f, z)
+                const lineWidth = this.lineWidth(f, z) * z
 
                 //set canvas drawing parameters
-                if(strokeStyle) geoCanvas.ctx.strokeStyle = strokeStyle
-                if(fillStyle) geoCanvas.ctx.fillStyle = fillStyle
-                if(lineWidth) geoCanvas.ctx.lineWidth = lineWidth
+                if (strokeStyle) geoCanvas.ctx.strokeStyle = strokeStyle
+                if (fillStyle) geoCanvas.ctx.fillStyle = fillStyle
+                if (lineWidth) geoCanvas.ctx.lineWidth = lineWidth
 
-                if (shape == "circle") {
+                if (shape == 'circle') {
                     //draw circle - fill and stroke
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
-                    if(fillStyle) geoCanvas.ctx.fill()
-                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
-                } else if (shape == "square") {
+                    if (fillStyle) geoCanvas.ctx.fill()
+                    if (strokeStyle && lineWidth) geoCanvas.ctx.stroke()
+                } else if (shape == 'square') {
                     //draw square - fill and stroke
                     geoCanvas.ctx.beginPath()
                     geoCanvas.ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
-                    if(fillStyle) geoCanvas.ctx.fill()
-                    if(strokeStyle && lineWidth) geoCanvas.ctx.stroke()
+                    if (fillStyle) geoCanvas.ctx.fill()
+                    if (strokeStyle && lineWidth) geoCanvas.ctx.stroke()
                 } else {
-                    console.error("Unexpected shape for point geojson: " + shape)
+                    console.error('Unexpected shape for point geojson: ' + shape)
                 }
-
-            } else if (gt == "LineString") {
-
+            } else if (gt == 'LineString') {
                 const cs = f.geometry.coordinates
                 if (cs.length < 2) continue
 
@@ -160,9 +154,8 @@ export class GeoJSONLayer extends Layer {
                 for (let i = 1; i < cs.length; i++) geoCanvas.ctx.lineTo(cs[i][0], cs[i][1])
                 geoCanvas.ctx.stroke()
             } else {
-                console.log("Unsupported geometry type in GeoJSONLayer: " + gt)
+                console.log('Unsupported geometry type in GeoJSONLayer: ' + gt)
             }
-
         }
 
         //...
