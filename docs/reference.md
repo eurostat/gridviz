@@ -312,7 +312,7 @@ This style shows the cell as a star polygon whose compacity depends on a variabl
 
 [![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
 
-This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
+This style shows the grid cells in a [Tanaka style](https://manifold.net/doc/mfd9/example__tanaka_contours.htm), that is with discrete colors and a shadow effect.
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/tanaka.html)).
 
