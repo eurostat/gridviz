@@ -1,3 +1,19 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+
+        <title>Gridviz Joyplot Example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
 <div id="map" style="height: 100%; width: 100%"></div>
 
 <script src="../../dist/gridviz.js"></script>
@@ -38,3 +54,5 @@
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
 </script>
+</body>
+</html>
