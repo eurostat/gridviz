@@ -36,13 +36,16 @@ export class GeoCanvas {
         /** @type {number} */
         this.h = this.canvas.offsetHeight
 
-        this.canvas.width = this.w
-        this.canvas.height = this.h
+        // Adjust canvas width and height based on device pixel ratio
+        const dpr = window.devicePixelRatio || 1 // Get the device pixel ratio
+        this.canvas.width = this.w * dpr // Set canvas width
+        this.canvas.height = this.h * dpr // Set canvas height
 
         const ctx = this.canvas.getContext('2d')
         if (!ctx) throw 'Impossible to create canvas 2D context'
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx
+        this.ctx.scale(dpr, dpr) // Scale the context
 
         /**
          * z: pixel size, in m/pix
