@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
         <title>Gridviz Joyplot Example</title>
         <style>
             html,
@@ -77,6 +77,10 @@
 
             //add layers to map
             map.layers = [gridLayer, labelLayer]
+
+            //text
+            map.geoCanvas.ctx.imageSmoothingEnabled = false
+            console.log(window.devicePixelRatio)
         </script>
     </body>
 </html>
