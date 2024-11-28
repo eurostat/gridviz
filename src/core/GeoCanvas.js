@@ -122,7 +122,6 @@ export class GeoCanvas {
                     if (this.onZoomFun) this.onZoomFun(e)
                 })
                 .on('start', (e) => {
-                    console.log('zoomStart')
                     // start of zoom event
                     // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this.canvasSave.c = document.createElement('canvas')

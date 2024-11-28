@@ -115,7 +115,8 @@ export class SquareColorWebGLStyle extends Style {
         //draw
         wgp.draw(verticesBuffer, tBuffer, geoCanvas.getWebGLTransform())
 
-        //draw in canvas geo
+        // draw in canvas geo
+        // NOTE: drawing each tile this way is very inefficient. WebGL is best used with fewer, heavier/larger draw calls.
         geoCanvas.initCanvasTransform()
         geoCanvas.offscreenCtx.drawImage(cvWGL.canvas, 0, 0)
 
