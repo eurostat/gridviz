@@ -1,0 +1,23 @@
+<div id="map" style="height: 450px; width: 800px"></div>
+
+<script src="../../../dist/gridviz.js"></script>
+<script>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4000000, y: 2400000, z: 2000 })
+
+    //define dataset
+    const dataset = new gridviz.TiledGrid(
+        map,
+        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/5000m/'
+    )
+
+    //define style
+    const styles = gridviz.TanakaStyle.get(
+        (cell) => cell.elevation,
+        [100, 200, 500, 1000, 2000],
+        ['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#d95f0e', '#993404']
+    )
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, styles)]
+</script>

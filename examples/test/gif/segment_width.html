@@ -1,0 +1,46 @@
+<div id="map" style="height: 450px; width: 800px"></div>
+
+<script src="../../../dist/gridviz.js"></script>
+<script>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4000000,
+        y: 2400000,
+        z: 2000,
+    }).addZoomButtons()
+
+    //define multi resolution dataset
+    const dataset = new gridviz.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                    resolution +
+                    'm/'
+            ),
+        { preprocess: (cell) => +cell.TOT_P_2021 > 0 }
+    )
+
+    //define style
+    const style = new gridviz.SegmentStyle({
+        color: () => 'lightseagreen',
+        viewScale: gridviz.viewScaleQuantile({
+            valueFunction: (c) => +c.TOT_P_2021,
+            classNumber: 5,
+            minSizePix: 1,
+            maxSizeFactor: 1.4141 / 2,
+        }),
+        width: (cell, resolution, z, viewScale) => viewScale(+cell.TOT_P_2021),
+        length: (cell, resolution) => resolution * 1.4142,
+        orientation: () => 0,
+    })
+
+    //add layer to map
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            minPixelsPerCell: 7,
+            cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
+        }),
+    ]
+</script>

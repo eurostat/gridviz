@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title>Gridviz - Mosaic style</title>
+
+        <style>
+            @font-face {
+                font-family: mf;
+                src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/Constantine.woff);
+            }
+
+            html,
+            body,
+            div {
+                font-family: mf;
+            }
+        </style>
+    </head>
+
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
+
+        <div
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                width: auto;
+                height: auto;
+                padding: 10px;
+                border: 0px;
+                background: #e2ddc8cc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+            "
+        >
+            <span style="font-size: 1.5em; font-weight: bold">Population mosaic of Europe, 2021 A.D.</span
+            ><br />
+
+            <div id="gvizLegend"></div>
+
+            <span style="font-size: 1em">
+                Source:
+                <a
+                    href="https://ec.europa.eu/eurostat/web/gisco/geodata/grids"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >European Commission</a
+                >
+            </span>
+        </div>
+
+        <script src="../../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('viz-container'), {
+                x: 4500000,
+                y: 3400000,
+                z: 9000,
+                zoomExtent: [30, 9000],
+                backgroundColor: '#ECE6D3',
+            })
+                .setViewFromURL()
+                .addZoomButtons()
+
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                            resolution +
+                            'm/'
+                    ),
+                {
+                    preprocess: (c) => {
+                        delete c.CNTR_ID
+                        delete c.TOT_P_2006
+                        delete c.TOT_P_2011
+                        delete c.TOT_P_2018
+                        return c.TOT_P_2021 != undefined && +c.TOT_P_2021 > 0
+                    },
+                }
+            )
+
+            //define style
+            const classNumber = 6
+            const colors = d3.schemeYlOrRd[classNumber]
+            const style = new gridviz.MosaicStyle({
+                viewScale: gridviz.viewScaleColorQuantile({
+                    valueFunction: (c) => +c.TOT_P_2021,
+                    classNumber: classNumber,
+                    colors: colors,
+                }),
+                color: (c, r, z, scale) => scale(+c.TOT_P_2021),
+                mosaicFactor: 0.2,
+                shadowFactor: 0.25,
+                shadowColor: '#aaa',
+            })
+
+            //define legend
+            const legend = new gridviz.ColorDiscreteLegend({
+                title: 'Number of inhabitants',
+                width: 450,
+                colors: () => colors,
+                breaks: (viewScale) => viewScale.breaks.map((b) => Math.round(b)),
+                'font-family': 'mf',
+            })
+
+            //link legend to style
+            style.legends = [legend]
+
+            //define grid layer
+            const gridLayer = new gridviz.GridLayer(dataset, [style], {
+                minPixelsPerCell: 12,
+                cellInfoHTML: (c) =>
+                    '<b>' + c.TOT_P_2021 + '</b> inhabitant' + (c.TOT_P_2021 == 1 ? '' : 's'),
+            })
+
+            //define background layer
+            const backgroundLayer = new gridviz.BackgroundLayer(
+                gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', {
+                    filterColor: () => '#ffffffd3',
+                })
+            )
+
+            //define boundaries layer
+            const boundariesLayer = new gridviz.GeoJSONLayer(
+                gridviz_eurostat.getEurostatBoundariesLayer({
+                    scale: '10M',
+                    col: '#00000077',
+                    lineDash: () => [],
+                })
+            )
+
+            //define label layer
+            const labelLayer = new gridviz.LabelLayer(
+                gridviz_eurostat.getEuronymeLabelLayer('EUR', 50, {
+                    ex: 1.6,
+                    fontFamily: 'mf',
+                    exSize: 1.2,
+                    color: () => 'black',
+                    haloColor: () => '#ffffff',
+                    haloWidth: () => 3,
+                })
+            )
+
+            //add layers to map
+            map.layers = [backgroundLayer, gridLayer, boundariesLayer, labelLayer]
+            //map.layers_([backgroundLayer, gridLayer, boundariesLayer, labelLayer])
+            //map.layers_(backgroundLayer, gridLayer, boundariesLayer, labelLayer)
+            //map.layers_(gridLayer)
+
+            /*/convert to roman numbers - source: https://stackoverflow.com/a/9083076/413912
+    function romanize(num) {
+        if (isNaN(num))
+            return NaN;
+        var digits = String(+num).split(""),
+            key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
+                "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
+                "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
+            roman = "",
+            i = 3;
+        while (i--)
+            roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+        return Array(+digits.join("") + 1).join("M") + roman;
+    }*/
+        </script>
+
+        <div
+            style="
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
+                width: auto;
+                height: auto;
+                padding: 1px;
+                border: 0px;
+                background: #ffffffcc;
+            "
+        >
+            <span style="font-size: 0.8em"
+                ><a href="https://github.com/eurostat/gridviz" style="text-decoration: none">GridViz</a> | ©
+                <a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span
+            >
+        </div>
+    </body>
+</html>

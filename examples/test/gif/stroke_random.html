@@ -1,0 +1,45 @@
+<div id="map" style="height: 450px; width: 800px"></div>
+
+<script src="../../../dist/gridviz.js"></script>
+<script>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4000000,
+        y: 2400000,
+        z: 2000,
+        zoomExtent: [100, 1500],
+    }).addZoomButtons()
+
+    //define dataset
+    const dataset = new gridviz.CSVGrid(
+        map,
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+        10000
+    )
+
+    //define style
+    const rd = Math.random
+    const style = new gridviz.StrokeStyle({
+        //random color
+        strokeColor: () => 'rgb(' + 255 * rd() + ',' + 255 * rd() + ',' + 255 * rd() + ')',
+        //random size
+        size: (c, r) => r * (rd() * 0.6 + 0.3),
+        //random stroke width
+        strokeWidth: (c, r, z) => (1 + rd() * 2) * z,
+        //random shape
+        shape: () => {
+            const r = rd()
+            if (r < 1 / 5) return 'circle'
+            if (r < 2 / 5) return 'square'
+            if (r < 3 / 5) return 'diamond'
+            if (r < 3.5 / 5) return 'triangle_up'
+            if (r < 4 / 5) return 'triangle_down'
+            if (r < 4.5 / 5) return 'triangle_left'
+            return 'triangle_right'
+            //return "donut"
+        },
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+</script>

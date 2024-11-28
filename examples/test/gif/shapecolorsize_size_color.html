@@ -1,0 +1,85 @@
+<div>
+    <select id="shape">
+        <option value="circle" selected>Circle</option>
+        <option value="square">Square</option>
+        <option value="diamond">Diamond</option>
+        <option value="donut">Donut</option>
+        <option value="triangle_up">Triangle up</option>
+        <option value="triangle_down">Triangle down</option>
+        <option value="triangle_left">Triangle left</option>
+        <option value="triangle_right">Triangle right</option>
+    </select>
+</div>
+<div id="map" style="height: 450px; width: 800px"></div>
+
+<script src="../../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4000000,
+        y: 2400000,
+        z: 2000,
+        zoomExtent: [7, 2000],
+    }).addZoomButtons()
+
+    //define multi resolution dataset
+    const dataset = new gridviz.MultiResolutionDataset(
+        [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        (resolution) =>
+            new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' +
+                    resolution +
+                    'm/'
+            ),
+        {
+            preprocess: (c) => {
+                c.revind = Math.round(c.ind_snv / c.ind / 12)
+            },
+        }
+    )
+
+    //define style
+    const style = new gridviz.ShapeColorSizeStyle({
+        color: (cell) => {
+            let t = (cell.revind - 1200) / (3700 - 1200)
+            t = t > 1 ? 1 : t < 0 ? 0 : t
+            return d3.interpolateSpectral(1 - t)
+        },
+        size: (cell, resolution, z, viewScale) => 1.41 * viewScale(cell.ind),
+        viewScale: gridviz.viewScale({
+            valueFunction: (cell) => +cell.ind,
+            stretching: gridviz.powerScale(0.13),
+        }),
+        shape: () => 'circle',
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
+
+    //shape selection
+    document.getElementById('shape').addEventListener('change', function () {
+        const shape = this.value
+
+        //set shape
+        style.shape = () => shape
+
+        //set size
+        const sizeFactor =
+            shape === 'circle' ||
+            shape === 'diamond' ||
+            shape === 'triangle_up' ||
+            shape === 'triangle_down' ||
+            shape === 'triangle_left' ||
+            shape === 'triangle_right'
+                ? 1.41
+                : 1
+        style.size = (c, r, z, viewScale) => sizeFactor * viewScale(c.ind)
+
+        //redraw
+        map.redraw()
+    })
+</script>
