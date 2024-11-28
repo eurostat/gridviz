@@ -103,6 +103,7 @@ export class GeoCanvas {
                             )
                         } else if (se instanceof TouchEvent) {
                             if (!se.targetTouches.length) return
+                            //pinch zoom
                             //compute average position of the touches
                             let tx = 0,
                                 ty = 0
@@ -121,7 +122,9 @@ export class GeoCanvas {
                     if (this.onZoomFun) this.onZoomFun(e)
                 })
                 .on('start', (e) => {
+                    console.log('zoomStart')
                     // start of zoom event
+                    // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this.canvasSave.c = document.createElement('canvas')
                     this.canvasSave.c.setAttribute('width', '' + this.w)
                     this.canvasSave.c.setAttribute('height', '' + this.h)
@@ -140,7 +143,6 @@ export class GeoCanvas {
                 })
             z(select(this.canvas))
         }
-        //select(this.canvas).call(z);
 
         //center extent
         /** @type {number|undefined} */
@@ -303,25 +305,25 @@ export class GeoCanvas {
         this.view.y += dyGeo
         this.updateExtentGeo()
 
+        // zoom in on the current canvas state
         if (this.canvasSave.c) {
             this.clear(this.backgroundColor)
             this.canvasSave.f /= f
             this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
             this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
-            this.clear(this.backgroundColor)
-            this.ctx.drawImage(
-                this.canvasSave.c,
-                this.canvasSave.dx,
-                this.canvasSave.dy,
-                this.canvasSave.f * this.canvasSave.c.width,
-                this.canvasSave.f * this.canvasSave.c.height
-            )
             this.offscreenCtx.drawImage(
                 this.canvasSave.c,
                 this.canvasSave.dx,
                 this.canvasSave.dy,
                 this.canvasSave.f * this.canvasSave.c.width,
                 this.canvasSave.f * this.canvasSave.c.height
+            )
+            this.ctx.drawImage(
+                this.offscreenCanvas, // Use offscreen canvas as the source
+                0,
+                0, // Position the offscreen canvas at the top-left corner of the main canvas
+                this.canvas.width, // The width of the visible canvas
+                this.canvas.height // The height of the visible canvas
             )
         }
     }

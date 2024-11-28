@@ -40,6 +40,7 @@ export class JoyPlotStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -68,7 +69,7 @@ export class JoyPlotStyle extends Style {
         const ys = { min: yMin, max: yMax }
 
         //draw lines, row by row, stating from the top
-        geoCanvas.ctx.lineJoin = 'round'
+        ctx.lineJoin = 'round'
         for (let y = yMax; y >= yMin; y -= resolution) {
             //get row
             const row = ind[y]
@@ -77,8 +78,8 @@ export class JoyPlotStyle extends Style {
             if (!row) continue
 
             //place first point
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(xMin - resolution / 2, y)
+            ctx.beginPath()
+            ctx.moveTo(xMin - resolution / 2, y)
 
             //store the previous height
             /** @type {number|undefined} */
@@ -94,32 +95,32 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    geoCanvas.ctx.lineTo(x + resolution / 2, y + hG)
+                    ctx.lineTo(x + resolution / 2, y + hG)
                 } else {
                     //else move the point
-                    geoCanvas.ctx.moveTo(x + resolution / 2, y)
+                    ctx.moveTo(x + resolution / 2, y)
                 }
                 //store the previous value
                 hG_ = hG
             }
 
             //last point
-            if (hG_) geoCanvas.ctx.lineTo(xMax + resolution / 2, y)
+            if (hG_) ctx.lineTo(xMax + resolution / 2, y)
 
             //draw fill
             const fc = this.fillColor(y, ys, resolution, z)
             if (fc && fc != 'none') {
-                geoCanvas.ctx.fillStyle = fc
-                geoCanvas.ctx.fill()
+                ctx.fillStyle = fc
+                ctx.fill()
             }
 
             //draw line
             const lc = this.lineColor(y, ys, resolution, z)
             const lw = this.lineWidth(y, ys, resolution, z)
             if (lc && lc != 'none' && lw > 0) {
-                geoCanvas.ctx.strokeStyle = lc
-                geoCanvas.ctx.lineWidth = lw
-                geoCanvas.ctx.stroke()
+                ctx.strokeStyle = lc
+                ctx.lineWidth = lw
+                ctx.stroke()
             }
         }
     }

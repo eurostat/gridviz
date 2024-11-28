@@ -43,6 +43,7 @@ export class StrokeStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -52,7 +53,7 @@ export class StrokeStyle extends Style {
             //color
             const col = this.strokeColor ? this.strokeColor(c, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
-            geoCanvas.ctx.strokeStyle = col
+            ctx.strokeStyle = col
 
             //size - in geo unit
             const size = this.size ? this.size(c, resolution, z, viewScale) : resolution
@@ -60,7 +61,7 @@ export class StrokeStyle extends Style {
             //width
             const wi = this.strokeWidth ? this.strokeWidth(c, resolution, z, viewScale) : 1 * z
             if (!wi || wi <= 0) continue
-            geoCanvas.ctx.lineWidth = wi
+            ctx.lineWidth = wi
 
             //shape
             const shape = this.shape ? this.shape(c, resolution, z, viewScale) : 'square'
@@ -72,64 +73,57 @@ export class StrokeStyle extends Style {
             if (shape === 'square') {
                 //draw square
                 const d = resolution * (1 - size / resolution) * 0.5
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.rect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.rect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
+                ctx.stroke()
             } else if (shape === 'circle') {
                 //draw circle
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.arc(
-                    c.x + r2 + offset.dx,
-                    c.y + r2 + offset.dy,
-                    size * 0.5,
-                    0,
-                    2 * Math.PI,
-                    false
-                )
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                ctx.stroke()
             } else if (shape === 'diamond') {
                 const s2 = size * 0.5
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x + r2 - s2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 + s2)
-                geoCanvas.ctx.lineTo(c.x + r2 + s2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 - s2)
-                geoCanvas.ctx.lineTo(c.x + r2 - s2, c.y + r2)
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(c.x + r2 - s2, c.y + r2)
+                ctx.lineTo(c.x + r2, c.y + r2 + s2)
+                ctx.lineTo(c.x + r2 + s2, c.y + r2)
+                ctx.lineTo(c.x + r2, c.y + r2 - s2)
+                ctx.lineTo(c.x + r2 - s2, c.y + r2)
+                ctx.stroke()
             } else if (shape === 'donut') {
                 console.error('Not implemented')
             } else if (shape === 'triangle_up') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x - dr2, c.y - dr2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y + resolution + dr2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
-                geoCanvas.ctx.closePath()
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y - dr2)
+                ctx.lineTo(c.x + r2, c.y + resolution + dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                ctx.closePath()
+                ctx.stroke()
             } else if (shape === 'triangle_down') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x - dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y - dr2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.closePath()
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y + resolution + dr2)
+                ctx.lineTo(c.x + r2, c.y - dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y + resolution + dr2)
+                ctx.closePath()
+                ctx.stroke()
             } else if (shape === 'triangle_left') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x + resolution + dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.lineTo(c.x - dr2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
-                geoCanvas.ctx.closePath()
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(c.x + resolution + dr2, c.y + resolution + dr2)
+                ctx.lineTo(c.x - dr2, c.y + r2)
+                ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                ctx.closePath()
+                ctx.stroke()
             } else if (shape === 'triangle_right') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x - dr2, c.y - dr2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x - dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.closePath()
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y - dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y + r2)
+                ctx.lineTo(c.x - dr2, c.y + resolution + dr2)
+                ctx.closePath()
+                ctx.stroke()
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }

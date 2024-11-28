@@ -40,7 +40,7 @@
         "start": "webpack --config webpack.config.dev.cjs",
         "server": "webpack serve -c webpack.config.dev.cjs",
         "doc": "jsdoc -c docs/jsdoc/jsdoc.conf.json",
-        "bp": "webpack --config webpack.config.prod.cjs",
+        "build-prod": "webpack --config webpack.config.prod.cjs",
         "test": "jest",
         "format": "prettier --write ."
     },

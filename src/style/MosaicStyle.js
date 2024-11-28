@@ -42,15 +42,16 @@ export class MosaicStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //set stroke style, for shadow
-        geoCanvas.ctx.strokeStyle = this.shadowColor
-        geoCanvas.ctx.lineWidth = this.shadowFactor * resolution
-        geoCanvas.ctx.lineJoin = 'round'
-        geoCanvas.ctx.lineCap = 'butt'
+        ctx.strokeStyle = this.shadowColor
+        ctx.lineWidth = this.shadowFactor * resolution
+        ctx.lineJoin = 'round'
+        ctx.lineCap = 'butt'
 
         //function to compute position mosaic effect
         const d = resolution * this.mosaicFactor
@@ -62,7 +63,7 @@ export class MosaicStyle extends Style {
             //set fill color
             const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
-            geoCanvas.ctx.fillStyle = col
+            ctx.fillStyle = col
 
             //get offset
             const offset = this.offset(cell, resolution, z)
@@ -75,27 +76,21 @@ export class MosaicStyle extends Style {
 
             //stroke
             if (this.shadowFactor > 0) {
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
-                geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
-                geoCanvas.ctx.lineTo(
-                    cell.x + offset.dx + resolution - ur.x,
-                    cell.y + offset.dy + resolution - ur.y
-                )
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
+                ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
+                ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
+                ctx.stroke()
             }
 
             //fill
 
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
-            geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
-            geoCanvas.ctx.lineTo(
-                cell.x + offset.dx + resolution - ur.x,
-                cell.y + offset.dy + resolution - ur.y
-            )
-            geoCanvas.ctx.lineTo(cell.x + offset.dx + ul.x, cell.y + offset.dy + resolution - ul.y)
-            geoCanvas.ctx.fill()
+            ctx.beginPath()
+            ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
+            ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
+            ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
+            ctx.lineTo(cell.x + offset.dx + ul.x, cell.y + offset.dy + resolution - ul.y)
+            ctx.fill()
         }
 
         //update legends

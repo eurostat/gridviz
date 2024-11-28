@@ -84,7 +84,7 @@ export class Map {
         this.geoCanvas.canvas.addEventListener('mouseout', this.mouseOutHandler)
 
         // listen for resize events on the App's container and handle them
-        this.defineResizeObserver(this.container, this._canvas)
+        this.defineResizeObserver()
 
         // add extra logic to onZoomStartFun
         this.geoCanvas.onZoomStartFun = (e) => {
@@ -173,8 +173,9 @@ export class Map {
             if (layer.visible && !layer.visible(z)) continue
 
             //set layer alpha and blend mode
-            this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-            if (layer.blendOperation) this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
+            this.geoCanvas.offscreenCtx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
+            if (layer.blendOperation)
+                this.geoCanvas.offscreenCtx.globalCompositeOperation = layer.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
@@ -186,9 +187,14 @@ export class Map {
             if (layer.filterColor) layer.drawFilter(this.geoCanvas)
 
             //restore default alpha and blend operation
-            this.geoCanvas.ctx.globalAlpha = 1.0
-            this.geoCanvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
+            this.geoCanvas.offscreenCtx.globalAlpha = 1.0
+            this.geoCanvas.offscreenCtx.globalCompositeOperation = this.defaultGlobalCompositeOperation
         }
+
+        // one drawImage call: draw the offscreen canvas to the main canvas
+        this.geoCanvas.initCanvasTransform()
+        this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
+
         this.canvasSave = null
 
         return this
@@ -240,9 +246,9 @@ export class Map {
                 this.canvasSave = document.createElement('canvas')
                 this.canvasSave.setAttribute('width', '' + this.w)
                 this.canvasSave.setAttribute('height', '' + this.h)
-                this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.canvas, 0, 0)
+                this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
             } else {
-                this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
+                this.geoCanvas.offscreenCtx.drawImage(this.canvasSave, 0, 0)
             }
 
             //draw image saved + draw rectangle
@@ -250,17 +256,19 @@ export class Map {
                 ? this.selectionRectangleWidthPix(focus.resolution, this.geoCanvas.view.z)
                 : 4
             this.geoCanvas.initCanvasTransform()
-            this.geoCanvas.ctx.strokeStyle = this.selectionRectangleColor
-            this.geoCanvas.ctx.lineWidth = rectWPix
-            this.geoCanvas.ctx.beginPath()
+            const ctx = this.geoCanvas.offscreenCtx
+            ctx.strokeStyle = this.selectionRectangleColor
+            ctx.lineWidth = rectWPix
+            ctx.beginPath()
 
-            this.geoCanvas.ctx.rect(
+            ctx.rect(
                 this.geoCanvas.geoToPixX(focus.cell.x) - rectWPix / 2,
                 this.geoCanvas.geoToPixY(focus.cell.y) + rectWPix / 2,
                 focus.resolution / this.geoCanvas.view.z + rectWPix,
                 -focus.resolution / this.geoCanvas.view.z - rectWPix
             )
-            this.geoCanvas.ctx.stroke()
+            ctx.stroke()
+            this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
         } else {
             this.tooltip.hide()
             if (this.canvasSave) this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
@@ -380,7 +388,7 @@ export class Map {
 
         this.zoomButtons = new ZoomButtons({
             map: this,
-            id: opts?.id || 'gridviz-zoom-buttons',
+            id: opts?.id || 'gridviz-zoom-buttons-' + this.container.id,
             class: opts?.class,
             x: opts?.x,
             y: opts?.y,
@@ -422,13 +430,12 @@ export class Map {
 
     /**
      * @description Add a resize event observer to the Apps container and update the canvas accordingly
-     * @param {HTMLDivElement} container The App's container element
-     * @param {HTMLCanvasElement} canvas The App canvas element
      * @memberof App
      */
-    defineResizeObserver(container, canvas) {
+    defineResizeObserver() {
         // listen to resize events
         const resizeObserver = new ResizeObserver((entries) => {
+            let container = this.container
             // make sure canvas has been built
             if (container.clientWidth > 0 && container.clientHeight > 0) {
                 // make sure we dont exceed loop limit first
@@ -443,8 +450,8 @@ export class Map {
                         this.w = container.clientWidth
                         this.geoCanvas.h = container.clientHeight
                         this.geoCanvas.w = container.clientWidth
-                        canvas.setAttribute('width', '' + this.w)
-                        canvas.setAttribute('height', '' + this.h)
+                        this.geoCanvas.canvas.setAttribute('width', '' + this.w)
+                        this.geoCanvas.canvas.setAttribute('height', '' + this.h)
                         // offscreen canvas
                         this.geoCanvas.offscreenCanvas.setAttribute('width', '' + this.w)
                         this.geoCanvas.offscreenCanvas.setAttribute('height', '' + this.h)
@@ -458,7 +465,7 @@ export class Map {
             }
         })
 
-        resizeObserver.observe(container)
+        resizeObserver.observe(this.container)
     }
 
     /**

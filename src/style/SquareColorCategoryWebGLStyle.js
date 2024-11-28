@@ -99,7 +99,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
-        geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
+        geoCanvas.offscreenCtx.drawImage(cvWGL.canvas, 0, 0)
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z })

@@ -15,7 +15,6 @@ export class ShapeColorSizeStyle extends Style {
     constructor(opts) {
         super(opts)
         opts = opts || {}
-        this.opts = opts
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
@@ -39,119 +38,96 @@ export class ShapeColorSizeStyle extends Style {
      * @override
      */
     draw(cells, geoCanvas, resolution) {
-        // Filter cells early
+        //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        // Precompute constants
-        const r2 = resolution * 0.5
+        //zoom
         const z = geoCanvas.view.z
 
-        // Determine view scale if applicable
+        //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        const ctx = geoCanvas.ctx
-        // Get the offscreen context
-        const offscreenCtx = geoCanvas.offscreenCtx
-
-        // Loop through cells
-        for (const c of cells) {
-            // Determine color
-            const col = this.color ? this.color(c, resolution, z, viewScale) : 'black'
+        const r2 = resolution * 0.5
+        for (let c of cells) {
+            //color
+            let col = this.color ? this.color(c, resolution, z, viewScale) : 'black'
             if (!col || col === 'none') continue
 
-            // Determine size
+            //size
             const size = this.size ? this.size(c, resolution, z, viewScale) : resolution
             if (!size) continue
 
-            // Determine shape
+            //shape
             const shape = this.shape ? this.shape(c, resolution, z, viewScale) : 'square'
             if (shape === 'none') continue
 
-            // Get offsets
-            const { dx, dy } = this.offset(c, resolution, z)
+            //get offset
+            const offset = this.offset(c, resolution, z)
 
-            // Apply color
-            offscreenCtx.fillStyle = col
-
-            // Draw the appropriate shape
-            const x = c.x + dx
-            const y = c.y + dy
-
-            switch (shape) {
-                case 'square': {
-                    const d = resolution * (1 - size / resolution) * 0.5
-                    offscreenCtx.fillRect(x + d, y + d, size, size)
-                    break
-                }
-                case 'circle': {
-                    offscreenCtx.beginPath()
-                    offscreenCtx.arc(x + r2, y + r2, size * 0.5, 0, 2 * Math.PI)
-                    offscreenCtx.fill()
-                    break
-                }
-                case 'donut': {
-                    const xc = x + r2,
-                        yc = y + r2
-                    offscreenCtx.beginPath()
-                    offscreenCtx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                    offscreenCtx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
-                    offscreenCtx.closePath()
-                    offscreenCtx.fill()
-                    break
-                }
-                case 'diamond': {
-                    const s2 = size * 0.5
-                    offscreenCtx.beginPath()
-                    offscreenCtx.moveTo(x + r2 - s2, y + r2)
-                    offscreenCtx.lineTo(x + r2, y + r2 + s2)
-                    offscreenCtx.lineTo(x + r2 + s2, y + r2)
-                    offscreenCtx.lineTo(x + r2, y + r2 - s2)
-                    offscreenCtx.fill()
-                    break
-                }
-                case 'triangle_up': {
-                    const dr2 = (size - resolution) / 2
-                    offscreenCtx.beginPath()
-                    offscreenCtx.moveTo(x - dr2, y - dr2)
-                    offscreenCtx.lineTo(x + r2, y + resolution + dr2)
-                    offscreenCtx.lineTo(x + resolution + dr2, y - dr2)
-                    offscreenCtx.fill()
-                    break
-                }
-                case 'triangle_down': {
-                    const dr2 = (size - resolution) / 2
-                    offscreenCtx.beginPath()
-                    offscreenCtx.moveTo(x - dr2, y + resolution + dr2)
-                    offscreenCtx.lineTo(x + r2, y - dr2)
-                    offscreenCtx.lineTo(x + resolution + dr2, y + resolution + dr2)
-                    offscreenCtx.fill()
-                    break
-                }
-                case 'triangle_left': {
-                    const dr2 = (size - resolution) / 2
-                    offscreenCtx.beginPath()
-                    offscreenCtx.moveTo(x + resolution + dr2, y + resolution + dr2)
-                    offscreenCtx.lineTo(x - dr2, y + r2)
-                    offscreenCtx.lineTo(x + resolution + dr2, y - dr2)
-                    offscreenCtx.fill()
-                    break
-                }
-                case 'triangle_right': {
-                    const dr2 = (size - resolution) / 2
-                    offscreenCtx.beginPath()
-                    offscreenCtx.moveTo(x - dr2, y - dr2)
-                    offscreenCtx.lineTo(x + resolution + dr2, y + r2)
-                    offscreenCtx.lineTo(x - dr2, y + resolution + dr2)
-                    offscreenCtx.fill()
-                    break
-                }
-                default:
-                    console.error('Unexpected shape:', shape)
-                    break
+            //get context
+            const ctx = geoCanvas.offscreenCtx
+            ctx.fillStyle = col
+            if (shape === 'square') {
+                //draw square
+                const d = resolution * (1 - size / resolution) * 0.5
+                ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
+            } else if (shape === 'circle') {
+                //draw circle
+                ctx.beginPath()
+                ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                ctx.fill()
+            } else if (shape === 'donut') {
+                //draw donut
+                const xc = c.x + r2 + offset.dx,
+                    yc = c.y + r2 + offset.dy
+                ctx.beginPath()
+                ctx.moveTo(xc, yc)
+                ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
+                ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
+                ctx.closePath()
+                ctx.fill()
+            } else if (shape === 'diamond') {
+                const s2 = size * 0.5
+                ctx.beginPath()
+                ctx.moveTo(c.x + r2 - s2, c.y + r2)
+                ctx.lineTo(c.x + r2, c.y + r2 + s2)
+                ctx.lineTo(c.x + r2 + s2, c.y + r2)
+                ctx.lineTo(c.x + r2, c.y + r2 - s2)
+                ctx.fill()
+            } else if (shape === 'triangle_up') {
+                const dr2 = (size - resolution) / 2
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y - dr2)
+                ctx.lineTo(c.x + r2, c.y + resolution + dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                ctx.fill()
+            } else if (shape === 'triangle_down') {
+                const dr2 = (size - resolution) / 2
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y + resolution + dr2)
+                ctx.lineTo(c.x + r2, c.y - dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y + resolution + dr2)
+                ctx.fill()
+            } else if (shape === 'triangle_left') {
+                const dr2 = (size - resolution) / 2
+                ctx.beginPath()
+                ctx.moveTo(c.x + resolution + dr2, c.y + resolution + dr2)
+                ctx.lineTo(c.x - dr2, c.y + r2)
+                ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                ctx.fill()
+            } else if (shape === 'triangle_right') {
+                const dr2 = (size - resolution) / 2
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y - dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y + r2)
+                ctx.lineTo(c.x - dr2, c.y + resolution + dr2)
+                ctx.fill()
+            } else {
+                throw new Error('Unexpected shape:' + shape)
             }
         }
 
-        // Update legends
-        this.updateLegends({ viewScale, resolution, z, cells })
+        //update legends
+        this.updateLegends({ viewScale: viewScale, resolution: resolution, z: z, cells: cells })
     }
 }

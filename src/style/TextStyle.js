@@ -47,7 +47,7 @@ export class TextStyle extends Style {
 
         //
         const z = geoCanvas.view.z
-
+        const ctx = geoCanvas.offscreenCtx
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
@@ -63,7 +63,7 @@ export class TextStyle extends Style {
             //color
             const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col) continue
-            geoCanvas.ctx.fillStyle = col
+            ctx.fillStyle = col
 
             //font size
             //size - in pixel unit
@@ -73,18 +73,18 @@ export class TextStyle extends Style {
             //set font
             const fontFamily = this.fontFamily ? this.fontFamily(cell, resolution, z, viewScale) : 'Arial'
             const fontWeight = this.fontWeight ? this.fontWeight(cell, resolution, z, viewScale) : 'bold'
-            geoCanvas.ctx.font = fontWeight + ' ' + fontSizePix + 'px ' + fontFamily
+            ctx.font = fontWeight + ' ' + fontSizePix + 'px ' + fontFamily
 
             //get offset
             const offset = this.offset(cell, resolution, z)
 
             //text position
-            geoCanvas.ctx.textAlign = 'center'
+            ctx.textAlign = 'center'
             const tx = geoCanvas.geoToPixX(cell.x + resolution * 0.5 + offset.dx)
             const ty = geoCanvas.geoToPixY(cell.y + resolution * 0.5 + offset.dy) + fontSizePix * 0.3 //it should be 0.5 but 0.3 seems to work better
 
             //draw the text
-            geoCanvas.ctx.fillText(text, tx, ty)
+            ctx.fillText(text, tx, ty)
         }
 
         //update legends
