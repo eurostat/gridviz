@@ -95,9 +95,6 @@ export class GridLayer extends Layer {
                 }
             }
         }
-
-        // After all cells are drawn to the offscreen canvas, copy to the visible canvas
-        setTimeout(() => geoCanvas.ctx.drawImage(geoCanvas.offscreenCanvas, 0, 0), 3000)
     }
 
     /** @private */

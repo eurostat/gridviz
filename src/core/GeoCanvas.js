@@ -52,6 +52,7 @@ export class GeoCanvas {
         if (!offscreenCtx) throw 'Impossible to create canvas 2D context'
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx
+        this.offscreenCtx = offscreenCtx
         //this.ctx.scale(dpr, dpr) // Scale the context
 
         /**
@@ -120,6 +121,7 @@ export class GeoCanvas {
                     if (this.onZoomFun) this.onZoomFun(e)
                 })
                 .on('start', (e) => {
+                    // start of zoom event
                     this.canvasSave.c = document.createElement('canvas')
                     this.canvasSave.c.setAttribute('width', '' + this.w)
                     this.canvasSave.c.setAttribute('height', '' + this.h)
@@ -127,10 +129,10 @@ export class GeoCanvas {
                     this.canvasSave.dx = 0
                     this.canvasSave.dy = 0
                     this.canvasSave.f = 1
-
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
                 .on('end', (e) => {
+                    // end of zoom event
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
@@ -245,12 +247,24 @@ export class GeoCanvas {
         this.updateExtentGeo()
 
         if (this.canvasSave.c) {
-            this.canvasSave.dx -= dxGeo / this.view.z
-            this.canvasSave.dy += dyGeo / this.view.z
+            const scale = 1 / this.view.z
+
+            // Update saved canvas offset
+            this.canvasSave.dx -= dxGeo * scale
+            this.canvasSave.dy += dyGeo * scale
+
+            // clear canvas
             this.clear(this.backgroundColor)
+
             // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
-            this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+            //this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
             this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+
+            // Render the offscreen canvas to the visible context
+            // this.clear(this.backgroundColor)
+            this.ctx.drawImage(this.offscreenCtx.canvas, 0, 0)
+        } else {
+            console.log('no canvas save')
         }
     }
 

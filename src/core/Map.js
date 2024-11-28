@@ -445,6 +445,9 @@ export class Map {
                         this.geoCanvas.w = container.clientWidth
                         canvas.setAttribute('width', '' + this.w)
                         canvas.setAttribute('height', '' + this.h)
+                        // offscreen canvas
+                        this.geoCanvas.offscreenCanvas.setAttribute('width', '' + this.w)
+                        this.geoCanvas.offscreenCanvas.setAttribute('height', '' + this.h)
                         this.redraw()
 
                         //update button positions
