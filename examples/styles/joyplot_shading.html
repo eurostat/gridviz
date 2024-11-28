@@ -1,64 +1,82 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
 
-<script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4000000,
-        y: 2960000,
-        z: 1000,
-        zoomExtent: [30, 7000],
-    })
-        .setViewFromURL()
-        .addZoomButtons()
+        <title>Gridviz Joyplot Example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-    //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) =>
-            new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                    resolution +
-                    'm/'
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4000000,
+                y: 2960000,
+                z: 1000,
+                zoomExtent: [30, 7000],
+            })
+                .setViewFromURL()
+                .addZoomButtons()
+
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                            resolution +
+                            'm/'
+                    )
             )
-    )
 
-    //define style
-    const style = new gridviz.JoyPlotStyle({
-        height: (c, r, z, scale) => scale(c.TOT_P_2021),
-        viewScale: gridviz.viewScale({
-            valueFunction: (c) => +c.TOT_P_2021,
-            maxSizeFactor: 5,
-            stretching: gridviz.powerScale(0.4),
-        }),
-        lineColor: (y, ys, r, z) => {
-            const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
-            return 'rgb(' + t + ',' + t + ',' + t + ')'
-        },
-        lineWidth: (y, ys, r, z) => 0.1 * r,
-        fillColor: (y, ys, r, z) =>
-            'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
-    })
+            //define style
+            const style = new gridviz.JoyPlotStyle({
+                height: (c, r, z, scale) => scale(c.TOT_P_2021),
+                viewScale: gridviz.viewScale({
+                    valueFunction: (c) => +c.TOT_P_2021,
+                    maxSizeFactor: 5,
+                    stretching: gridviz.powerScale(0.4),
+                }),
+                lineColor: (y, ys, r, z) => {
+                    const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
+                    return 'rgb(' + t + ',' + t + ',' + t + ')'
+                },
+                lineWidth: (y, ys, r, z) => 0.1 * r,
+                fillColor: (y, ys, r, z) =>
+                    'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
+            })
 
-    //define grid layer
-    const gridLayer = new gridviz.GridLayer(dataset, [style], {
-        minPixelsPerCell: 8,
-        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-    })
+            //define grid layer
+            const gridLayer = new gridviz.GridLayer(dataset, [style], {
+                minPixelsPerCell: 6,
+                cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
+            })
 
-    //define label layer
-    const labelLayer = new gridviz.LabelLayer(
-        gridviz_eurostat.getEuronymeLabelLayer('EUR', 50, {
-            ex: 1.8,
-            exSize: 1,
-            color: () => 'black',
-            haloColor: () => '#ffffff',
-            haloWidth: () => 3,
-        })
-    )
+            //define label layer
+            const labelLayer = new gridviz.LabelLayer(
+                gridviz_eurostat.getEuronymeLabelLayer('EUR', 50, {
+                    ex: 1.8,
+                    exSize: 1,
+                    color: () => 'black',
+                    haloColor: () => '#ffffff',
+                    haloWidth: () => 3,
+                })
+            )
 
-    //add layers to map
-    map.layers = [gridLayer, labelLayer]
-</script>
+            //add layers to map
+            map.layers = [gridLayer, labelLayer]
+        </script>
+    </body>
+</html>
