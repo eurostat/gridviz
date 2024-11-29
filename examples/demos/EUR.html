@@ -518,7 +518,7 @@
                     styles[0].legends.push(
                         new gridviz.ColorLegend({
                             title: 'Road transport performance',
-                            width: 300,
+                            width: Math.min(window.innerWidth - 35, 300),
                             ticks: 2,
                             colorScale: d3.interpolateGnBu,
                             textScale: (t) => (t == 0 ? 'Low' : 'High'),
@@ -576,7 +576,7 @@
                             title: 'Travel time to nearest health service, in minutes',
                             colors: () => colorsH_, // this shouldnt have to be a function.
                             breaks: () => breaksH, // this shouldnt have to be a function.
-                            width: 300,
+                            width: Math.min(window.innerWidth - 35, 300),
                         })
                     )
                     healthStyles[0].legends.push(
@@ -634,7 +634,7 @@
                             title: 'Travel time to nearest primary education service, in minutes',
                             colors: () => colorsE_, // this shouldnt have to be a function.
                             breaks: () => breaksE, // this shouldnt have to be a function.
-                            width: 360,
+                            width: Math.min(window.innerWidth - 35, 360),
                         })
                     )
                     educationStyles[0].legends.push(
