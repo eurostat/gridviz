@@ -15,48 +15,69 @@
                     <div class="layer-group">
                         <h2 class="first-title">Population</h2>
                         <div class="radio-group">
-                            <input type="radio" name="layer" id="y2021" value="y2021" checked />
-                            <label for="y2021">2021</label>
-                            <input type="radio" name="layer" id="y2018" value="y2018" />
-                            <label for="y2018">2018</label>
-                            <input type="radio" name="layer" id="y2011" value="y2011" />
-                            <label for="y2011">2011</label>
-                            <input type="radio" name="layer" id="y2006" value="y2006" />
-                            <label for="y2006">2006</label>
-                        </div>
-                        <div class="radio-group">
-                            <input type="radio" name="layer" id="popChange" value="popChange" />
-                            <label for="popChange">Change from </label>
-                            <select id="pcyIni" disabled>
-                                <option value="2006">2006</option>
-                                <option value="2011" selected>2011</option>
-                                <option value="2018">2018</option>
-                                <option value="2021">2021</option>
-                            </select>
-                            to
-                            <select id="pcyFin" disabled>
-                                <option value="2006">2006</option>
-                                <option value="2011">2011</option>
-                                <option value="2018">2018</option>
-                                <option value="2021" selected>2021</option>
-                            </select>
-                            <br />
-                            <input type="radio" name="layer" id="degurba" value="degurba" />
-                            <label for="degurba">Degree of urbanisation</label>
+                            <div class="panel-item">
+                                <div class="radio-container">
+                                    <input type="radio" name="layer" id="y2021" value="y2021" checked />
+                                    <label for="y2021">2021</label>
+                                </div>
+                                <div class="radio-container">
+                                    <input type="radio" name="layer" id="y2018" value="y2018" />
+                                    <label for="y2018">2018</label>
+                                </div>
+                                <div class="radio-container">
+                                    <input type="radio" name="layer" id="y2011" value="y2011" />
+                                    <label for="y2011">2011</label>
+                                </div>
+                                <div class="radio-container">
+                                    <input type="radio" name="layer" id="y2006" value="y2006" />
+                                    <label for="y2006">2006</label>
+                                </div>
+                            </div>
+                            <div class="panel-item">
+                                <div class="radio-container">
+                                    <input type="radio" name="layer" id="popChange" value="popChange" />
+                                    <label for="popChange">Change from </label>
+                                </div>
+                                <div class="radio-container">
+                                    <select id="pcyIni" disabled>
+                                        <option value="2006">2006</option>
+                                        <option value="2011" selected>2011</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                    to
+                                    <select id="pcyFin" disabled>
+                                        <option value="2006">2006</option>
+                                        <option value="2011">2011</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2021" selected>2021</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="panel-item">
+                                <div class="radio-container">
+                                    <input type="radio" name="layer" id="degurba" value="degurba" />
+                                    <label for="degurba">Degree of urbanisation</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="layer-group">
                         <h2>Accessibility</h2>
                         <div class="radio-group">
-                            <input type="radio" name="layer" id="rtp" value="rtp" />
-                            <label for="rtp">Road transport performance</label>
-                            <br />
-                            <input type="radio" name="layer" id="accHealth" value="accHealth" />
-                            <label for="accHealth">Healthcare services</label>
-                            <br />
-                            <input type="radio" name="layer" id="accEducPrim" value="accEducPrim" />
-                            <label for="accEducPrim">Primary schools</label>
+                            <div class="panel-item">
+                                <input type="radio" name="layer" id="rtp" value="rtp" />
+                                <label for="rtp">Road transport performance</label>
+                            </div>
+                            <div class="panel-item">
+                                <input type="radio" name="layer" id="accHealth" value="accHealth" />
+                                <label for="accHealth">Healthcare services</label>
+                            </div>
+                            <div class="panel-item">
+                                <input type="radio" name="layer" id="accEducPrim" value="accEducPrim" />
+                                <label for="accEducPrim">Primary schools</label>
+                            </div>
                         </div>
                     </div>
                 </div>
