@@ -90,13 +90,16 @@
                     <label for="boundary">Boundaries</label>
                 </div>
                 <hr />
-                Source:
-                <a
-                    href="https://ec.europa.eu/eurostat/web/gisco/geodata/grids"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >Eurostat GISCO</a
-                >
+                <div class="source">
+                    Source:
+                    <a
+                        href="https://ec.europa.eu/eurostat/web/gisco/geodata/grids"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Eurostat GISCO
+                    </a>
+                </div>
             </span>
         </div>
 
@@ -109,7 +112,8 @@
         <script>
             document.getElementById('panel-toggle-btn').addEventListener('click', function () {
                 const panel = document.getElementById('panel')
-                if (panel.style.display === 'none') {
+                const style = window.getComputedStyle(panel)
+                if (style.display === 'none') {
                     panel.style.display = 'block' // Show the panel
                 } else {
                     panel.style.display = 'none' // Hide the panel
@@ -127,7 +131,7 @@
                 x: 4000000,
                 y: 2891045,
                 z: 1000,
-                zoomExtent: [7, 2000],
+                zoomExtent: [7, 3000],
             }).addZoomButtons()
 
             //define label layer

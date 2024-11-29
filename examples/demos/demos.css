@@ -86,12 +86,14 @@ h2 {
 /* Mobile specific changes */
 @media (max-width: 600px) {
     .panel {
+        display: none; /* Initially shown */
         width: 90%;
         max-width: 350px;
         max-height: 70vh;
         padding: 10px;
         font-size: 0.8em;
         overflow-y: auto;
+        top: 65px;
     }
 
     .panel-toggle-btn {
