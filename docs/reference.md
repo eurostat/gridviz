@@ -6,6 +6,7 @@
     -   [Table of contents](#table-of-contents)
     -   [Concepts](#concepts)
     -   [Adding data](#adding-data)
+    -   [Filtering and formatting data](#filtering-and-formatting-data)
     -   [Basic styles](#basic-styles)
         -   [Shape/Color/Size Style](#shapecolorsize-style)
         -   [Square color WebGL Style](#square-color-webgl-style)
@@ -147,9 +148,9 @@ This style displays each cell as a square, with a changing color based on a cate
 
 ### Composition style
 
-![composition style](img/styles/composition_flag.png)
+[![composition style](img/styles/composition_flag.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_piechart.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
-![composition style](img/styles/composition_ring.png)
+[![composition style](img/styles/composition_ring.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_halftone.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_random.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 
