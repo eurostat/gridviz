@@ -161,6 +161,9 @@
                 filterColor: (z) => '#ffffff77',
             })
 
+            //define boundaries layer
+            const boundariesLayer = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
             // define datasets
 
             //population dataset
@@ -651,8 +654,11 @@
                     return
                 }
 
-                //add layer to map
-                const layers = [backgroundLayer1].concat(gridLayers).concat([labelLayer])
+                //add layers to map
+                const layers = [backgroundLayer1]
+                    .concat(gridLayers)
+                    .concat(document.querySelector('#boundary').checked ? [boundariesLayer] : [])
+                    .concat(document.querySelector('#label').checked ? [labelLayer] : [])
                 map.layers = layers
 
                 //redraw
@@ -681,14 +687,12 @@
 
             // show/hide labels
             document.querySelector('#label').addEventListener('change', function () {
-                map.showLabels = this.checked
-                map.cg.redraw()
+                update()
             })
 
             // show/hide boundaries
             document.querySelector('#boundary').addEventListener('change', function () {
-                map.showBoundaries = this.checked
-                map.cg.redraw()
+                update()
             })
 
             //select layer from URL

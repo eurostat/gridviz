@@ -159,3 +159,7 @@ hr {
 .source a:hover {
     text-decoration: underline;
 }
+
+select {
+    font-size: 1rem;
+}
