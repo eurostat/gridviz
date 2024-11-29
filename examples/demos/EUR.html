@@ -8,100 +8,75 @@
     </head>
     <body>
         <div id="viz-container"></div>
-        <div class="panel">
-            <div id="layer">
-                <!-- Population Section -->
-                <div class="layer-group">
-                    <h2 class="first-title">Population</h2>
-                    <div class="radio-group">
-                        <label>
+        <div id="panel-toggle-btn" class="panel-toggle-btn">☰</div>
+        <div id="panel" class="panel">
+            <span>
+                <div id="layer">
+                    <div class="layer-group">
+                        <h2 class="first-title">Population</h2>
+                        <div class="radio-group">
                             <input type="radio" name="layer" id="y2021" value="y2021" checked />
-                            2021
-                        </label>
-                        <label>
+                            <label for="y2021">2021</label>
                             <input type="radio" name="layer" id="y2018" value="y2018" />
-                            2018
-                        </label>
-                        <label>
+                            <label for="y2018">2018</label>
                             <input type="radio" name="layer" id="y2011" value="y2011" />
-                            2011
-                        </label>
-                        <label>
+                            <label for="y2011">2011</label>
                             <input type="radio" name="layer" id="y2006" value="y2006" />
-                            2006
-                        </label>
-                        <br />
-                        <label>
+                            <label for="y2006">2006</label>
+                        </div>
+                        <div class="radio-group">
                             <input type="radio" name="layer" id="popChange" value="popChange" />
-                            Change from
-                        </label>
-                        <select id="pcyIni" disabled>
-                            <option value="2006">2006</option>
-                            <option value="2011" selected>2011</option>
-                            <option value="2018">2018</option>
-                            <option value="2021">2021</option>
-                        </select>
-                        to
-                        <select id="pcyFin" disabled>
-                            <option value="2006">2006</option>
-                            <option value="2011">2011</option>
-                            <option value="2018">2018</option>
-                            <option value="2021" selected>2021</option>
-                        </select>
-                        <br />
-                        <label>
+                            <label for="popChange">Change from </label>
+                            <select id="pcyIni" disabled>
+                                <option value="2006">2006</option>
+                                <option value="2011" selected>2011</option>
+                                <option value="2018">2018</option>
+                                <option value="2021">2021</option>
+                            </select>
+                            to
+                            <select id="pcyFin" disabled>
+                                <option value="2006">2006</option>
+                                <option value="2011">2011</option>
+                                <option value="2018">2018</option>
+                                <option value="2021" selected>2021</option>
+                            </select>
+                            <br />
                             <input type="radio" name="layer" id="degurba" value="degurba" />
-                            Degree of urbanisation
-                        </label>
+                            <label for="degurba">Degree of urbanisation</label>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Accessibility Section -->
-                <div class="layer-group">
-                    <h2>Accessibility</h2>
-                    <div class="radio-group">
-                        <label>
+                    <div class="layer-group">
+                        <h2>Accessibility</h2>
+                        <div class="radio-group">
                             <input type="radio" name="layer" id="rtp" value="rtp" />
-                            Road transport performance
-                        </label>
-                        <br />
-                        <label>
+                            <label for="rtp">Road transport performance</label>
+                            <br />
                             <input type="radio" name="layer" id="accHealth" value="accHealth" />
-                            Healthcare services
-                        </label>
-                        <br />
-                        <label>
+                            <label for="accHealth">Healthcare services</label>
+                            <br />
                             <input type="radio" name="layer" id="accEducPrim" value="accEducPrim" />
-                            Primary schools
-                        </label>
+                            <label for="accEducPrim">Primary schools</label>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <hr />
-            <!-- Checkbox Group -->
-            <div class="checkbox-group">
-                <label>
+                <hr />
+                <div class="checkbox-group">
                     <input type="checkbox" id="label" checked />
-                    City names
-                </label>
-                <label>
+                    <label for="label">City names</label>
                     <input type="checkbox" id="boundary" checked />
-                    Boundaries
-                </label>
-            </div>
-            <hr />
-            <!-- Source -->
-            <div class="source">
+                    <label for="boundary">Boundaries</label>
+                </div>
+                <hr />
                 Source:
                 <a
                     href="https://ec.europa.eu/eurostat/web/gisco/geodata/grids"
                     target="_blank"
                     rel="noopener noreferrer"
+                    >Eurostat GISCO</a
                 >
-                    Eurostat GISCO
-                </a>
-            </div>
+            </span>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.16"></script>
@@ -111,6 +86,14 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
         <script>
+            document.getElementById('panel-toggle-btn').addEventListener('click', function () {
+                const panel = document.getElementById('panel')
+                if (panel.style.display === 'none') {
+                    panel.style.display = 'block' // Show the panel
+                } else {
+                    panel.style.display = 'none' // Hide the panel
+                }
+            })
             function getClass(v, breaks) {
                 if (!breaks) return
                 if (breaks.length == 0) return 0
