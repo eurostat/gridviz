@@ -19,140 +19,60 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
-            //map 1
+            //define map with initial view
+            const map1 = new gridviz.Map(document.getElementById('viz1'), {
+                x: 4500000,
+                y: 2900000,
+                z: 500,
+            }).addZoomButtons()
 
-            const map1 = new gridviz.Map(document.getElementById('viz1'), { legendDivId: 'legend1' })
-                .setGeoCenter({ x: 4500000, y: 2900000 })
-                .setZoom(3000)
-                .addMultiScaleTiledGridLayer(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                        r +
-                        'm/',
-                    [
-                        new gridviz.SquareColorWGLStyle({
-                            colorCol: 'TOT_P_2021',
-                            tFun: (value, resolution, stats) => gridviz.sExp(value / stats.max, -50),
-                        }),
-                    ],
-                    {
-                        minPixelsPerCell: 3,
-                    }
-                )
-
-            //legend
-            map1.layers[0].styles[0].legends.push(
-                new gridviz.ColorLegend({
-                    title: 'Number of inhabitants',
-                    ticks: 5,
-                    colorRamp: d3.interpolateOrRd,
-                    fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, 7),
-                })
+            //define dataset
+            const dataset1 = new gridviz.CSVGrid(
+                map1,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
             )
 
-            //map2
+            //define style
+            const style1 = new gridviz.ShapeColorSizeStyle({
+                //set random color
+                color: () => 'grey',
+                //set random size
+                size: (cell, resolution) => Math.sqrt(cell.population) * 50,
+                //set random shape
+                shape: () => 'circle',
+            })
 
-            const degurbaColors = {
-                uc: '#d53e4f',
-                du: '#f46d43',
-                sdu: '#fdae61',
-                sbu: '#fee08b',
-                r: '#e6f598',
-                lr: '#abdda4',
-                vlr: '#66c2a5',
-                NA: 'gray',
-            }
+            //add layer to map
+            map1.layers = [new gridviz.GridLayer(dataset1, [style1])]
 
-            new gridviz.Map(document.getElementById('viz2'))
-                .setGeoCenter({ x: 4000000, y: 2960000 })
-                .setZoom(600)
-                .setZoomExtent([40, 7500])
-                .setLabelLayer(gviz_es.getEuronymeLabelLayer())
-                .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
-                .addMultiScaleTiledGridLayer(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/degurba/' +
-                        r +
-                        'm/',
-                    [
-                        new gridviz.CompositionStyle({
-                            color: degurbaColors,
-                            type: () => 'flag',
-                            //stripesOrientation: () => 0,
-                            sizeCol: 'TOT',
-                            size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.5),
-                            minZoom: 120,
-                        }),
-                        new gridviz.SideCatStyle({
-                            col: 'c',
-                            color: degurbaColors,
-                            width: (side, r, z) => z * 3,
-                            fillColor: (c) => degurbaColors[c.c] + '55',
-                            maxZoom: 120,
-                        }),
-                    ],
-                    {
-                        minPixelsPerCell: 4,
-                        cellInfoHTML: (c) => {
-                            if (!c.TOT) return 'No information'
-                            if (c.TOT == 1)
-                                return +c.uc
-                                    ? 'Urban centre'
-                                    : +c.du
-                                    ? 'Dense urban cluster'
-                                    : +c.sdu
-                                    ? 'Semi-dense urban cluster'
-                                    : +c.sbu
-                                    ? 'Suburban'
-                                    : +c.r
-                                    ? 'Rural'
-                                    : +c.lr
-                                    ? 'Low density rural'
-                                    : +c.vlr
-                                    ? 'Very low density rural'
-                                    : 'Unknown'
-                            const out = []
-                            if (+c.uc) out.push(c.uc + ' Dense urban cluster<br>')
-                            if (+c.sdu) out.push(c.sdu + ' Semi-dense urban cluster<br>')
-                            if (+c.sbu) out.push(c.sbu + ' Suburban<br>')
-                            if (+c.r) out.push(c.r + ' Rural<br>')
-                            if (+c.lr) out.push(c.lr + ' Low density rural<br>')
-                            if (+c.vlr) out.push(c.vlr + ' Very low density rural<br>')
-                            if (+c.NA) out.push(c.NA + ' Unknown<br>')
-                            return out.join('')
-                        },
-                        preprocess: (c) => {
-                            if (+c.TOT != 1) c.c = 'zzz'
-                            else
-                                c.c = +c.uc
-                                    ? 'uc'
-                                    : +c.du
-                                    ? 'du'
-                                    : +c.sdu
-                                    ? 'sdu'
-                                    : +c.sbu
-                                    ? 'sbu'
-                                    : +c.r
-                                    ? 'r'
-                                    : +c.lr
-                                    ? 'lr'
-                                    : +c.vlr
-                                    ? 'vlr'
-                                    : 'NA'
-                        },
-                    }
-                )
-                .addBackgroundLayer({
-                    url: 'https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/',
-                    resolutions: [
-                        156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512,
-                        9783.93962050256, 4891.96981025128, 2445.98490512564,
-                    ],
-                    origin: [0, 6000000],
-                    filterColor: (z) => '#ffffffd3',
-                })
+            //MAP 2
+            //define map with initial view
+            const map2 = new gridviz.Map(document.getElementById('viz2'), {
+                x: 4500000,
+                y: 2900000,
+                z: 500,
+            }).addZoomButtons()
+
+            //define dataset
+            const dataset2 = new gridviz.CSVGrid(
+                map2,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
+            )
+
+            //define style
+            const style2 = new gridviz.ShapeColorSizeStyle({
+                //set random color
+                color: () => 'coral',
+                //set random size
+                size: (cell, resolution) => Math.sqrt(cell.population) * 50,
+                //set random shape
+                shape: () => 'circle',
+            })
+
+            //add layer to map
+            map2.layers = [new gridviz.GridLayer(dataset2, [style2])]
         </script>
     </body>
 </html>

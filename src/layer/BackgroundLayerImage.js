@@ -59,7 +59,7 @@ export class BackgroundLayerImage extends Layer {
 
             //draw image
             geoCanvas.initCanvasTransform()
-            geoCanvas.ctx.drawImage(this.img, x, y, this.width / z, this.height / z)
+            geoCanvas.offscreenCtx.drawImage(this.img, x, y, this.width / z, this.height / z)
         } else {
             //retrieve image
 

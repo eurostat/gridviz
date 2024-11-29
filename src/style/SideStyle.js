@@ -44,6 +44,7 @@ export class SideStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //build sides
 
@@ -56,7 +57,7 @@ export class SideStyle extends Style {
 
         //draw sides
 
-        geoCanvas.ctx.lineCap = 'butt'
+        ctx.lineCap = 'butt'
         const r2 = resolution * 0.5
         for (let side of sides) {
             //color
@@ -66,18 +67,18 @@ export class SideStyle extends Style {
 
             if (this.diamond) {
                 //set color
-                geoCanvas.ctx.fillStyle = col
+                ctx.fillStyle = col
 
                 //draw diamond
                 const x = side.x,
                     y = side.y
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(x - r2, y)
-                geoCanvas.ctx.lineTo(x, y + r2)
-                geoCanvas.ctx.lineTo(x + r2, y)
-                geoCanvas.ctx.lineTo(x, y - r2)
-                geoCanvas.ctx.closePath()
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(x - r2, y)
+                ctx.lineTo(x, y + r2)
+                ctx.lineTo(x + r2, y)
+                ctx.lineTo(x, y - r2)
+                ctx.closePath()
+                ctx.fill()
             } else {
                 //width
                 /** @type {number|undefined} */
@@ -91,22 +92,22 @@ export class SideStyle extends Style {
                 const lG2 = lG * 0.5
 
                 //set width
-                geoCanvas.ctx.lineWidth = wG
+                ctx.lineWidth = wG
                 //set color
-                geoCanvas.ctx.strokeStyle = col
+                ctx.strokeStyle = col
 
                 //draw segment with correct orientation
                 const x = side.x,
                     y = side.y
-                geoCanvas.ctx.beginPath()
+                ctx.beginPath()
                 if (side.or === 'v') {
-                    geoCanvas.ctx.moveTo(x, y - lG2)
-                    geoCanvas.ctx.lineTo(x, y + lG2)
+                    ctx.moveTo(x, y - lG2)
+                    ctx.lineTo(x, y + lG2)
                 } else {
-                    geoCanvas.ctx.moveTo(x - lG2, y)
-                    geoCanvas.ctx.lineTo(x + lG2, y)
+                    ctx.moveTo(x - lG2, y)
+                    ctx.lineTo(x + lG2, y)
                 }
-                geoCanvas.ctx.stroke()
+                ctx.stroke()
             }
         }
 

@@ -1,0 +1,32 @@
+<div id="map" style="height: 450px; width: 800px"></div>
+
+<script src="../../../dist/gridviz.js"></script>
+<script>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4000000,
+        y: 2400000,
+        z: 2000,
+    }).addZoomButtons()
+
+    //define dataset
+    const dataset = new gridviz.CSVGrid(
+        map,
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+        10000
+    )
+
+    //define text scale: a function [0,1] => text
+    const textScale = gridviz.TextStyle.textScale(
+        ['.', '-', '~', '+', '=', '#', '€', '@'],
+        gridviz.powerScale(0.5)
+    )
+
+    //define style
+    const style = new gridviz.TextStyle({
+        text: (cell) => textScale(cell.population / 150000),
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+</script>

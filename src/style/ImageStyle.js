@@ -81,7 +81,7 @@ export class ImageStyle extends Style {
                 //draw image
                 const d = (resolutionPix - sizePix) / 2
                 try {
-                    geoCanvas.ctx.drawImage(
+                    geoCanvas.offscreenCtx.drawImage(
                         image,
                         geoCanvas.geoToPixX(cell.x) + d,
                         geoCanvas.geoToPixY(cell.y) + d - resolutionPix,

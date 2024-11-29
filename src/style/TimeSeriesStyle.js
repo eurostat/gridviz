@@ -64,6 +64,7 @@ export class TimeSeriesStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -92,7 +93,7 @@ export class TimeSeriesStyle extends Style {
 
         const nb = this.ts.length
 
-        geoCanvas.ctx.lineCap = 'butt'
+        ctx.lineCap = 'butt'
         for (let c of cells) {
             //line width
             /** @type {number|undefined} */
@@ -118,8 +119,8 @@ export class TimeSeriesStyle extends Style {
             const anchY = this.anchorModeY ? this.anchorModeY(c, resolution, z) : 'center'
             if (!anchY) continue
 
-            geoCanvas.ctx.lineWidth = wG
-            geoCanvas.ctx.strokeStyle = col
+            ctx.lineWidth = wG
+            ctx.strokeStyle = col
 
             //compute anchor Y figures
             let val0, y0
@@ -183,8 +184,8 @@ export class TimeSeriesStyle extends Style {
             //handle first point
             let v0 = c[this.ts[0]]
             if (!this.noData(v0)) {
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x + offX, c.y + y0 + ((v0 - val0) * h) / ampMax + offY)
+                ctx.beginPath()
+                ctx.moveTo(c.x + offX, c.y + y0 + ((v0 - val0) * h) / ampMax + offY)
             }
             //console.log(v0, isNaN(v0))
 
@@ -198,18 +199,18 @@ export class TimeSeriesStyle extends Style {
                 if (this.noData(v0) && this.noData(v1)) {
                     //second point 'no data'
                 } else if (!this.noData(v0) && this.noData(v1)) {
-                    geoCanvas.ctx.stroke()
+                    ctx.stroke()
 
                     //first point 'no data'
                 } else if (this.noData(v0) && !this.noData(v1)) {
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + ((v1 - val0) * h) / ampMax + offY)
+                    ctx.beginPath()
+                    ctx.moveTo(c.x + i * sX + offX, c.y + y0 + ((v1 - val0) * h) / ampMax + offY)
 
                     //both points have data: trace line
                 } else {
-                    geoCanvas.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + ((v1 - val0) * h) / ampMax + offY)
+                    ctx.lineTo(c.x + i * sX + offX, c.y + y0 + ((v1 - val0) * h) / ampMax + offY)
                     //if it is the last point, stroke
-                    if (i == nb - 1) geoCanvas.ctx.stroke()
+                    if (i == nb - 1) ctx.stroke()
                 }
                 v0 = v1
             }

@@ -65,6 +65,7 @@ export class PillarStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -82,11 +83,11 @@ export class PillarStyle extends Style {
         //get simple information
         const simple = this.simple(resolution, z, viewScale)
 
-        geoCanvas.ctx.lineCap = simple ? 'butt' : 'round'
+        ctx.lineCap = simple ? 'butt' : 'round'
 
         //draw shadows
-        geoCanvas.ctx.strokeStyle = this.shadowColor
-        geoCanvas.ctx.fillStyle = this.shadowColor
+        ctx.strokeStyle = this.shadowColor
+        ctx.fillStyle = this.shadowColor
         for (let cell of cells) {
             //width
             /** @type {number|undefined} */
@@ -103,7 +104,7 @@ export class PillarStyle extends Style {
             //const offset = this.offset(c, resolution, z)
 
             //set width
-            geoCanvas.ctx.lineWidth = wG
+            ctx.lineWidth = wG
 
             //compute cell center postition
             const cx = cell.x + resolution / 2
@@ -111,13 +112,10 @@ export class PillarStyle extends Style {
             const ls = hG * this.shadowFactor
 
             //draw segment
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(cx, cy)
-            geoCanvas.ctx.lineTo(
-                cx + ls * Math.cos(this.shadowDirection),
-                cy + ls * Math.sin(this.shadowDirection)
-            )
-            geoCanvas.ctx.stroke()
+            ctx.beginPath()
+            ctx.moveTo(cx, cy)
+            ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection))
+            ctx.stroke()
 
             /*
             if (this.simple) {
@@ -166,42 +164,42 @@ export class PillarStyle extends Style {
 
             if (simple) {
                 //draw segment
-                geoCanvas.ctx.strokeStyle = col
-                geoCanvas.ctx.lineWidth = wG
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cx, cy)
-                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
-                geoCanvas.ctx.stroke()
+                ctx.strokeStyle = col
+                ctx.lineWidth = wG
+                ctx.beginPath()
+                ctx.moveTo(cx, cy)
+                ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                ctx.stroke()
             } else {
                 //draw background segment
-                geoCanvas.ctx.strokeStyle = this.outlineCol
-                geoCanvas.ctx.lineWidth = wG + 2 * this.outlineWidthPix * z
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cx, cy)
-                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
-                geoCanvas.ctx.stroke()
+                ctx.strokeStyle = this.outlineCol
+                ctx.lineWidth = wG + 2 * this.outlineWidthPix * z
+                ctx.beginPath()
+                ctx.moveTo(cx, cy)
+                ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                ctx.stroke()
 
                 //draw segment
-                geoCanvas.ctx.strokeStyle = col
-                geoCanvas.ctx.lineWidth = wG
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cx, cy)
-                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
-                geoCanvas.ctx.stroke()
+                ctx.strokeStyle = col
+                ctx.lineWidth = wG
+                ctx.beginPath()
+                ctx.moveTo(cx, cy)
+                ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                ctx.stroke()
 
                 //draw top circle
-                geoCanvas.ctx.strokeStyle = this.outlineCol
+                ctx.strokeStyle = this.outlineCol
                 //cg.ctx.fillStyle = "#c08c59"
-                geoCanvas.ctx.lineWidth = this.outlineWidthPix * z
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.arc(cx + d * Math.cos(a), cy + d * Math.sin(a), wG * 0.5, 0, 2 * Math.PI, false)
-                geoCanvas.ctx.stroke()
+                ctx.lineWidth = this.outlineWidthPix * z
+                ctx.beginPath()
+                ctx.arc(cx + d * Math.cos(a), cy + d * Math.sin(a), wG * 0.5, 0, 2 * Math.PI, false)
+                ctx.stroke()
                 //cg.ctx.fill();
             }
         }
 
         //in case...
-        geoCanvas.ctx.lineCap = 'butt'
+        ctx.lineCap = 'butt'
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })

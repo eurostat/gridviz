@@ -64,69 +64,64 @@ export class ShapeColorSizeStyle extends Style {
             //get offset
             const offset = this.offset(c, resolution, z)
 
-            geoCanvas.ctx.fillStyle = col
+            //get context
+            const ctx = geoCanvas.offscreenCtx
+            ctx.fillStyle = col
             if (shape === 'square') {
                 //draw square
                 const d = resolution * (1 - size / resolution) * 0.5
-                geoCanvas.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
+                ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
             } else if (shape === 'circle') {
                 //draw circle
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.arc(
-                    c.x + r2 + offset.dx,
-                    c.y + r2 + offset.dy,
-                    size * 0.5,
-                    0,
-                    2 * Math.PI,
-                    false
-                )
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                ctx.fill()
             } else if (shape === 'donut') {
                 //draw donut
                 const xc = c.x + r2 + offset.dx,
                     yc = c.y + r2 + offset.dy
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(xc, yc)
-                geoCanvas.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                geoCanvas.ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
-                geoCanvas.ctx.closePath()
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(xc, yc)
+                ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
+                ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
+                ctx.closePath()
+                ctx.fill()
             } else if (shape === 'diamond') {
                 const s2 = size * 0.5
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x + r2 - s2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 + s2)
-                geoCanvas.ctx.lineTo(c.x + r2 + s2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 - s2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(c.x + r2 - s2, c.y + r2)
+                ctx.lineTo(c.x + r2, c.y + r2 + s2)
+                ctx.lineTo(c.x + r2 + s2, c.y + r2)
+                ctx.lineTo(c.x + r2, c.y + r2 - s2)
+                ctx.fill()
             } else if (shape === 'triangle_up') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x - dr2, c.y - dr2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y + resolution + dr2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y - dr2)
+                ctx.lineTo(c.x + r2, c.y + resolution + dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                ctx.fill()
             } else if (shape === 'triangle_down') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x - dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.lineTo(c.x + r2, c.y - dr2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y + resolution + dr2)
+                ctx.lineTo(c.x + r2, c.y - dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y + resolution + dr2)
+                ctx.fill()
             } else if (shape === 'triangle_left') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x + resolution + dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.lineTo(c.x - dr2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(c.x + resolution + dr2, c.y + resolution + dr2)
+                ctx.lineTo(c.x - dr2, c.y + r2)
+                ctx.lineTo(c.x + resolution + dr2, c.y - dr2)
+                ctx.fill()
             } else if (shape === 'triangle_right') {
                 const dr2 = (size - resolution) / 2
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(c.x - dr2, c.y - dr2)
-                geoCanvas.ctx.lineTo(c.x + resolution + dr2, c.y + r2)
-                geoCanvas.ctx.lineTo(c.x - dr2, c.y + resolution + dr2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(c.x - dr2, c.y - dr2)
+                ctx.lineTo(c.x + resolution + dr2, c.y + r2)
+                ctx.lineTo(c.x - dr2, c.y + resolution + dr2)
+                ctx.fill()
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }

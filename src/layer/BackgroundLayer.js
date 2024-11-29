@@ -145,7 +145,7 @@ export class BackgroundLayer extends Layer {
                 const yGeo = y0 - y * sizeG
                 try {
                     geoCanvas.initCanvasTransform()
-                    geoCanvas.ctx.drawImage(
+                    geoCanvas.offscreenCtx.drawImage(
                         img,
                         geoCanvas.geoToPixX(xGeo),
                         geoCanvas.geoToPixY(yGeo),

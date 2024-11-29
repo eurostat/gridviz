@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>Gridviz Joyplot Example</title>
         <style>
             html,
@@ -12,48 +12,52 @@
                 margin: 0; /* Remove default margins to prevent scrolling */
                 overflow: hidden; /* Prevent potential scrollbars */
             }
+
+            #map {
+                touch-action: none;
+            }
         </style>
     </head>
     <body>
-<div id="map" style="height: 100%; width: 100%"></div>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4000000,
-        y: 2960000,
-        z: 1000,
-        backgroundColor: 'white',
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4000000,
+                y: 2960000,
+                z: 1000,
+                backgroundColor: 'white',
+            }).addZoomButtons()
 
-    //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) =>
-            new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                    resolution +
-                    'm/'
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                            resolution +
+                            'm/'
+                    )
             )
-    )
 
-    //define style
-    const style = new gridviz.JoyPlotStyle({
-        height: (c, r, z, scale) => scale(c.TOT_P_2021),
-        viewScale: gridviz.viewScale({
-            valueFunction: (c) => +c.TOT_P_2021,
-            maxSizeFactor: 5,
-            stretching: gridviz.powerScale(0.4),
-        }),
-        lineColor: () => 'white',
-        lineWidth: (y, ys, r, z) => 0.1 * r,
-        fillColor: () => 'black',
-    })
+            //define style
+            const style = new gridviz.JoyPlotStyle({
+                height: (c, r, z, scale) => scale(c.TOT_P_2021),
+                viewScale: gridviz.viewScale({
+                    valueFunction: (c) => +c.TOT_P_2021,
+                    maxSizeFactor: 5,
+                    stretching: gridviz.powerScale(0.4),
+                }),
+                lineColor: () => 'white',
+                lineWidth: (y, ys, r, z) => 0.1 * r,
+                fillColor: () => 'black',
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], {minPixelsPerCell:6})]
-</script>
-</body>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
+        </script>
+    </body>
 </html>
