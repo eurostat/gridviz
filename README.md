@@ -5,7 +5,7 @@
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
 <p align="center" style="height: 350px;">
-    <img src="docs/img/banner.png">
+    <img src="docs/img/gif/gridviz-annotated.gif">
 </p>
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser using a large variety of [cartographic styles and techniques](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md). Unlike traditional raster-based web mapping tools, Gridviz renders everything client-side, on the fly.
