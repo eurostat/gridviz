@@ -103,7 +103,8 @@
             </span>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.16"></script>
+        <script src="../../dist/gridviz.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.16"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -296,7 +297,7 @@
             )
 
             // define population layer
-            const populationLayer = new gridviz.GridLayer(populationDataset, populationStyles)
+            const populationLayer = new gridviz.GridLayer(populationDataset, populationStyles, { cellInfoHTML: 'none' })
 
             // update grid layers
             const update = () => {
@@ -406,6 +407,36 @@
                     }
                 } else if (layerCode === 'degurba') {
                     // DEGURBA
+                    const cellInfoHTML = (c) => {
+                        if (!c.TOT) return 'No information'
+                        if (c.TOT == 1)
+                            return +c.uc
+                                ? 'City'
+                                : +c.du
+                                ? 'City'
+                                : +c.sbu
+                                ? 'Suburb'
+                                : +c.sdu
+                                ? 'Town'
+                                : +c.r
+                                ? 'Village'
+                                : +c.lr
+                                ? 'Dispersed rural'
+                                : +c.vlr
+                                ? 'Mostly uninhabited'
+                                : 'Unknown'
+                        const out = []
+                        //if (+c.uc) out.push(c.uc + " large city cell" + (+c.uc == 1 ? "" : "s") + "<br>")
+                        if (+c.uc + +c.du)
+                            out.push(+c.uc + +c.du + ' city cell' + (+c.uc + +c.du == 1 ? '' : 's') + '<br>')
+                        if (+c.sbu) out.push(c.sbu + ' suburb cell' + (+c.sbu == 1 ? '' : 's') + '<br>')
+                        if (+c.sdu) out.push(c.sdu + ' town cell' + (+c.sdu == 1 ? '' : 's') + '<br>')
+                        if (+c.r) out.push(c.r + ' village cell' + (+c.r == 1 ? '' : 's') + '<br>')
+                        if (+c.lr) out.push(c.lr + ' dispersed rural cell' + (+c.lr == 1 ? '' : 's') + '<br>')
+                        if (+c.vlr) out.push(c.vlr + ' mostly uninhabited cell' + (+c.vlr == 1 ? '' : 's') + '<br>')
+                        if (+c.NA) out.push(c.NA + ' unknown cell' + (+c.NA == 1 ? '' : 's') + '<br>')
+                        return out.join('')
+                    }
 
                     // define degurba colors
                     const degurbaColors = {
@@ -443,36 +474,7 @@
                     //define grid layer
                     const degurbaLayer = new gridviz.GridLayer(degurbaDataset, degurbaStyles, {
                         minPixelsPerCell: 11,
-                        cellInfoHTML: (c) => {
-                            if (!c.TOT) return 'No information'
-                            if (c.TOT == 1)
-                                return +c.uc
-                                    ? 'City'
-                                    : +c.du
-                                    ? 'City'
-                                    : +c.sbu
-                                    ? 'Suburb'
-                                    : +c.sdu
-                                    ? 'Town'
-                                    : +c.r
-                                    ? 'Village'
-                                    : +c.lr
-                                    ? 'Dispersed rural'
-                                    : +c.vlr
-                                    ? 'Mostly uninhabited'
-                                    : 'Unknown'
-                            const out = []
-                            //if (+c.uc) out.push(c.uc + " large city cell" + (+c.uc == 1 ? "" : "s") + "<br>")
-                            if (+c.uc + +c.du)
-                                out.push(+c.uc + +c.du + ' city cell' + (+c.uc + +c.du == 1 ? '' : 's') + '<br>')
-                            if (+c.sbu) out.push(c.sbu + ' suburb cell' + (+c.sbu == 1 ? '' : 's') + '<br>')
-                            if (+c.sdu) out.push(c.sdu + ' town cell' + (+c.sdu == 1 ? '' : 's') + '<br>')
-                            if (+c.r) out.push(c.r + ' village cell' + (+c.r == 1 ? '' : 's') + '<br>')
-                            if (+c.lr) out.push(c.lr + ' dispersed rural cell' + (+c.lr == 1 ? '' : 's') + '<br>')
-                            if (+c.vlr) out.push(c.vlr + ' mostly uninhabited cell' + (+c.vlr == 1 ? '' : 's') + '<br>')
-                            if (+c.NA) out.push(c.NA + ' unknown cell' + (+c.NA == 1 ? '' : 's') + '<br>')
-                            return out.join('')
-                        },
+                        cellInfoHTML: cellInfoHTML,
                     })
 
                     //degurba legend
@@ -706,42 +708,17 @@
             update()
         </script>
 
-        <div
-            style="
-                position: absolute;
-                right: 0px;
-                bottom: 0px;
-                width: auto;
-                height: auto;
-                padding: 1px;
-                border: 0px;
-                background: #ffffffcc;
-            "
-        >
-            <span style="font-size: 0.8em; font-family: sans-serif"
-                ><a
-                    target="_blank"
-                    rel="nofollow noreferrer noopener"
-                    href="https://github.com/eurostat/gridviz"
-                    style="text-decoration: none"
-                    >GridViz</a
+        <div class="attribution">
+            <span
+                ><a target="_blank" rel="nofollow noreferrer noopener" href="https://github.com/eurostat/gridviz"
+                    >Gridviz</a
                 >
                 | ©
-                <a
-                    target="_blank"
-                    rel="nofollow noreferrer noopener"
-                    href="https://eurogeographics.org"
-                    style="text-decoration: none"
+                <a target="_blank" rel="nofollow noreferrer noopener" href="https://eurogeographics.org"
                     >EuroGeographics</a
                 >
                 | ©
-                <a
-                    target="_blank"
-                    rel="nofollow noreferrer noopener"
-                    href="https://www.tuik.gov.tr"
-                    style="text-decoration: none"
-                    >Turkstat</a
-                >
+                <a target="_blank" rel="nofollow noreferrer noopener" href="https://www.tuik.gov.tr">Turkstat</a>
             </span>
         </div>
     </body>

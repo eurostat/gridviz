@@ -129,13 +129,13 @@ h2 {
         text-align: center;
     }
 
-    .source a {
+    a {
         font-size: 1.1em; /* Increase the font size of the source link */
         text-decoration: none; /* Optional: Remove underline */
         color: #007bff; /* Add a color for the link */
     }
 
-    .source a:hover {
+    a:hover {
         text-decoration: underline; /* Add underline on hover for better UX */
     }
 }
@@ -151,15 +151,22 @@ hr {
     color: #555;
 }
 
-.source a {
+a {
     color: #007bff;
-    text-decoration: none;
 }
 
-.source a:hover {
-    text-decoration: underline;
+a:hover {
+    text-decoration: underline; /* Add underline on hover for better UX */
 }
 
 select {
     font-size: 1rem;
+}
+.attribution {
+    position: absolute;
+    background-color: white;
+    padding: 2px;
+    left: 0px;
+    bottom: 0px;
+    font-size: 0.8em;
 }

@@ -174,8 +174,7 @@ export class Map {
 
             //set layer alpha and blend mode
             this.geoCanvas.offscreenCtx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-            if (layer.blendOperation)
-                this.geoCanvas.offscreenCtx.globalCompositeOperation = layer.blendOperation(z)
+            if (layer.blendOperation) this.geoCanvas.offscreenCtx.globalCompositeOperation = layer.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
@@ -290,8 +289,8 @@ export class Map {
             /** @type {import("./Layer.js").Layer} */
             const layer = this.layers[i]
             if (layer.visible && !layer.visible(z)) continue
+            if (layer.cellInfoHTML === 'none') continue // this is necessary in order to not show tooltips for layers 'on top' (e.g. population circles on top of squares)
             if (!layer.cellInfoHTML) continue
-            //if (layer.cellInfoHTML === 'none') continue
             if (!layer.getDataset) continue
             const dsc = layer.getDataset(z)
             if (!dsc) continue
