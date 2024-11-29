@@ -7,7 +7,7 @@
  * @param {number} v the value
  * @param {Array.<number>} breaks the breaks
  * @returns The class id, from 0 to breaks.length
- * @deprecated use getClassifier instead
+ * @deprecated use getClassifier instead.
  */
 export function getClass(v, breaks) {
     if (!breaks) return

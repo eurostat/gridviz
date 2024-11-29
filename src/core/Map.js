@@ -98,7 +98,7 @@ export class Map {
          * @type {HTMLCanvasElement|null} */
         this.canvasSave = null
 
-        this.selectionRectangleColor = opts.selectionRectangleColor || 'red'
+        this.selectionRectangleColor = opts.selectionRectangleColor || '#FF6347'
         this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || (() => 4) //(r,z) => {}
 
         // transparent background (e.g. leaflet) 'red painting' fix
