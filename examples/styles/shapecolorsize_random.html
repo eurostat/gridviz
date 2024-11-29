@@ -1,42 +1,66 @@
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz color example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
-        z: 500,
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2900000,
+                z: 500,
+            }).addZoomButtons()
 
-    //define dataset
-    const dataset = new gridviz.CSVGrid(
-        map,
-        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
-        10000
-    )
+            //define dataset
+            const dataset = new gridviz.CSVGrid(
+                map,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
+            )
 
-    //define style
-    const style = new gridviz.ShapeColorSizeStyle({
-        //set random color
-        color: () =>
-            'rgb(' + 255 * Math.random() + ',' + 255 * Math.random() + ',' + 255 * Math.random() + ')',
-        //set random size
-        size: (cell, resolution) => resolution * (0.2 + 0.8 * Math.random()),
-        //set random shape
-        shape: () => {
-            const r = Math.random()
-            if (r < 1 / 6) return 'circle'
-            if (r < 2 / 6) return 'square'
-            if (r < 3 / 6) return 'diamond'
-            if (r < 3.5 / 6) return 'triangle_up'
-            if (r < 4 / 6) return 'triangle_down'
-            if (r < 4.5 / 6) return 'triangle_left'
-            if (r < 5 / 6) return 'triangle_right'
-            return 'donut'
-        },
-    })
+            //define style
+            const style = new gridviz.ShapeColorSizeStyle({
+                //set random color
+                color: () =>
+                    'rgb(' +
+                    255 * Math.random() +
+                    ',' +
+                    255 * Math.random() +
+                    ',' +
+                    255 * Math.random() +
+                    ')',
+                //set random size
+                size: (cell, resolution) => resolution * (0.2 + 0.8 * Math.random()),
+                //set random shape
+                shape: () => {
+                    const r = Math.random()
+                    if (r < 1 / 6) return 'circle'
+                    if (r < 2 / 6) return 'square'
+                    if (r < 3 / 6) return 'diamond'
+                    if (r < 3.5 / 6) return 'triangle_up'
+                    if (r < 4 / 6) return 'triangle_down'
+                    if (r < 4.5 / 6) return 'triangle_left'
+                    if (r < 5 / 6) return 'triangle_right'
+                    return 'donut'
+                },
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style])]
+        </script>
+    </body>
+</html>

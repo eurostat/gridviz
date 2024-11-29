@@ -1,88 +1,110 @@
-<div>
-    Orientation<br />
-    <input
-        type="range"
-        min="-180"
-        max="180"
-        value="50"
-        class="slider"
-        id="orientation"
-        style="width: 250px"
-    /><br />
-    Height<br />
-    <input
-        type="range"
-        min="0"
-        max="5"
-        step="0.05"
-        value="1.5"
-        class="slider"
-        id="exa"
-        style="width: 250px"
-    />
-</div>
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz isofence example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            Orientation<br />
+            <input
+                type="range"
+                min="-180"
+                max="180"
+                value="50"
+                class="slider"
+                id="orientation"
+                style="width: 250px"
+            /><br />
+            Height<br />
+            <input
+                type="range"
+                min="0"
+                max="5"
+                step="0.05"
+                value="1.5"
+                class="slider"
+                id="exa"
+                style="width: 250px"
+            />
+        </div>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 3700000,
-        y: 2400000,
-        z: 400,
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3700000,
+                y: 2400000,
+                z: 400,
+            }).addZoomButtons()
 
-    //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) =>
-            new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
-                    resolution +
-                    'm/'
-            ),
-        {
-            preprocess: (c) => {
-                //aggregate to 3 age groups only
-                c.ind_0_24 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
-                c.ind_25_64 = +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
-                c.ind_65p = +c.ind_65_79 + +c.ind_80p
-            },
-        }
-    )
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
+                            resolution +
+                            'm/'
+                    ),
+                {
+                    preprocess: (c) => {
+                        //aggregate to 3 age groups only
+                        c.ind_0_24 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
+                        c.ind_25_64 = +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                        c.ind_65p = +c.ind_65_79 + +c.ind_80p
+                    },
+                }
+            )
 
-    //define style
-    const style = new gridviz.IsoFenceStyle({
-        color: {
-            ind_0_24: 'rgb(240, 112, 74)',
-            ind_25_64: 'rgb(254, 221, 141)',
-            ind_65p: 'rgb(66, 136, 181)',
-        },
-        angle: 50,
-        viewScale: gridviz.viewScale({
-            valueFunction: (c) => +c.ind,
-            stretching: gridviz.logarithmicScale(-7),
-        }),
-        height: (c, r, z, viewScale) => 1.5 * viewScale(c.ind),
-    })
+            //define style
+            const style = new gridviz.IsoFenceStyle({
+                color: {
+                    ind_0_24: 'rgb(240, 112, 74)',
+                    ind_25_64: 'rgb(254, 221, 141)',
+                    ind_65p: 'rgb(66, 136, 181)',
+                },
+                angle: 50,
+                viewScale: gridviz.viewScale({
+                    valueFunction: (c) => +c.ind,
+                    stretching: gridviz.logarithmicScale(-7),
+                }),
+                height: (c, r, z, viewScale) => 1.5 * viewScale(c.ind),
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 25 })]
+            //add layer to map
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 15,
+                }),
+            ]
 
-    //orientation selection
-    document.getElementById('orientation').oninput = function () {
-        //set orientation
-        style.angle = this.value
-        //redraw
-        map.redraw()
-    }
+            //orientation selection
+            document.getElementById('orientation').oninput = function () {
+                //set orientation
+                style.angle = this.value
+                //redraw
+                map.redraw()
+            }
 
-    //height exageration selection
-    document.getElementById('exa').oninput = function () {
-        //set exageration
-        style.height = (c, r, z, viewScale) => this.value * viewScale(c.ind)
-        //redraw
-        map.redraw()
-    }
-</script>
+            //height exageration selection
+            document.getElementById('exa').oninput = function () {
+                //set exageration
+                style.height = (c, r, z, viewScale) => this.value * viewScale(c.ind)
+                //redraw
+                map.redraw()
+            }
+        </script>
+    </body>
+</html>

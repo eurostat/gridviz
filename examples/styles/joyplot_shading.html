@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-
-        <title>Gridviz Joyplot Example</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz joyplot example</title>
         <style>
             html,
             body {
@@ -60,7 +60,7 @@
 
             //define grid layer
             const gridLayer = new gridviz.GridLayer(dataset, [style], {
-                minPixelsPerCell: 6,
+                // minPixelsPerCell: 6,
                 cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
             })
 
@@ -68,7 +68,7 @@
             const labelLayer = new gridviz.LabelLayer(
                 gridviz_eurostat.getEuronymeLabelLayer('EUR', 50, {
                     ex: 1.8,
-                    exSize: 1,
+                    exSize: 1.3,
                     color: () => 'black',
                     haloColor: () => '#ffffff',
                     haloWidth: () => 3,

@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Gridviz Joyplot Example</title>
+        <title>Gridviz Joyplot example</title>
         <style>
             html,
             body {
@@ -57,7 +57,11 @@
             })
 
             //add layer to map
-            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    //minPixelsPerCell: 6
+                }),
+            ]
         </script>
     </body>
 </html>

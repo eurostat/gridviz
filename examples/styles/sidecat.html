@@ -1,87 +1,105 @@
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz side categorical example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
-        z: 3000,
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2900000,
+                z: 3000,
+            }).addZoomButtons()
 
-    //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) =>
-            new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' +
-                    resolution +
-                    'm/'
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' +
+                            resolution +
+                            'm/'
+                    )
             )
-    )
 
-    //define style
+            //define style
 
-    const clcColors = {
-        1: '#e6004d',
-        2: '#ff0000',
-        3: '#cc4df2',
-        4: '#cc0000',
-        5: '#e6cccc',
-        6: '#e6cce6',
-        7: '#a600cc',
-        8: '#a64d00',
-        9: '#ff4dff',
-        10: '#ffa6ff',
-        11: '#ffe6ff',
-        12: '#ffffa8',
-        13: '#ffff00',
-        14: '#e6e600',
-        15: '#e68000',
-        16: '#f2a64d',
-        17: '#e6a600',
-        18: '#e6e64d',
-        19: '#ffe6a6',
-        20: '#ffe64d',
-        21: '#e6cc4d',
-        22: '#f2cca6',
-        23: '#80ff00',
-        24: '#00a600',
-        25: '#4dff00',
-        26: '#ccf24d',
-        27: '#a6ff80',
-        28: '#a6e64d',
-        29: '#a6f200',
-        30: '#e6e6e6',
-        31: '#cccccc',
-        32: '#ccffcc',
-        33: '#000000',
-        34: '#a6e6cc',
-        35: '#a6a6ff',
-        36: '#4d4dff',
-        37: '#ccccff',
-        38: '#e6e6ff',
-        39: '#a6a6e6',
-        40: '#00ccf2',
-        41: '#80f2e6',
-        42: '#00ffa6',
-        43: '#a6ffe6',
-        44: '#e6f2ff',
-        48: 'gray',
-    }
+            const clcColors = {
+                1: '#e6004d',
+                2: '#ff0000',
+                3: '#cc4df2',
+                4: '#cc0000',
+                5: '#e6cccc',
+                6: '#e6cce6',
+                7: '#a600cc',
+                8: '#a64d00',
+                9: '#ff4dff',
+                10: '#ffa6ff',
+                11: '#ffe6ff',
+                12: '#ffffa8',
+                13: '#ffff00',
+                14: '#e6e600',
+                15: '#e68000',
+                16: '#f2a64d',
+                17: '#e6a600',
+                18: '#e6e64d',
+                19: '#ffe6a6',
+                20: '#ffe64d',
+                21: '#e6cc4d',
+                22: '#f2cca6',
+                23: '#80ff00',
+                24: '#00a600',
+                25: '#4dff00',
+                26: '#ccf24d',
+                27: '#a6ff80',
+                28: '#a6e64d',
+                29: '#a6f200',
+                30: '#e6e6e6',
+                31: '#cccccc',
+                32: '#ccffcc',
+                33: '#000000',
+                34: '#a6e6cc',
+                35: '#a6a6ff',
+                36: '#4d4dff',
+                37: '#ccccff',
+                38: '#e6e6ff',
+                39: '#a6a6e6',
+                40: '#00ccf2',
+                41: '#80f2e6',
+                42: '#00ffa6',
+                43: '#a6ffe6',
+                44: '#e6f2ff',
+                48: 'gray',
+            }
 
-    const style = new gridviz.SideCategoryStyle({
-        code: (cell) => cell.clc,
-        color: clcColors,
-        width: (side, r, z) => z * 3,
-        //fillColor: (c) => clcColors[c.clc] + '33',
-    })
+            const style = new gridviz.SideCategoryStyle({
+                code: (cell) => cell.clc,
+                color: clcColors,
+                width: (side, r, z) => z * 3,
+                //fillColor: (c) => clcColors[c.clc] + '33',
+            })
 
-    const fillStyle = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => clcColors[cell.clc] + '33',
-    })
+            const fillStyle = new gridviz.ShapeColorSizeStyle({
+                color: (cell) => clcColors[cell.clc] + '33',
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [fillStyle, style], { minPixelsPerCell: 6 })]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [fillStyle, style], { minPixelsPerCell: 6 })]
+        </script>
+    </body>
+</html>

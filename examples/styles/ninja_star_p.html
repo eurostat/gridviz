@@ -1,52 +1,70 @@
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz ninja star example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 3763437,
-        y: 2891045,
-        z: 50.1,
-        zoomExtent: [2, 2000],
-        backgroundColor: 'black',
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3763437,
+                y: 2891045,
+                z: 50.1,
+                zoomExtent: [2, 2000],
+                backgroundColor: 'black',
+            }).addZoomButtons()
 
-    //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) =>
-            new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
-                    resolution +
-                    'm/'
-            ),
-        {
-            preprocess: (c) => {
-                //compute age ratio
-                const yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
-                const ooo = +c.ind_65_79 + +c.ind_80p
-                c.age_ratio = yyy + ooo == 0 ? 0 : (yyy - ooo) / (yyy + ooo)
-                c.age_ratio = c.age_ratio * 0.5 + 0.5
-            },
-        }
-    )
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
+                            resolution +
+                            'm/'
+                    ),
+                {
+                    preprocess: (c) => {
+                        //compute age ratio
+                        const yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
+                        const ooo = +c.ind_65_79 + +c.ind_80p
+                        c.age_ratio = yyy + ooo == 0 ? 0 : (yyy - ooo) / (yyy + ooo)
+                        c.age_ratio = c.age_ratio * 0.5 + 0.5
+                    },
+                }
+            )
 
-    //define style
-    const style = new gridviz.NinjaStarStyle({
-        viewScale: gridviz.viewScale({
-            valueFunction: (c) => +c.ind,
-            stretching: gridviz.powerScale(0.26),
-            range: [0, 1],
-        }),
-        size: (c, r, z, viewScale) => viewScale(c.ind),
-        color: (c) => d3.interpolateSpectral(1 - c.age_ratio),
-        shape: () => 'p',
-    })
+            //define style
+            const style = new gridviz.NinjaStarStyle({
+                viewScale: gridviz.viewScale({
+                    valueFunction: (c) => +c.ind,
+                    stretching: gridviz.powerScale(0.26),
+                    range: [0, 1],
+                }),
+                size: (c, r, z, viewScale) => viewScale(c.ind),
+                color: (c) => d3.interpolateSpectral(1 - c.age_ratio),
+                shape: () => 'p',
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 12 })]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 12 })]
+        </script>
+    </body>
+</html>

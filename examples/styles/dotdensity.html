@@ -1,28 +1,46 @@
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz dot density example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
-        z: 3000,
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2900000,
+                z: 3000,
+            }).addZoomButtons()
 
-    //define dataset
-    const dataset = new gridviz.CSVGrid(
-        map,
-        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
-        10000
-    )
+            //define dataset
+            const dataset = new gridviz.CSVGrid(
+                map,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
+            )
 
-    //define style
-    const style = new gridviz.DotDensityStyle({
-        dotNumber: (c, r, z) => c.population / z / 5,
-        dotSize: (r, z) => 1.2 * z,
-        color: () => '#FF5733',
-    })
+            //define style
+            const style = new gridviz.DotDensityStyle({
+                dotNumber: (c, r, z) => c.population / z / 5,
+                dotSize: (r, z) => 1.2 * z,
+                color: () => '#FF5733',
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style])]
+        </script>
+    </body>
+</html>

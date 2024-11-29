@@ -1,37 +1,55 @@
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz kitten example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
-        z: 200,
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2900000,
+                z: 200,
+            }).addZoomButtons()
 
-    //define dataset
-    const dataset = new gridviz.CSVGrid(
-        map,
-        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
-        10000
-    )
+            //define dataset
+            const dataset = new gridviz.CSVGrid(
+                map,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
+            )
 
-    //define image style
-    const style = new gridviz.ImageStyle({
-        // image URL from cell
-        image: (cell) => {
-            if (cell.population > 70000)
-                return 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png'
-            else if (cell.population > 7000)
-                return 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_gray.png'
-            else if (cell.population > 1500)
-                return 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_white.png'
-        },
+            //define image style
+            const style = new gridviz.ImageStyle({
+                // image URL from cell
+                image: (cell) => {
+                    if (cell.population > 70000)
+                        return 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_dark.png'
+                    else if (cell.population > 7000)
+                        return 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_gray.png'
+                    else if (cell.population > 1500)
+                        return 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/kitten_white.png'
+                },
 
-        // cell size
-        size: (c, r, z, viewScale) => r * 0.9,
-    })
+                // cell size
+                size: (c, r, z, viewScale) => r * 0.9,
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style])]
+        </script>
+    </body>
+</html>

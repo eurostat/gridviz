@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" style="height: 100%">
+<html lang="en">
     <head>
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Gridviz - Mosaic style</title>
 
         <style>
             @font-face {
                 font-family: mf;
                 src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/Constantine.woff);
+            }
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
             }
 
             html,
@@ -114,7 +121,7 @@
             })
 
             //link legend to style
-            style.legends = [legend]
+            if (window.innerWidth > 600) style.legends = [legend]
 
             //define grid layer
             const gridLayer = new gridviz.GridLayer(dataset, [style], {
