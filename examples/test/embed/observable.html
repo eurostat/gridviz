@@ -26,41 +26,54 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
-            //map 1
+            const container = document.getElementById('map')
+            // define map
 
-            const map1 = new gridviz.Map(document.getElementById('map'), { legendDivId: 'legend1' })
-                .setGeoCenter({ x: 4500000, y: 2900000 })
-                .setZoom(3000)
-                .addMultiScaleTiledGridLayer(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) =>
+            const map = new gridviz.Map(container, {
+                x: 4500000,
+                y: 2900000,
+                z: 2000,
+            }).addZoomButtons()
+
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                //the resolutions
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                //the function returning each dataset from the resolution
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
                         'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                        r +
-                        'm/',
-                    [
-                        new gridviz.SquareColorWGLStyle({
-                            colorCol: 'TOT_P_2021',
-                            tFun: (value, resolution, stats) => gridviz.sExp(value / stats.max, -50),
-                        }),
-                    ],
-                    {
-                        minPixelsPerCell: 3,
-                    }
-                )
-                .addZoomButtons()
-                .addFullscreenButton()
-
-            //legend
-            map1.layers[0].styles[0].legends.push(
-                new gridviz.ColorLegend({
-                    title: 'Number of inhabitants',
-                    ticks: 5,
-                    colorRamp: d3.interpolateOrRd,
-                    fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, 7),
-                    x: 10,
-                    y: 400,
-                })
+                            resolution +
+                            'm/',
+                        {
+                            onlyDrawWhenAllTilesReady: false,
+                        }
+                    )
             )
+
+            //define color for each cell c
+            const colorFunction = (cell, resolution) => {
+                const density = (1000000 * cell.TOT_P_2021) / (resolution * resolution)
+                if (density > 1500) return '#993404'
+                else if (density > 600) return '#d95f0e'
+                else if (density > 200) return '#fe9929'
+                else if (density > 60) return '#fec44f'
+                else if (density > 15) return '#fee391'
+                else return '#ffffd4'
+            }
+
+            //define style
+            const style = new gridviz.ShapeColorSizeStyle({
+                color: colorFunction,
+            })
+
+            //add layer to map
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 1,
+                }),
+            ]
         </script>
     </body>
 </html>
