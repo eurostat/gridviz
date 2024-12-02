@@ -17,8 +17,6 @@ export class Tooltip {
         opts = opts || {}
 
         /** @type {string} */
-        this.div = opts.div || 'tooltip_eurostat'
-        /** @type {string} */
         this.maxWidth = opts.maxWidth || '20em'
         /** @type {string} */
         this.fontSize = opts.fontSize || '1.2em'
@@ -47,21 +45,15 @@ export class Tooltip {
         this.xMouseOffset = opts.xMouseOffset || 0
         /** @type {HTMLElement} */
         this.parentElement = opts.parentElement || document.body
+        /** @type {HTMLElement} */
+        this.tooltipElement = opts.tooltipElement || null
 
         /**
          * @public
          * @type {import("d3-selection").Selection} */
-        this.tooltip = select('#' + this.div)
-
-        if (this.tooltip.empty()) {
-            //create tooltip DOM node
-            // this.tooltip = select(
-            //     '#' + this.parentElement.id && this.parentElement.id != ''
-            //         ? '#' + this.parentElement.id
-            //         : 'body'
-            // )
-            this.tooltip = select('body').append('div').attr('id', this.div)
-        }
+        this.tooltip = opts.tooltipElement
+            ? select(opts.tooltipElement) // Wrap the provided HTML node in a D3 selection
+            : select(this.parentElement).append('div').attr('id', 'gridviz-tooltip').attr('class', 'gridviz-tooltip') // create default element
 
         //initialise
         this.tooltip.style('max-width', this.maxWidth)
@@ -77,6 +69,10 @@ export class Tooltip {
         this.tooltip.style('pointer-events', 'none')
         this.tooltip.style('opacity', '0')
         this.tooltip.style('text-wrap', 'nowrap')
+
+        // these placeholders are needed to prevent an infinite DOM resizeObserver loop:
+        this.tooltip.style('left', '0')
+        this.tooltip.style('top', '0')
 
         // aria-labels (thanks to wahlatlas)
         this.tooltip.attr('role', 'tooltip').attr('aria-live', 'polite')
@@ -107,14 +103,51 @@ export class Tooltip {
      * @param {MouseEvent} event
      */
     setPosition(event) {
+        // Get the bounding rect of the parent container (map2)
         let parentRect = this.parentElement.getBoundingClientRect()
 
-        let x = event.pageX + this.xOffset
-        let y = event.pageY - this.yOffset
+        // Get the mouse position (relative to the parent container)
+        let x = event.clientX - parentRect.left + this.xOffset // Relative to parent
+        let y = event.clientY - parentRect.top - this.yOffset // Relative to parent
 
+        // Now, apply the position to the tooltip
         this.tooltip.style('left', x + 'px').style('top', y + 'px')
 
-        this.ensureTooltipInsideContainer(event, parentRect)
+        // Ensure the tooltip stays inside the parent container
+        this.ensureTooltipInsideContainer(event, parentRect, this.tooltip.node())
+    }
+    /**
+     * @function ensureTooltipInsideContainer
+     * @description Prevents the tooltip from overflowing out of the App container (ensures that the tooltip is inside the gridviz container)
+     * @param {MouseEvent} event
+     * @param {DOMRect} parentRect
+     * @param {HTMLElement} tooltipNode
+     */
+    ensureTooltipInsideContainer(event, parentRect, tooltipNode) {
+        let node = tooltipNode
+        let parentWidth = parentRect.width
+        let parentHeight = parentRect.height
+
+        // Ensure tooltip doesn't go beyond the right edge
+        if (node.offsetLeft + node.clientWidth > parentWidth) {
+            let left = event.clientX - node.clientWidth - this.xOffset
+            node.style.left = left + 'px'
+        }
+
+        // Ensure tooltip doesn't go beyond the bottom edge
+        if (node.offsetTop + node.clientHeight > parentHeight) {
+            node.style.top = parentHeight - node.clientHeight + 'px'
+        }
+
+        // Ensure tooltip doesn't go above the top edge
+        if (node.offsetTop < 0) {
+            node.style.top = 0 + 'px'
+        }
+
+        // Ensure tooltip doesn't go beyond the left edge
+        if (node.offsetLeft < 0) {
+            node.style.left = 0 + 'px'
+        }
     }
 
     /*
@@ -144,40 +177,5 @@ export class Tooltip {
         if (arguments.length == 1) return this.tooltip.attr(k)
         this.tooltip.attr(k, v)
         return this
-    }
-
-    /**
-     * @function ensureTooltipInsideContainer
-     * @description Prevents the tooltip from overflowing out of the App container (ensures that the tooltip is inside the gridviz container)
-     * @param {MouseEvent} event
-     * @param {DOMRect} parentRect
-     */
-    ensureTooltipInsideContainer = function (event, parentRect) {
-        let node = this.tooltip.node()
-        let parentWidth = parentRect.width
-        let parentHeight = parentRect.height
-
-        //too far right
-        if (node.offsetLeft > parentRect.left + parentWidth - node.clientWidth) {
-            let left = event.x - node.clientWidth - this.xOffset
-            node.style.left = left + 'px'
-            // check if mouse covers tooltip
-            if (node.offsetLeft + node.clientWidth > event.x) {
-                //move tooltip left so it doesnt cover mouse
-                let left2 = event.x - node.clientWidth - this.xOffset
-                node.style.left = left2 + 'px'
-            }
-            // node.style.top = node.offsetTop + config.yOffset + "px";
-        }
-
-        //too far down
-        if (node.offsetTop + node.clientHeight > parentRect.top + parentHeight) {
-            node.style.top = node.offsetTop - node.clientHeight + 'px'
-        }
-
-        //too far up
-        if (node.offsetTop < parentRect.top) {
-            node.style.top = parentRect.top + this.yOffset + 'px'
-        }
     }
 }

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz tooltips test</title>
+        <style>
+            .container {
+                position: relative;
+                margin: 17px 0;
+                min-height: 1.5rem;
+            }
+            .filler {
+                background-color: bisque;
+                height: 50px;
+                width: 50%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Test multiple instances / tooltips</h1>
+
+        <div class="container">
+            <div class="filler"></div>
+            <div id="map" style="height: 300px; width: 50%"></div>
+        </div>
+
+        <div class="container">
+            <div class="filler"></div>
+            <div id="map2" style="height: 300px; width: 50%"></div>
+        </div>
+
+        <script src="../../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            const container = document.getElementById('map')
+            const container2 = document.getElementById('map2')
+            // define map
+
+            const map = new gridviz.Map(container, {
+                x: 4500000,
+                y: 2900000,
+                z: 2000,
+            }).addZoomButtons()
+            const map2 = new gridviz.Map(container2, {
+                x: 4500000,
+                y: 2900000,
+                z: 2000,
+            }).addZoomButtons()
+
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                //the resolutions
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                //the function returning each dataset from the resolution
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                            resolution +
+                            'm/',
+                        {
+                            onlyDrawWhenAllTilesReady: true,
+                        }
+                    )
+            )
+
+            const dataset2 = new gridviz.MultiResolutionDataset(
+                //the resolutions
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                //the function returning each dataset from the resolution
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map2,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
+                            resolution +
+                            'm/',
+                        {
+                            onlyDrawWhenAllTilesReady: true,
+                        }
+                    )
+            )
+
+            //define color for each cell c
+            const colorFunction = (cell, resolution) => {
+                const density = (1000000 * cell.TOT_P_2021) / (resolution * resolution)
+                if (density > 1500) return '#993404'
+                else if (density > 600) return '#d95f0e'
+                else if (density > 200) return '#fe9929'
+                else if (density > 60) return '#fec44f'
+                else if (density > 15) return '#fee391'
+                else return '#ffffd4'
+            }
+
+            //define style
+            const style = new gridviz.ShapeColorSizeStyle({
+                color: colorFunction,
+            })
+
+            //add layer to map
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 1,
+                }),
+            ]
+
+            map2.layers = [
+                new gridviz.GridLayer(dataset2, [style], {
+                    minPixelsPerCell: 1,
+                }),
+            ]
+        </script>
+    </body>
+</html>

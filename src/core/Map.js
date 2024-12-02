@@ -433,35 +433,43 @@ export class Map {
      * @memberof App
      */
     defineResizeObserver() {
-        // listen to resize events
-        const resizeObserver = new ResizeObserver((entries) => {
-            let container = this.container
-            // make sure canvas has been built
-            if (container.clientWidth > 0 && container.clientHeight > 0) {
-                // make sure we dont exceed loop limit first
-                // see: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
-                window.requestAnimationFrame(() => {
-                    if (!Array.isArray(entries) || !entries.length) {
-                        return
-                    }
-                    // update the map and canvas size
-                    if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
-                        this.h = container.clientHeight
-                        this.w = container.clientWidth
-                        this.geoCanvas.h = container.clientHeight
-                        this.geoCanvas.w = container.clientWidth
-                        this.geoCanvas.canvas.setAttribute('width', '' + this.w)
-                        this.geoCanvas.canvas.setAttribute('height', '' + this.h)
-                        // offscreen canvas
-                        this.geoCanvas.offscreenCanvas.setAttribute('width', '' + this.w)
-                        this.geoCanvas.offscreenCanvas.setAttribute('height', '' + this.h)
-                        this.redraw()
+        // Track whether the observer is currently processing a resize event
+        let resizePending = false
 
-                        //update button positions
-                        // if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px'
-                        // if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px'
-                    }
-                })
+        const resizeObserver = new ResizeObserver((entries) => {
+            if (!Array.isArray(entries) || !entries.length) return
+
+            let container = this.container
+
+            // Ensure the container has valid dimensions
+            if (container.clientWidth > 0 && container.clientHeight > 0) {
+                if (!resizePending) {
+                    resizePending = true // Prevent overlapping resize triggers
+
+                    window.requestAnimationFrame(() => {
+                        resizePending = false // Reset the flag after processing
+
+                        // Check for size changes
+                        if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
+                            this.h = container.clientHeight
+                            this.w = container.clientWidth
+
+                            // Update geoCanvas sizes
+                            this.geoCanvas.h = this.h
+                            this.geoCanvas.w = this.w
+                            this.geoCanvas.canvas.setAttribute('width', String(this.w))
+                            this.geoCanvas.canvas.setAttribute('height', String(this.h))
+                            this.geoCanvas.offscreenCanvas.setAttribute('width', String(this.w))
+                            this.geoCanvas.offscreenCanvas.setAttribute('height', String(this.h))
+
+                            this.redraw()
+
+                            // Optionally reposition UI elements
+                            // if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px';
+                            // if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px';
+                        }
+                    })
+                }
             }
         })
 
