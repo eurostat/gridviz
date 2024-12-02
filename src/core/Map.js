@@ -60,9 +60,10 @@ export class Map {
         }
 
         // legend div
-        this.legendDivId = opts.legendDivId || 'gvizLegend'
-        this.legend = select('#' + this.legendDivId)
-        if (this.legend.empty()) this.initialiseLegend()
+        this.legend = opts.legendContainer
+            ? select(opts.legendContainer) // Wrap the provided HTML node in a D3 selection
+            : null
+        if (!this.legend) this.initialiseLegend()
 
         //tooltip
 
@@ -122,9 +123,9 @@ export class Map {
     }
 
     initialiseLegend() {
-        this.legend = select(this.container.id && this.container.id != '' ? '#' + this.container.id : 'body')
-            .append('div')
-            .attr('id', this.legendDivId)
+        this.legend = select(this.container)
+            .append('div') // Create a new container
+            .attr('id', 'gridviz-legend')
             .style('position', 'absolute')
             .style('width', 'auto')
             .style('height', 'auto')

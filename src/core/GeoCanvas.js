@@ -87,24 +87,29 @@ export class GeoCanvas {
                 .on('zoom', (e) => {
                     const t = e.transform
                     const f = tP.k / t.k
-                    if (f == 1) {
-                        //pan
+
+                    // Get container's bounding rect to adjust for offsets
+                    const containerRect = this.canvas.getBoundingClientRect()
+
+                    // Adjust for container's offset and zoom center
+                    const offsetX = e.sourceEvent.offsetX - containerRect.left
+                    const offsetY = e.sourceEvent.offsetY - containerRect.top
+
+                    if (f === 1) {
+                        // Pan logic
                         const dx = tP.x - t.x
                         const dy = tP.y - t.y
                         this.pan(dx * this.view.z, -dy * this.view.z)
                     } else {
                         const se = e.sourceEvent
+
                         if (se instanceof WheelEvent) {
-                            //zoom at the mouse position
-                            this.zoom(
-                                f,
-                                this.pixToGeoX(e.sourceEvent.offsetX),
-                                this.pixToGeoY(e.sourceEvent.offsetY)
-                            )
+                            // Zoom at mouse position, adjusted by container offset
+                            this.zoom(f, this.pixToGeoX(offsetX), this.pixToGeoY(offsetY))
                         } else if (se instanceof TouchEvent) {
                             if (!se.targetTouches.length) return
-                            //pinch zoom
-                            //compute average position of the touches
+
+                            // Compute average position of the touches
                             let tx = 0,
                                 ty = 0
                             for (let tt of se.targetTouches) {
@@ -113,7 +118,12 @@ export class GeoCanvas {
                             }
                             tx /= se.targetTouches.length
                             ty /= se.targetTouches.length
-                            //zoom at this average position
+
+                            // Adjust for container's offset
+                            tx -= containerRect.left
+                            ty -= containerRect.top
+
+                            // Zoom at the average touch position
                             this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
                         }
                     }

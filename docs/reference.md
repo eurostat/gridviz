@@ -102,7 +102,7 @@ new gridviz.Map(document.getElementById('map'), {
     x: 4500000,
     y: 2900000,
     z: 1000,
-    legendDivId: 'myLegendDiv', // if you want your legend in an external container
+    legendContainer: document.getElementById('myLegendDiv'), // if you want your legend in an external container
     selectionRectangleColor: 'red', // cell hover
     selectionRectangleWidthPix: (resolution, z) => '1',
     backgroundColor: 'white',

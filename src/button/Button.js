@@ -46,7 +46,7 @@ export class Button {
         this.style('display', 'flex')
         this.style('justify-content', 'center')
         this.style('align-items', 'center')
-        this.style('width', '30px')
+        this.style('width', '35px')
         this.style('height', '30px')
         // this.style(padding , '4px'
 
