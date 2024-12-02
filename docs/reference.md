@@ -5,6 +5,7 @@
 -   [Gridviz API reference](#gridviz-api-reference)
     -   [Table of contents](#table-of-contents)
     -   [Concepts](#concepts)
+    -   [Defining the map](#defining-the-map)
     -   [Adding data](#adding-data)
         -   [Layers](#layers)
             -   [GridLayer](#gridlayer)
@@ -89,6 +90,64 @@ Here are few concepts on Gridviz to be aware of:
 10. Gridviz zoom level, usually noted **z**, is defined in **ground UoM per pixel**. The ground UoM is usually meter. **z** value can be used directly to transorm distances from ground distance to map screen distance, in pixels, as a division. **resolution** parameter is the cell size, in ground UoM. Its size in map screen pixel is thus 'resolution / z'.
 
 11. A grid layer shows gridded data in the grid coordinate reference system. Several gridded datasets may be overlayed, as soon as they are defined in the same coordinate reference system. Other layers (background, labels, etc.) must be defined also in the grid coordinate reference system.
+
+## Defining the map
+
+When building a gridviz map, in addition to the container element you can also specify an options object with the properties outlined in the table below.
+
+For example:
+
+```javascript
+new gridviz.Map(document.getElementById('map'), {
+    x: 4500000,
+    y: 2900000,
+    z: 1000,
+    legendDivId: 'myLegendDiv', // if you want your legend in an external container
+    selectionRectangleColor: 'red', // cell hover
+    selectionRectangleWidthPix: (resolution, z) => '1',
+    backgroundColor: 'white',
+    tooltip: {
+        fontSize: '1.2em',
+        transitionDuration: 100,
+        maxWidth: '20em'
+        fontSize:'1.2em'
+        background :  'white'
+        padding: '5px'
+        border :'0px'
+        'border-radius' : '0px'
+        'box-shadow' : '5px 5px 5px grey'
+        'font-family' :'Helvetica, Arial, sans-serif'
+        transitionDuration : 100
+        xOffset:  30
+        yOffset:  20
+        yMouseOffset : 0
+        xMouseOffset : 0
+        parentElement : document.body
+    },
+    onZoomStartFun: (event) => {
+        console.log('pan/zoom start', event)
+    },
+    onZoomFun: (event) => {
+        console.log('zoom', event)
+    },
+    onZoomEndFun: (event) => {
+        console.log('pan/zoom end', event)
+    },
+})
+```
+
+| Property                              | Type     | Default      | Description                                                                                                                                                         |
+| ------------------------------------- | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _opts_.**legendDivId**                | string   | 'gvizLegend' | The identifier of the element upon which the legend will be appended.                                                                                               |
+| _opts_.**selectionRectangleColor**    | string   | 'red'        | The colour of the outline when a cell is highlighted.                                                                                                               |
+| _opts_.**selectionRectangleWidthPix** | Function | (r,z) => 4   | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _z_ is the zoom level.  |
+| _opts_.**transparentbackground**      | boolean  | false        | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
+| _opts_.**backgroundColor**            | string   | 'white'      | The background color of the canvas when transparentBackground is set to false.                                                                                      |
+| _opts_.**disableZoom**                | Boolean  | false        | Disables d3 pan and zoom when set to true.                                                                                                                          |
+| _opts_.**onZoomStartFun**             | Function | null         | Event handler for when a pan/zoom event is initiated.                                                                                                               |
+| _opts_.**onZoomFun**                  | Function | null         | Event handler for when a pan/zoom event is occurring.                                                                                                               |
+| _opts_.**onZoomEndFun**               | Function | null         | Event handler for when a pan/zoom event has finished.                                                                                                               |
+| _opts_.**tooltip**                    | Object   | undefined    | See [tooltip](#tooltip)                                                                                                                                             |
 
 ## Adding data
 
