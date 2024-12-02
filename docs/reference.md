@@ -6,6 +6,13 @@
     -   [Table of contents](#table-of-contents)
     -   [Concepts](#concepts)
     -   [Adding data](#adding-data)
+        -   [Layers](#layers)
+            -   [GridLayer](#gridlayer)
+            -   [BackgroundLayer](#backgroundlayer)
+            -   [BackgroundLayerImage](#backgroundlayerimage)
+            -   [BackgroundLayerWMS](#backgroundlayerwms)
+            -   [GeoJSONLayer](#geojsonlayer)
+            -   [LabelLayer](#labellayer)
     -   [Filtering and formatting data](#filtering-and-formatting-data)
     -   [Basic styles](#basic-styles)
         -   [Shape/Color/Size Style](#shapecolorsize-style)
@@ -104,6 +111,94 @@ Gridviz can also show tiled data. This ensures only the data within the viewshed
 For [Parquet](https://parquet.apache.org/) data support, see the [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/).
 
 For better efficiency, it is recommended to use multi-resolution tiled parquet data.
+
+### Layers
+
+There are a few different types of layers that can be added to a gridviz map:
+Once you have constructed them, simply add them to the map like so:
+
+```javascript
+map.layers = [yourLayer] // they will be drawn in order
+```
+
+#### GridLayer
+
+```javascript
+new gridviz.GridLayer(dataset, [style], {
+    minPixelsPerCell: 12, //optional
+})
+```
+
+#### BackgroundLayer
+
+```javascript
+const backgroundLayer = new gridviz.BackgroundLayer({
+    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+    resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+    origin: [0, 6000000],
+    filterColor: (z) => '#ffffff77',
+})
+```
+
+#### BackgroundLayerImage
+
+```javascript
+const backgroundLayer = new gridviz.BackgroundLayerImage({
+    //the image URL
+    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/reunion_relief_100k.png',
+
+    //the georeferencing information:
+    // - geo coordinates of the top left corner
+    // - the image width and heigth in geo unit (meters). It is the image width/heigth in pixel multiplied by the resolution (meters/pixel)
+    xMin: 314686,
+    yMax: 7691260,
+    width: 64590.2,
+    height: 57178.2,
+})
+```
+
+#### BackgroundLayerWMS
+
+```javascript
+const backgroundLayer = new gridviz.BackgroundLayerWMS({
+    url: 'yourWMSserver?&service=WMS&request=GetMap&layers=yourLayers&styles=&format=image%2Fjpeg',
+})
+```
+
+#### GeoJSONLayer
+
+```javascript
+const pointLayer = new gridviz.GeoJSONLayer({
+    url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/nutspt_3.json',
+    shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
+    size: (f, z) => Math.max(2, 10000 / z),
+    strokeStyle: (f, z) => 'black',
+    fillStyle: (f, z) => 'red',
+    lineWidth: (f, z) => (z < 2000 ? 2 : 0),
+})
+```
+
+#### LabelLayer
+
+```javascript
+const labelLayer = new gridviz.LabelLayer({
+    url: 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v3/UTF_LATIN/50/EUR.csv', //The URL of the label data, as CSV file.
+    preprocess: (label) => {
+        //project from geo coordinates to ETRS89-LAEA
+        const p = proj([label.lon, label.lat])
+        label.x = p[0]
+        label.y = p[1]
+        delete label.lon
+        delete label.lat
+    },
+    style: (label, zoom) => {
+        if (label.rs < 0.9 * zoom) return
+        if (label.r1 < 0.9 * zoom) return '1em Arial'
+        return '1.5em Arial'
+    },
+    haloColor: () => 'white',
+})
+```
 
 ## Filtering and formatting data
 
