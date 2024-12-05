@@ -69,6 +69,7 @@ export class Tooltip {
         this.tooltip.style('pointer-events', 'none')
         this.tooltip.style('opacity', '0')
         this.tooltip.style('text-wrap', 'nowrap')
+        this.tooltip.style('z-index', 99999999) // important for leaflet-gridviz etc
 
         // these placeholders are needed to prevent an infinite DOM resizeObserver loop:
         this.tooltip.style('left', '0')
