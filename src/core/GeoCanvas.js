@@ -102,7 +102,7 @@ export class GeoCanvas {
                         const dy = tP.y - t.y
                         this.pan(dx * this.view.z, -dy * this.view.z)
                     } else {
-                        // Throttling the zoom
+                        // Zoom logic
                         handleZoom(e.sourceEvent, containerRect, f, offsetX, offsetY)
                     }
                     tP = t
@@ -123,7 +123,6 @@ export class GeoCanvas {
                 })
                 .on('end', (e) => {
                     // end of pan/zoom event
-                    //console.log('zoom redraw')
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 

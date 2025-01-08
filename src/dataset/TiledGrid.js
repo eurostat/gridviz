@@ -105,10 +105,6 @@ export class TiledGrid extends Dataset {
     async getData(extGeo) {
         if (!this.info) return this
 
-        // Capture the current zoom level
-        const currentZoom = this.map.geoCanvas.view.z
-        this.currentZoomLevel = currentZoom
-
         // Create an AbortController for the current data request
         this.abortController = new AbortController()
         const signal = this.abortController.signal
@@ -143,7 +139,7 @@ export class TiledGrid extends Dataset {
                 this.cache[xT][yT] = 'loading'
 
                 tilePromises.push(
-                    this.loadTile(xT, yT, currentZoom, signal)
+                    this.loadTile(xT, yT, signal)
                         .then((tile) => {
                             this.cache[xT][yT] = tile
 
@@ -168,11 +164,10 @@ export class TiledGrid extends Dataset {
      *
      * @param {number} xT
      * @param {number} yT
-     * @param {number} requestZoom
      * @param {AbortSignal} signal
      * @returns {Promise<any>}
      */
-    async loadTile(xT, yT, requestZoom, signal) {
+    async loadTile(xT, yT, signal) {
         try {
             const data = await csv(`${this.url}${xT}/${yT}.csv`, { signal })
 
