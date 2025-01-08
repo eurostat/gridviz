@@ -58,6 +58,19 @@ export class Map {
         this.geoCanvas.redraw = () => {
             this.redraw()
         }
+        this.geoCanvas.cancelCurrentRequests = () => {
+            // when the zoom level changes, avoid drawing outdated tiles, and ensure that requests are properly aborted when necessary
+            for (const layer of this.layers) {
+                //multires
+                if (layer.dataset?.datasets) {
+                    for (const dataset of layer.dataset?.datasets) {
+                        if (dataset?.cancelCurrentRequests) dataset.cancelCurrentRequests()
+                    }
+                }
+                //single res
+                if (layer.dataset?.cancelCurrentRequests) layer.dataset?.cancelCurrentRequests()
+            }
+        }
 
         // legend div
         this.legend = opts.legendContainer

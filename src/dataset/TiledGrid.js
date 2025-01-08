@@ -67,8 +67,7 @@ export class TiledGrid extends Dataset {
                     this.infoLoadingStatus = 'failed'
                 }
             })()
-        } else if (this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed')
-            this.map.redraw()
+        } else if (this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed') this.map.redraw()
         return this
     }
 
@@ -106,6 +105,14 @@ export class TiledGrid extends Dataset {
     async getData(extGeo) {
         if (!this.info) return this
 
+        // Capture the current zoom level
+        const currentZoom = this.map.geoCanvas.view.z
+        this.currentZoomLevel = currentZoom
+
+        // Create an AbortController for the current data request
+        this.abortController = new AbortController()
+        const signal = this.abortController.signal
+
         // Get the tiling envelope and check bounds
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return this
@@ -117,10 +124,8 @@ export class TiledGrid extends Dataset {
         const yMin = Math.max(tb.yMin, gbYMin)
         const yMax = Math.min(tb.yMax, gbYMax)
 
-        // Count the total number of tiles
         const totalTiles = (xMax - xMin + 1) * (yMax - yMin + 1)
-
-        let processedTiles = 0 // Counter for loaded tiles
+        let processedTiles = 0
         const tilePromises = []
 
         // Iterate over tiles within bounds
@@ -128,8 +133,8 @@ export class TiledGrid extends Dataset {
             for (let yT = yMin; yT <= yMax; yT++) {
                 if (!this.cache[xT]) this.cache[xT] = {}
 
-                // Skip already loaded or loading tiles
-                if (this.cache[xT][yT]) {
+                // Skip already loaded tiles or retry failed ones
+                if (this.cache[xT][yT] && this.cache[xT][yT] !== 'failed') {
                     ++processedTiles
                     continue
                 }
@@ -137,21 +142,16 @@ export class TiledGrid extends Dataset {
                 // Mark tile as loading
                 this.cache[xT][yT] = 'loading'
 
-                // Prepare the tile request and store it in tilePromises
                 tilePromises.push(
-                    this.loadTile(xT, yT)
+                    this.loadTile(xT, yT, currentZoom, signal)
                         .then((tile) => {
-                            // Before we increment processedTiles, check if it's the last tile
-                            const isLastTile = ++processedTiles === totalTiles
-
-                            // Store the tile in the cache
                             this.cache[xT][yT] = tile
 
-                            // Pass the isLastTile argument to checkAndRedraw
+                            // Check if this is the last tile
+                            const isLastTile = ++processedTiles === totalTiles
                             this.checkAndRedraw(tile, isLastTile)
                         })
                         .catch(() => {
-                            // Mark as failed but allow processing to continue
                             this.cache[xT][yT] = 'failed'
                             ++processedTiles
                         })
@@ -159,30 +159,48 @@ export class TiledGrid extends Dataset {
             }
         }
 
-        // Handle all tile promises, including failures
         await Promise.allSettled(tilePromises)
         return this
     }
 
-    async loadTile(xT, yT) {
+    /**
+     * Load a tile.
+     *
+     * @param {number} xT
+     * @param {number} yT
+     * @param {number} requestZoom
+     * @param {AbortSignal} signal
+     * @returns {Promise<any>}
+     */
+    async loadTile(xT, yT, requestZoom, signal) {
         try {
-            const data = await csv(`${this.url}${xT}/${yT}.csv`)
+            const data = await csv(`${this.url}${xT}/${yT}.csv`, { signal })
 
-            // Preprocess or filter the data if needed
             const cells = this.preprocess ? data.filter((cell) => this.preprocess(cell) !== false) : data
 
             if (!this.info) throw new Error('Tile info unknown')
 
             return getGridTile(cells, xT, yT, this.info)
         } catch (error) {
-            console.warn(`Failed to load tile ${xT}, ${yT}:`, error)
+            if (error.name === 'AbortError') {
+                console.warn(`Tile request for ${xT}, ${yT} was aborted.`)
+            }
             throw error
+        }
+    }
+
+    /**
+     * Cancel ongoing data requests when zoom level changes.
+     */
+    cancelCurrentRequests() {
+        if (this.abortController) {
+            this.abortController.abort()
         }
     }
 
     checkAndRedraw(tile, isLastTile) {
         // Check if any visible layer depends on this dataset
-        //check if redraw is really needed, that is if:
+        // check if redraw is really needed, that is if:
         // 1. the dataset belongs to a layer which is visible at the current zoom level
         let needsRedraw = false
         //go through the layers

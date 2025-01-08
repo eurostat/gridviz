@@ -78,11 +78,12 @@ export class GeoCanvas {
         this.extGeo = { xMin: NaN, xMax: NaN, yMin: NaN, yMax: NaN }
         this.updateExtentGeo()
 
-        //rely on d3 zoom for pan/zoom
+        //rely on d3 for zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
+            let debounceTimeout = null // Add a debounce timeout variable
             const z = d3zoom()
-                //to make the zooming a bit faster
+                // to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
                 .on('zoom', (e) => {
                     const t = e.transform
@@ -101,31 +102,8 @@ export class GeoCanvas {
                         const dy = tP.y - t.y
                         this.pan(dx * this.view.z, -dy * this.view.z)
                     } else {
-                        const se = e.sourceEvent
-
-                        if (se instanceof WheelEvent) {
-                            // Zoom at mouse position, adjusted by container offset
-                            this.zoom(f, this.pixToGeoX(offsetX), this.pixToGeoY(offsetY))
-                        } else if (se instanceof TouchEvent) {
-                            if (!se.targetTouches.length) return
-
-                            // Compute average position of the touches
-                            let tx = 0,
-                                ty = 0
-                            for (let tt of se.targetTouches) {
-                                tx += tt.clientX
-                                ty += tt.clientY
-                            }
-                            tx /= se.targetTouches.length
-                            ty /= se.targetTouches.length
-
-                            // Adjust for container's offset
-                            tx -= containerRect.left
-                            ty -= containerRect.top
-
-                            // Zoom at the average touch position
-                            this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
-                        }
+                        // Throttling the zoom
+                        handleZoom(e.sourceEvent, containerRect, f, offsetX, offsetY)
                     }
                     tP = t
 
@@ -144,13 +122,43 @@ export class GeoCanvas {
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
                 .on('end', (e) => {
-                    // end of zoom event
+                    // end of pan/zoom event
+                    //console.log('zoom redraw')
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
                 })
             z(select(this.canvas))
+
+            const handleZoom = (se, containerRect, f, offsetX, offsetY) => {
+                // cancel ongoing data requests
+                this.cancelCurrentRequests()
+
+                if (se instanceof WheelEvent) {
+                    // Zoom at mouse position, adjusted by container offset
+                    this.zoom(f, this.pixToGeoX(offsetX), this.pixToGeoY(offsetY))
+                } else if (se instanceof TouchEvent) {
+                    if (!se.targetTouches.length) return
+
+                    // Compute average position of the touches
+                    let tx = 0,
+                        ty = 0
+                    for (let tt of se.targetTouches) {
+                        tx += tt.clientX
+                        ty += tt.clientY
+                    }
+                    tx /= se.targetTouches.length
+                    ty /= se.targetTouches.length
+
+                    // Adjust for container's offset
+                    tx -= containerRect.left
+                    ty -= containerRect.top
+
+                    // Zoom at the average touch position
+                    this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
+                }
+            }
         }
 
         //center extent
@@ -223,6 +231,11 @@ export class GeoCanvas {
     /** The function specifying how to draw the map. */
     redraw() {
         throw new Error('Method redraw not implemented.')
+    }
+
+    /** When the zoom level changes, ensures that any ongoing requests are aborted before new ones are initiated. */
+    cancelCurrentRequests() {
+        throw new Error('Method cancelCurrentRequests not implemented.')
     }
 
     /**
