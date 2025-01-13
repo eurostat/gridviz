@@ -3,6 +3,7 @@
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/gridviz)
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
+[![Mentioned in Awesome Official Statistics ](https://awesome.re/mentioned-badge.svg)](http://www.awesomeofficialstatistics.org)
 
 <p align="center" style="height: 350px;">
     <img src="docs/img/gif/gridviz-annotated.gif">
