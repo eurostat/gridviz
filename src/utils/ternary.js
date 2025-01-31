@@ -15,7 +15,7 @@ export const ternaryClassifier = (properties, totalFunction, opts = {}) => {
     //parameter to decide wether to use mixed classes m0, m1, m2.
     const withMixedClasses = opts.withMixedClasses != undefined ? opts.withMixedClasses : true
 
-    //paramerter decide wether to use a central class, and the size of this central class.
+    //parameter to decide wether to use a central class, and the size of this central class.
     //set to 0 or undefined for not showing any central class. Set to 1 for a central class that contains the mix classes
     const cc = opts.centerCoefficient ? 1 - opts.centerCoefficient : undefined
 
