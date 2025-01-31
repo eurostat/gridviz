@@ -130,6 +130,11 @@ export const ternaryColorClassifier = (properties, totalFunction, colors, opts =
     return fun
 }
 
+
+
+
+// OLD VERSIONS
+
 /*
 const orderedIndexesDec = arr => [...arr.keys()].sort((a, b) => arr[b] - arr[a]);
 const orderedIndexesInc = arr => [...arr.keys()].sort((a, b) => arr[a] - arr[b]);
