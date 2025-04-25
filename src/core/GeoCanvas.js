@@ -81,29 +81,21 @@ export class GeoCanvas {
         //rely on d3 for zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
+            // @ts-ignore
             let debounceTimeout = null // Add a debounce timeout variable
             const z = d3zoom()
                 // to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
                 .on('zoom', (e) => {
                     const t = e.transform
-                    const f = tP.k / t.k
-
-                    // Get container's bounding rect to adjust for offsets
-                    const containerRect = this.canvas.getBoundingClientRect()
-
-                    // Adjust for container's offset and zoom center
-                    const offsetX = e.sourceEvent.offsetX - containerRect.left
-                    const offsetY = e.sourceEvent.offsetY - containerRect.top
-
-                    if (f === 1) {
-                        // Pan logic
+                    const zoomFactor = tP.k / t.k
+                    if (zoomFactor == 1) {
+                        //pan
                         const dx = tP.x - t.x
                         const dy = tP.y - t.y
                         this.pan(dx * this.view.z, -dy * this.view.z)
                     } else {
-                        // Zoom logic
-                        handleZoom(e.sourceEvent, containerRect, f, offsetX, offsetY)
+                        handleZoom(e, zoomFactor)
                     }
                     tP = t
 
@@ -128,19 +120,25 @@ export class GeoCanvas {
 
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
                 })
+            // @ts-ignore
             z(select(this.canvas))
 
-            const handleZoom = (se, containerRect, f, offsetX, offsetY) => {
+            const handleZoom = (event, zoomFactor) => {
                 // cancel ongoing data requests
                 this.cancelCurrentRequests()
+                const se = event.sourceEvent
 
                 if (se instanceof WheelEvent) {
-                    // Zoom at mouse position, adjusted by container offset
-                    this.zoom(f, this.pixToGeoX(offsetX), this.pixToGeoY(offsetY))
+                    //zoom at the mouse position
+                    this.zoom(
+                        zoomFactor,
+                        // @ts-ignore
+                        this.pixToGeoX(se.offsetX),
+                        // @ts-ignore
+                        this.pixToGeoY(se.offsetY)
+                    )
                 } else if (se instanceof TouchEvent) {
-                    if (!se.targetTouches.length) return
-
-                    // Compute average position of the touches
+                    //compute average position of the touches
                     let tx = 0,
                         ty = 0
                     for (let tt of se.targetTouches) {
@@ -151,11 +149,11 @@ export class GeoCanvas {
                     ty /= se.targetTouches.length
 
                     // Adjust for container's offset
-                    tx -= containerRect.left
-                    ty -= containerRect.top
+                    // tx -= containerRect.left
+                    // ty -= containerRect.top
 
-                    // Zoom at the average touch position
-                    this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
+                    //zoom at this average position
+                    this.zoom(zoomFactor, this.pixToGeoX(tx), this.pixToGeoY(ty))
                 }
             }
         }
@@ -332,6 +330,7 @@ export class GeoCanvas {
             this.canvasSave.f /= f
             this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
             this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
+            this.clear(this.backgroundColor)
             this.offscreenCtx.drawImage(
                 this.canvasSave.c,
                 this.canvasSave.dx,
