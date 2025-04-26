@@ -45,12 +45,13 @@ export class SegmentStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //
-        geoCanvas.ctx.lineCap = 'butt'
+        ctx.lineCap = 'butt'
 
         //conversion factor degree -> radian
         const f = Math.PI / 180
@@ -80,8 +81,8 @@ export class SegmentStyle extends Style {
             const offset = this.offset(cell, resolution, z)
 
             //set color and width
-            geoCanvas.ctx.strokeStyle = col
-            geoCanvas.ctx.lineWidth = wG
+            ctx.strokeStyle = col
+            ctx.lineWidth = wG
 
             //compute segment center postition
             const cx = cell.x + resolution / 2 + offset.dx
@@ -92,10 +93,10 @@ export class SegmentStyle extends Style {
             const dy = 0.5 * Math.sin(or) * lG
 
             //draw segment
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(cx - dx, cy - dy)
-            geoCanvas.ctx.lineTo(cx + dx, cy + dy)
-            geoCanvas.ctx.stroke()
+            ctx.beginPath()
+            ctx.moveTo(cx - dx, cy - dy)
+            ctx.lineTo(cx + dx, cy + dy)
+            ctx.stroke()
         }
 
         //update legends

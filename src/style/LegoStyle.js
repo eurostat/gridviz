@@ -87,37 +87,24 @@ class LegoTopStyle extends Style {
     draw(cells, geoCanvas, r) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
+        const ctx = geoCanvas.offscreenCtx
 
-        geoCanvas.ctx.lineWidth = 0.6 * geoCanvas.view.z
+        ctx.lineWidth = 0.6 * geoCanvas.view.z
 
         //dark part
-        geoCanvas.ctx.strokeStyle = this.colDark
+        ctx.strokeStyle = this.colDark
         for (let c of cells) {
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.arc(
-                c.x + r * 0.5,
-                c.y + r * 0.5,
-                r * 0.55 * 0.5,
-                Math.PI / 4,
-                -Math.PI * (3 / 4),
-                true
-            )
-            geoCanvas.ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), true)
+            ctx.stroke()
         }
 
         //bright part
-        geoCanvas.ctx.strokeStyle = this.colBright
+        ctx.strokeStyle = this.colBright
         for (let c of cells) {
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.arc(
-                c.x + r * 0.5,
-                c.y + r * 0.5,
-                r * 0.55 * 0.5,
-                Math.PI / 4,
-                -Math.PI * (3 / 4),
-                false
-            )
-            geoCanvas.ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(c.x + r * 0.5, c.y + r * 0.5, r * 0.55 * 0.5, Math.PI / 4, -Math.PI * (3 / 4), false)
+            ctx.stroke()
         }
     }
 }

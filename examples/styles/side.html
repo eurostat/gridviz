@@ -1,41 +1,59 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz side example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
-        z: 1500,
-        backgroundColor: '#ede4cc',
-    }).addZoomButtons()
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2900000,
+                z: 1500,
+                backgroundColor: '#ede4cc',
+            }).addZoomButtons()
 
-    //define dataset
-    const dataset = new gridviz.CSVGrid(
-        map,
-        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
-        10000
-    )
+            //define dataset
+            const dataset = new gridviz.CSVGrid(
+                map,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
+            )
 
-    //define style
-    const sideValue = (side) => (+side.c2?.population || 0) - (+side.c1?.population || 0)
-    const scale = gridviz.powerScale(0.6)
-    const style = new gridviz.SideStyle({
-        color: (side) => {
-            //color is either black or white depending on the value difference and the segment orientation
-            const value = sideValue(side)
-            if (value > 0 && side.or === 'h') return 'black'
-            if (value < 0 && side.or === 'v') return 'black'
-            return 'white'
-        },
-        width: (side, resolution, z) => {
-            //the larger the difference, the wider the segment
-            const t = Math.abs(sideValue(side)) / 80000
-            return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * scale(t)
-        },
-        length: (side, resolution) => resolution * 0.9,
-    })
+            //define style
+            const sideValue = (side) => (+side.c2?.population || 0) - (+side.c1?.population || 0)
+            const scale = gridviz.powerScale(0.6)
+            const style = new gridviz.SideStyle({
+                color: (side) => {
+                    //color is either black or white depending on the value difference and the segment orientation
+                    const value = sideValue(side)
+                    if (value > 0 && side.or === 'h') return 'black'
+                    if (value < 0 && side.or === 'v') return 'black'
+                    return 'white'
+                },
+                width: (side, resolution, z) => {
+                    //the larger the difference, the wider the segment
+                    const t = Math.abs(sideValue(side)) / 80000
+                    return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * scale(t)
+                },
+                length: (side, resolution) => resolution * 0.9,
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style])]
+        </script>
+    </body>
+</html>

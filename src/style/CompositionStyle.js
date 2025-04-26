@@ -66,6 +66,7 @@ export class CompositionStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -122,7 +123,7 @@ export class CompositionStyle extends Style {
                 for (let [column, color] of Object.entries(this.color)) {
                     if (type_ === 'agepyramid') {
                         //set category color
-                        geoCanvas.ctx.fillStyle = color
+                        ctx.fillStyle = color
 
                         //get category value
                         const val = cell[column]
@@ -132,13 +133,13 @@ export class CompositionStyle extends Style {
                         const wG = (sG * val) / maxVal
 
                         //draw bar
-                        geoCanvas.ctx.fillRect(xc + (resolution - wG) / 2, yc + cumul, wG, incr)
+                        ctx.fillRect(xc + (resolution - wG) / 2, yc + cumul, wG, incr)
 
                         //next height
                         cumul += incr
                     } else if (type_ === 'radar') {
                         //set category color
-                        geoCanvas.ctx.fillStyle = color
+                        ctx.fillStyle = color
 
                         //get categroy value
                         const val = cell[column]
@@ -149,17 +150,17 @@ export class CompositionStyle extends Style {
                         const rG = (sG / 2) * Math.sqrt(val / maxVal)
 
                         //draw angular sector
-                        geoCanvas.ctx.beginPath()
-                        geoCanvas.ctx.moveTo(xc, yc)
-                        geoCanvas.ctx.arc(xc, yc, rG, cumul - incr, cumul)
-                        geoCanvas.ctx.lineTo(xc, yc)
-                        geoCanvas.ctx.fill()
+                        ctx.beginPath()
+                        ctx.moveTo(xc, yc)
+                        ctx.arc(xc, yc, rG, cumul - incr, cumul)
+                        ctx.lineTo(xc, yc)
+                        ctx.fill()
 
                         //next angular sector
                         cumul += incr
                     } else if (type_ === 'halftone') {
                         //set category color
-                        geoCanvas.ctx.fillStyle = color
+                        ctx.fillStyle = color
 
                         //get categroy value
                         const val = cell[column]
@@ -169,15 +170,15 @@ export class CompositionStyle extends Style {
                         const rG = sG * 0.333 * Math.sqrt(val / maxVal)
 
                         //draw circle
-                        geoCanvas.ctx.beginPath()
-                        geoCanvas.ctx.arc(
+                        ctx.beginPath()
+                        ctx.arc(
                             xc + resolution * 0.25 * Math.cos(cumul),
                             yc + resolution * 0.25 * Math.sin(cumul),
                             rG,
                             0,
                             2 * Math.PI
                         )
-                        geoCanvas.ctx.fill()
+                        ctx.fill()
 
                         //next angular sector
                         cumul += incr
@@ -206,14 +207,14 @@ export class CompositionStyle extends Style {
                     if (!share || isNaN(share)) continue
 
                     //set color
-                    geoCanvas.ctx.fillStyle = color
+                    ctx.fillStyle = color
 
                     //draw symbol part
                     if (type_ === 'flag') {
                         //draw flag stripe
                         if (ori == 0) {
                             //horizontal
-                            geoCanvas.ctx.fillRect(
+                            ctx.fillRect(
                                 cell.x + d + offset.dx,
                                 cell.y + d + cumul * sG + offset.dy,
                                 sG,
@@ -221,7 +222,7 @@ export class CompositionStyle extends Style {
                             )
                         } else {
                             //vertical
-                            geoCanvas.ctx.fillRect(
+                            ctx.fillRect(
                                 cell.x + d + cumul * sG + offset.dx,
                                 cell.y + d + offset.dy,
                                 share * sG,
@@ -236,11 +237,11 @@ export class CompositionStyle extends Style {
                         const a2 = (cumul + share) * 2 * Math.PI
 
                         //draw
-                        geoCanvas.ctx.beginPath()
-                        geoCanvas.ctx.moveTo(xc, yc)
-                        geoCanvas.ctx.arc(xc, yc, sG * 0.5, a1 + offAng, a2 + offAng)
+                        ctx.beginPath()
+                        ctx.moveTo(xc, yc)
+                        ctx.arc(xc, yc, sG * 0.5, a1 + offAng, a2 + offAng)
                         if (this.pieChartInternalRadiusFactor)
-                            geoCanvas.ctx.arc(
+                            ctx.arc(
                                 xc,
                                 yc,
                                 sG * 0.5 * this.pieChartInternalRadiusFactor,
@@ -248,19 +249,19 @@ export class CompositionStyle extends Style {
                                 a2 + offAng,
                                 true
                             )
-                        geoCanvas.ctx.closePath()
-                        geoCanvas.ctx.fill()
+                        ctx.closePath()
+                        ctx.fill()
                     } else if (type_ === 'ring') {
                         //draw ring
-                        geoCanvas.ctx.beginPath()
-                        geoCanvas.ctx.arc(xc, yc, Math.sqrt(1 - cumul) * sG * 0.5, 0, 2 * Math.PI)
-                        geoCanvas.ctx.fill()
+                        ctx.beginPath()
+                        ctx.arc(xc, yc, Math.sqrt(1 - cumul) * sG * 0.5, 0, 2 * Math.PI)
+                        ctx.fill()
                     } else if (type_ === 'segment') {
                         //draw segment sections
                         const wG = (sG * sG) / resolution
                         if (ori == 0) {
                             //horizontal
-                            geoCanvas.ctx.fillRect(
+                            ctx.fillRect(
                                 cell.x + offset.dx,
                                 cell.y + (resolution - wG) / 2 + cumul * wG + offset.dy,
                                 resolution,
@@ -268,7 +269,7 @@ export class CompositionStyle extends Style {
                             )
                         } else {
                             //vertical
-                            geoCanvas.ctx.fillRect(
+                            ctx.fillRect(
                                 cell.x + cumul * resolution + offset.dx,
                                 cell.y + (resolution - wG) / 2 + offset.dy,
                                 share * resolution,

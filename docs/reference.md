@@ -5,7 +5,16 @@
 -   [Gridviz API reference](#gridviz-api-reference)
     -   [Table of contents](#table-of-contents)
     -   [Concepts](#concepts)
+    -   [Defining the map](#defining-the-map)
     -   [Adding data](#adding-data)
+        -   [Layers](#layers)
+            -   [GridLayer](#gridlayer)
+            -   [BackgroundLayer](#backgroundlayer)
+            -   [BackgroundLayerImage](#backgroundlayerimage)
+            -   [BackgroundLayerWMS](#backgroundlayerwms)
+            -   [GeoJSONLayer](#geojsonlayer)
+            -   [LabelLayer](#labellayer)
+    -   [Filtering and formatting data](#filtering-and-formatting-data)
     -   [Basic styles](#basic-styles)
         -   [Shape/Color/Size Style](#shapecolorsize-style)
         -   [Square color WebGL Style](#square-color-webgl-style)
@@ -82,6 +91,64 @@ Here are few concepts on Gridviz to be aware of:
 
 11. A grid layer shows gridded data in the grid coordinate reference system. Several gridded datasets may be overlayed, as soon as they are defined in the same coordinate reference system. Other layers (background, labels, etc.) must be defined also in the grid coordinate reference system.
 
+## Defining the map
+
+When building a gridviz map, in addition to the container element you can also specify an options object with the properties outlined in the table below.
+
+For example:
+
+```javascript
+new gridviz.Map(document.getElementById('map'), {
+    x: 4500000,
+    y: 2900000,
+    z: 1000,
+    legendContainer: document.getElementById('myLegendDiv'), // if you want your legend in an external container
+    selectionRectangleColor: 'red', // cell hover
+    selectionRectangleWidthPix: (resolution, z) => '1',
+    backgroundColor: 'white',
+    tooltip: {
+        fontSize: '1.2em',
+        transitionDuration: 100,
+        maxWidth: '20em'
+        fontSize:'1.2em'
+        background :  'white'
+        padding: '5px'
+        border :'0px'
+        'border-radius' : '0px'
+        'box-shadow' : '5px 5px 5px grey'
+        'font-family' :'Helvetica, Arial, sans-serif'
+        transitionDuration : 100
+        xOffset:  30
+        yOffset:  20
+        yMouseOffset : 0
+        xMouseOffset : 0
+        parentElement : document.body
+    },
+    onZoomStartFun: (event) => {
+        console.log('pan/zoom start', event)
+    },
+    onZoomFun: (event) => {
+        console.log('zoom', event)
+    },
+    onZoomEndFun: (event) => {
+        console.log('pan/zoom end', event)
+    },
+})
+```
+
+| Property                              | Type     | Default      | Description                                                                                                                                                         |
+| ------------------------------------- | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _opts_.**legendDivId**                | string   | 'gvizLegend' | The identifier of the element upon which the legend will be appended.                                                                                               |
+| _opts_.**selectionRectangleColor**    | string   | 'red'        | The colour of the outline when a cell is highlighted.                                                                                                               |
+| _opts_.**selectionRectangleWidthPix** | Function | (r,z) => 4   | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _z_ is the zoom level.  |
+| _opts_.**transparentbackground**      | boolean  | false        | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
+| _opts_.**backgroundColor**            | string   | 'white'      | The background color of the canvas when transparentBackground is set to false.                                                                                      |
+| _opts_.**disableZoom**                | Boolean  | false        | Disables d3 pan and zoom when set to true.                                                                                                                          |
+| _opts_.**onZoomStartFun**             | Function | null         | Event handler for when a pan/zoom event is initiated.                                                                                                               |
+| _opts_.**onZoomFun**                  | Function | null         | Event handler for when a pan/zoom event is occurring.                                                                                                               |
+| _opts_.**onZoomEndFun**               | Function | null         | Event handler for when a pan/zoom event has finished.                                                                                                               |
+| _opts_.**tooltip**                    | Object   | undefined    | See [tooltip](#tooltip)                                                                                                                                             |
+
 ## Adding data
 
 A gridviz dataset defines how to retrieve gridded data, as a list of grid cells. A grid cell is stored as a javascript object having a **x** and **y** property, which is usually the coordinates of the grid cell lower left corner in the grid coordinate reference system. The **x** and **y** values are usually multiples of the grid resolution value.
@@ -103,6 +170,94 @@ Gridviz can also show tiled data. This ensures only the data within the viewshed
 For [Parquet](https://parquet.apache.org/) data support, see the [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/).
 
 For better efficiency, it is recommended to use multi-resolution tiled parquet data.
+
+### Layers
+
+There are a few different types of layers that can be added to a gridviz map:
+Once you have constructed them, simply add them to the map like so:
+
+```javascript
+map.layers = [yourLayer] // they will be drawn in order
+```
+
+#### GridLayer
+
+```javascript
+new gridviz.GridLayer(dataset, [style], {
+    minPixelsPerCell: 12, //optional
+})
+```
+
+#### BackgroundLayer
+
+```javascript
+const backgroundLayer = new gridviz.BackgroundLayer({
+    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+    resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+    origin: [0, 6000000],
+    filterColor: (z) => '#ffffff77',
+})
+```
+
+#### BackgroundLayerImage
+
+```javascript
+const backgroundLayer = new gridviz.BackgroundLayerImage({
+    //the image URL
+    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/img/reunion_relief_100k.png',
+
+    //the georeferencing information:
+    // - geo coordinates of the top left corner
+    // - the image width and heigth in geo unit (meters). It is the image width/heigth in pixel multiplied by the resolution (meters/pixel)
+    xMin: 314686,
+    yMax: 7691260,
+    width: 64590.2,
+    height: 57178.2,
+})
+```
+
+#### BackgroundLayerWMS
+
+```javascript
+const backgroundLayer = new gridviz.BackgroundLayerWMS({
+    url: 'yourWMSserver?&service=WMS&request=GetMap&layers=yourLayers&styles=&format=image%2Fjpeg',
+})
+```
+
+#### GeoJSONLayer
+
+```javascript
+const pointLayer = new gridviz.GeoJSONLayer({
+    url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/nutspt_3.json',
+    shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
+    size: (f, z) => Math.max(2, 10000 / z),
+    strokeStyle: (f, z) => 'black',
+    fillStyle: (f, z) => 'red',
+    lineWidth: (f, z) => (z < 2000 ? 2 : 0),
+})
+```
+
+#### LabelLayer
+
+```javascript
+const labelLayer = new gridviz.LabelLayer({
+    url: 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v3/UTF_LATIN/50/EUR.csv', //The URL of the label data, as CSV file.
+    preprocess: (label) => {
+        //project from geo coordinates to ETRS89-LAEA
+        const p = proj([label.lon, label.lat])
+        label.x = p[0]
+        label.y = p[1]
+        delete label.lon
+        delete label.lat
+    },
+    style: (label, zoom) => {
+        if (label.rs < 0.9 * zoom) return
+        if (label.r1 < 0.9 * zoom) return '1em Arial'
+        return '1.5em Arial'
+    },
+    haloColor: () => 'white',
+})
+```
 
 ## Filtering and formatting data
 
@@ -132,7 +287,7 @@ This style is a generic style which allows to define the **shape**, **color** an
 [![square color webgl style](img/styles/squarecolorwgl_pop.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html)
 [![square color webgl style](img/styles/squarecolorwgl_dark.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
 
-This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
+This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailed resolutions.
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl.html)).
 -   See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl_dark.html)).
@@ -141,15 +296,15 @@ This style displays each cell as a square, with a changing color. This style use
 
 [![square color webgl category style](img/styles/squarecolorcatwgl_lc.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html)
 
-This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
+This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailed resolutions.
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorcatwgl.html)).
 
 ### Composition style
 
-![composition style](img/styles/composition_flag.png)
+[![composition style](img/styles/composition_flag.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_piechart.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
-![composition style](img/styles/composition_ring.png)
+[![composition style](img/styles/composition_ring.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_halftone.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_random.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 

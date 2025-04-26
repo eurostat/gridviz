@@ -31,8 +31,8 @@ export class Style extends Drawable {
 
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
          * @protected
-         * @type {function(import('./Dataset').Cell):boolean} */
-        this.filter = opts.filter || (() => true)
+         * @type {(function(import('./Dataset').Cell):boolean) | undefined} */
+        this.filter = opts.filter || undefined
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected

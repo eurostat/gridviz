@@ -59,6 +59,8 @@ export class DotDensityStyle extends Style {
         const sig = this.sigma ? this.sigma(resolution, z, viewScale) : resolution * 0.4
         const rand = randomNormal(0, sig)
 
+        const ctx = geoCanvas.offscreenCtx
+
         if (checkWebGLSupport()) {
             //create canvas and webgl renderer
             const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
@@ -101,14 +103,14 @@ export class DotDensityStyle extends Style {
 
             //draw in canvas geo
             geoCanvas.initCanvasTransform()
-            geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
+            ctx.drawImage(cvWGL.canvas, 0, 0)
         } else {
             for (let cell of cells) {
                 //get color
                 const col = this.color(cell, resolution, z, viewScale)
                 if (!col || col === 'none') continue
                 //set color
-                geoCanvas.ctx.fillStyle = col
+                ctx.fillStyle = col
 
                 //number of dots
                 const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
@@ -120,7 +122,7 @@ export class DotDensityStyle extends Style {
                 const cx = cell.x + offset.dx + resolution / 2,
                     cy = cell.y + offset.dy + resolution / 2
                 for (let i = 0; i <= dotNumber; i++) {
-                    geoCanvas.ctx.fillRect(cx + rand(), cy + rand(), sGeo, sGeo)
+                    ctx.fillRect(cx + rand(), cy + rand(), sGeo, sGeo)
                 }
             }
         }

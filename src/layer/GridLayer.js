@@ -46,6 +46,7 @@ export class GridLayer extends Layer {
     draw(geoCanvas, legend) {
         //get zoom level
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get layer dataset component
         /** @type {import('../core/Dataset.js').Dataset|undefined} */
@@ -65,8 +66,8 @@ export class GridLayer extends Layer {
 
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?
-            geoCanvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
-            if (s.blendOperation) geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
+            ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
+            if (s.blendOperation) ctx.globalCompositeOperation = s.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             geoCanvas.setCanvasTransform()

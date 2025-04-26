@@ -46,22 +46,37 @@ export class Map {
         /** @type {number} */
         this.h = opts.h || this.container.offsetHeight
 
-        //create canvas element if not specified
+        // Create the main canvas (for rendering to screen)
         /** @type {HTMLCanvasElement} */
         this._canvas = opts.canvas || this.initialiseCanvas()
 
-        /** Make geo canvas
+        /**  Initialize GeoCanvas
          * @type {GeoCanvas}
          * @private */
         this.geoCanvas = new GeoCanvas(this._canvas, opts.x, opts.y, opts.z, opts)
+
         this.geoCanvas.redraw = () => {
             this.redraw()
         }
+        this.geoCanvas.cancelCurrentRequests = () => {
+            // when the zoom level changes, avoid drawing outdated tiles, and ensure that requests are properly aborted when necessary
+            for (const layer of this.layers) {
+                //multires
+                if (layer.dataset?.datasets) {
+                    for (const dataset of layer.dataset?.datasets) {
+                        if (dataset?.cancelCurrentRequests) dataset.cancelCurrentRequests()
+                    }
+                }
+                //single res
+                if (layer.dataset?.cancelCurrentRequests) layer.dataset?.cancelCurrentRequests()
+            }
+        }
 
         // legend div
-        this.legendDivId = opts.legendDivId || 'gvizLegend'
-        this.legend = select('#' + this.legendDivId)
-        if (this.legend.empty()) this.initialiseLegend()
+        this.legend = opts.legendContainer
+            ? select(opts.legendContainer) // Wrap the provided HTML node in a D3 selection
+            : null
+        if (!this.legend) this.initialiseLegend()
 
         //tooltip
 
@@ -82,6 +97,9 @@ export class Map {
         this.geoCanvas.canvas.addEventListener('mousemove', this.mouseMoveHandler)
         this.geoCanvas.canvas.addEventListener('mouseout', this.mouseOutHandler)
 
+        // listen for resize events on the App's container and handle them
+        this.defineResizeObserver()
+
         // add extra logic to onZoomStartFun
         this.geoCanvas.onZoomStartFun = (e) => {
             if (opts.onZoomStartFun) opts.onZoomStartFun(e)
@@ -94,7 +112,7 @@ export class Map {
          * @type {HTMLCanvasElement|null} */
         this.canvasSave = null
 
-        this.selectionRectangleColor = opts.selectionRectangleColor || 'red'
+        this.selectionRectangleColor = opts.selectionRectangleColor || '#FF6347'
         this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || (() => 4) //(r,z) => {}
 
         // transparent background (e.g. leaflet) 'red painting' fix
@@ -118,9 +136,9 @@ export class Map {
     }
 
     initialiseLegend() {
-        this.legend = select(this.container.id && this.container.id != '' ? '#' + this.container.id : 'body')
-            .append('div')
-            .attr('id', this.legendDivId)
+        this.legend = select(this.container)
+            .append('div') // Create a new container
+            .attr('id', 'gridviz-legend')
             .style('position', 'absolute')
             .style('width', 'auto')
             .style('height', 'auto')
@@ -169,8 +187,8 @@ export class Map {
             if (layer.visible && !layer.visible(z)) continue
 
             //set layer alpha and blend mode
-            this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-            if (layer.blendOperation) this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
+            this.geoCanvas.offscreenCtx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
+            if (layer.blendOperation) this.geoCanvas.offscreenCtx.globalCompositeOperation = layer.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
@@ -182,15 +200,15 @@ export class Map {
             if (layer.filterColor) layer.drawFilter(this.geoCanvas)
 
             //restore default alpha and blend operation
-            this.geoCanvas.ctx.globalAlpha = 1.0
-            this.geoCanvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
+            this.geoCanvas.offscreenCtx.globalAlpha = 1.0
+            this.geoCanvas.offscreenCtx.globalCompositeOperation = this.defaultGlobalCompositeOperation
         }
 
-        //
-        this.canvasSave = null
+        // one drawImage call: draw the offscreen canvas to the main canvas
+        this.geoCanvas.initCanvasTransform()
+        this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
 
-        // listen for resize events on the App's container and handle them
-        this.defineResizeObserver(this.container, this._canvas)
+        this.canvasSave = null
 
         return this
     }
@@ -241,9 +259,9 @@ export class Map {
                 this.canvasSave = document.createElement('canvas')
                 this.canvasSave.setAttribute('width', '' + this.w)
                 this.canvasSave.setAttribute('height', '' + this.h)
-                this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.canvas, 0, 0)
+                this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
             } else {
-                this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
+                this.geoCanvas.offscreenCtx.drawImage(this.canvasSave, 0, 0)
             }
 
             //draw image saved + draw rectangle
@@ -251,17 +269,19 @@ export class Map {
                 ? this.selectionRectangleWidthPix(focus.resolution, this.geoCanvas.view.z)
                 : 4
             this.geoCanvas.initCanvasTransform()
-            this.geoCanvas.ctx.strokeStyle = this.selectionRectangleColor
-            this.geoCanvas.ctx.lineWidth = rectWPix
-            this.geoCanvas.ctx.beginPath()
+            const ctx = this.geoCanvas.offscreenCtx
+            ctx.strokeStyle = this.selectionRectangleColor
+            ctx.lineWidth = rectWPix
+            ctx.beginPath()
 
-            this.geoCanvas.ctx.rect(
+            ctx.rect(
                 this.geoCanvas.geoToPixX(focus.cell.x) - rectWPix / 2,
                 this.geoCanvas.geoToPixY(focus.cell.y) + rectWPix / 2,
                 focus.resolution / this.geoCanvas.view.z + rectWPix,
                 -focus.resolution / this.geoCanvas.view.z - rectWPix
             )
-            this.geoCanvas.ctx.stroke()
+            ctx.stroke()
+            this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
         } else {
             this.tooltip.hide()
             if (this.canvasSave) this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
@@ -283,8 +303,8 @@ export class Map {
             /** @type {import("./Layer.js").Layer} */
             const layer = this.layers[i]
             if (layer.visible && !layer.visible(z)) continue
+            if (layer.cellInfoHTML === 'none') continue // this is necessary in order to not show tooltips for layers 'on top' (e.g. population circles on top of squares)
             if (!layer.cellInfoHTML) continue
-            //if (layer.cellInfoHTML === 'none') continue
             if (!layer.getDataset) continue
             const dsc = layer.getDataset(z)
             if (!dsc) continue
@@ -381,7 +401,7 @@ export class Map {
 
         this.zoomButtons = new ZoomButtons({
             map: this,
-            id: opts?.id || 'gridviz-zoom-buttons',
+            id: opts?.id || 'gridviz-zoom-buttons-' + this.container.id,
             class: opts?.class,
             x: opts?.x,
             y: opts?.y,
@@ -423,40 +443,50 @@ export class Map {
 
     /**
      * @description Add a resize event observer to the Apps container and update the canvas accordingly
-     * @param {HTMLDivElement} container The App's container element
-     * @param {HTMLCanvasElement} canvas The App canvas element
      * @memberof App
      */
-    defineResizeObserver(container, canvas) {
-        // listen to resize events
-        const resizeObserver = new ResizeObserver((entries) => {
-            // make sure canvas has been built
-            if (container.clientWidth > 0 && container.clientHeight > 0) {
-                // make sure we dont exceed loop limit first
-                // see: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
-                window.requestAnimationFrame(() => {
-                    if (!Array.isArray(entries) || !entries.length) {
-                        return
-                    }
-                    // update the map and canvas size
-                    if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
-                        this.h = container.clientHeight
-                        this.w = container.clientWidth
-                        this.geoCanvas.h = container.clientHeight
-                        this.geoCanvas.w = container.clientWidth
-                        canvas.setAttribute('width', '' + this.w)
-                        canvas.setAttribute('height', '' + this.h)
-                        this.redraw()
+    defineResizeObserver() {
+        // Track whether the observer is currently processing a resize event
+        let resizePending = false
 
-                        //update button positions
-                        // if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px'
-                        // if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px'
-                    }
-                })
+        const resizeObserver = new ResizeObserver((entries) => {
+            if (!Array.isArray(entries) || !entries.length) return
+
+            let container = this.container
+
+            // Ensure the container has valid dimensions
+            if (container.clientWidth > 0 && container.clientHeight > 0) {
+                if (!resizePending) {
+                    resizePending = true // Prevent overlapping resize triggers
+
+                    window.requestAnimationFrame(() => {
+                        resizePending = false // Reset the flag after processing
+
+                        // Check for size changes
+                        if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
+                            this.h = container.clientHeight
+                            this.w = container.clientWidth
+
+                            // Update geoCanvas sizes
+                            this.geoCanvas.h = this.h
+                            this.geoCanvas.w = this.w
+                            this.geoCanvas.canvas.setAttribute('width', String(this.w))
+                            this.geoCanvas.canvas.setAttribute('height', String(this.h))
+                            this.geoCanvas.offscreenCanvas.setAttribute('width', String(this.w))
+                            this.geoCanvas.offscreenCanvas.setAttribute('height', String(this.h))
+
+                            this.redraw()
+
+                            // Optionally reposition UI elements
+                            // if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px';
+                            // if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px';
+                        }
+                    })
+                }
             }
         })
 
-        resizeObserver.observe(container)
+        resizeObserver.observe(this.container)
     }
 
     /**

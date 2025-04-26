@@ -97,13 +97,14 @@ export class LabelLayer extends Layer {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //text align
-        geoCanvas.ctx.textAlign = this.textAlign || 'start'
+        ctx.textAlign = this.textAlign || 'start'
 
         //line join and cap
-        geoCanvas.ctx.lineJoin = 'bevel' //|| "round" || "miter";
-        geoCanvas.ctx.lineCap = 'butt' //|| "round" || "square";
+        ctx.lineJoin = 'bevel' //|| "round" || "miter";
+        ctx.lineCap = 'butt' //|| "round" || "square";
 
         //draw in pix coordinates
         geoCanvas.initCanvasTransform()
@@ -113,7 +114,7 @@ export class LabelLayer extends Layer {
             //get label style
             const st = this.style(lb, z)
             if (!st) continue
-            geoCanvas.ctx.font = st
+            ctx.font = st
 
             //check label within the view, to be drawn
             if (!geoCanvas.toDraw(lb)) continue
@@ -127,9 +128,9 @@ export class LabelLayer extends Layer {
                 const hc = this.haloColor(lb, z)
                 const hw = this.haloWidth(lb, z)
                 if (hc && hw && hw > 0) {
-                    geoCanvas.ctx.strokeStyle = hc
-                    geoCanvas.ctx.lineWidth = hw
-                    geoCanvas.ctx.strokeText(lb.name, xP, yP)
+                    ctx.strokeStyle = hc
+                    ctx.lineWidth = hw
+                    ctx.strokeText(lb.name, xP, yP)
                 }
             }
 
@@ -137,8 +138,8 @@ export class LabelLayer extends Layer {
             if (this.color) {
                 const col = this.color(lb, z)
                 if (col) {
-                    geoCanvas.ctx.fillStyle = col
-                    geoCanvas.ctx.fillText(lb.name, xP, yP)
+                    ctx.fillStyle = col
+                    ctx.fillText(lb.name, xP, yP)
                 }
             }
         }

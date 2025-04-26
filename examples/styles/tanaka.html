@@ -1,23 +1,41 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz tanaka example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 2000 })
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 2000 })
 
-    //define dataset
-    const dataset = new gridviz.TiledGrid(
-        map,
-        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/5000m/'
-    )
+            //define dataset
+            const dataset = new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/5000m/'
+            )
 
-    //define style
-    const styles = gridviz.TanakaStyle.get(
-        (cell) => cell.elevation,
-        [100, 200, 500, 1000, 2000],
-        ['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#d95f0e', '#993404']
-    )
+            //define style
+            const styles = gridviz.TanakaStyle.get(
+                (cell) => cell.elevation,
+                [100, 200, 500, 1000, 2000],
+                ['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#d95f0e', '#993404']
+            )
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, styles)]
-</script>
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, styles)]
+        </script>
+    </body>
+</html>

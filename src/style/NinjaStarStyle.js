@@ -40,6 +40,7 @@ export class NinjaStarStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -49,7 +50,7 @@ export class NinjaStarStyle extends Style {
             //color
             const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
-            geoCanvas.ctx.fillStyle = col
+            ctx.fillStyle = col
 
             //size - in geo unit
             let k = this.size(cell, resolution, z, viewScale)
@@ -69,27 +70,27 @@ export class NinjaStarStyle extends Style {
             const cy = cell.y + r2
 
             if (shape === 'p') {
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cx, cy + r2)
-                geoCanvas.ctx.lineTo(cx + sG2, cy + sG2)
-                geoCanvas.ctx.lineTo(cx + r2, cy)
-                geoCanvas.ctx.lineTo(cx + sG2, cy - sG2)
-                geoCanvas.ctx.lineTo(cx, cy - r2)
-                geoCanvas.ctx.lineTo(cx - sG2, cy - sG2)
-                geoCanvas.ctx.lineTo(cx - r2, cy)
-                geoCanvas.ctx.lineTo(cx - sG2, cy + sG2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(cx, cy + r2)
+                ctx.lineTo(cx + sG2, cy + sG2)
+                ctx.lineTo(cx + r2, cy)
+                ctx.lineTo(cx + sG2, cy - sG2)
+                ctx.lineTo(cx, cy - r2)
+                ctx.lineTo(cx - sG2, cy - sG2)
+                ctx.lineTo(cx - r2, cy)
+                ctx.lineTo(cx - sG2, cy + sG2)
+                ctx.fill()
             } else if (shape === 'o') {
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cx, cy + sG2)
-                geoCanvas.ctx.lineTo(cx + r2, cy + r2)
-                geoCanvas.ctx.lineTo(cx + sG2, cy)
-                geoCanvas.ctx.lineTo(cx + r2, cy - r2)
-                geoCanvas.ctx.lineTo(cx, cy - sG2)
-                geoCanvas.ctx.lineTo(cx - r2, cy - r2)
-                geoCanvas.ctx.lineTo(cx - sG2, cy)
-                geoCanvas.ctx.lineTo(cx - r2, cy + r2)
-                geoCanvas.ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(cx, cy + sG2)
+                ctx.lineTo(cx + r2, cy + r2)
+                ctx.lineTo(cx + sG2, cy)
+                ctx.lineTo(cx + r2, cy - r2)
+                ctx.lineTo(cx, cy - sG2)
+                ctx.lineTo(cx - r2, cy - r2)
+                ctx.lineTo(cx - sG2, cy)
+                ctx.lineTo(cx - r2, cy + r2)
+                ctx.fill()
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }

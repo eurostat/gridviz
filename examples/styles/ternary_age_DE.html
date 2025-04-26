@@ -1,90 +1,108 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz ternary example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4301000, y: 3050000, z: 400 })
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), { x: 4301000, y: 3050000, z: 400 })
 
-    //define dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
-        (resolution) =>
-            new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/ALTER_KURZcsv/' +
-                    resolution +
-                    'm/'
-            ),
-        {
-            preprocess: (c) => {
-                /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
-                //total
-                c.TOT = 0
-                for (let i = 1; i <= 5; i++) c.TOT += +c[i]
-                //define 3 age groups:
-                //<18
-                c.yo = +c['1']
-                //between
-                c.mi = +c['2'] + +c['3'] + +c['4']
-                //>65
-                c.ol = +c['5']
-            },
-        }
-    )
+            //define dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/ALTER_KURZcsv/' +
+                            resolution +
+                            'm/'
+                    ),
+                {
+                    preprocess: (c) => {
+                        /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
+                        //total
+                        c.TOT = 0
+                        for (let i = 1; i <= 5; i++) c.TOT += +c[i]
+                        //define 3 age groups:
+                        //<18
+                        c.yo = +c['1']
+                        //between
+                        c.mi = +c['2'] + +c['3'] + +c['4']
+                        //>65
+                        c.ol = +c['5']
+                    },
+                }
+            )
 
-    //define ternary classifier
-    const ternaryClassifier = gridviz.ternaryColorClassifier(
-        //the three groups
-        ['yo', 'mi', 'ol'],
-        //the function returning the total of the three
-        (c) => c.TOT,
-        //the colors
-        ['#4daf4a', '#377eb8', '#e41a1c'],
-        {
-            //the center point of the ternary classification
-            center: [0.17, 0.63, 0.2],
-            //the size of the central class
-            centerCoefficient: 0.15,
-        }
-    )
+            //define ternary classifier
+            const ternaryClassifier = gridviz.ternaryColorClassifier(
+                //the three groups
+                ['yo', 'mi', 'ol'],
+                //the function returning the total of the three
+                (c) => c.TOT,
+                //the colors
+                ['#4daf4a', '#377eb8', '#e41a1c'],
+                {
+                    //the center point of the ternary classification
+                    center: [0.17, 0.63, 0.2],
+                    //the size of the central class
+                    centerCoefficient: 0.15,
+                }
+            )
 
-    //define style
-    const classNumberSize = 4
-    const style = new gridviz.ShapeColorSizeStyle({
-        color: (c) => ternaryClassifier(c) || 'black',
-        viewScale: gridviz.viewScaleQuantile({
-            valueFunction: (c) => +c.TOT,
-            classNumber: classNumberSize,
-            minSizePix: 3,
-            maxSizeFactor: 1.1,
-        }),
-        size: (c, r, z, viewScale) => viewScale(c.TOT),
-        shape: () => 'circle',
-    })
+            //define style
+            const classNumberSize = 4
+            const style = new gridviz.ShapeColorSizeStyle({
+                color: (c) => ternaryClassifier(c) || 'black',
+                viewScale: gridviz.viewScaleQuantile({
+                    valueFunction: (c) => +c.TOT,
+                    classNumber: classNumberSize,
+                    minSizePix: 3,
+                    maxSizeFactor: 1.1,
+                }),
+                size: (c, r, z, viewScale) => viewScale(c.TOT),
+                shape: () => 'circle',
+            })
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 4 })]
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 4 })]
 
-    //legend
-    style.legends = [
-        new gridviz.TernaryLegend({
-            title: 'Predominant age group',
-            classifier: ternaryClassifier,
-            width: 90,
-            tooltip: map.tooltip,
-            texts: {
-                0: 'Over representation of persons aged <18',
-                1: 'Over representation of persons aged 18 to 64',
-                2: 'Over representation of persons aged >=65',
-                m12: 'Under representation of persons aged <18',
-                m02: 'Under representation of<br>persons aged 18 to 64',
-                m01: 'Under representation of persons aged >=65',
-                center: 'Balanced representation of age groups',
-            },
-            leftText: '<18',
-            topText: '18 to 64',
-            rightText: '>65',
-            centerCoefficient: 0.5,
-        }),
-    ]
-</script>
+            //legend
+            style.legends = [
+                new gridviz.TernaryLegend({
+                    title: 'Predominant age group',
+                    classifier: ternaryClassifier,
+                    width: 90,
+                    tooltip: map.tooltip,
+                    texts: {
+                        0: 'Over representation of persons aged <18',
+                        1: 'Over representation of persons aged 18 to 64',
+                        2: 'Over representation of persons aged >=65',
+                        m12: 'Under representation of persons aged <18',
+                        m02: 'Under representation of<br>persons aged 18 to 64',
+                        m01: 'Under representation of persons aged >=65',
+                        center: 'Balanced representation of age groups',
+                    },
+                    leftText: '<18',
+                    topText: '18 to 64',
+                    rightText: '>65',
+                    centerCoefficient: 0.5,
+                }),
+            ]
+        </script>
+    </body>
+</html>

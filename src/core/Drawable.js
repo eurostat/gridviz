@@ -54,7 +54,7 @@ export class Drawable {
         if (!fc || fc == 'none') return
 
         //draw filter
-        geoCanvas.ctx.fillStyle = fc
-        geoCanvas.ctx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
+        geoCanvas.offscreenCtx.fillStyle = fc
+        geoCanvas.offscreenCtx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
     }
 }

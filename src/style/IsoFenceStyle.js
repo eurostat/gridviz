@@ -60,6 +60,7 @@ export class IsoFenceStyle extends Style {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -108,23 +109,23 @@ export class IsoFenceStyle extends Style {
             //line style
             const lw = this.cornerLineWidth ? this.cornerLineWidth(cell, resolution, z, this.angle) : 0.8 * z
             if (lw == 0) return
-            geoCanvas.ctx.strokeStyle = this.cornerLineStrokeColor
+            ctx.strokeStyle = this.cornerLineStrokeColor
                 ? this.cornerLineStrokeColor(cell, resolution, z, this.angle)
                 : '#333'
-            geoCanvas.ctx.lineWidth = lw
+            ctx.lineWidth = lw
 
             //height - in geo
             const hG = this.height(cell, resolution, z, viewScale)
 
             //draw line
-            geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(cell.x + r2 + dx, cell.y + r2 + dy)
-            geoCanvas.ctx.lineTo(cell.x + r2 + hG * cos + dx, cell.y + r2 + hG * sin + dy)
-            geoCanvas.ctx.stroke()
+            ctx.beginPath()
+            ctx.moveTo(cell.x + r2 + dx, cell.y + r2 + dy)
+            ctx.lineTo(cell.x + r2 + hG * cos + dx, cell.y + r2 + hG * sin + dy)
+            ctx.stroke()
         }
 
         //draw sides
-        geoCanvas.ctx.lineCap = 'round'
+        ctx.lineCap = 'round'
         for (let side of sides) {
             const c1 = side.c1,
                 c2 = side.c2,
@@ -157,33 +158,33 @@ export class IsoFenceStyle extends Style {
                 const h2n = (hG2 * (cumul2 + v2)) / total2 || 0
 
                 //make path
-                geoCanvas.ctx.beginPath()
+                ctx.beginPath()
                 if (side.or == 'h') {
                     //horizontal side - vertical section
                     //bottom left
-                    geoCanvas.ctx.moveTo(x + h1 * cos + dx, y - r2 + h1 * sin + dy)
+                    ctx.moveTo(x + h1 * cos + dx, y - r2 + h1 * sin + dy)
                     //top left
-                    geoCanvas.ctx.lineTo(x + h2 * cos + dx, y + r2 + h2 * sin + dy)
+                    ctx.lineTo(x + h2 * cos + dx, y + r2 + h2 * sin + dy)
                     //top right
-                    geoCanvas.ctx.lineTo(x + h2n * cos + dx, y + r2 + h2n * sin + dy)
+                    ctx.lineTo(x + h2n * cos + dx, y + r2 + h2n * sin + dy)
                     //bottom right
-                    geoCanvas.ctx.lineTo(x + h1n * cos + dx, y - r2 + h1n * sin + dy)
+                    ctx.lineTo(x + h1n * cos + dx, y - r2 + h1n * sin + dy)
                 } else {
                     //vertical side - horizontal section
                     //bottom left
-                    geoCanvas.ctx.moveTo(x - r2 + h1 * cos + dx, y + h1 * sin + dy)
+                    ctx.moveTo(x - r2 + h1 * cos + dx, y + h1 * sin + dy)
                     //bottom right
-                    geoCanvas.ctx.lineTo(x + r2 + h2 * cos + dx, y + h2 * sin + dy)
+                    ctx.lineTo(x + r2 + h2 * cos + dx, y + h2 * sin + dy)
                     //top right
-                    geoCanvas.ctx.lineTo(x + r2 + h2n * cos + dx, y + h2n * sin + dy)
+                    ctx.lineTo(x + r2 + h2n * cos + dx, y + h2n * sin + dy)
                     //top left
-                    geoCanvas.ctx.lineTo(x - r2 + h1n * cos + dx, y + h1n * sin + dy)
+                    ctx.lineTo(x - r2 + h1n * cos + dx, y + h1n * sin + dy)
                 }
                 //cg.ctx.closePath()
 
                 //fill
-                geoCanvas.ctx.fillStyle = color
-                geoCanvas.ctx.fill()
+                ctx.fillStyle = color
+                ctx.fill()
 
                 cumul1 += v1
                 cumul2 += v2

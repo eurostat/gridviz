@@ -1,4 +1,4 @@
-<div id="map" style="height: 500px; width: 800px"></div>
+<div id="map" style="height: 100%; width: 100%"></div>
 
 <script src="../../dist/gridviz.js"></script>
 <script>
@@ -25,6 +25,7 @@
     const customStyle = new gridviz.Style({
         //define draw function
         drawFun: (cells, geoCanvas, resolution) => {
+            const ctx = geoCanvas.offscreenCtx
             //draw each cell as an arrow
             //with a fill color depending on the property "TOT_P_2021"
             for (let cell of cells) {
@@ -33,19 +34,19 @@
 
                 //set fill color as a shade from cyan to red depending on "TOT_P_2021" property
                 const t = Math.floor((255 * Math.round(Math.pow(cell.TOT_P_2021 / 1000000, 0.2) * 6)) / 6)
-                geoCanvas.ctx.fillStyle = 'rgb(' + t + ',' + (255 - t) + ',' + (255 - t) + ')'
+                ctx.fillStyle = 'rgb(' + t + ',' + (255 - t) + ',' + (255 - t) + ')'
 
                 //fill arrow
-                geoCanvas.ctx.beginPath()
+                ctx.beginPath()
                 //left point
-                geoCanvas.ctx.moveTo(cell.x, cell.y)
+                ctx.moveTo(cell.x, cell.y)
                 //bottom center point
-                geoCanvas.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
+                ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
                 //right point
-                geoCanvas.ctx.lineTo(cell.x + resolution, cell.y)
+                ctx.lineTo(cell.x + resolution, cell.y)
                 //top center point
-                geoCanvas.ctx.lineTo(cell.x + resolution / 2, cell.y + (resolution * 4) / 3)
-                geoCanvas.ctx.fill()
+                ctx.lineTo(cell.x + resolution / 2, cell.y + (resolution * 4) / 3)
+                ctx.fill()
             }
         },
     })

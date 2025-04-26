@@ -3,9 +3,10 @@
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/gridviz)
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
+[![Mentioned in Awesome Official Statistics ](https://awesome.re/mentioned-badge.svg)](http://www.awesomeofficialstatistics.org)
 
 <p align="center" style="height: 350px;">
-    <img src="docs/img/banner.png">
+    <img src="docs/img/gif/gridviz-annotated.gif">
 </p>
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser using a large variety of [cartographic styles and techniques](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md). Unlike traditional raster-based web mapping tools, Gridviz renders everything client-side, on the fly.
@@ -28,14 +29,12 @@
 
 ## Live Demos
 
--   [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/demos/EUR.html)
--   [Germany - 100m resolution - Zensus 2011](https://eurostat.github.io/gridviz/examples/demos/DE.html)
--   [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/demos/FR.html). Focus on [total population](https://eurostat.github.io/gridviz/examples/demos/FR_pop.html) and [income](https://eurostat.github.io/gridviz/examples/demos/FR_income.html).
--   [Norway - 250m resolution - SSB](https://eurostat.github.io/gridviz/examples/demos/NO.html)
--   [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/demos/HR.html)
--   [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
--   [Europe population as a mosaic](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
--   [Belgium population](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html), as mixed resolution layer.
+-   [**Europe** - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/demos/EUR.html)
+-   [**Germany** - 100m resolution - Zensus 2011](https://eurostat.github.io/gridviz/examples/demos/DE.html)
+-   [**France** - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/demos/FR.html). Focus on [total population](https://eurostat.github.io/gridviz/examples/demos/FR_pop.html) and [income](https://eurostat.github.io/gridviz/examples/demos/FR_income.html).
+-   [**Norway** - 250m resolution - SSB](https://eurostat.github.io/gridviz/examples/demos/NO.html)
+-   [**Croatia** - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/demos/HR.html)
+-   [**Belgium** population](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html), as mixed resolution layer.
 
 ## Installation
 

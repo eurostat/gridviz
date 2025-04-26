@@ -36,13 +36,24 @@ export class GeoCanvas {
         /** @type {number} */
         this.h = this.canvas.offsetHeight
 
-        this.canvas.width = this.w
-        this.canvas.height = this.h
+        // Adjust canvas width and height based on device pixel ratio
+        //const dpr = window.devicePixelRatio || 1 // Get the device pixel ratio
+        //this.canvas.width = this.w * dpr // Set canvas width
+        //\sthis.canvas.height = this.h * dpr // Set canvas height
+
+        // Create offscreen canvas for drawing operations
+        this.offscreenCanvas = document.createElement('canvas')
+        this.offscreenCanvas.width = this.w
+        this.offscreenCanvas.height = this.h
 
         const ctx = this.canvas.getContext('2d')
+        const offscreenCtx = this.offscreenCanvas.getContext('2d')
         if (!ctx) throw 'Impossible to create canvas 2D context'
+        if (!offscreenCtx) throw 'Impossible to create canvas 2D context'
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx
+        this.offscreenCtx = offscreenCtx
+        //this.ctx.scale(dpr, dpr) // Scale the context
 
         /**
          * z: pixel size, in m/pix
@@ -67,49 +78,32 @@ export class GeoCanvas {
         this.extGeo = { xMin: NaN, xMax: NaN, yMin: NaN, yMax: NaN }
         this.updateExtentGeo()
 
-        //rely on d3 zoom for pan/zoom
+        //rely on d3 for zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
+            // @ts-ignore
+            let debounceTimeout = null // Add a debounce timeout variable
             const z = d3zoom()
-                //to make the zooming a bit faster
+                // to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
                 .on('zoom', (e) => {
                     const t = e.transform
-                    const f = tP.k / t.k
-                    if (f == 1) {
+                    const zoomFactor = tP.k / t.k
+                    if (zoomFactor == 1) {
                         //pan
                         const dx = tP.x - t.x
                         const dy = tP.y - t.y
                         this.pan(dx * this.view.z, -dy * this.view.z)
                     } else {
-                        const se = e.sourceEvent
-                        if (se instanceof WheelEvent) {
-                            //zoom at the mouse position
-                            this.zoom(
-                                f,
-                                this.pixToGeoX(e.sourceEvent.offsetX),
-                                this.pixToGeoY(e.sourceEvent.offsetY)
-                            )
-                        } else if (se instanceof TouchEvent) {
-                            if (!se.targetTouches.length) return
-                            //compute average position of the touches
-                            let tx = 0,
-                                ty = 0
-                            for (let tt of se.targetTouches) {
-                                tx += tt.clientX
-                                ty += tt.clientY
-                            }
-                            tx /= se.targetTouches.length
-                            ty /= se.targetTouches.length
-                            //zoom at this average position
-                            this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
-                        }
+                        handleZoom(e, zoomFactor)
                     }
                     tP = t
 
                     if (this.onZoomFun) this.onZoomFun(e)
                 })
                 .on('start', (e) => {
+                    // start of zoom event
+                    // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this.canvasSave.c = document.createElement('canvas')
                     this.canvasSave.c.setAttribute('width', '' + this.w)
                     this.canvasSave.c.setAttribute('height', '' + this.h)
@@ -117,18 +111,52 @@ export class GeoCanvas {
                     this.canvasSave.dx = 0
                     this.canvasSave.dy = 0
                     this.canvasSave.f = 1
-
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
                 .on('end', (e) => {
+                    // end of pan/zoom event
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
                 })
+            // @ts-ignore
             z(select(this.canvas))
+
+            const handleZoom = (event, zoomFactor) => {
+                // cancel ongoing data requests
+                this.cancelCurrentRequests()
+                const se = event.sourceEvent
+
+                if (se instanceof WheelEvent) {
+                    //zoom at the mouse position
+                    this.zoom(
+                        zoomFactor,
+                        // @ts-ignore
+                        this.pixToGeoX(se.offsetX),
+                        // @ts-ignore
+                        this.pixToGeoY(se.offsetY)
+                    )
+                } else if (se instanceof TouchEvent) {
+                    //compute average position of the touches
+                    let tx = 0,
+                        ty = 0
+                    for (let tt of se.targetTouches) {
+                        tx += tt.clientX
+                        ty += tt.clientY
+                    }
+                    tx /= se.targetTouches.length
+                    ty /= se.targetTouches.length
+
+                    // Adjust for container's offset
+                    // tx -= containerRect.left
+                    // ty -= containerRect.top
+
+                    //zoom at this average position
+                    this.zoom(zoomFactor, this.pixToGeoX(tx), this.pixToGeoY(ty))
+                }
+            }
         }
-        //select(this.canvas).call(z);
 
         //center extent
         /** @type {number|undefined} */
@@ -178,6 +206,7 @@ export class GeoCanvas {
     /** Initialise canvas transform with identity transformation. */
     initCanvasTransform() {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0)
+        this.offscreenCtx.setTransform(1, 0, 0, 1, 0, 0)
     }
 
     /** Initialise canvas transform with geo to screen transformation, so that geo objects can be drawn directly in geo coordinates. */
@@ -186,6 +215,7 @@ export class GeoCanvas {
         const tx = -this.view.x / this.view.z + this.w * 0.5
         const ty = this.view.y / this.view.z + this.h * 0.5
         this.ctx.setTransform(k, 0, 0, -k, tx, ty)
+        this.offscreenCtx.setTransform(k, 0, 0, -k, tx, ty)
     }
 
     /** Get the transformation matrix to webGL screen coordinates, within [-1,1]*[-1,1] */
@@ -200,6 +230,11 @@ export class GeoCanvas {
         throw new Error('Method redraw not implemented.')
     }
 
+    /** When the zoom level changes, ensures that any ongoing requests are aborted before new ones are initiated. */
+    cancelCurrentRequests() {
+        throw new Error('Method cancelCurrentRequests not implemented.')
+    }
+
     /**
      * Clear. To be used before a redraw for example.
      * @param {string} color
@@ -207,9 +242,12 @@ export class GeoCanvas {
     clear(color = 'white') {
         if (this.opts.transparentBackground) {
             this.ctx.clearRect(0, 0, this.w, this.h)
+            this.offscreenCtx.clearRect(0, 0, this.w, this.h)
         } else {
             if (this.ctx) this.ctx.fillStyle = color
+            if (this.offscreenCtx) this.offscreenCtx.fillStyle = color
             this.ctx.fillRect(0, 0, this.w, this.h)
+            this.offscreenCtx.fillRect(0, 0, this.w, this.h)
         }
     }
 
@@ -230,11 +268,24 @@ export class GeoCanvas {
         this.updateExtentGeo()
 
         if (this.canvasSave.c) {
-            this.canvasSave.dx -= dxGeo / this.view.z
-            this.canvasSave.dy += dyGeo / this.view.z
+            const scale = 1 / this.view.z
+
+            // Update saved canvas offset
+            this.canvasSave.dx -= dxGeo * scale
+            this.canvasSave.dy += dyGeo * scale
+
+            // clear canvas
             this.clear(this.backgroundColor)
+
             // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
-            this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+            //this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+            this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+
+            // Render the offscreen canvas to the visible context
+            // this.clear(this.backgroundColor)
+            this.ctx.drawImage(this.offscreenCtx.canvas, 0, 0)
+        } else {
+            console.log('no canvas save')
         }
     }
 
@@ -273,18 +324,26 @@ export class GeoCanvas {
         this.view.y += dyGeo
         this.updateExtentGeo()
 
+        // zoom in on the current canvas state
         if (this.canvasSave.c) {
             this.clear(this.backgroundColor)
             this.canvasSave.f /= f
             this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
             this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
             this.clear(this.backgroundColor)
-            this.ctx.drawImage(
+            this.offscreenCtx.drawImage(
                 this.canvasSave.c,
                 this.canvasSave.dx,
                 this.canvasSave.dy,
                 this.canvasSave.f * this.canvasSave.c.width,
                 this.canvasSave.f * this.canvasSave.c.height
+            )
+            this.ctx.drawImage(
+                this.offscreenCanvas, // Use offscreen canvas as the source
+                0,
+                0, // Position the offscreen canvas at the top-left corner of the main canvas
+                this.canvas.width, // The width of the visible canvas
+                this.canvas.height // The height of the visible canvas
             )
         }
     }

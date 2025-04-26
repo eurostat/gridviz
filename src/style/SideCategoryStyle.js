@@ -36,6 +36,7 @@ export class SideCategoryStyle extends SideStyle {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         //build sides
 
@@ -48,7 +49,7 @@ export class SideCategoryStyle extends SideStyle {
 
         //draw sides
 
-        geoCanvas.ctx.lineCap = 'butt'
+        ctx.lineCap = 'butt'
         const r2 = resolution * 0.5
         for (let side of sides) {
             //get category codes for both cells
@@ -63,44 +64,44 @@ export class SideCategoryStyle extends SideStyle {
             const w2 = wG * 0.5
 
             //set width
-            geoCanvas.ctx.lineWidth = wG
+            ctx.lineWidth = wG
 
             //draw segment with correct orientation
             if (side.or === 'h') {
                 //top line
                 if (code2) {
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[code2]
-                    geoCanvas.ctx.moveTo(side.x - r2, side.y + w2)
-                    geoCanvas.ctx.lineTo(side.x + r2, side.y + w2)
-                    geoCanvas.ctx.stroke()
+                    ctx.beginPath()
+                    ctx.strokeStyle = this.color[code2]
+                    ctx.moveTo(side.x - r2, side.y + w2)
+                    ctx.lineTo(side.x + r2, side.y + w2)
+                    ctx.stroke()
                 }
 
                 //bottom line
                 if (code1) {
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[code1]
-                    geoCanvas.ctx.moveTo(side.x - r2, side.y - w2)
-                    geoCanvas.ctx.lineTo(side.x + r2, side.y - w2)
-                    geoCanvas.ctx.stroke()
+                    ctx.beginPath()
+                    ctx.strokeStyle = this.color[code1]
+                    ctx.moveTo(side.x - r2, side.y - w2)
+                    ctx.lineTo(side.x + r2, side.y - w2)
+                    ctx.stroke()
                 }
             } else {
                 //right line
                 if (code2) {
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[code2]
-                    geoCanvas.ctx.moveTo(side.x + w2, side.y - r2)
-                    geoCanvas.ctx.lineTo(side.x + w2, side.y + r2)
-                    geoCanvas.ctx.stroke()
+                    ctx.beginPath()
+                    ctx.strokeStyle = this.color[code2]
+                    ctx.moveTo(side.x + w2, side.y - r2)
+                    ctx.lineTo(side.x + w2, side.y + r2)
+                    ctx.stroke()
                 }
 
                 //left line
                 if (code1) {
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[code1]
-                    geoCanvas.ctx.moveTo(side.x - w2, side.y - r2)
-                    geoCanvas.ctx.lineTo(side.x - w2, side.y + r2)
-                    geoCanvas.ctx.stroke()
+                    ctx.beginPath()
+                    ctx.strokeStyle = this.color[code1]
+                    ctx.moveTo(side.x - w2, side.y - r2)
+                    ctx.lineTo(side.x - w2, side.y + r2)
+                    ctx.stroke()
                 }
             }
         }

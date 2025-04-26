@@ -94,6 +94,7 @@ export class GeoJSONLayer extends Layer {
 
         //
         const z = geoCanvas.view.z
+        const ctx = geoCanvas.offscreenCtx
 
         for (const f of this.fs) {
             const gt = f.geometry.type
@@ -111,22 +112,22 @@ export class GeoJSONLayer extends Layer {
                 const lineWidth = this.lineWidth(f, z) * z
 
                 //set canvas drawing parameters
-                if (strokeStyle) geoCanvas.ctx.strokeStyle = strokeStyle
-                if (fillStyle) geoCanvas.ctx.fillStyle = fillStyle
-                if (lineWidth) geoCanvas.ctx.lineWidth = lineWidth
+                if (strokeStyle) ctx.strokeStyle = strokeStyle
+                if (fillStyle) ctx.fillStyle = fillStyle
+                if (lineWidth) ctx.lineWidth = lineWidth
 
                 if (shape == 'circle') {
                     //draw circle - fill and stroke
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
-                    if (fillStyle) geoCanvas.ctx.fill()
-                    if (strokeStyle && lineWidth) geoCanvas.ctx.stroke()
+                    ctx.beginPath()
+                    ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
+                    if (fillStyle) ctx.fill()
+                    if (strokeStyle && lineWidth) ctx.stroke()
                 } else if (shape == 'square') {
                     //draw square - fill and stroke
-                    geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
-                    if (fillStyle) geoCanvas.ctx.fill()
-                    if (strokeStyle && lineWidth) geoCanvas.ctx.stroke()
+                    ctx.beginPath()
+                    ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
+                    if (fillStyle) ctx.fill()
+                    if (strokeStyle && lineWidth) ctx.stroke()
                 } else {
                     console.error('Unexpected shape for point geojson: ' + shape)
                 }
@@ -137,29 +138,29 @@ export class GeoJSONLayer extends Layer {
                 //set color
                 const col = this.color(f, z)
                 if (!col || col == 'none') continue
-                geoCanvas.ctx.strokeStyle = col
+                ctx.strokeStyle = col
 
                 //set linewidth
                 const wP = this.width(f, z)
                 if (!wP || wP < 0) continue
-                geoCanvas.ctx.lineWidth = wP * z
+                ctx.lineWidth = wP * z
 
                 //set line dash
                 const ldP = this.lineDash(f, z)
-                if (ldP) geoCanvas.ctx.setLineDash(ldP)
+                if (ldP) ctx.setLineDash(ldP)
 
                 //draw line
-                geoCanvas.ctx.beginPath()
-                geoCanvas.ctx.moveTo(cs[0][0], cs[0][1])
-                for (let i = 1; i < cs.length; i++) geoCanvas.ctx.lineTo(cs[i][0], cs[i][1])
-                geoCanvas.ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(cs[0][0], cs[0][1])
+                for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
+                ctx.stroke()
             } else {
                 console.log('Unsupported geometry type in GeoJSONLayer: ' + gt)
             }
         }
 
         //...
-        geoCanvas.ctx.setLineDash([])
+        ctx.setLineDash([])
     }
 
     /**

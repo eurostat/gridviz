@@ -1,5 +1,44 @@
-<div id="map" style="height: 500px; width: 800px"></div>
-<div id="ext_legend"></div>
+<style>
+    #myLegend {
+        background: linear-gradient(45deg, #ff6f61, #6b5b95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        border-radius: 15px;
+        animation: pulse 3s infinite, colorChange 6s infinite;
+    }
+
+    /* Pulsing scale animation */
+    @keyframes pulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    /* Smooth color gradient animation */
+    @keyframes colorChange {
+        0% {
+            background: linear-gradient(45deg, #ff6f61, #6b5b95);
+        }
+        50% {
+            background: linear-gradient(45deg, #6b5b95, #88b04b);
+        }
+        100% {
+            background: linear-gradient(45deg, #ff6f61, #6b5b95);
+        }
+    }
+</style>
+
+<div id="map" style="height: 100%; width: 100%"></div>
+<div id="myLegend" style="position: absolute; top: 50px; left: 50px"></div>
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -11,7 +50,7 @@
         x: 4500000,
         y: 2900000,
         z: 1000,
-        legendDivId: 'ext_legend',
+        legendContainer: document.getElementById('myLegend'),
     }).addZoomButtons()
 
     //define dataset

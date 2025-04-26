@@ -1,0 +1,28 @@
+<div id="map" style="height: 450px; width: 800px"></div>
+
+<script src="../../../dist/gridviz.js"></script>
+<script>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), {
+        x: 4000000,
+        y: 2400000,
+        z: 2000,
+    }).addZoomButtons()
+
+    //define dataset
+    const dataset = new gridviz.CSVGrid(
+        map,
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+        10000
+    )
+
+    //define style
+    const style = new gridviz.PillarStyle({
+        height: (cell, resolution, z) => 0.3 * cell.population,
+        simple: (resolution, z) => z > 1000,
+        color: () => 'darkcyan',
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+</script>

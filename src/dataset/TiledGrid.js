@@ -20,11 +20,11 @@ export class TiledGrid extends Dataset {
     /**
      * @param {import("../core/Map.js").Map} map The map.
      * @param {string} url The URL of the dataset.
-     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean) }} opts
+     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean), onlyDrawWhenAllTilesReady:boolean}} opts
      */
     constructor(map, url, opts = {}) {
         super(map, url, 0, opts)
-
+        this.onlyDrawWhenAllTilesReady = opts.onlyDrawWhenAllTilesReady || false
         /**
          * The grid info object, from the info.json file.
          *  @type {GridInfo | undefined}
@@ -67,8 +67,7 @@ export class TiledGrid extends Dataset {
                     this.infoLoadingStatus = 'failed'
                 }
             })()
-        } else if (this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed')
-            this.map.redraw()
+        } else if (this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed') this.map.redraw()
         return this
     }
 
@@ -103,112 +102,128 @@ export class TiledGrid extends Dataset {
      * @param {import('../core/GeoCanvas.js').Envelope} extGeo
      * @returns {this}
      */
-    getData(extGeo) {
-        //TODO empty cache when it gets too big ?
-
-        //check if info has been loaded
+    async getData(extGeo) {
         if (!this.info) return this
 
-        //tiles within the scope
-        /** @type {import("../core/GeoCanvas.js").Envelope|undefined} */
+        // Create an AbortController for the current data request
+        this.abortController = new AbortController()
+        const signal = this.abortController.signal
+
+        // Get the tiling envelope and check bounds
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return this
 
-        //grid bounds
-        /** @type {import("../core/GeoCanvas.js").Envelope} */
-        const gb = this.info.tilingBounds
+        const { xMin: gbXMin, xMax: gbXMax, yMin: gbYMin, yMax: gbYMax } = this.info.tilingBounds
 
-        for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
-            for (let yT = Math.max(tb.yMin, gb.yMin); yT <= Math.min(tb.yMax, gb.yMax); yT++) {
-                //prepare cache
+        const xMin = Math.max(tb.xMin, gbXMin)
+        const xMax = Math.min(tb.xMax, gbXMax)
+        const yMin = Math.max(tb.yMin, gbYMin)
+        const yMax = Math.min(tb.yMax, gbYMax)
+
+        const totalTiles = (xMax - xMin + 1) * (yMax - yMin + 1)
+        let processedTiles = 0
+        const tilePromises = []
+
+        // Iterate over tiles within bounds
+        for (let xT = xMin; xT <= xMax; xT++) {
+            for (let yT = yMin; yT <= yMax; yT++) {
                 if (!this.cache[xT]) this.cache[xT] = {}
 
-                //check if tile exists in the cache
-                /** @type {object} */
-                let tile = this.cache[xT][yT]
-                if (tile) continue
+                // Skip already loaded tiles or retry failed ones
+                if (this.cache[xT][yT] && this.cache[xT][yT] !== 'failed') {
+                    ++processedTiles
+                    continue
+                }
 
-                //mark tile as loading
+                // Mark tile as loading
                 this.cache[xT][yT] = 'loading'
-                ;(async () => {
-                    //request tile
-                    /** @type {Array.<import("../core/Dataset.js").Cell>}  */
-                    let cells
 
-                    try {
-                        /** @type {Array.<import("../core/Dataset.js").Cell>}  */
-                        // @ts-ignore
-                        const data = await csv(this.url + xT + '/' + yT + '.csv')
+                tilePromises.push(
+                    this.loadTile(xT, yT, signal)
+                        .then((tile) => {
+                            this.cache[xT][yT] = tile
 
-                        //if (monitor) monitorDuration('*** TiledGrid parse start')
-
-                        //preprocess/filter
-                        if (this.preprocess) {
-                            cells = []
-                            for (const c of data) {
-                                const b = this.preprocess(c)
-                                if (b == false) continue
-                                cells.push(c)
-                            }
-                        } else {
-                            cells = data
-                        }
-
-                        //if (monitor) monitorDuration('preprocess / filter')
-                    } catch (error) {
-                        //mark as failed
-                        this.cache[xT][yT] = 'failed'
-                        return
-                    }
-
-                    //store tile in cache
-                    if (!this.info) {
-                        console.error('Tile info inknown')
-                        return
-                    }
-                    const tile_ = getGridTile(cells, xT, yT, this.info)
-                    this.cache[xT][yT] = tile_
-
-                    //if (monitor) monitorDuration('storage')
-
-                    //if no redraw is specified, then leave
-                    this.map.redraw()
-
-                    //check if redraw is really needed, that is if:
-
-                    // 1. the dataset belongs to a layer which is visible at the current zoom level
-                    let redraw = false
-                    //go through the layers
-                    const z = this.map.getZoom()
-                    for (const lay of this.map.layers) {
-                        if (lay.visible && !lay.visible(z)) continue
-                        if (!lay.getDataset) continue
-                        if (lay.getDataset(z) != this) continue
-                        //found one layer. No need to seek more.
-                        redraw = true
-                        break
-                    }
-                    //if (monitor) monitorDuration('check redraw 1')
-
-                    if (!redraw) return
-
-                    // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
-                    const env = this.map.updateExtentGeo()
-                    const envT = tile_.extGeo
-                    if (env.xMax <= envT.xMin) return
-                    if (env.xMin >= envT.xMax) return
-                    if (env.yMax <= envT.yMin) return
-                    if (env.yMin >= envT.yMax) return
-
-                    //if (monitor) monitorDuration('check redraw 2')
-                    //if (monitor) monitorDuration('*** TiledGrid parse end')
-
-                    //redraw
-                    this.map.redraw()
-                })()
+                            // Check if this is the last tile
+                            const isLastTile = ++processedTiles === totalTiles
+                            this.checkAndRedraw(tile, isLastTile)
+                        })
+                        .catch(() => {
+                            this.cache[xT][yT] = 'failed'
+                            ++processedTiles
+                        })
+                )
             }
         }
+
+        await Promise.allSettled(tilePromises)
         return this
+    }
+
+    /**
+     * Load a tile.
+     *
+     * @param {number} xT
+     * @param {number} yT
+     * @param {AbortSignal} signal
+     * @returns {Promise<any>}
+     */
+    async loadTile(xT, yT, signal) {
+        try {
+            const data = await csv(`${this.url}${xT}/${yT}.csv`, { signal })
+
+            const cells = this.preprocess ? data.filter((cell) => this.preprocess(cell) !== false) : data
+
+            if (!this.info) throw new Error('Tile info unknown')
+
+            return getGridTile(cells, xT, yT, this.info)
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                console.warn(`Tile request for ${xT}, ${yT} was aborted.`)
+            }
+            throw error
+        }
+    }
+
+    /**
+     * Cancel ongoing data requests when zoom level changes.
+     */
+    cancelCurrentRequests() {
+        if (this.abortController) {
+            this.abortController.abort()
+        }
+    }
+
+    checkAndRedraw(tile, isLastTile) {
+        // Check if any visible layer depends on this dataset
+        // check if redraw is really needed, that is if:
+        // 1. the dataset belongs to a layer which is visible at the current zoom level
+        let needsRedraw = false
+        //go through the layers
+        const z = this.map.getZoom()
+        for (const lay of this.map.layers) {
+            if (lay.visible && !lay.visible(z)) continue
+            if (!lay.getDataset) continue
+            if (lay.getDataset(z) != this) continue
+            //found one layer. No need to seek more.
+            needsRedraw = true
+            break
+        }
+
+        if (!needsRedraw) return
+
+        // Check if tile intersects the current view
+        const env = this.map.updateExtentGeo()
+        const { xMin, xMax, yMin, yMax } = tile.extGeo
+        if (env.xMax <= xMin || env.xMin >= xMax || env.yMax <= yMin || env.yMin >= yMax) return
+
+        // Trigger redraw
+        if (this.onlyDrawWhenAllTilesReady) {
+            if (isLastTile) {
+                this.map.redraw()
+            }
+        } else {
+            this.map.redraw()
+        }
     }
 
     /**
