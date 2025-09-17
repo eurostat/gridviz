@@ -35,22 +35,22 @@ export class LabelLayer extends Layer {
         /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):string} */
-        this.style = opts.style || (() => 'bold 1em Arial')
+        this.style = opts.style || (() => '1.2em Arial')
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):string} */
-        this.color = opts.color || (opts.dark ? () => '#ddd' : () => '#222')
+        this.color = opts.color || (opts.dark ? () => 'white' : () => 'black')
 
         /** Specify the label halo color, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):string} */
-        this.haloColor = opts.haloColor || (opts.dark ? () => '#000000BB' : () => '#FFFFFFBB')
+        this.haloColor = opts.haloColor || (opts.dark ? () => 'black' : () => 'white')
 
         /** Specify the label halo width, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):number} */
-        this.haloWidth = opts.haloWidth || (() => 4)
+        this.haloWidth = opts.haloWidth || (() => 2.5)
 
         /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
          * "left" || "right" || "center" || "start" || "end"

@@ -1,6 +1,6 @@
 {
     "name": "gridviz",
-    "version": "3.0.19",
+    "version": "3.0.20",
     "description": "Visualization tool for gridded statistics",
     "keywords": [
         "statistics",
