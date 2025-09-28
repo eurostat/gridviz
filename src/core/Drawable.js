@@ -34,7 +34,7 @@ export class Drawable {
 
         /** @type {(function(number):string)|undefined} */
         this.filterColor = opts.filterColor // (z) => "#eee7"
-        /** @type {(function(number):GlobalCompositeOperation)|undefined} */
+        /** @type {(function(number):GlobalCompositeOperation|"none")|undefined} */
         this.filterBlendOperation = opts.filterBlendOperation // (z) => "multiply"
     }
 
