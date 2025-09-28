@@ -34,6 +34,8 @@ export class Drawable {
 
         /** @type {(function(number):string)|undefined} */
         this.filterColor = opts.filterColor // (z) => "#eee7"
+        /** @type {(function(number):GlobalCompositeOperation)|undefined} */
+        this.filterBlendOperation = opts.filterBlendOperation // (z) => "multiply"
     }
 
     /**
@@ -54,7 +56,23 @@ export class Drawable {
         if (!fc || fc == 'none') return
 
         //draw filter
+
+        //set color
         geoCanvas.offscreenCtx.fillStyle = fc
+
+        //save blend mode and set new, if any
+        let bo = undefined, bo2 = undefined
+        if (this.filterBlendOperation) {
+            bo = geoCanvas.offscreenCtx.globalCompositeOperation
+            bo2 = this.filterBlendOperation(geoCanvas.view.z)
+        }
+        if (bo2 && bo2 != "none") geoCanvas.offscreenCtx.globalCompositeOperation = bo2;
+
+        //draw
         geoCanvas.offscreenCtx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
+
+        //restore blend mode
+        if (bo) geoCanvas.offscreenCtx.globalCompositeOperation = bo;
+
     }
 }
