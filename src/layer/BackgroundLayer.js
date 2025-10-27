@@ -91,8 +91,7 @@ export class BackgroundLayer extends Layer {
 
         //
         const z = geoCanvas.view.z
-        const x0 = this.origin[0],
-            y0 = this.origin[1]
+        const x0 = this.origin[0], y0 = this.origin[1]
 
         //get zoom level and resolution
         let z_ = 0
