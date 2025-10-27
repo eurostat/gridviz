@@ -99,9 +99,7 @@ export class BackgroundLayer extends Layer {
         z_ -= 1
         z_ = Math.max(0, z_)
         z_ = Math.min(z_, this.resolutions.length - 1)
-        //console.log(this.resolutions.length, z)
         const res = this.resolutions[z_]
-
         z_ += this.z0
 
         const sizeG = this.nbPix * res
@@ -121,7 +119,7 @@ export class BackgroundLayer extends Layer {
                 //get image
                 let img = this.get(z_, x, y)
 
-                //load image
+                //no image: load image from URL
                 if (!img) {
                     const img = new Image()
                     this.put(img, z_, x, y)
@@ -136,7 +134,7 @@ export class BackgroundLayer extends Layer {
                     continue
                 }
 
-                //case when no image
+                //case when no image available
                 if (img === 'failed') continue
                 if (!(img instanceof HTMLImageElement)) {
                     console.log(img)
