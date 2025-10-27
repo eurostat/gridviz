@@ -20,7 +20,8 @@ export class BackgroundLayer extends Layer {
         super(opts)
         opts = opts || {}
 
-        /** The image cache, indexed by z/y/x */
+        /** The image cache, indexed by z/y/x
+         * @private */
         this.cache = {}
 
         /**
@@ -29,16 +30,20 @@ export class BackgroundLayer extends Layer {
         /** @type {function(number,number,number):string} */
         this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + '/' + x + '/' + y + '.png')
 
-        /** @type {Array.<number>} */
+        /** The resolutions of the zoom levels, usually multiplied by 2 for each zoom level
+         * @type {Array.<number>} */
         this.resolutions = opts.resolutions
         if (!this.resolutions || this.resolutions.length == 0)
             throw new Error('No resolutions provided for background layer')
 
-        /** @type {number} */
+        /** The tile size, in number of pixels
+         * @type {number} */
         this.nbPix = opts.nbPix || 256
+
         /** CRS coordinates of top left corner
          * @type {Array.<number>} */
         this.origin = opts.origin || [0, 0]
+
         /** @type {number} */
         this.z0 = opts.z0 || 0
     }
@@ -60,7 +65,7 @@ export class BackgroundLayer extends Layer {
     }
 
     /**
-     * Get z/x/y cache data.
+     * Put image in cache.
      * @param {HTMLImageElement|string} img
      * @param {number} z
      * @param {number} x
