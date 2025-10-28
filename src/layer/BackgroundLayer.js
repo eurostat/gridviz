@@ -30,7 +30,8 @@ export class BackgroundLayer extends Layer {
         /** @type {function(number,number,number):string} */
         this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + '/' + x + '/' + y + '.png')
 
-        /** The resolutions of the zoom levels, usually multiplied by 2 for each zoom level
+        /** The ground resolutions of the zoom levels, starting from the smallest (most zoomed-out, usually 0) to the largest (most zoomed-in).
+         * Usually divided by 2 for each zoom level increment.
          * @type {Array.<number>} */
         this.resolutions = opts.resolutions
         if (!this.resolutions || this.resolutions.length == 0)
@@ -40,12 +41,20 @@ export class BackgroundLayer extends Layer {
          * @type {number} */
         this.nbPix = opts.nbPix || 256
 
-        /** CRS coordinates of top left corner
+        /** CRS coordinates of top left corner of the top left tile, the one with code /0/0.png.
          * @type {Array.<number>} */
         this.origin = opts.origin || [0, 0]
 
-        /** @type {number} */
+        /** The code of the smallest (most zoomed-out) zoom level, in case it is not 0.
+         * @type {number} */
         this.z0 = opts.z0 || 0
+
+        /** A coefficient to adjust the backgroun resolution with the screen resolution.
+         *  If the background images are too pixelised, reduce the value.
+         *  If there are too many images to download, increase the value.
+         *  Default value is 1.0
+         * @type {number} */
+        this.pixelationCoefficient = opts.pixelationCoefficient || 1.0
     }
 
     /**
@@ -95,7 +104,7 @@ export class BackgroundLayer extends Layer {
 
         //get zoom level and resolution
         let z_ = 0
-        for (z_ = 0; z_ < this.resolutions.length; z_++) if (this.resolutions[z_] < z) break
+        for (z_ = 0; z_ < this.resolutions.length; z_++) if (this.resolutions[z_] < z * this.pixelationCoefficient) break
         z_ -= 1
         z_ = Math.max(0, z_)
         z_ = Math.min(z_, this.resolutions.length - 1)
