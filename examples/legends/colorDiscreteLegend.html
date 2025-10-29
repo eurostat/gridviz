@@ -44,6 +44,7 @@
         width: 450,
         colors: () => classifier.colors,
         breaks: () => classifier.breaks,
+        labelFormat: (text,i) => text+ (i==7?" hab.":"")
     })
 
     //link legend to style

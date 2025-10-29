@@ -80,7 +80,7 @@ export class ColorDiscreteLegend extends Legend {
         for (let i = 1; i < nb; i++) {
             let label = breaks[i - 1]
             if (isNaN(label) || label == undefined) continue
-            if (this.labelFormat) label = this.labelFormat(label)
+            if (this.labelFormat) label = this.labelFormat(label, i)
 
             //label
             svg.append('text')
