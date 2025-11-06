@@ -282,7 +282,6 @@ export class GeoCanvas {
             this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
 
             // Render the offscreen canvas to the visible context
-            // this.clear(this.backgroundColor)
             this.ctx.drawImage(this.offscreenCtx.canvas, 0, 0)
         } else {
             console.log('no canvas save')

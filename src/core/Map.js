@@ -232,21 +232,44 @@ export class Map {
         /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
         const focus = this.getCellFocusInfo(mousePositionGeo)
 
-        // transparent background (e.g. leaflet) 'red painting' fix
+        // Transparent background (Leaflet): redraw base, then draw focus rect directly on the visible canvas
         if (this.transparentBackground) {
+            // Always restore the base (offscreen) into the visible canvas
+            this.geoCanvas.initCanvasTransform();
+            this.geoCanvas.ctx.clearRect(0, 0, this.w, this.h);
+            this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0);
+
             if (focus) {
-                this.tooltip.html(focus.html)
-                this.tooltip.setPosition(e)
-                this.tooltip.show()
+                this.tooltip.html(focus.html);
+                this.tooltip.setPosition(e);
+                this.tooltip.show();
+
+                const rectWPix = this.selectionRectangleWidthPix
+                    ? this.selectionRectangleWidthPix(focus.resolution, this.geoCanvas.view.z)
+                    : 4;
+
+                const ctx = this.geoCanvas.ctx; // draw directly on visible canvas
+                ctx.save();
+                ctx.strokeStyle = this.selectionRectangleColor;
+                ctx.lineWidth = rectWPix;
+                ctx.beginPath();
+                // compute in pixel space (no geo transform on ctx)
+                const xPix = this.geoCanvas.geoToPixX(focus.cell.x);
+                const yPix = this.geoCanvas.geoToPixY(focus.cell.y);
+                const wPix = focus.resolution / this.geoCanvas.view.z;
+                const hPix = -wPix; // y axis inverted in geoToPix
+                ctx.rect(
+                    xPix - rectWPix / 2,
+                    yPix + rectWPix / 2,
+                    wPix + rectWPix,
+                    hPix - rectWPix
+                );
+                ctx.stroke();
+                ctx.restore();
             } else {
-                this.tooltip.hide()
+                this.tooltip.hide();
             }
-            this.canvasSave = document.createElement('canvas')
-            this.canvasSave.setAttribute('width', '' + this.w)
-            this.canvasSave.setAttribute('height', '' + this.h)
-            this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.canvas, 0, 0)
-            this.geoCanvas.initCanvasTransform()
-            return
+            return; // handled
         }
 
         if (focus) {
