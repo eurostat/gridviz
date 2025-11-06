@@ -91,11 +91,13 @@ export class ZoomButtons extends Button {
     zoomIn(e) {
         this.map.setZoom(this.map.getZoom() * (1 - this.delta)).redraw()
         if (this.onZoom) this.onZoom(e)
+        if (this.map.geoCanvas.onZoomFun) this.map.geoCanvas.onZoomFun(e)
     }
 
     /* Zoom out */
     zoomOut(e) {
         this.map.setZoom(this.map.getZoom() * (1 + this.delta)).redraw()
         if (this.onZoom) this.onZoom(e)
+        if (this.map.geoCanvas.onZoomFun) this.map.geoCanvas.onZoomFun(e)
     }
 }
