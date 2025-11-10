@@ -224,6 +224,9 @@ export class Map {
 
     /** @param {MouseEvent} e */
     focusCell(e) {
+        // Don’t process hover events during active zoom
+        if (this.geoCanvas._isZooming) return;
+
         //compute mouse geo position
         const mousePositionGeo = {
             x: this.geoCanvas.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
@@ -335,7 +338,7 @@ export class Map {
             //get cell at mouse position
             /** @type {import('./Dataset.js').Cell|undefined} */
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
-            //console.log(cell, dsc.resolution)
+
             if (!cell) return undefined
 
             //rare case for a dataset with mixed resolutions

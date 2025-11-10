@@ -81,8 +81,6 @@ export class GeoCanvas {
         //rely on d3 for zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
-            // @ts-ignore
-            let debounceTimeout = null // Add a debounce timeout variable
             const z = d3zoom()
                 // to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
@@ -93,7 +91,7 @@ export class GeoCanvas {
                         //pan
                         const dx = tP.x - t.x
                         const dy = tP.y - t.y
-                        this.pan(dx * this.view.z, -dy * this.view.z)
+                        this.applyPan(dx * this.view.z, -dy * this.view.z)
                     } else {
                         handleZoom(e, zoomFactor)
                     }
@@ -103,6 +101,7 @@ export class GeoCanvas {
                 })
                 .on('start', (e) => {
                     // start of zoom event
+                     this._isZooming = true;
                     // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this.canvasSave.c = document.createElement('canvas')
                     this.canvasSave.c.setAttribute('width', '' + this.w)
@@ -115,10 +114,11 @@ export class GeoCanvas {
                 })
                 .on('end', (e) => {
                     // end of pan/zoom event
+                    this._isZooming = false;
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
-
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
+                        
                 })
             // @ts-ignore
             z(select(this.canvas))
@@ -130,7 +130,7 @@ export class GeoCanvas {
 
                 if (se instanceof WheelEvent) {
                     //zoom at the mouse position
-                    this.zoom(
+                    this.applyZoom(
                         zoomFactor,
                         // @ts-ignore
                         this.pixToGeoX(se.offsetX),
@@ -153,7 +153,7 @@ export class GeoCanvas {
                     // ty -= containerRect.top
 
                     //zoom at this average position
-                    this.zoom(zoomFactor, this.pixToGeoX(tx), this.pixToGeoY(ty))
+                    this.applyZoom(zoomFactor, this.pixToGeoX(tx), this.pixToGeoY(ty))
                 }
             }
         }
@@ -175,6 +175,122 @@ export class GeoCanvas {
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
+    }
+
+    /**
+ * @param {number} dxGeo
+ * @param {number} dyGeo
+ */
+    applyPan(dxGeo = 0, dyGeo = 0) {
+        //ensures x/y extent
+        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
+        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
+
+        //pan
+        this.view.x += dxGeo
+        this.view.y += dyGeo
+        this.updateExtentGeo()
+
+        if (this.canvasSave.c) {
+            const scale = 1 / this.view.z
+
+            // Update saved canvas offset
+            this.canvasSave.dx -= dxGeo * scale
+            this.canvasSave.dy += dyGeo * scale
+
+            // clear canvas
+            this.clear(this.backgroundColor)
+
+            // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
+            //this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+            this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
+
+            // Render the offscreen canvas to the visible context
+            this.ctx.drawImage(this.offscreenCtx.canvas, 0, 0)
+        } else {
+            console.log('no canvas save')
+        }
+    }
+
+    /**
+     * Zoom.
+     * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
+     * @param {number} xGeo The x geo position fixed in the screen.
+     * @param {number} yGeo The y geo position fixed in the screen.
+     */
+    applyZoom(f = 1, xGeo = this.view.x, yGeo = this.view.y) {
+        //TODO force geo extend to remain
+
+        //trying to zoom in/out beyond limit
+        if (this.zoomExtent[0] == this.view.z && f <= 1) return
+        if (this.zoomExtent[1] == this.view.z && f >= 1) return
+
+        //ensure zoom extent preserved
+        const newZf = f * this.view.z
+        if (newZf < this.zoomExtent[0]) f = this.zoomExtent[0] / this.view.z
+        if (newZf > this.zoomExtent[1]) f = this.zoomExtent[1] / this.view.z
+
+        this.view.z *= f
+
+        //compute pan
+        let dxGeo = (xGeo - this.view.x) * (1 - f)
+        let dyGeo = (yGeo - this.view.y) * (1 - f)
+
+        //ensures x/y extent
+        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
+        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
+        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
+        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
+
+        //pan
+        this.view.x += dxGeo
+        this.view.y += dyGeo
+        this.updateExtentGeo()
+
+        this._drawZoomFrame(f, xGeo, yGeo)
+    }
+
+    _drawZoomFrame(f, xGeo, yGeo) {
+        // zoom in on the current canvas state
+        if (this.canvasSave.c) {
+            this.clear(this.backgroundColor)
+            this.canvasSave.f /= f
+            this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
+            this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
+            this.clear(this.backgroundColor)
+            this.offscreenCtx.drawImage(
+                this.canvasSave.c,
+                this.canvasSave.dx,
+                this.canvasSave.dy,
+                this.canvasSave.f * this.canvasSave.c.width,
+                this.canvasSave.f * this.canvasSave.c.height
+            )
+            this.ctx.drawImage(
+                this.offscreenCanvas, // Use offscreen canvas as the source
+                0,
+                0, // Position the offscreen canvas at the top-left corner of the main canvas
+                this.canvas.width, // The width of the visible canvas
+                this.canvas.height // The height of the visible canvas
+            )
+        }
+    }
+
+    /**
+ * Clear. To be used before a redraw for example.
+ * @param {string} color
+ */
+    clear(color = 'white') {
+        if (this.opts.transparentBackground) {
+            this.ctx.clearRect(0, 0, this.w, this.h)
+            this.offscreenCtx.clearRect(0, 0, this.w, this.h)
+        } else {
+            if (this.ctx) this.ctx.fillStyle = color
+            if (this.offscreenCtx) this.offscreenCtx.fillStyle = color
+            this.ctx.fillRect(0, 0, this.w, this.h)
+            this.offscreenCtx.fillRect(0, 0, this.w, this.h)
+        }
     }
 
     /** @returns {View} */
@@ -235,117 +351,9 @@ export class GeoCanvas {
         throw new Error('Method cancelCurrentRequests not implemented.')
     }
 
-    /**
-     * Clear. To be used before a redraw for example.
-     * @param {string} color
-     */
-    clear(color = 'white') {
-        if (this.opts.transparentBackground) {
-            this.ctx.clearRect(0, 0, this.w, this.h)
-            this.offscreenCtx.clearRect(0, 0, this.w, this.h)
-        } else {
-            if (this.ctx) this.ctx.fillStyle = color
-            if (this.offscreenCtx) this.offscreenCtx.fillStyle = color
-            this.ctx.fillRect(0, 0, this.w, this.h)
-            this.offscreenCtx.fillRect(0, 0, this.w, this.h)
-        }
-    }
 
-    /**
-     * @param {number} dxGeo
-     * @param {number} dyGeo
-     */
-    pan(dxGeo = 0, dyGeo = 0) {
-        //ensures x/y extent
-        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
-        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
-        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
 
-        //pan
-        this.view.x += dxGeo
-        this.view.y += dyGeo
-        this.updateExtentGeo()
 
-        if (this.canvasSave.c) {
-            const scale = 1 / this.view.z
-
-            // Update saved canvas offset
-            this.canvasSave.dx -= dxGeo * scale
-            this.canvasSave.dy += dyGeo * scale
-
-            // clear canvas
-            this.clear(this.backgroundColor)
-
-            // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
-            //this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
-            this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
-
-            // Render the offscreen canvas to the visible context
-            this.ctx.drawImage(this.offscreenCtx.canvas, 0, 0)
-        } else {
-            console.log('no canvas save')
-        }
-    }
-
-    /**
-     * Zoom.
-     * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
-     * @param {number} xGeo The x geo position fixed in the screen.
-     * @param {number} yGeo The y geo position fixed in the screen.
-     */
-    zoom(f = 1, xGeo = this.view.x, yGeo = this.view.y) {
-        //TODO force geo extend to remain
-
-        //trying to zoom in/out beyond limit
-        if (this.zoomExtent[0] == this.view.z && f <= 1) return
-        if (this.zoomExtent[1] == this.view.z && f >= 1) return
-
-        //ensure zoom extent preserved
-        const newZf = f * this.view.z
-        if (newZf < this.zoomExtent[0]) f = this.zoomExtent[0] / this.view.z
-        if (newZf > this.zoomExtent[1]) f = this.zoomExtent[1] / this.view.z
-
-        this.view.z *= f
-
-        //compute pan
-        let dxGeo = (xGeo - this.view.x) * (1 - f)
-        let dyGeo = (yGeo - this.view.y) * (1 - f)
-
-        //ensures x/y extent
-        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
-        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
-        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
-
-        //pan
-        this.view.x += dxGeo
-        this.view.y += dyGeo
-        this.updateExtentGeo()
-
-        // zoom in on the current canvas state
-        if (this.canvasSave.c) {
-            this.clear(this.backgroundColor)
-            this.canvasSave.f /= f
-            this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
-            this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
-            this.clear(this.backgroundColor)
-            this.offscreenCtx.drawImage(
-                this.canvasSave.c,
-                this.canvasSave.dx,
-                this.canvasSave.dy,
-                this.canvasSave.f * this.canvasSave.c.width,
-                this.canvasSave.f * this.canvasSave.c.height
-            )
-            this.ctx.drawImage(
-                this.offscreenCanvas, // Use offscreen canvas as the source
-                0,
-                0, // Position the offscreen canvas at the top-left corner of the main canvas
-                this.canvas.width, // The width of the visible canvas
-                this.canvas.height // The height of the visible canvas
-            )
-        }
-    }
 
     /**
      * @param {number} marginPx

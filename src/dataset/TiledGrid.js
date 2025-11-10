@@ -194,7 +194,6 @@ export class TiledGrid extends Dataset {
     }
 
     checkAndRedraw(tile, isLastTile) {
-        if (this.map.geoCanvas.canvasSave.c) return; // skip redraws during zoom
         // Check if any visible layer depends on this dataset
         // check if redraw is really needed, that is if:
         // 1. the dataset belongs to a layer which is visible at the current zoom level

@@ -1,34 +1,52 @@
-<div id="map" style="height: 100%; width: 100%"></div>
+<!DOCTYPE html>
+<html lang="en">
 
-<script src="../../dist/gridviz.js"></script>
-<script>
-    //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
-        z: 3000,
-    }).addZoomButtons()
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic CSV Example - Gridviz</title>
+    <style>
+        /* canvas {
+            will-change: transform;
+            backface-visibility: hidden;
+        } */
+    </style>
+</head>
 
-    //define dataset
-    const dataset = new gridviz.CSVGrid(
-        map,
-        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
-        10000
-    )
+<body>
+    <div id="map" style="height: 98vh; width: 100%; max-height: 100vh"></div>
+    <script src="../../dist/gridviz.js"></script>
+    <script>
+        //define map with initial view
+        const map = new gridviz.Map(document.getElementById('map'), {
+            x: 4500000,
+            y: 2900000,
+            z: 3000,
+        }).addZoomButtons()
 
-    //define color for each cell
-    const colorFunction = (cell) => {
-        if (cell.population > 150000) return '#993404'
-        else if (cell.population > 60000) return '#d95f0e'
-        else if (cell.population > 20000) return '#fe9929'
-        else if (cell.population > 6000) return '#fec44f'
-        else if (cell.population > 1500) return '#fee391'
-        else return '#ffffd4'
-    }
+        //define dataset
+        const dataset = new gridviz.CSVGrid(
+            map,
+            'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+            10000
+        )
 
-    //define style
-    const style = new gridviz.ShapeColorSizeStyle({ color: colorFunction })
+        //define color for each cell
+        const colorFunction = (cell) => {
+            if (cell.population > 150000) return '#993404'
+            else if (cell.population > 60000) return '#d95f0e'
+            else if (cell.population > 20000) return '#fe9929'
+            else if (cell.population > 6000) return '#fec44f'
+            else if (cell.population > 1500) return '#fee391'
+            else return '#ffffd4'
+        }
 
-    //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
-</script>
+        //define style
+        const style = new gridviz.ShapeColorSizeStyle({ color: colorFunction })
+
+        //add layer to map
+        map.layers = [new gridviz.GridLayer(dataset, [style])]
+    </script>
+</body>
+
+</html>
