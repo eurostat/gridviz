@@ -276,6 +276,7 @@ export class Map {
         }
 
         if (focus) {
+            this.geoCanvas.canvas.style.cursor = 'pointer';
             this.tooltip.html(focus.html)
             this.tooltip.setPosition(e)
             this.tooltip.show()
@@ -309,6 +310,7 @@ export class Map {
             ctx.stroke()
             this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
         } else {
+            this.geoCanvas.canvas.style.cursor = 'default';
             this.tooltip.hide()
             if (this.canvasSave) this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
         }
