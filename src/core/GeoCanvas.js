@@ -85,6 +85,7 @@ export class GeoCanvas {
                 // to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
                 .on('zoom', (e) => {
+                    this._isZooming = true;
                     const t = e.transform
                     const zoomFactor = tP.k / t.k
                     if (zoomFactor == 1) {
@@ -101,7 +102,7 @@ export class GeoCanvas {
                 })
                 .on('start', (e) => {
                     // start of zoom event
-                     this._isZooming = true;
+                    this._isZooming = true;
                     // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this.canvasSave.c = document.createElement('canvas')
                     this.canvasSave.c.setAttribute('width', '' + this.w)
