@@ -30,6 +30,7 @@ export class GeoCanvas {
 
         /** @type {HTMLCanvasElement} */
         this.canvas = canvas
+        this.canvas.style.cursor = 'grab'          // default shown when hover
 
         /** @type {number} */
         this.w = this.canvas.offsetWidth
@@ -102,6 +103,8 @@ export class GeoCanvas {
                 })
                 .on('start', (e) => {
                     // start of zoom event
+                    // show grabbing during pan/zoom
+                    try { this.canvas.style.cursor = 'grabbing' } catch (err) { }
                     this._isZooming = true;
                     // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this.canvasSave.c = document.createElement('canvas')
@@ -115,11 +118,13 @@ export class GeoCanvas {
                 })
                 .on('end', (e) => {
                     // end of pan/zoom event
+                    // restore cursor
+                    try { this.canvas.style.cursor = 'grab' } catch (err) { }
                     this._isZooming = false;
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
-                        
+
                 })
             // @ts-ignore
             z(select(this.canvas))

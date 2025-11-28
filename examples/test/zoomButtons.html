@@ -27,11 +27,11 @@
         //define map with initial view
         const map = new gridviz.Map(document.getElementById('map'), {
             x: 4500000, y: 2900000, z: 3000, onZoomFun: (event) => {
-                console.log(map.getView().z)
+                // console.log(map.getView().z)
             }
         })
-        .addZoomButtons({onZoom: (level) => console.log(map.getView().z)})
-        .addFullscreenButton()
+            .addZoomButtons({ onZoom: (level) => console.log(map.getView().z) })
+            .addFullscreenButton()
 
         //define dataset
         const dataset = new gridviz.CSVGrid(
