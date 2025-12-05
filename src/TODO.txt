@@ -1,7 +1,8 @@
+use gridviz-parquet update 1.1.1
+use gridviz-eurostat 2.1.0
 
-euronym location issue ?
-parquet update
 webgl style improvements
+
 
 
 analyse possiblility to migrate toward openlayer ?
