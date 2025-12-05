@@ -1,4 +1,9 @@
 
+euronym location issue ?
+parquet update
+webgl style improvements
+
+
 analyse possiblility to migrate toward openlayer ?
 
 BE multi
