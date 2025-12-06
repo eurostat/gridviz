@@ -1,5 +1,5 @@
 use gridviz-parquet update 1.1.1
-use gridviz-eurostat 2.1.0
+use gridviz-eurostat 2.1.1
 
 webgl style improvements
 
