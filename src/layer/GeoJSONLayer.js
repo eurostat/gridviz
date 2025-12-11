@@ -99,8 +99,7 @@ export class GeoJSONLayer extends Layer {
         for (const f of this.fs) {
             const gt = f.geometry.type
 
-            if (gt == 'Point') {
-                const c = f.geometry.coordinates
+            if (gt == 'Point' || gt == 'MultiPoint') {
 
                 //get style parameters for the point feature
                 const shape = this.shape(f, z)
@@ -116,24 +115,29 @@ export class GeoJSONLayer extends Layer {
                 if (fillStyle) ctx.fillStyle = fillStyle
                 if (lineWidth) ctx.lineWidth = lineWidth
 
+                let cs = f.geometry.coordinates
+                if (gt == 'Point') cs = [cs]
+
                 if (shape == 'circle') {
                     //draw circle - fill and stroke
-                    ctx.beginPath()
-                    ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
-                    if (fillStyle) ctx.fill()
-                    if (strokeStyle && lineWidth) ctx.stroke()
+                    for (const c of cs) {
+                        ctx.beginPath()
+                        ctx.arc(c[0], c[1], size / 2, 0, 2 * Math.PI, false)
+                        if (fillStyle) ctx.fill()
+                        if (strokeStyle && lineWidth) ctx.stroke()
+                    }
                 } else if (shape == 'square') {
                     //draw square - fill and stroke
-                    ctx.beginPath()
-                    ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
-                    if (fillStyle) ctx.fill()
-                    if (strokeStyle && lineWidth) ctx.stroke()
+                    for (const c of cs) {
+                        ctx.beginPath()
+                        ctx.rect(c[0] - size / 2, c[1] - size / 2, size, size)
+                        if (fillStyle) ctx.fill()
+                        if (strokeStyle && lineWidth) ctx.stroke()
+                    }
                 } else {
                     console.error('Unexpected shape for point geojson: ' + shape)
                 }
-            } else if (gt == 'LineString') {
-                const cs = f.geometry.coordinates
-                if (cs.length < 2) continue
+            } else if (gt == 'LineString' || gt == 'MultiLineString') {
 
                 //set color
                 const col = this.color(f, z)
@@ -149,11 +153,17 @@ export class GeoJSONLayer extends Layer {
                 const ldP = this.lineDash(f, z)
                 if (ldP) ctx.setLineDash(ldP)
 
-                //draw line
-                ctx.beginPath()
-                ctx.moveTo(cs[0][0], cs[0][1])
-                for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
-                ctx.stroke()
+                let css = f.geometry.coordinates
+                if (gt == 'LineString') css = [css]
+
+                //draw lines
+                for (const cs of css) {
+                    if (cs.length < 2) continue
+                    ctx.beginPath()
+                    ctx.moveTo(cs[0][0], cs[0][1])
+                    for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
+                    ctx.stroke()
+                }
             } else {
                 console.log('Unsupported geometry type in GeoJSONLayer: ' + gt)
             }

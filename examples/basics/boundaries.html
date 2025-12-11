@@ -11,7 +11,7 @@
 
     //make boundary layer, with a different style depending on the zoom level and line type.
     const boundaryLayer = new gridviz.GeoJSONLayer({
-        url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json',
+        url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/03M/nutsbn_3.json',
         color: (f, zoom) => {
             const p = f.properties
             if (p.co === 'T') return '#888'
