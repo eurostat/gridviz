@@ -100,8 +100,6 @@ See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference
 
 See the **[gridviz documentation page](./docs/reference.md)**.
 
-The document of [the previous version 2](./docs/reference_v2.md).
-
 ## Grid tiling
 
 In order to visualize large grids efficiently, you can produce tiled grids in a [tiled grid format](https://eurostat.github.io/gridviz/docs/tiledformat) with **[GridTiler](https://github.com/eurostat/gridtiler)**.
