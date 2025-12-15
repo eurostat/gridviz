@@ -12,45 +12,49 @@ import { exponentialScale } from '../utils/stretching.js'
 export class ShadingStyle extends SideStyle {
 
     /** @param {object} opts
-     * @param {string} opts.field
+     * @param {string} opts.elevation
      * @param {boolean} opts.diamond
-     * @param {number} opts.exageration
+     * @param {function} opts.scale
+     * @param {function} opts.width
      * @param {number} opts.reliefDirection
+     * @param {string} opts.colorTopLeft
+     * @param {string} opts.colorBottomRight
      */
     constructor(opts = {}) {
         super(opts)
 
         /** The cell elevation field name
          * @type {string} */
-        const field = opts.field
+        const elevation = opts.elevation
 
         // compute side value as elevation difference and attach to side
         const sideValue = (side) => {
             if (!side.c1) side.v = 0
             else if (!side.c2) side.v = 0
-            else if (!side.c1[field]) side.v = 0
-            else if (!side.c2[field]) side.v = 0
-            else side.v = +side.c2[field] - side.c1[field]
+            else if (!side.c1[elevation]) side.v = 0
+            else if (!side.c2[elevation]) side.v = 0
+            else side.v = +side.c2[elevation] - side.c1[elevation]
             return side.v
         }
 
-        this.width = (_, r, z) => Math.min(2 * z, r / 3)
-        this.diamond = opts.diamond
-
+        // compute maximum side value for normalization
         this.viewScale = sides => max(sides, s => sideValue(s))
 
-        const exageration = opts.exageration | 1
-        const reliefDirection = opts.reliefDirection | 1
+        const colorTopLeft = opts.colorTopLeft || '255,255,255'
+        const colorBottomRight = opts.colorBottomRight || '0,0,0'
+        const scale = opts.scale || (t=>t)
 
-        const scale = exponentialScale(-exageration)
         this.color = (side, resolution, z, max) => {
             if (side.v == 0) return
             let coeff = Math.abs(side.v / max)
             coeff = scale(coeff)
-            if ((side.v * reliefDirection < 0 && side.or === 'h') || (side.v * reliefDirection > 0 && side.or === 'v'))
-                return 'rgba(255,255,255,' + coeff + ')'
-            return 'rgba(0,0,0,' + coeff + ')'
+            if ((side.v < 0 && side.or === 'h') || (side.v > 0 && side.or === 'v'))
+                return 'rgba(' + colorTopLeft + ',' + coeff + ')'
+            return 'rgba(' + colorBottomRight + ',' + coeff + ')'
         }
+
+        this.width = (_, r, z) => opts.width | Math.min(2 * z, r / 3)
+        this.diamond = opts.diamond
 
     }
 
