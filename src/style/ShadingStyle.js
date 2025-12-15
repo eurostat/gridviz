@@ -2,7 +2,8 @@
 'use strict'
 
 import { SideStyle } from './SideStyle.js'
-
+import { max } from 'd3-array'
+import { exponentialScale } from '../utils/stretching.js'
 
 /**
  * @module style
@@ -10,7 +11,12 @@ import { SideStyle } from './SideStyle.js'
  */
 export class ShadingStyle extends SideStyle {
 
-    /** @param {object} opts */
+    /** @param {object} opts
+     * @param {string} opts.field
+     * @param {boolean} opts.diamond
+     * @param {number} opts.exageration
+     * @param {number} opts.reliefDirection
+     */
     constructor(opts = {}) {
         super(opts)
 
@@ -28,10 +34,10 @@ export class ShadingStyle extends SideStyle {
             return side.v
         }
 
-        this.width = (side, r, z) => Math.min(2 * z, r / 3)
+        this.width = (_, r, z) => Math.min(2 * z, r / 3)
         this.diamond = opts.diamond
 
-        this.viewScale = sides => d3.max(sides, s => sideValue(s)),
+        this.viewScale = sides => max(sides, s => sideValue(s))
 
         const exageration = opts.exageration | 1
         const reliefDirection = opts.reliefDirection | 1
