@@ -13,7 +13,7 @@ export class GridLayer extends Layer {
     /**
      * @param {import("../core/Dataset").Dataset|import("../core/MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
      * @param {Array.<import("../core/Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minPixelsPerCell?:number,cellInfoHTML?:function(import("../core/Dataset").Cell):string}} opts
+     * @param {{visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minPixelsPerCell?:number,cellInfoHTML?:'none'|function(import("../core/Dataset").Cell):string}} opts
      */
     constructor(dataset, styles, opts = {}) {
         super(opts)
@@ -38,7 +38,8 @@ export class GridLayer extends Layer {
         /**
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
-         * @type {function(import("../core/Dataset").Cell, number):string} */
+         * Set to 'none' to disable cell info.
+         * @type {'none'|function(import("../core/Dataset").Cell, number):string} */
         this.cellInfoHTML = opts.cellInfoHTML || GridLayer.defaultCellInfoHTML
     }
 
