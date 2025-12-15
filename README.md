@@ -30,6 +30,7 @@
 ## Live Demos
 
 -   [**Europe** - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/demos/EUR.html)
+-   [**Europe** - 100m resolution - Relief](https://eurostat.github.io/gridviz/examples/demos/EUR_relief.html)
 -   [**Germany** - 100m resolution - Zensus 2011](https://eurostat.github.io/gridviz/examples/demos/DE.html)
 -   [**France** - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/demos/FR.html). Focus on [total population](https://eurostat.github.io/gridviz/examples/demos/FR_pop.html) and [income](https://eurostat.github.io/gridviz/examples/demos/FR_income.html).
 -   [**Norway** - 250m resolution - SSB](https://eurostat.github.io/gridviz/examples/demos/NO.html)
