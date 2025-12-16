@@ -299,7 +299,7 @@
             // set layers
             const layers = []
             const mppc = 1.7 * resolutionCoeff
-            const mppcRelief = joyplot ? 10 * resolutionCoeff : mppc
+            const mppcRelief = joyplot ? 8 * resolutionCoeff : mppc
             const reliefStyle = joyplot ? joyplotStyle : hypsoStyle
             // relief
             if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
