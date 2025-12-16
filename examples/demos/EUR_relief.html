@@ -62,7 +62,6 @@
 
 
         //TODO
-        //hillshading exageration
         //tanaka, contours, joyplot
         //test webgl - faster ?
         //reuse hill shading with accessibility map
@@ -81,6 +80,7 @@
         })
             .setZoomExtent([10, 5000])
             .addZoomButtons()
+            .setViewFromURL()
 
         const datasetRelief = new gridviz.MultiResolutionDataset(
             [100, 200, 500, 1000, 2000, 5000, 10000, 20000],
@@ -128,7 +128,6 @@
             },
             color: () => "#aaa", //"#555",
         })*/
-
 
 
         const strokeWidthPix = 1
@@ -202,6 +201,7 @@
         let resolutionCoeff = 1
         let scaleShadingCoeff = -2
         let shadingDiamond = false
+        let joyplot = false
 
         function update() {
             const seaLevel = +sSeaLevel.value;
@@ -240,7 +240,7 @@
                 },
                 size: (c, r, z) => r + z * 0.3
             })*/
-            let styleRelief = new gridviz.SquareColorWebGLStyle({
+            let hypsoStyle = new gridviz.SquareColorWebGLStyle({
                 viewScale: cells => d3.extent(cells, c => getElevationValue(c)),
                 tFun: (c, r, z, [min, max]) => {
                     const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
@@ -264,6 +264,26 @@
                 diamond: shadingDiamond,
             })
 
+
+            // joyplot style
+            const joyplotStyle = new gridviz.JoyPlotStyle({
+                height: (c, r, z, scale) => scale(getElevationValue(c)),
+                viewScale: gridviz.viewScale({
+                    valueFunction: (c) => getElevationValue(c),
+                    maxSizeFactor: 5,
+                    stretching: gridviz.powerScale(0.4),
+                }),
+                lineColor: (y, ys, r, z) => {
+                    const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
+                    return 'rgb(' + t + ',' + t + ',' + t + ')'
+                },
+                lineWidth: (y, ys, r, z) => 0.1 * r,
+                fillColor: (y, ys, r, z) =>
+                    'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
+            })
+
+
+
             // apply smoothing
             if (sr > 0) {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
@@ -273,22 +293,24 @@
                     filterSmoothed: (value) => value > 0.0005,
                     styles: [style]
                 })
-                styleRelief = fun(styleRelief)
+                hypsoStyle = fun(hypsoStyle)
+                joyplotStyle = fun(joyplotStyle)
                 shadingStyle = fun(shadingStyle)
                 styleWater = fun(styleWater)
             }
 
             // set layers
             const layers = []
-            const mppc = 1.7 * resolutionCoeff
+            const mppc = (joyplot ? 5 : 1.7) * resolutionCoeff
+            const reliefStyle = joyplot ? joyplotStyle : hypsoStyle
             // relief
-            if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [styleRelief], { minPixelsPerCell: mppc, cellInfoHTML: cellInfoHTMLRelief }))
+            if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppc, cellInfoHTML: cellInfoHTMLRelief }))
             //relief shading
             if (cbHillshading.checked) layers.push(new gridviz.GridLayer(datasetRelief, [shadingStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // CLC waters
             if (cbCLC.checked) layers.push(new gridviz.GridLayer(datasetCLC, [styleCLCWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // population
-            if (cbPopulation.checked) layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4 * resolutionCoeff, cellInfoHTML: cellInfoHTMLPop }))
+            if (cbPopulation.checked) layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4 * resolutionCoeff, cellInfoHTML: 'none' }))
             //boundaries
             if (cbBoundaries.checked) layers.push(boundariesLayer);
             //roads
@@ -325,6 +347,7 @@
                 if (div.style.display === "none") div.style.display = "block"; // or "inline", "flex", etc.
                 else div.style.display = "none";
             }
+            else if (e.key == "j") { joyplot = !joyplot; update() }
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "x") { scaleShadingCoeff += 0.25; console.log(scaleShadingCoeff); update() }
