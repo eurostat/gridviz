@@ -33,7 +33,7 @@
         <br>
         <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
         <br>
-        <label for="cbBoundaries"><input type="checkbox" id="cbBoundaries">Boundaries</label>
+        <label for="cbBoundaries"><input type="checkbox" id="cbBoundaries" checked>Boundaries</label>
         <br>
         <label for="cbRoads"><input type="checkbox" id="cbRoads">Roads</label>
         <br>
@@ -200,7 +200,8 @@
         const cbHypssea = document.getElementById("cbHypssea");
 
         let resolutionCoeff = 1
-        let scaleShadingCoeff = 0
+        let scaleShadingCoeff = -2
+        let shadingDiamond = false
 
         function update() {
             const seaLevel = +sSeaLevel.value;
@@ -260,6 +261,7 @@
             let shadingStyle = new gridviz.ShadingStyle({
                 elevation: sr == 0 ? 'v' : 'ksmval',
                 scale: scaleShading,
+                diamond: shadingDiamond,
             })
 
             // apply smoothing
@@ -323,6 +325,7 @@
                 if (div.style.display === "none") div.style.display = "block"; // or "inline", "flex", etc.
                 else div.style.display = "none";
             }
+            else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "x") { scaleShadingCoeff += 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "+") { resolutionCoeff /= 1.2; console.log(resolutionCoeff); update() }
