@@ -266,20 +266,17 @@
 
 
             // joyplot style
-            const joyplotStyle = new gridviz.JoyPlotStyle({
-                height: (c, r, z, scale) => scale(getElevationValue(c)),
-                viewScale: gridviz.viewScale({
-                    valueFunction: (c) => getElevationValue(c),
-                    maxSizeFactor: 5,
-                    stretching: gridviz.powerScale(0.4),
-                }),
+            let joyplotStyle = new gridviz.JoyPlotStyle({
+                viewScale: cells => d3.extent(cells, c => getElevationValue(c)),
+                height: (c, r, z, [min, max]) => 2 * r * (getElevationValue(c) - min) / (max - min),
                 lineColor: (y, ys, r, z) => {
-                    const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
-                    return 'rgb(' + t + ',' + t + ',' + t + ')'
+                    return "black"
+                    //const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
+                    //return 'rgb(' + t + ',' + t + ',' + t + ')'
                 },
-                lineWidth: (y, ys, r, z) => 0.1 * r,
-                fillColor: (y, ys, r, z) =>
-                    'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
+                lineWidth: (y, ys, r, z) => z,
+                //fillColor: (y, ys, r, z) => undefined,
+                //'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
             })
 
 
@@ -301,10 +298,11 @@
 
             // set layers
             const layers = []
-            const mppc = (joyplot ? 5 : 1.7) * resolutionCoeff
+            const mppc = 1.7 * resolutionCoeff
+            const mppcRelief = joyplot ? 10 * resolutionCoeff : mppc
             const reliefStyle = joyplot ? joyplotStyle : hypsoStyle
             // relief
-            if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppc, cellInfoHTML: cellInfoHTMLRelief }))
+            if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
             //relief shading
             if (cbHillshading.checked) layers.push(new gridviz.GridLayer(datasetRelief, [shadingStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // CLC waters
