@@ -62,6 +62,8 @@
 
 
         //TODO
+        //hillshading exageration
+        //tanaka, contours, joyplot
         //test webgl - faster ?
         //reuse hill shading with accessibility map
         //tanaka
@@ -198,6 +200,7 @@
         const cbHypssea = document.getElementById("cbHypssea");
 
         let resolutionCoeff = 1
+        let scaleShadingCoeff = 0
 
         function update() {
             const seaLevel = +sSeaLevel.value;
@@ -252,12 +255,11 @@
             })
 
 
+            //- 0.3 * +sReliefExageration.value
+            const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
             let shadingStyle = new gridviz.ShadingStyle({
                 elevation: sr == 0 ? 'v' : 'ksmval',
-                scale: gridviz.exponentialScale(-1),
-                //colorTopLeft: "255,155,155",
-                //colorBottomRight: "0,0,100",
-                //diamond: true,
+                scale: scaleShading,
             })
 
             // apply smoothing
@@ -321,8 +323,8 @@
                 if (div.style.display === "none") div.style.display = "block"; // or "inline", "flex", etc.
                 else div.style.display = "none";
             }
-            //else if (e.key == "w") { scaleReliefCoeff -= 0.3; console.log(scaleReliefCoeff); update() }
-            //else if (e.key == "x") { scaleReliefCoeff += 0.3; console.log(scaleReliefCoeff); update() }
+            else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
+            else if (e.key == "x") { scaleShadingCoeff += 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "+") { resolutionCoeff /= 1.2; console.log(resolutionCoeff); update() }
             else if (e.key == "-") { resolutionCoeff *= 1.2; console.log(resolutionCoeff); update() }
         })
