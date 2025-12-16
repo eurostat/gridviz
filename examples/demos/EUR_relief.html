@@ -264,22 +264,14 @@
                 diamond: shadingDiamond,
             })
 
-
             // joyplot style
             let joyplotStyle = new gridviz.JoyPlotStyle({
                 viewScale: cells => d3.extent(cells, c => getElevationValue(c)),
-                height: (c, r, z, [min, max]) => 2 * r * (getElevationValue(c) - min) / (max - min),
-                lineColor: (y, ys, r, z) => {
-                    return "black"
-                    //const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
-                    //return 'rgb(' + t + ',' + t + ',' + t + ')'
-                },
+                height: (c, r, z, [min, max]) => 3 * r * scaleRelief((getElevationValue(c) - min) / (max - min)),
+                lineColor: (y, ys, r, z) => "#ddd",
                 lineWidth: (y, ys, r, z) => z,
-                //fillColor: (y, ys, r, z) => undefined,
-                //'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
+                fillColor: (y, ys, r, z) => "#777"
             })
-
-
 
             // apply smoothing
             if (sr > 0) {
