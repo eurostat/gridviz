@@ -1,9 +1,6 @@
 //@ts-check
 'use strict'
 
-import { SideStyle } from './SideStyle.js'
-import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
-import { classifier as clFun, colorClassifier as cclFun } from '../utils/scale.js'
 
 /**
  * @see https://manifold.net/doc/mfd9/example__tanaka_contours.htm

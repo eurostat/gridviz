@@ -64,6 +64,7 @@
 
 
         //TODO
+        //fix smoothing for joyplot, tanaka, shading
         //REDO: tanaka, lego, contours
         //test webgl - faster ?
         //reuse hill shading and tanaka with accessibility map
@@ -282,8 +283,8 @@
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     sigma: (r, z) => r * (sr + 0.5),
-                    factor: 2,
-                    filterSmoothed: (value) => value > 0.0005,
+                    factor: 1,
+                    filterSmoothed: (value) => value > 0.05,
                     styles: [style]
                 })
                 hypsoStyle = fun(hypsoStyle)

@@ -1,10 +1,14 @@
 //@ts-check
 'use strict'
 
-import { TanakaStyle } from './SideTanakaStyle___OLD.js'
+//import { TanakaStyle } from './SideTanakaStyle___OLD.js'
 import { StrokeStyle } from './StrokeStyle.js'
 import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
 import { Style } from '../core/Style.js'
+//import { SideStyle } from './SideStyle.js'
+import { classifier as clFun, colorClassifier as cclFun } from '../utils/scale.js'
+import { SideTanakaStyle } from './SideTanakaStyle.js'
+
 
 /**
  * @module style
@@ -35,7 +39,36 @@ export class LegoStyle {
         opts.widthFactor = opts.widthFactor || 0.12
 
         //reuse tanaka as basis
-        const ts = TanakaStyle.get(value, breaks, colors, opts)
+        //const ts = TanakaStyle.get(value, breaks, colors, opts)
+
+        /** @type { function(number, number):number } */
+        opts.width =
+            opts.width ||
+            ((sideValue, resolution, z) => {
+                const minWG = 1 * z
+                const maxWG = 4 * z
+                const step = (maxWG - minWG) / 3
+                return Math.min(minWG + (sideValue - 1) * step, maxWG)
+            })
+
+        //make classifier
+        const classifier = clFun(breaks)
+        const classifier2 = cell => classifier(value(cell))
+        //make colors table
+        const colorsDict = {}
+        for (let i = 0; i < colors.length; i++) colorsDict[i + ''] = colors[i]
+
+        //make cell fill style
+        const cellStyle = new SquareColorCategoryWebGLStyle({
+            code: classifier2,
+            color: colorsDict,
+        })
+
+        //make tanaka side style
+        opts.classifier = () => classifier2
+        const tanakaStyle = new SideTanakaStyle(opts)
+
+
         //style to show limits between pieces
         const sst = new StrokeStyle({
             strokeColor: () => '#666',
@@ -44,9 +77,9 @@ export class LegoStyle {
         })
 
         return [
-            ts[0],
+            cellStyle,
             sst,
-            ts[1],
+            tanakaStyle,
             new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright, filter: opts.filter }),
         ]
     }
