@@ -34,22 +34,8 @@ export class LegoStyle {
             //"#eee" //whithe
         ]*/
 
-        opts.colDark = opts.colDark || '#333'
-        opts.colBright = opts.colBright || '#aaa'
-        opts.widthFactor = opts.widthFactor || 0.12
-
-        //reuse tanaka as basis
-        //const ts = TanakaStyle.get(value, breaks, colors, opts)
-
-        /** @type { function(number, number):number } */
-        opts.width =
-            opts.width ||
-            ((sideValue, resolution, z) => {
-                const minWG = 1 * z
-                const maxWG = 4 * z
-                const step = (maxWG - minWG) / 3
-                return Math.min(minWG + (sideValue - 1) * step, maxWG)
-            })
+        opts.colorDark = opts.colorDark || '#333'
+        opts.colorBright = opts.colorBright || '#aaa'
 
         //make classifier
         const classifier = clFun(breaks)
@@ -65,9 +51,12 @@ export class LegoStyle {
         })
 
         //make tanaka side style
-        opts.classifier = () => classifier2
-        const tanakaStyle = new SideTanakaStyle(opts)
-
+        const tanakaStyle = new SideTanakaStyle({
+            classifier: () => classifier2,
+            colorDark : opts.colorDark,
+            colorBright : opts.colorBright,
+            diamond: opts.diamond,
+        })
 
         //style to show limits between pieces
         const sst = new StrokeStyle({
