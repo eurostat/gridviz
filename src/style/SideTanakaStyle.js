@@ -35,9 +35,17 @@ export class SideTanakaStyle extends Style {
         this.colorDark = opts.colorDark || '#111'
         // the bright color: for side facing the light (coming from NW)
         this.colorBright = opts.colorBright || '#ddd'
+        //
+        this.revert = opts.revert == undefined? false : opts.revert
 
         /** Set to A or true so that the side is drawn as a diamond */
         this.diamond = opts.diamond
+
+        /* Determines what to do for limit sides, between a cell with value and one with no value
+        * steep: the cell value absence is equivalent to 0. It shows potentially a steep limit then.
+        * skip: no side is drawn
+        * step: a side with a 1 step */
+        this.limit = opts.limit || "steep"
     }
 
     /**
@@ -61,8 +69,8 @@ export class SideTanakaStyle extends Style {
             const cl1 = side.c1 ? classifier(side.c1) : undefined
             const cl2 = side.c2 ? classifier(side.c2) : undefined
             if (cl1 === undefined && cl2 === undefined) return undefined
-            if (cl1 === undefined) return cl2
-            if (cl2 === undefined) return -cl1
+            if (cl1 === undefined) return this.limit=="none"? undefined : this.limit=="steep"? cl2 : Math.sign(cl2)
+            if (cl2 === undefined) return this.limit=="none"? undefined : this.limit=="steep"? -cl1 : Math.sign(-cl1)
             return cl2 - cl1
         }
 
@@ -78,6 +86,8 @@ export class SideTanakaStyle extends Style {
         //draw sides
         ctx.lineCap = 'butt'
         const r2 = resolution * 0.5
+        const cd = this.revert? this.colorBright : this.colorDark
+        const cb = this.revert? this.colorDark : this.colorBright
         for (let side of sides) {
 
             //get side value
@@ -86,7 +96,7 @@ export class SideTanakaStyle extends Style {
 
             //color
             /** @type {string|undefined} */
-            const col = ((v < 0 && side.or === 'h') || (v > 0 && side.or === 'v')) ? this.colorBright : this.colorDark
+            const col = ((v < 0 && side.or === 'h') || (v > 0 && side.or === 'v')) ? cb : cd
             if (!col || col == 'none') continue
 
             if (this.diamond) {
