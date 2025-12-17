@@ -224,9 +224,9 @@
 
 
             const adj = cbHypssea.checked
-            const scaleReliefCoeff = 1.5 - 0.3 * +sReliefExageration.value
-            const scaleRelief = gridviz.exponentialScale(scaleReliefCoeff)
-            //exponentialScale logarithmicScale
+            const scaleReliefCoeff = 3 - 0.3 * +sReliefExageration.value
+            const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff)
+            //exponentialScale 
 
             //define style
             const classNumber = sReliefNb.value
@@ -264,7 +264,7 @@
                 code: (c,r,z,classifier) => classifier(getElevationValue(c)),
                 color: { ...colors },
             })
-            
+
 
             let tanakaStyle = new gridviz.SideTanakaStyle({
                 classifier: cells => {
