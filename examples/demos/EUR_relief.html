@@ -233,7 +233,7 @@
             const colors = []
             for (let i = 0; i <= (classNumber - 1); i++) colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
 
-            let hypsoStyle = new gridviz.SquareColorWebGLStyle({
+            /*let hypsoStyle = new gridviz.SquareColorWebGLStyle({
                 viewScale: cells => {
                     [min, max] = d3.extent(cells, c => getElevationValue(c))
                     const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
@@ -247,7 +247,24 @@
                 },
                 tFun: (c, r, z, vs) => vs(getElevationValue(c)) / classNumber,
                 colors: colors,
+            })*/
+
+            let hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                viewScale: cells => {
+                    [min, max] = d3.extent(cells, c => getElevationValue(c))
+                    const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                    const breaks = []
+                    for (let i = 1; i < classNumber; i++) {
+                        let t = i / classNumber
+                        t = scaleRelief(t)
+                        breaks.push(min_ + (max - min_) * t)
+                    }
+                    return gridviz.classifier(breaks)
+                },
+                code: (c,r,z,classifier) => classifier(getElevationValue(c)),
+                color: { ...colors },
             })
+            
 
             let tanakaStyle = new gridviz.SideTanakaStyle({
                 classifier: cells => {

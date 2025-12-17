@@ -21,8 +21,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         /**
          * A function returning the category code of the cell, for coloring.
-         * @type {function(import('../core/Dataset.js').Cell):string} */
-        this.code = opts.code
+         * @type {function(import('../core/Dataset.js').Cell, number, number, viewScale):string} */
+        this.code = opts.code  // (c, resolution, z, viewScale) => "code1"
 
         /**
          * The dictionary (code -> color) which gives the color of each category code.
@@ -63,6 +63,9 @@ export class SquareColorCategoryWebGLStyle extends Style {
         //
         const z = geoCanvas.view.z
 
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+
         //add vertice and fragment data
         const r2 = resolution / 2
         let c,
@@ -71,7 +74,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const iBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-            const cat = this.code(c)
+            const cat = this.code(c, resolution, z, viewScale)
             if (cat == undefined) {
                 console.log('Unexpected category: ' + cat)
                 continue
