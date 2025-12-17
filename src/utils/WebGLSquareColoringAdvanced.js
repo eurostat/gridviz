@@ -53,86 +53,85 @@ export class WebGLSquareColoringAdvanced {
 
         //prepare fragment shader code
         //declare the uniform and other variables
-        let fshString =
-            '' +
-            'precision mediump float;\n' +
-            'varying float vt;\n' +
-            'uniform float alpha;\n' +
-            (() => {
-                const out = []
-                for (let i = 0; i < colors.length; i++) out.push('uniform vec4 c' + i + ';\n')
-                return out.join('')
-            })() +
-            //start the main function, apply the stretching of t
-            'void main(void) {\n'
+        const fshBuff = []
+        fshBuff.push('precision mediump float;')
+        fshBuff.push('varying float vt;')
+        fshBuff.push('uniform float alpha;')
+        for (let i = 0; i < colors.length; i++) fshBuff.push('uniform vec4 c' + i + ';')
+        //start the main function
+        fshBuff.push('void main(void) {')
 
+        // apply the stretching of t
         if (stretching) {
             if (stretching.fun == 'pow')
                 //sPow = (t, alpha = 3) => Math.pow(t, alpha);
-                fshString += '   float t = pow(vt, alpha);\n'
+                fshBuff.push('   float t = pow(vt, alpha);')
             else if (stretching.fun == 'powInv')
                 //sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
-                fshString += '   float t = 1.0-pow(1.0-vt, 1.0/alpha);\n'
+                fshBuff.push('   float t = 1.0-pow(1.0-vt, 1.0/alpha);')
             else if (stretching.fun == 'exp')
                 //sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
-                fshString +=
+                fshBuff.push(
                     stretching.alpha == 0
                         ? `float t = vt;`
-                        : '   float t = (exp(vt * alpha) - 1.0) / (exp(alpha) - 1.0);\n'
+                        : '   float t = (exp(vt * alpha) - 1.0) / (exp(alpha) - 1.0);')
             else if (stretching.fun == 'log')
                 //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
-                fshString +=
+                fshBuff.push(
                     stretching.alpha == 0
                         ? `float t = vt;`
-                        : '   float t = 1.0 - (1.0 / alpha) * log(exp(alpha) * (1.0 - vt) + vt);\n'
+                        : '   float t = 1.0 - (1.0 / alpha) * log(exp(alpha) * (1.0 - vt) + vt);')
             else if (stretching.fun == 'circle') {
                 if (stretching.alpha == 0)
                     //if (alpha == 0) return t;
-                    fshString += '   float t = vt;\n'
+                    fshBuff.push('   float t = vt;')
                 else if (stretching.alpha == 1)
                     // if (alpha == 1) return Math.sqrt(2 * t - t * t);
-                    fshString += '   float t = sqrt(vt * (2.0 - vt));\n'
+                    fshBuff.push('   float t = sqrt(vt * (2.0 - vt));')
                 else {
                     //const a = alpha / (1 - alpha);
                     //return Math.sqrt(1 / (a * a) + t * (2 / a + 2 - t)) - 1 / a;
-                    fshString +=
-                        '   float a = alpha / (1.0 - alpha);\n' +
-                        '   float t = sqrt(1.0 / (a * a) + vt * ( 2.0/a + 2.0 - vt )) - 1.0 / a;\n'
+                    fshBuff.push('   float a = alpha / (1.0 - alpha);')
+                    fshBuff.push('   float t = sqrt(1.0 / (a * a) + vt * ( 2.0/a + 2.0 - vt )) - 1.0 / a;')
                 }
             } else if (stretching.fun == 'circleInv') {
                 // 1 - sCircleLow(1 - t, alpha)
                 if (stretching.alpha == 0)
                     //if (alpha == 0) return t;
-                    fshString += '   float t = vt;\n'
+                    fshBuff.push('   float t = vt;')
                 else if (stretching.alpha == 1)
                     // if (alpha == 1) return Math.sqrt(2 * t - t * t);
-                    fshString += '   float t = 1.0 - sqrt((1.0 - vt) * (1.0 + vt));\n'
+                    fshBuff.push('   float t = 1.0 - sqrt((1.0 - vt) * (1.0 + vt));')
                 else {
                     //const a = alpha / (1 - alpha);
                     //return Math.sqrt(1 / (a * a) + (2 * t) / a + 2 * t - t * t) - 1 / a;
-                    fshString +=
-                        '   float a = alpha / (1.0 - alpha);\n' +
-                        '   float t = 1.0 - sqrt(1.0 / (a * a) + (1.0-vt) * ( 2.0/a + 1.0 + vt )) + 1.0 / a;\n'
+                    fshBuff.push('   float a = alpha / (1.0 - alpha);')
+                    fshBuff.push('   float t = 1.0 - sqrt(1.0 / (a * a) + (1.0-vt) * ( 2.0/a + 1.0 + vt )) + 1.0 / a;')
                 }
             } else {
                 console.error('Unexpected stretching function code: ' + stretching.fun)
-                fshString += '   float t = vt;\n'
+                fshBuff.push('   float t = vt;')
             }
         } else {
-            fshString += '   float t = vt;\n'
+            fshBuff.push('   float t = vt;')
         }
 
         //choose initial and final colors, and adjust t value
-        if (colors.length == 1) fshString += '   vec4 cI=c0;\n   vec4 cF=c0;\n'
-        else if (colors.length == 2) fshString += '   vec4 cI=c0;\n   vec4 cF=c1;\n'
-        else {
+        if (colors.length == 1) {
+            fshBuff.push('   vec4 cI=c0;')
+            fshBuff.push('   vec4 cF=c0;')
+        }
+        else if (colors.length == 2) {
+            fshBuff.push('   vec4 cI=c0;')
+            fshBuff.push('   vec4 cF=c1;')
+        } else {
             const nb = colors.length - 1
             const nbs = nb + '.0'
-            fshString += '   vec4 cI;\n'
-            fshString += '   vec4 cF;\n'
-            fshString += '   if(t<1.0/' + nbs + ') { cI=c0; cF=c1; t=t*' + nbs + '; }\n'
+            fshBuff.push('   vec4 cI;')
+            fshBuff.push('   vec4 cF;')
+            fshBuff.push('   if(t<1.0/' + nbs + ') { cI=c0; cF=c1; t=t*' + nbs + '; }')
             for (let i = 2; i < nb; i++)
-                fshString +=
+                fshBuff.push(
                     '   else if(t<' +
                     i +
                     '.0/' +
@@ -145,16 +144,17 @@ export class WebGLSquareColoringAdvanced {
                     nbs +
                     '*t-' +
                     (i - 1) +
-                    '.0; }\n'
-            fshString +=
-                '   else { cI=c' + (nb - 1) + '; cF=c' + nb + '; t=' + nbs + '*t-' + (nb - 1) + '.0; }\n'
+                    '.0; }')
+            fshBuff.push('   else { cI=c' + (nb - 1) + '; cF=c' + nb + '; t=' + nbs + '*t-' + (nb - 1) + '.0; }')
         }
 
         //one single color
-        if (colors.length == 1) fshString += '   gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}\n'
+        if (colors.length == 1) fshBuff.push('   gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}')
         //set interpolated color, between initial and final one
-        else fshString += '   gl_FragColor = mix(cI, cF, t);}\n'
+        else fshBuff.push('   gl_FragColor = mix(cI, cF, t);}')
 
+        let fshString = fshBuff.join("")
+        //let fshString = fshBuff.join("\n")
         //console.log(fshString)
 
         /** @type {WebGLShader} */
@@ -180,12 +180,9 @@ export class WebGLSquareColoringAdvanced {
             let opacity = c.opacity
             if (c.opacity == 1 && globalOpacity != undefined) opacity = globalOpacity
 
-            gl.uniform4fv(gl.getUniformLocation(this.program, 'c' + i), [
-                +c.r / 255.0,
-                +c.g / 255.0,
-                +c.b / 255.0,
-                +opacity,
-            ])
+            const colData = [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +opacity]
+            //console.log(i, colors[i], c, colData)
+            gl.uniform4fv(gl.getUniformLocation(this.program, 'c' + i), colData)
         }
     }
 
