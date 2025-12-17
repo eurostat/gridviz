@@ -17,7 +17,7 @@ export class TanakaStyle {
      * @param {Array.<number>} breaks The break values
      * @param {Array.<string>} colors The colors, one more than the break values
      * @param {object} opts
-     * @returns {Array.<import("../core/Style").Style>}
+     * @returns {Array.<import("../core/Style.js").Style>}
      */
     static get(value, breaks, colors, opts = {}) {
         //shadow colors

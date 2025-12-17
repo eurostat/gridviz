@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { TanakaStyle } from './TanakaStyle.js'
+import { TanakaStyle } from './SideTanakaStyle___OLD.js'
 import { StrokeStyle } from './StrokeStyle.js'
 import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
 import { Style } from '../core/Style.js'
