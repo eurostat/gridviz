@@ -3,7 +3,9 @@
 
 import { SideStyle } from './SideStyle.js'
 import { max } from 'd3-array'
-import { exponentialScale } from '../utils/stretching.js'
+
+/** @typedef {{ x:number, y:number, or:"v"|"h", c1:(import('../core/Dataset.js').Cell)|undefined, c2:(import('../core/Dataset.js').Cell)|undefined }} Side */
+
 
 /**
  * @module style
@@ -28,7 +30,7 @@ export class ShadingStyle extends SideStyle {
         const elevation = opts.elevation
 
         // compute side value as elevation difference and attach to side
-        const sideValue = (side) => {
+        const sideValue = (/** @type {Side} */ side) => {
             if (!side.c1) side.v = 0
             else if (!side.c2) side.v = 0
             else if (!side.c1[elevation]) side.v = 0
@@ -55,7 +57,5 @@ export class ShadingStyle extends SideStyle {
 
         this.width = (_, r, z) => opts.width | Math.min(2 * z, r / 3)
         this.diamond = opts.diamond
-
     }
-
 }
