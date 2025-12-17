@@ -2,6 +2,7 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
+import { SideStyle } from './SideStyle.js'
 
 /** @typedef {{ x:number, y:number, or:"v"|"h", c1:(import('../core/Dataset.js').Cell)|undefined, c2:(import('../core/Dataset.js').Cell)|undefined }} Side */
 
@@ -17,17 +18,23 @@ export class SideTanakaStyle extends Style {
     constructor(opts = {}) {
         super(opts)
 
-        /** A function returning the color of a cell side.
-         * @type {function(Side, number, number, object):string} */
-        this.color = opts.color || ((side, resolution, z, sideViewScale) => '#EA6BAC')
+        /** A function returning the cells classifier.
+         * The cell classifier is a function that for each cell returns its class number (int).
+        */
+        this.classifier = opts.classifier || ((cells, resolution, z) => c => 1)
 
         /** A function returning the width of a cell side, in geo unit
-         * @type {function(Side, number, number, object):number} */
-        this.width = opts.width || ((side, resolution, z, sideViewScale) => resolution / 5)
+         * @type {function(Side, number, number, number, object):number} */
+        this.width = opts.width || ((side, sideValue, resolution, z, sidesScale) => Math.abs(sideValue) * Math.min(2 * z, resolution / 3))
 
         /** A function returning the length of a cell side, in geo unit
          * @type {function(Side, number, number, object):number} */
-        this.length = opts.length || ((side, resolution, z, sideViewScale) => resolution)
+        this.length = opts.length || ((side, resolution, z, sidesScale) => resolution)
+
+        // the dark color: for side facing away from light (coming from NW)
+        this.colorDark = opts.colorDark || '#111'
+        // the bright color: for side facing the light (coming from NW)
+        this.colorBright = opts.colorBright || '#ddd'
 
         /** Set to A or true so that the side is drawn as a diamond */
         this.diamond = opts.diamond
@@ -46,8 +53,21 @@ export class SideTanakaStyle extends Style {
         const z = geoCanvas.view.z
         const ctx = geoCanvas.offscreenCtx
 
-        //build sides
+        //get cell classifier
+        const classifier = this.classifier(cells, resolution, z)
 
+        //get side value: class change difference
+        const getSideValue = (/** @type {{ c1: Side; c2: Side; }} */ side) => {
+            const cl1 = side.c1 ? classifier(side.c1) : undefined
+            const cl2 = side.c2 ? classifier(side.c2) : undefined
+            if (cl1 === undefined && cl2 === undefined) return undefined
+            if (cl1 === undefined) return cl2
+            if (cl2 === undefined) return -cl1
+            return cl2 - cl1
+        }
+
+        //build sides
+        //TODO build only those with different codes ?
         /**  @type {Array.<Side>} */
         const sides = SideStyle.buildSides(cells, resolution)
         if (sides.length == 0) return
@@ -56,13 +76,17 @@ export class SideTanakaStyle extends Style {
         const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
 
         //draw sides
-
         ctx.lineCap = 'butt'
         const r2 = resolution * 0.5
         for (let side of sides) {
+
+            //get side value
+            const v = getSideValue(side)
+            if (v === undefined || v === 0) continue
+
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(side, resolution, z, viewScale) : undefined
+            const col = ((v < 0 && side.or === 'h') || (v > 0 && side.or === 'v')) ? this.colorBright : this.colorDark
             if (!col || col == 'none') continue
 
             if (this.diamond) {
@@ -82,7 +106,7 @@ export class SideTanakaStyle extends Style {
             } else {
                 //width
                 /** @type {number|undefined} */
-                const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
+                const wG = this.width ? this.width(side, v, resolution, z, viewScale) : undefined
                 if (!wG || wG <= 0) continue
 
                 //length
@@ -115,98 +139,4 @@ export class SideTanakaStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 
-    /**
-     *
-     * @param {Array.<import('../core/Dataset.js').Cell>} cells The cells to use to build the sides.
-     * @param {number} resolution The cells resolution
-     * @param {boolean} withHorizontal Set to true to build horizontal sides, false otherwise.
-     * @param {boolean} withVertical Set to true to build vertical sides, false otherwise.
-     * @param {boolean} center Set to true so that the side coordinate are those of its center point rather than its left/bottom point (the side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides)
-     * @returns { Array.<Side> }
-     */
-    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = true) {
-        /** @type { Array.<Side> } */
-        const sides = []
-
-        const r2 = center ? resolution / 2 : 0
-
-        //make horizontal sides
-        //sort cells by x and y
-        cells.sort((c1, c2) => (c2.x == c1.x ? c1.y - c2.y : c1.x - c2.x))
-        let c1 = cells[0]
-        for (let i = 1; i < cells.length; i++) {
-            let c2 = cells[i]
-
-            if (c1.y + resolution == c2.y && c1.x == c2.x)
-                //cells in same column and touch along horizontal side
-                //make shared side
-                sides.push({
-                    or: 'h',
-                    x: c1.x + r2,
-                    y: c2.y,
-                    c1: c1,
-                    c2: c2,
-                })
-            else {
-                //cells do not touch along horizontal side
-                //make two sides: top one for c1, bottom for c2
-                sides.push({
-                    or: 'h',
-                    x: c1.x + r2,
-                    y: c1.y + resolution,
-                    c1: c1,
-                    c2: undefined,
-                })
-                sides.push({
-                    or: 'h',
-                    x: c2.x + r2,
-                    y: c2.y,
-                    c1: undefined,
-                    c2: c2,
-                })
-            }
-
-            c1 = c2
-        }
-
-        //make vertical sides
-        //sort cells by y and x
-        cells.sort((c1, c2) => (c2.y == c1.y ? c1.x - c2.x : c1.y - c2.y))
-        c1 = cells[0]
-        for (let i = 1; i < cells.length; i++) {
-            let c2 = cells[i]
-
-            if (c1.x + resolution == c2.x && c1.y == c2.y)
-                //cells in same row and touch along vertical side
-                //make shared side
-                sides.push({
-                    or: 'v',
-                    x: c1.x + resolution,
-                    y: c1.y + r2,
-                    c1: c1,
-                    c2: c2,
-                })
-            else {
-                //cells do not touch along vertical side
-                //make two sides: right one for c1, left for c2
-                sides.push({
-                    or: 'v',
-                    x: c1.x + resolution,
-                    y: c1.y + r2,
-                    c1: c1,
-                    c2: undefined,
-                })
-                sides.push({
-                    or: 'v',
-                    x: c2.x,
-                    y: c2.y + r2,
-                    c1: undefined,
-                    c2: c2,
-                })
-            }
-
-            c1 = c2
-        }
-        return sides
-    }
 }

@@ -41,6 +41,8 @@
         <br>
         <label for="cbRelief"><input type="checkbox" id="cbRelief" checked>Relief hypsometric tints</label>
         <hr>
+        <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
+        <br>
         <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
         <br>
         <label>Relief exageration</label>
@@ -50,7 +52,7 @@
         <input type="range" min="0" max="4" value="0" step="0.05" id="sReliefSmoothing" style="width: 200px" />
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/gridviz@3.0.28"></script>
+    <script src="../../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@2.0.2"></script>
@@ -65,7 +67,6 @@
         //REDO: tanaka, lego, contours
         //test webgl - faster ?
         //reuse hill shading and tanaka with accessibility map
-        //tanaka
         //DEM 50m ?
         //add some rivers ?
         //legend ?
@@ -184,6 +185,8 @@
         const cellInfoHTMLPop = (c) => `Population: ${c.POP_2021}`
         const cellInfoHTMLRelief = (c) => `Elevation: ${c.v}`
 
+
+        const cbTanaka = document.getElementById("cbTanaka");
         const cbHillshading = document.getElementById("cbHillshading");
         const cbRelief = document.getElementById("cbRelief");
         const sReliefSmoothing = document.getElementById('sReliefSmoothing');
@@ -222,75 +225,40 @@
 
 
             const adj = cbHypssea.checked
-            const scaleReliefCoeff = -2 - 0.3 * +sReliefExageration.value
+            const scaleReliefCoeff = 2 - 0.3 * +sReliefExageration.value
             const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff)
-            /*let styleRelief_ = new gridviz.ShapeColorSizeStyle({
-                viewScale: cells => d3.extent(cells, c => getElevationValue(c)),
-                color: (c, r, z, [min, max]) => {
-                    const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                    const val = getElevationValue(c)
-                    if (val < 0 && (seaLevel==0 || (seaLevel>0 && !adj))) return colors[0]
-                    let t = (val - min_) / (max - min_)
-                    //t = Math.pow(t, 0.6)
-                    t = scaleRelief(t)
-                    t = Math.floor(t * classNumber)
-                    if (t >= classNumber) t = classNumber - 1
-                    return colors[t]
-                },
-                size: (c, r, z) => r + z * 0.3
-            })*/
             let hypsoStyle = new gridviz.SquareColorWebGLStyle({
-                viewScale: cells => d3.extent(cells, c => getElevationValue(c)),
-                tFun: (c, r, z, [min, max]) => {
+                viewScale: cells => {
+                    [min, max] = d3.extent(cells, c => getElevationValue(c))
                     const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                    const val = getElevationValue(c)
-                    if (val < 0 && (seaLevel == 0 || (seaLevel > 0 && !adj))) return 0
-                    let t = (val - min_) / (max - min_)
-                    t = scaleRelief(t)
-                    t = Math.floor(t * classNumber) / classNumber
-                    return t
+                    const breaks = []
+                    for (let i = 1; i < classNumber; i++) {
+                        let t = i / classNumber
+                        t = scaleRelief(t)
+                        breaks.push(min_ + (max - min_) * t)
+                    }
+                    return gridviz.classifier(breaks)
                 },
+                tFun: (c, r, z, vs) => vs(getElevationValue(c)) / classNumber,
                 colors: colors,
-                //stretching: { fun: 'log', alpha: -2 },
             })
 
-
-            function getTanakaStyle(field, classifier, change = false) {
-                //define tanaka style
-                const sideValue = (side) => {
-                    if (change) {
-                        const v1 = !side.c1 || side.c1[field] == undefined ? 0 : side.c1[field] / 60
-                        const v2 = !side.c2 || side.c2[field] == undefined ? 0 : side.c2[field] / 60
-                        return classifier(v2) - classifier(v1)
-                    } else {
-                        if (!side.c1 && !side.c2) return
-                        if (!side.c2) return 1
-                        if (!side.c1) return -1
-                        if (!side.c1[field] && !side.c2[field]) return
-                        if (!side.c2[field]) return 1
-                        if (!side.c1[field]) return -1
-                        return classifier(side.c2[field] / 60) - classifier(side.c1[field] / 60)
+            let tanakaStyle = new gridviz.SideTanakaStyle({
+                classifier: cells => {
+                    // return a function which for each cell returns its class number
+                    [min, max] = d3.extent(cells, c => getElevationValue(c))
+                    const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                    const breaks = []
+                    for (let i = 1; i < classNumber; i++) {
+                        let t = i / classNumber
+                        t = scaleRelief(t)
+                        breaks.push(min_ + (max - min_) * t)
                     }
-                }
-
-                return new gridviz.SideStyle({
-                    color: (side, resolution) => {
-                        const v = sideValue(side) * reliefDirection
-                        if (!v) return
-                        if ((v < 0 && side.or === 'h') || (v > 0 && side.or === 'v')) return "black"
-                        return "white"
-                    },
-                    width: (side, r, z) => {
-                        const v = sideValue(side) * reliefDirection
-                        if (!v) return
-                        return Math.abs(v) * Math.min(2 * z, r / 3)
-                    }
-                })
-            }
-
-
-
-
+                    const cs = gridviz.classifier(breaks)
+                    return c => cs(getElevationValue(c))
+                },
+                diamond: shadingDiamond,
+            })
 
             //- 0.3 * +sReliefExageration.value
             const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
@@ -319,6 +287,7 @@
                     styles: [style]
                 })
                 hypsoStyle = fun(hypsoStyle)
+                tanakaStyle = fun(tanakaStyle)
                 joyplotStyle = fun(joyplotStyle)
                 shadingStyle = fun(shadingStyle)
                 styleWater = fun(styleWater)
@@ -331,6 +300,8 @@
             const reliefStyle = joyplot ? joyplotStyle : hypsoStyle
             // relief
             if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
+            // relief tanaka
+            if (cbTanaka.checked) layers.push(new gridviz.GridLayer(datasetRelief, [tanakaStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: 'none' }))
             //relief shading
             if (cbHillshading.checked) layers.push(new gridviz.GridLayer(datasetRelief, [shadingStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // CLC waters
@@ -352,6 +323,7 @@
 
         //add event listeners
         sSeaLevel.addEventListener('input', update);
+        cbTanaka.addEventListener("change", update);
         cbHillshading.addEventListener("change", update);
         cbRelief.addEventListener("change", update);
         sReliefSmoothing.addEventListener("input", update);
@@ -373,6 +345,7 @@
                 if (div.style.display === "none") div.style.display = "block"; // or "inline", "flex", etc.
                 else div.style.display = "none";
             }
+            //else if (e.key == "t") { tanaka = !tanaka; update() }
             else if (e.key == "j") { joyplot = !joyplot; update() }
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }

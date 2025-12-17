@@ -168,6 +168,7 @@ export const viewScaleCombination = (obj) => {
     }
 }
 
+
 /**
  * Return a classifier function from break values.
  * The classifier function returns the class id (from 0 to breaks.length) from a value to classifiy.
@@ -187,6 +188,20 @@ export function classifier(breaks) {
     classifier.breaks = breaks
     return classifier
 }
+
+/**
+ * @param {number} min
+ * @param {number} max
+ * @param {number} nbClass
+ */
+export function classifierMinMax(min, max, nbClass) {
+    const breaks = []
+    const step = (max - min) / nbClass
+    for (let i = 1; i < nbClass; i++) breaks.push(min + i * step)
+    return classifier(breaks)
+}
+
+
 
 /**
  * Return a color classifier function from break values.

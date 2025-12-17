@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gridviz tanaka example</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+            margin: 0;
+            /* Remove default margins to prevent scrolling */
+            overflow: hidden;
+            /* Prevent potential scrollbars */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map" style="height: 100%; width: 100%"></div>
+
+    <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+    <script>
+        const map = new gridviz.Map(document.getElementById('map'), {
+            x: 4200000, y: 2800000, z: 1000,
+            backgroundColor: "#ccc"
+        })
+            .addZoomButtons()
+
+        const dataset = new gridviz.MultiResolutionDataset(
+            [100, 200, 500, 1000, 2000, 5000, 10000, 20000],
+            resolution => new gviz_par.TiledParquetGrid(map,
+                "https://raw.githubusercontent.com/jgaffuri/tiled-euroDEM/main/pub/v1/tiles_" + resolution + "/"),
+            { preprocess: (c) => c.v != undefined && c.v != 0 }
+        )
+
+        //define style
+        const tanakaStyle = new gridviz.SideTanakaStyle({
+            classifier: cells => {
+                return c=> {
+                    const v = c.v
+                    if(v===undefined) return undefined
+                    if(v<0) return 0
+                    if(v<100) return 1
+                    if(v<200) return 2
+                    if(v<500) return 3
+                    if(v<1000) return 4
+                    if(v<2000) return 5
+                    if(v<3000) return 6
+                    return 7
+                }
+            }
+        })
+
+        //add layer to map
+        map.layers = [new gridviz.GridLayer(dataset, [tanakaStyle], { minPixelsPerCell: 3 })]
+
+    </script>
+</body>
+
+</html>
