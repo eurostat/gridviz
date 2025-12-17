@@ -33,7 +33,7 @@
             [100, 200, 500, 1000, 2000, 5000, 10000, 20000],
             resolution => new gviz_par.TiledParquetGrid(map,
                 "https://raw.githubusercontent.com/jgaffuri/tiled-euroDEM/main/pub/v1/tiles_" + resolution + "/"),
-            { preprocess: (c) => c.v != undefined && c.v != 0 }
+            { preprocess: (c) => c.v != undefined && c.v > 0 }
         )
 
         //define style
@@ -53,7 +53,7 @@
                 }
             },
             limit: "steep", // none step steep
-            revert: false,
+            revert: true,
         })
 
         //add layer to map
