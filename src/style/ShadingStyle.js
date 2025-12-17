@@ -42,14 +42,25 @@ export class ShadingStyle extends SideStyle {
         // compute maximum side value for normalization
         this.viewScale = sides => max(sides, s => sideValue(s))
 
-        const colorTopLeft = opts.colorTopLeft || '255,255,255'
-        const colorBottomRight = opts.colorBottomRight || '0,0,0'
-        const scale = opts.scale || (t=>t)
+        // get colors
+        let colorTopLeft = opts.colorTopLeft || '255,255,255'
+        let colorBottomRight = opts.colorBottomRight || '0,0,0'
+
+        // revert colors (to revert the relief, show depressions as hills)
+        const revert = opts.revert == undefined? false : opts.revert
+        if(revert) {
+            let a = colorTopLeft
+            colorTopLeft = colorBottomRight
+            colorBottomRight = a
+        }
+
+        //
+        const scale = opts.scale
 
         this.color = (side, resolution, z, max) => {
             if (side.v == 0) return
             let coeff = Math.abs(side.v / max)
-            coeff = scale(coeff)
+            if(scale) coeff = scale(coeff)
             if ((side.v < 0 && side.or === 'h') || (side.v > 0 && side.or === 'v'))
                 return 'rgba(' + colorTopLeft + ',' + coeff + ')'
             return 'rgba(' + colorBottomRight + ',' + coeff + ')'
