@@ -44,50 +44,19 @@ export class SquareColorCategoryWebGLStyle extends Style {
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
         this.size = opts.size // (resolution, z) => ...
+
+        /**  * @type {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext, width:number, height:number }}*/
+        this.cvWGL = undefined
+        this.programm = undefined
     }
 
-    /**
-     * @param {Array.<import("../core/Dataset.js").Cell>} cells
-     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
-     * @param {number} resolution
-     */
-    draw(cells, geoCanvas, resolution) {
-        //filter
-        if (this.filter) cells = cells.filter(this.filter)
 
-        //
-        const z = geoCanvas.view.z
+    init(w, h) {
+        this.cvWGL = makeWebGLCanvas(w + '', h + '')
+        if (!this.cvWGL) { console.error('No webGL'); return }
 
-        //get view scale
-        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+        const gl = this.cvWGL.gl
 
-        //add vertice and fragment data
-        const r2 = resolution / 2
-        let c,
-            nb = cells.length
-        const verticesBuffer = []
-        const iBuffer = []
-        for (let i = 0; i < nb; i++) {
-            c = cells[i]
-            const cat = this.code(c, resolution, z, viewScale)
-            if (cat == undefined) {
-                console.log('Unexpected category: ' + cat)
-                continue
-            }
-            const i_ = this.catToI[cat]
-            if (isNaN(+i_)) {
-                console.log('Unexpected category index: ' + cat + ' ' + i_)
-                continue
-            }
-            verticesBuffer.push(c.x + r2, c.y + r2)
-            iBuffer.push(+i_)
-        }
-
-        //create canvas and webgl renderer
-        const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
-        if (!cvWGL) { console.error('No webGL'); return }
-        const gl = cvWGL.gl
-        const canvas = cvWGL.canvas
 
         //draw
         const vectorShader = `
@@ -118,15 +87,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShader)
 
         /** @type {WebGLProgram} */
-        const program = initShaderProgram(gl, vShader, fShader)
-        gl.useProgram(program)
+        this.program = initShaderProgram(gl, vShader, fShader)
+        gl.useProgram(this.program)
 
-
-        //set uniforms
-
-        //bind sizePix
-        const sizePix = this.size ? this.size(resolution, z)/z : resolution/z + 0.2
-        gl.uniform1f(gl.getUniformLocation(program, 'sizePix'), 1.0 * sizePix)
+        // bind colors
 
         // Example: Create a 1D LUT texture (e.g., 256 entries)
         const lutSize = this.colors.length;
@@ -151,8 +115,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
         // Get uniform locations
-        const uColorLUT = gl.getUniformLocation(program, 'colorLUT');
-        const uLutSize = gl.getUniformLocation(program, 'lutSize');
+        const uColorLUT = gl.getUniformLocation(this.program, 'colorLUT');
+        const uLutSize = gl.getUniformLocation(this.program, 'lutSize');
 
         // Set uniform values
         gl.uniform1i(uColorLUT, 0); // Texture unit 0
@@ -162,10 +126,59 @@ export class SquareColorCategoryWebGLStyle extends Style {
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, lutTexture);
 
+    }
+
+
+    /**
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {number} resolution
+     */
+    draw(cells, geoCanvas, resolution) {
+        //filter
+        if (this.filter) cells = cells.filter(this.filter)
+
+        //
+        const z = geoCanvas.view.z
+
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+
+        //create canvas and webgl renderer
+        if (!this.cvWGL || geoCanvas.w != this.cvWGL.width || geoCanvas.h != this.cvWGL.height)
+            this.init(geoCanvas.w, geoCanvas.h)
+        const gl = this.cvWGL.gl
+        const canvas = this.cvWGL.canvas
+
+        //bind sizePix
+        const sizePix = this.size ? this.size(resolution, z) / z : resolution / z + 0.2
+        gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
+
+        //add vertice and fragment data
+        const r2 = resolution / 2
+        let c, nb = cells.length
+        const verticesBuffer = []
+        const iBuffer = []
+        for (let i = 0; i < nb; i++) {
+            c = cells[i]
+            const cat = this.code(c, resolution, z, viewScale)
+            if (cat == undefined) {
+                console.log('Unexpected category: ' + cat)
+                continue
+            }
+            const i_ = this.catToI[cat]
+            if (isNaN(+i_)) {
+                console.log('Unexpected category index: ' + cat + ' ' + i_)
+                continue
+            }
+            verticesBuffer.push(c.x + r2, c.y + r2)
+            iBuffer.push(+i_)
+        }
+
         //bind vertice data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW)
-        const position = gl.getAttribLocation(program, 'pos')
+        const position = gl.getAttribLocation(this.program, 'pos')
         gl.vertexAttribPointer(
             position,
             2, //numComponents
@@ -179,12 +192,12 @@ export class SquareColorCategoryWebGLStyle extends Style {
         //i data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(iBuffer), gl.STATIC_DRAW)
-        const i = gl.getAttribLocation(program, 'i')
+        const i = gl.getAttribLocation(this.program, 'i')
         gl.vertexAttribPointer(i, 1, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(i)
 
         //transformation
-        gl.uniformMatrix3fv(gl.getUniformLocation(program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
+        gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
 
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);
@@ -194,8 +207,6 @@ export class SquareColorCategoryWebGLStyle extends Style {
         //gl.viewport(0, 0, cg.w, cg.h);
 
         gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
-
-
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
@@ -208,7 +219,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
 
 
-// test for webgl2 migration
+// early tests for webgl2 migration
 
 /*
 function getVectorShader2() {
