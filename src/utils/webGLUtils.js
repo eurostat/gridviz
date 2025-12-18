@@ -11,10 +11,11 @@ export function makeWebGLCanvas(width, height, opts = {}) {
     const canvas = document.createElement('canvas')
     canvas.setAttribute('width', width)
     canvas.setAttribute('height', height)
+    const version2 = (opts && +opts.version==2)? "2" : ""
     /** @type {WebGLRenderingContext} */
-    const gl = canvas.getContext('webgl', opts)
+    const gl = canvas.getContext('webgl' + version2, opts)
     if (!gl) {
-        throw new Error('Unable to initialize WebGL. Your browser or machine may not support it.')
+        throw new Error('Unable to initialize WebGL'+version2+'. Your browser or machine may not support it.')
     }
     return { canvas: canvas, gl: gl }
 }

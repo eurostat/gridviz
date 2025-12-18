@@ -2,8 +2,8 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
-import { makeWebGLCanvas } from '../utils/webGLUtils.js'
-import { WebGLSquareColoringCatAdvanced } from '../utils/WebGLSquareColoringCatAdvanced.js'
+import { initShaderProgram, createShader, makeWebGLCanvas } from '../utils/webGLUtils.js'
+import { color } from 'd3-color'
 
 /**
  * Style based on webGL
@@ -44,11 +44,6 @@ export class SquareColorCategoryWebGLStyle extends Style {
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
         this.size = opts.size // (resolution, z) => ...
-
-        /**
-         * @private
-         * @type { WebGLSquareColoringCatAdvanced } */
-        this.wgp = new WebGLSquareColoringCatAdvanced(this.colors)
     }
 
     /**
@@ -79,7 +74,6 @@ export class SquareColorCategoryWebGLStyle extends Style {
                 console.log('Unexpected category: ' + cat)
                 continue
             }
-            /** @type {number} */
             const i_ = this.catToI[cat]
             if (isNaN(+i_)) {
                 console.log('Unexpected category index: ' + cat + ' ' + i_)
@@ -98,7 +92,119 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         //draw
         const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
-        this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, geoCanvas.getWebGLTransform(), sizeGeo / z)
+        const sizePix = sizeGeo / z
+
+        const gl = cvWGL.gl
+        const transfoMat = geoCanvas.getWebGLTransform()
+
+
+        const vectorShader = `
+        attribute vec2 pos;
+        uniform float sizePix;
+        uniform mat3 mat;
+
+        attribute float i;
+        varying float vi;
+
+        void main() {
+          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+          gl_PointSize = sizePix;
+          vi = i;
+        }`
+        /** @type {WebGLShader} */
+        const vShader = createShader(gl, gl.VERTEX_SHADER, vectorShader)
+
+        const fragmentShader = `
+        precision highp float;
+        varying float vi;
+        uniform sampler2D colorLUT;
+        uniform float lutSize;
+        void main(void) {
+            float idx = floor(vi + 0.5);
+            float u = (idx + 0.5) / lutSize;
+            gl_FragColor = texture2D(colorLUT, vec2(u, 0.5));
+        }`
+        /** @type {WebGLShader} */
+        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShader)
+
+        /** @type {WebGLProgram} */
+        const program = initShaderProgram(gl, vShader, fShader)
+        gl.useProgram(program)
+
+
+        //set uniforms
+
+        //bind sizePix
+        gl.uniform1f(gl.getUniformLocation(program, 'sizePix'), 1.0 * sizePix)
+
+        // Example: Create a 1D LUT texture (e.g., 256 entries)
+        const lutSize = this.colors.length;
+        const lutData = new Uint8Array(lutSize * 4); // RGBA for each entry
+
+        // Fill lutData with your color values (e.g., rainbow, grayscale, etc.)
+        for (let i = 0; i < lutSize; i++) {
+            const c = color(this.colors[i])
+            lutData[i * 4] = +c.r;     // R
+            lutData[i * 4 + 1] = c.g; // G
+            lutData[i * 4 + 2] = c.b; // B
+            lutData[i * 4 + 3] = c?.opacity * 255; // A
+        }
+
+        // Create and bind texture
+        const lutTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, lutTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, lutSize, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, lutData);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        // Get uniform locations
+        const uColorLUT = gl.getUniformLocation(program, 'colorLUT');
+        const uLutSize = gl.getUniformLocation(program, 'lutSize');
+
+        // Set uniform values
+        gl.uniform1i(uColorLUT, 0); // Texture unit 0
+        gl.uniform1f(uLutSize, lutSize);
+
+        // Bind the texture to texture unit 0
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, lutTexture);
+
+        //bind vertice data
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW)
+        const position = gl.getAttribLocation(program, 'pos')
+        gl.vertexAttribPointer(
+            position,
+            2, //numComponents
+            gl.FLOAT, //type
+            false, //normalise
+            0, //stride
+            0 //offset
+        )
+        gl.enableVertexAttribArray(position)
+
+        //i data
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(iBuffer), gl.STATIC_DRAW)
+        const i = gl.getAttribLocation(program, 'i')
+        gl.vertexAttribPointer(i, 1, gl.FLOAT, false, 0, 0)
+        gl.enableVertexAttribArray(i)
+
+        //transformation
+        gl.uniformMatrix3fv(gl.getUniformLocation(program, 'mat'), false, new Float32Array(transfoMat))
+
+        // Enable the depth test
+        //gl.enable(gl.DEPTH_TEST);
+        // Clear the color buffer bit
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        // Set the view port
+        //gl.viewport(0, 0, cg.w, cg.h);
+
+        gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
+
+
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
@@ -108,3 +214,53 @@ export class SquareColorCategoryWebGLStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z })
     }
 }
+
+
+function getVectorShader2() {
+    return `
+        #version 300 es
+        precision highp float;
+
+        in vec2 pos;
+        in int i;
+
+        uniform float sizePix;
+        uniform mat3 mat;
+
+        flat out int vi;
+
+        void main() {
+            gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+            gl_PointSize = sizePix;
+            vi = i;
+        }
+        `
+}
+
+
+function getFragmentShader2(colors) {
+
+    //prepare fragment shader code
+    //declare the uniform and other variables
+    const out = []
+    out.push('#version 300 es\nprecision highp float;\nflat in int vi;\n')
+
+    //add color uniforms
+    //uniform vec4 colors[12];
+    out.push('uniform vec4 colors[')
+    out.push(colors.length)
+    out.push('];\n')
+
+    out.push('out vec4 fragColor;\n')
+
+    //start the main function
+    //void main() { fragColor = colors[clamp(vi, 0, 11)]; }
+    out.push('void main() { fragColor = colors[vi]; }\n')
+
+    /** Fragment shader program
+     * @type {string} */
+    const fshString = out.join('')
+    console.log(fshString)
+    return fshString
+}
+
