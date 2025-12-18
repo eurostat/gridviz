@@ -177,6 +177,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
 
 
+    // check if the vertices have to be bound again
     mapContentChanged(v, cellsNb) {
         if (v.x == this.x && v.y == this.y && v.z == this.z && this.cellsNb == cellsNb) return false
         this.x = v.x
@@ -216,10 +217,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         //
         if (this.mapContentChanged(geoCanvas.view, cells.length))
+            //bind vertices
             this.bindVertices(cells, resolution, z, viewScale)
-
-        //transformation
-        gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
+            //transformation
+            gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
 
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);
