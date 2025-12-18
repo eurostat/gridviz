@@ -107,11 +107,11 @@
         )
 
 
-        const styleCLCWater = new gridviz.ShapeColorSizeStyle({ color: () => seaColor, size: (c, r, z) => r + z * 0.3 })
-        /*const styleCLCWater = new gridviz.SquareColorCategoryWebGLStyle({
+        //const styleCLCWater = new gridviz.ShapeColorSizeStyle({ color: () => seaColor, size: (c, r, z) => r + z * 0.3 })
+        const styleCLCWater = new gridviz.SquareColorCategoryWebGLStyle({
             code: (cell) => "a",
             color: { 'a': seaColor },
-        })*/
+        })
 
         /*
         const scalePopulation = gridviz.logarithmicScale(-3)

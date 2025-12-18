@@ -57,7 +57,6 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         const gl = this.cvWGL.gl
 
-
         //draw
         const vectorShader = `
         attribute vec2 pos;
@@ -89,10 +88,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
         /** @type {WebGLProgram} */
         this.program = initShaderProgram(gl, vShader, fShader)
         gl.useProgram(this.program)
+    }
 
-        // bind colors
-
-        // Example: Create a 1D LUT texture (e.g., 256 entries)
+    bindColors() {
+        const gl = this.cvWGL.gl
         const lutSize = this.colors.length;
         const lutData = new Uint8Array(lutSize * 4); // RGBA for each entry
 
@@ -125,35 +124,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
         // Bind the texture to texture unit 0
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, lutTexture);
-
     }
 
-
-    /**
-     * @param {Array.<import("../core/Dataset.js").Cell>} cells
-     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
-     * @param {number} resolution
-     */
-    draw(cells, geoCanvas, resolution) {
-        //filter
-        if (this.filter) cells = cells.filter(this.filter)
-
-        //
-        const z = geoCanvas.view.z
-
-        //get view scale
-        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
-
-        //create canvas and webgl renderer
-        if (!this.cvWGL || geoCanvas.w != this.cvWGL.width || geoCanvas.h != this.cvWGL.height)
-            this.init(geoCanvas.w, geoCanvas.h)
+    bindVertices(cells, resolution, z, viewScale) {
         const gl = this.cvWGL.gl
-        const canvas = this.cvWGL.canvas
-
-        //bind sizePix
-        const sizePix = this.size ? this.size(resolution, z) / z : resolution / z + 0.2
-        gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
-
         //add vertice and fragment data
         const r2 = resolution / 2
         let c, nb = cells.length
@@ -195,6 +169,38 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const i = gl.getAttribLocation(this.program, 'i')
         gl.vertexAttribPointer(i, 1, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(i)
+    }
+
+
+    /**
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {number} resolution
+     */
+    draw(cells, geoCanvas, resolution) {
+        //filter
+        if (this.filter) cells = cells.filter(this.filter)
+
+        //
+        const z = geoCanvas.view.z
+
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+
+        //create canvas and webgl renderer
+        if (!this.cvWGL || geoCanvas.w != this.cvWGL.width || geoCanvas.h != this.cvWGL.height) {
+            this.init(geoCanvas.w, geoCanvas.h)
+            this.bindColors()
+        }
+        const gl = this.cvWGL.gl
+        const canvas = this.cvWGL.canvas
+
+        //bind sizePix
+        const sizePix = this.size ? this.size(resolution, z) / z : resolution / z + 0.2
+        gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
+
+        //
+        this.bindVertices(cells, resolution, z, viewScale)
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
@@ -206,7 +212,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
         // Set the view port
         //gl.viewport(0, 0, cg.w, cg.h);
 
-        gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
+        gl.drawArrays(gl.POINTS, 0, cells.length)
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
