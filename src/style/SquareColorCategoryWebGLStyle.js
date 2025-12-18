@@ -85,27 +85,17 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
-        if (!cvWGL) {
-            console.error('No webGL')
-            return
-        }
+        if (!cvWGL) { console.error('No webGL'); return }
+        const gl = cvWGL.gl
+        const canvas = cvWGL.canvas
 
         //draw
-        const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
-        const sizePix = sizeGeo / z
-
-        const gl = cvWGL.gl
-        const transfoMat = geoCanvas.getWebGLTransform()
-
-
         const vectorShader = `
         attribute vec2 pos;
         uniform float sizePix;
         uniform mat3 mat;
-
         attribute float i;
         varying float vi;
-
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
           gl_PointSize = sizePix;
@@ -135,6 +125,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
         //set uniforms
 
         //bind sizePix
+        const sizePix = this.size ? this.size(resolution, z)/z : resolution/z + 0.2
         gl.uniform1f(gl.getUniformLocation(program, 'sizePix'), 1.0 * sizePix)
 
         // Example: Create a 1D LUT texture (e.g., 256 entries)
@@ -193,7 +184,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
         gl.enableVertexAttribArray(i)
 
         //transformation
-        gl.uniformMatrix3fv(gl.getUniformLocation(program, 'mat'), false, new Float32Array(transfoMat))
+        gl.uniformMatrix3fv(gl.getUniformLocation(program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
 
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);
@@ -208,7 +199,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
-        geoCanvas.offscreenCtx.drawImage(cvWGL.canvas, 0, 0)
+        geoCanvas.offscreenCtx.drawImage(canvas, 0, 0)
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z })
@@ -216,6 +207,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
 }
 
 
+
+// test for webgl2 migration
+
+/*
 function getVectorShader2() {
     return `
         #version 300 es
@@ -258,9 +253,9 @@ function getFragmentShader2(colors) {
     out.push('void main() { fragColor = colors[vi]; }\n')
 
     /** Fragment shader program
-     * @type {string} */
     const fshString = out.join('')
     console.log(fshString)
     return fshString
 }
 
+*/
