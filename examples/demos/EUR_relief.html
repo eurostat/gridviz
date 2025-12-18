@@ -52,13 +52,13 @@
         <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
         <br>
         <label>Relief smoothing (slow)</label>
-        <input type="range" min="0" max="4" value="0" step="0.05" id="sReliefSmoothing" style="width: 200px" />
+        <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
     </div>
 
     <script src="../../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@2.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@2.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3.2.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -260,7 +260,7 @@
                     }
                     return gridviz.classifier(breaks)
                 },
-                code: (c,r,z,classifier) => classifier(getElevationValue(c)),
+                code: (c, r, z, classifier) => classifier(getElevationValue(c)),
                 color: { ...colors },
             })
 
@@ -303,7 +303,7 @@
             if (sr > 0) {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
-                    sigma: (r, z) => r * (sr + 0.5),
+                    sigma: (r, z) => sr*z,
                     factor: 1,
                     filterSmoothed: (value) => value > 0.05,
                     styles: [style]
