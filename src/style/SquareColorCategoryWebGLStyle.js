@@ -48,8 +48,12 @@ export class SquareColorCategoryWebGLStyle extends Style {
         /**  * @type {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext, width:number, height:number }}*/
         this.cvWGL = undefined
         this.programm = undefined
-    }
 
+        this.x = undefined
+        this.y = undefined
+        this.z = undefined
+        this.cellsNb = undefined
+    }
 
     init(w, h) {
         this.cvWGL = makeWebGLCanvas(w + '', h + '')
@@ -172,6 +176,17 @@ export class SquareColorCategoryWebGLStyle extends Style {
     }
 
 
+
+    mapContentChanged(v, cellsNb) {
+        if (v.x == this.x && v.y == this.y && v.z == this.z && this.cellsNb == cellsNb) return false
+        this.x = v.x
+        this.y = v.y
+        this.z = v.z
+        this.cellsNb = cellsNb
+        return true
+    }
+
+
     /**
      * @param {Array.<import("../core/Dataset.js").Cell>} cells
      * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
@@ -200,7 +215,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
         gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
 
         //
-        this.bindVertices(cells, resolution, z, viewScale)
+        if (this.mapContentChanged(geoCanvas.view, cells.length))
+            this.bindVertices(cells, resolution, z, viewScale)
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
