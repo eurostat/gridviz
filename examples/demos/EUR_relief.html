@@ -52,7 +52,9 @@
         <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
         <br>
         <label>Relief smoothing (slow)</label>
-        <input type="range" min="0" max="30" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+        <input type="range" min="0" max="50" value="0" step="1" id="sReliefSmoothing" style="width: 200px" />
+        <hr>
+        <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -68,6 +70,7 @@
         //TODO
         //fix smoothing for tanaka, shading joyplot
         //test quantile
+        //rayshading ?
         //Check doc and examples: tanaka, lego, contours.
         //add some rivers ?
         //legend ?
@@ -197,6 +200,7 @@
         const sSeaLevel = document.getElementById('sSeaLevel');
         const lbSeaLevel = document.getElementById("lbSeaLevel");
         const cbHypssea = document.getElementById("cbHypssea");
+        const cbHD = document.getElementById("cbHD");
 
         let resolutionCoeff = 1
         let scaleShadingCoeff = -2
@@ -299,37 +303,39 @@
                 fillColor: (y, ys, r, z) => "#777"
             })
 
+
+            // definition
+            const mppc = (1 + sr/3) * (cbHD.checked? 0.7 : 1.4) * resolutionCoeff
+            const mppcRelief = joyplot ? 8 * resolutionCoeff : mppc
+            let reliefStyle = joyplot ? joyplotStyle : hypsoStyle
+
             // apply smoothing
             if (sr > 0) {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
-                    sigma: (r, z) => (3+sr)*r/10,
-                    factor: 1,
+                    sigma: (r, z) => sr * 3 * z, // in screen pixel
+                    factor: mppcRelief,
                     filterSmoothed: (value) => value > 0.05,
                     styles: [style]
                 })
-                hypsoStyle = fun(hypsoStyle)
+                reliefStyle = fun(reliefStyle)
                 tanakaStyle = fun(tanakaStyle)
-                joyplotStyle = fun(joyplotStyle)
                 shadingStyle = fun(shadingStyle)
                 styleWater = fun(styleWater)
             }
 
             // set layers
             const layers = []
-            const mppc = 1.7 * resolutionCoeff
-            const mppcRelief = joyplot ? 8 * resolutionCoeff : mppc
-            const reliefStyle = joyplot ? joyplotStyle : hypsoStyle
             // relief
             if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
             // relief tanaka
-            if (cbTanaka.checked) layers.push(new gridviz.GridLayer(datasetRelief, [tanakaStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: 'none' }))
+            if (cbTanaka.checked) layers.push(new gridviz.GridLayer(datasetRelief, [tanakaStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             //relief shading
             if (cbHillshading.checked) layers.push(new gridviz.GridLayer(datasetRelief, [shadingStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // CLC waters
             if (cbCLC.checked) layers.push(new gridviz.GridLayer(datasetCLC, [styleCLCWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // population
-            if (cbPopulation.checked) layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4 * resolutionCoeff, cellInfoHTML: 'none' }))
+            if (cbPopulation.checked) layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4, cellInfoHTML: 'none' }))
             //boundaries
             if (cbBoundaries.checked) layers.push(boundariesLayer);
             //roads
@@ -357,6 +363,7 @@
         cbBoundaries.addEventListener("change", update);
         cbRoads.addEventListener("change", update);
         cbHypssea.addEventListener("change", update);
+        cbHD.addEventListener("change", update);
 
 
 
