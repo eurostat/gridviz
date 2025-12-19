@@ -76,6 +76,7 @@ export class Map {
         this.legend = opts.legendContainer
             ? select(opts.legendContainer) // Wrap the provided HTML node in a D3 selection
             : null
+        this._legendProvidedByUser = !!opts.legendContainer
         if (!this.legend) this.initialiseLegend()
 
         //tooltip
@@ -536,7 +537,10 @@ export class Map {
         this.geoCanvas.canvas.remove()
 
         // remove legend
-        this.legend?.remove()
+        // only remove legend if gridviz created it
+        if (!this._legendProvidedByUser) {
+            this.legend?.remove()
+        }
 
         // remove tooltip
         this.tooltip.tooltip?.remove()
