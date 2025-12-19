@@ -25,7 +25,7 @@ export class SideTanakaStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @type {function(Side, number, number, number, object):number} */
-        this.width = opts.width || ((side, sideValue, resolution, z, sidesScale) => Math.abs(sideValue) * Math.min(2 * z, resolution / 3))
+        this.width = opts.width || ((side, sideValue, resolution, z, sidesScale) => Math.abs(sideValue) * z) //Math.min(2 * z, resolution / 3))
 
         /** A function returning the length of a cell side, in geo unit
          * @type {function(Side, number, number, object):number} */
