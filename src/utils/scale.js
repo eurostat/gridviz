@@ -151,6 +151,28 @@ export const viewScaleColorQuantile = (opts) => {
     }
 }
 
+
+/**
+ * Generic function for view scale quantile classifier
+ *
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, classNumber?:number }} opts
+ * @returns {function(Array.<import("../core/Dataset").Cell>):ColorScale}
+ */
+export const viewScaleQuantileClassifer = (opts) => {
+    const valueFunction = opts.valueFunction // the function that return the cell value from a cell
+    const classNumber = opts.classNumber || 12 // the class number
+
+    const scale = scaleQuantile().range(Array.from( { length: classNumber }, (_, i) => i ))
+    return (cells) => {
+        scale.domain(cells.map(valueFunction))
+        scale.breaks = scale.quantiles()
+        return scale
+    }
+}
+
+
+
+
 /**
  * Combine view scale functions
  *
