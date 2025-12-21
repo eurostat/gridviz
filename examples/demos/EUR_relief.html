@@ -46,7 +46,7 @@
         <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
         <br>
         <label>Relief hypsometric tints number</label>
-        <input type="range" min="2" max="40" value="20" step="1" id="sReliefNb" style="width: 200px" />
+        <input type="range" min="2" max="25" value="7" step="1" id="sReliefNb" style="width: 200px" />
         <br>
         <label>Relief exageration</label>
         <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
@@ -80,6 +80,7 @@
 
         const seaColor = "#a4c8e1"
         const seaColorT = seaColor + "bb"
+        const colorRamp = (t) => d3.interpolateRdYlGn(0.95 - t*0.9)
 
         const map = new gridviz.Map(document.getElementById('map'), {
             x: 4200000, y: 2800000, z: 1000,
@@ -235,7 +236,7 @@
             //define style
             const classNumber = sReliefNb.value
             const colors = []
-            for (let i = 0; i <= (classNumber - 1); i++) colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
+            for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
 
             /*let hypsoStyle = new gridviz.SquareColorWebGLStyle({
                 viewScale: cells => {
