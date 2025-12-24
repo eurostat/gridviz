@@ -10,6 +10,8 @@ import { SideStyle } from './SideStyle.js'
  * @typedef {function(Array.<Side>,number, number):*} SideViewScale */
 
 /**
+ * @see https://manifold.net/doc/mfd9/example__tanaka_contours.htm
+ * 
  * @module style
  * @author Julien Gaffuri
  */

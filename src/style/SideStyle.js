@@ -124,11 +124,16 @@ export class SideStyle extends Style {
      * @param {boolean} center Set to true so that the side coordinate are those of its center point rather than its left/bottom point (the side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides)
      * @returns { Array.<Side> }
      */
-    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = true) {
+    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = true, eps = 0.01) {
         /** @type { Array.<Side> } */
         const sides = []
 
+        // half resolution
         const r2 = center ? resolution / 2 : 0
+
+        // epsilon
+        eps = resolution * eps
+        const abs = Math.abs
 
         //make horizontal sides
         //sort cells by x and y
@@ -137,7 +142,7 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            if (c1.y + resolution == c2.y && c1.x == c2.x)
+            if (abs(c1.y + resolution - c2.y) < eps && abs(c1.x - c2.x) < eps)
                 //cells in same column and touch along horizontal side
                 //make shared side
                 sides.push({
@@ -176,7 +181,7 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            if (c1.x + resolution == c2.x && c1.y == c2.y)
+            if (abs(c1.x + resolution - c2.x) < eps && abs(c1.y - c2.y) < eps)
                 //cells in same row and touch along vertical side
                 //make shared side
                 sides.push({
