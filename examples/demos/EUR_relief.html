@@ -70,7 +70,7 @@
     <script>
 
         //TODO
-        //color ramp: add new
+        //color ramp: selecte default
         //rayshading ?
         //joyplot: fix
         //Check doc and examples: tanaka, lego, contours.
@@ -81,18 +81,15 @@
         const seaColor = "#a4c8e1"
         const seaColorT = seaColor + "bb"
 
-        /*
-"Peuckers" : interpolateRamp(["#a8bb9e","#c9dcaa","#f0f1af","#fbf6b1","#fde89f","#f9a579","#ea444b"]),
-"Bartholomew" : interpolateRamp(["#bbcc9e","#dde4c7","#e0ebd9","#e9f0d1","#ece8c1","#e9d6ad","#e7c18c","#e2b470","#dda255","#de8f4e","#d57751","#c8705e","#d38487","#dca3a4","#edc7c2"]),
-"International map of the world" : interpolateRamp(["#add7aa","#d6e8b8","#faf7c7","#faf5be","#fbcbb8","#d9baca","#f5e1e7"]),
-*/
-
         // color ramps
         const interpolateRamp = (colors) => {
             const domain = d3.range(colors.length).map(i => i / (colors.length - 1));
             return d3.scaleLinear().domain(domain).range(colors).interpolate(d3.interpolateLab); //interpolateLab interpolateRgb
         }
         ramps = {
+            "Peuckers": interpolateRamp(["#a8bb9e", "#c9dcaa", "#f0f1af", "#fbf6b1", "#fde89f", "#f9a579", "#ea444b"]),
+            "Bartholomew": interpolateRamp(["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]),
+            "International map of the world": interpolateRamp(["#add7aa", "#d6e8b8", "#faf7c7", "#faf5be", "#fbcbb8", "#d9baca", "#f5e1e7"]),
             "Green - Yellow - Red": (t) => d3.interpolateRdYlGn(0.95 - t * 0.9),
             "Patterson-Jenny warm humid": interpolateRamp(["rgb(245,245,245)", "rgb(235,235,237)", "rgb(220,220,220)", "rgb(212,207,204)", "rgb(212,193,179)", "rgb(212,184,163)", "rgb(212,201,180)", "rgb(169,192,166)", "rgb(134,184,159)", "rgb(120,172,149)", "rgb(114,164,141)", "rgb(106,153,135)"].reverse()),
             "Green": (t) => d3.interpolateGreens(1 - t),
