@@ -236,8 +236,7 @@
 
             const adj = cbHypssea.checked
             const scaleReliefCoeff = 3 + 0.3 * +sReliefExageration.value
-            const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff)
-            //exponentialScale 
+            const scaleRelief = gridviz.exponentialScale(scaleReliefCoeff) //exponentialScale logarithmicScale
 
             //define style
             const classNumber = sReliefNb.value
