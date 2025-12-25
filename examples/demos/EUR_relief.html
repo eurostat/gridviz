@@ -104,8 +104,8 @@
         //interpolateLab interpolateRgb
 
         ramps = {
-            "Patterson-Jenny warm humid": colorRampWH,
             "Green - Yellow - Red": (t) => d3.interpolateRdYlGn(0.95 - t * 0.9),
+            "Patterson-Jenny warm humid": colorRampWH,
             "Green": (t) => d3.interpolateGreens(1 - t),
             "Gray": (t) => d3.interpolateGreys(0.8 - t * 0.8),
             "Viridis": d3.interpolateViridis,
