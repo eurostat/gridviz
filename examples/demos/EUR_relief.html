@@ -46,7 +46,7 @@
         <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
         <br>
         <label>Relief hypsometric tints number</label>
-        <input type="range" min="2" max="30" value="12" step="1" id="sReliefNb" style="width: 200px" />
+        <input type="range" min="2" max="20" value="8" step="1" id="sReliefNb" style="width: 200px" />
         <br>
         <label>Relief exageration</label>
         <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
@@ -60,7 +60,7 @@
     <script src="../../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@2.0.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@3.0.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3.2.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -214,17 +214,14 @@
             const seaLevel = +sSeaLevel.value;
             lbSeaLevel.textContent = seaLevel + ' m';
 
-            const sr = +sReliefSmoothing.value
-            const getElevationValue = sr == 0 ? (c) => +c.v : (c) => +c.ksmval
-
             let styleWater = new gridviz.ShapeColorSizeStyle({
                 color: (c, r, z, vs) => {
-                    if (getElevationValue(c) > seaLevel) return
+                    if (c.v > seaLevel) return
                     return seaColorT
                 }
             })
             /*let styleWater = new gridviz.SquareColorCategoryWebGLStyle({
-                code: (c) => getElevationValue(c) > seaLevel ? undefined : "a",
+                code: (c) => c.v > seaLevel ? undefined : "a",
                 color: { 'a': seaColorT },
             })*/
 
@@ -241,7 +238,7 @@
 
             /*let hypsoStyle = new gridviz.SquareColorWebGLStyle({
                 viewScale: cells => {
-                    [min, max] = d3.extent(cells, c => getElevationValue(c))
+                    [min, max] = d3.extent(cells, c => c.v)
                     const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
                     const breaks = []
                     for (let i = 1; i < classNumber; i++) {
@@ -251,17 +248,17 @@
                     }
                     return gridviz.classifier(breaks)
                 },
-                tFun: (c, r, z, vs) => vs(getElevationValue(c)) / classNumber,
+                tFun: (c, r, z, vs) => vs(c.v) / classNumber,
                 colors: colors,
             })*/
 
             let hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
                 viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
-                    valueFunction: (c) => getElevationValue(c),
+                    valueFunction: (c) => c.v,
                     classNumber: classNumber,
                 }) :
                     cells => {
-                        [min, max] = d3.extent(cells, c => getElevationValue(c))
+                        [min, max] = d3.extent(cells, c => c.v)
                         const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
                         const breaks = []
                         for (let i = 1; i < classNumber; i++) {
@@ -271,7 +268,7 @@
                         }
                         return gridviz.classifier(breaks)
                     },
-                code: (c, r, z, classifier) => classifier(getElevationValue(c)),
+                code: (c, r, z, classifier) => classifier(c.v),
                 color: { ...colors },
             })
 
@@ -279,13 +276,13 @@
             let tanakaStyle = new gridviz.SideTanakaStyle({
                 classifier: quantile ? cells => {
                     const classifier = gridviz.viewScaleQuantileClassifer({
-                        valueFunction: (c) => getElevationValue(c),
+                        valueFunction: (c) => c.v,
                         classNumber: classNumber,
                     })(cells)
-                    return c => classifier(getElevationValue(c))
+                    return c => classifier(c.v)
                 } : cells => {
                     // return a function which for each cell returns its class number
-                    [min, max] = d3.extent(cells, c => getElevationValue(c))
+                    [min, max] = d3.extent(cells, c => c.v)
                     const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
                     const breaks = []
                     for (let i = 1; i < classNumber; i++) {
@@ -294,7 +291,7 @@
                         breaks.push(min_ + (max - min_) * t)
                     }
                     const cs = gridviz.classifier(breaks)
-                    return c => cs(getElevationValue(c))
+                    return c => cs(c.v)
                 },
                 diamond: shadingDiamond,
             })
@@ -302,20 +299,19 @@
             //- 0.3 * +sReliefExageration.value
             const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
             let shadingStyle = new gridviz.ShadingStyle({
-                elevation: sr == 0 ? 'v' : 'ksmval',
+                elevation: 'v',
                 scale: scaleShading,
                 diamond: shadingDiamond,
             })
 
             // joyplot style
             let joyplotStyle = new gridviz.JoyPlotStyle({
-                viewScale: cells => d3.extent(cells, c => getElevationValue(c)),
-                height: (c, r, z, [min, max]) => 3 * r * scaleRelief((getElevationValue(c) - min) / (max - min)),
+                viewScale: cells => d3.extent(cells, c => c.v),
+                height: (c, r, z, [min, max]) => 3 * r * scaleRelief((c.v - min) / (max - min)),
                 lineColor: (y, ys, r, z) => "#ddd",
                 lineWidth: (y, ys, r, z) => z,
                 fillColor: (y, ys, r, z) => "#777"
             })
-
 
             // definition
             const mppc = (cbHD.checked ? 0.7 : 1.4) * resolutionCoeff
@@ -323,9 +319,11 @@
             let reliefStyle = joyplot ? joyplotStyle : hypsoStyle
 
             // apply smoothing
+            const sr = +sReliefSmoothing.value
             if (sr > 0) {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
+                    smoothedProperty: "v",
                     sigma: (r, z) => r + sr * z, // in geo unit - sr is in screen pixel
                     factor: (cbHD.checked ? 1 : 3),
                     filterSmoothed: (value) => value > 0.05,
