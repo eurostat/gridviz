@@ -71,6 +71,7 @@
 
         //TODO
         //legend
+        //slope-aspect styles
         //rayshading
         //DEM 50m
         //joyplot - smoothed: fix
@@ -234,7 +235,7 @@
 
 
             const adj = cbHypssea.checked
-            const scaleReliefCoeff = 3 - 0.3 * +sReliefExageration.value
+            const scaleReliefCoeff = 3 + 0.3 * +sReliefExageration.value
             const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff)
             //exponentialScale 
 
