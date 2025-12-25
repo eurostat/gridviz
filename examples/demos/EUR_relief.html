@@ -80,11 +80,11 @@
         const seaColor = "#a4c8e1"
         const seaColorT = seaColor + "bb"
 
-        // color ramps
-        const interpolateRamp = (colors) => {
-            const domain = d3.range(colors.length).map(i => i / (colors.length - 1));
-            return d3.scaleLinear().domain(domain).range(colors).interpolate(d3.interpolateLab); //interpolateLab interpolateRgb
-        }
+        // prepare color ramps
+        const interpolateRamp = (colors) =>
+            d3.scaleLinear()
+                .domain(d3.range(colors.length).map(i => i / (colors.length - 1)))
+                .range(colors).interpolate(d3.interpolateLab); //interpolateLab interpolateRgb
         ramps = {
             "Bartholomew": interpolateRamp(["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]),
             "Green - Yellow - Red": (t) => d3.interpolateRdYlGn(0.95 - t * 0.9),
@@ -99,7 +99,7 @@
             "Rainbow": d3.interpolateRainbow,
         }
 
-        // build colour ramps list
+        // build colour ramps combo list
         const hypscol = document.getElementById("hypscol");
         for (let r in ramps) hypscol.add(new Option(r, r));
         hypscol.addEventListener("change", update);
