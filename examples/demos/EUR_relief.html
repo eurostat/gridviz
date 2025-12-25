@@ -23,12 +23,6 @@
                 line-height: 1.6;
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
-        <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
-        <br>
-        <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
-        <br>
-        <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level</label>
-        <hr>
         <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
         <br>
         <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
@@ -39,7 +33,14 @@
         <br>
         <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
         <br>
-        <label for="cbRelief"><input type="checkbox" id="cbRelief" checked>Relief hypsometric tints</label>
+        <label for="cbRelief"><input type="checkbox" id="cbRelief" checked>Relief hypsometric tints</label> <select
+            id="hypscol"></select>
+        <hr>
+        <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
+        <br>
+        <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
+        <br>
+        <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level</label>
         <hr>
         <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
         <br>
@@ -62,25 +63,62 @@
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@3.0.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3.2.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         //TODO
-        //with smoothing, use smoothedProperty
-        //prune color ramp ?
-        //test quantile
+        //color ramp list
         //rayshading ?
+        //joyplot: fix
         //Check doc and examples: tanaka, lego, contours.
         //add some rivers ?
         //legend ?
         //DEM 50m ?
 
-
         const seaColor = "#a4c8e1"
         const seaColorT = seaColor + "bb"
-        const colorRamp = (t) => d3.interpolateRdYlGn(0.95 - t * 0.9)
+
+        // color ramps
+        const colorsWH = [
+            "rgb(245,245,245)",
+            "rgb(235,235,237)",
+            "rgb(220,220,220)",
+            "rgb(212,207,204)",
+            "rgb(212,193,179)",
+            "rgb(212,184,163)",
+            "rgb(212,201,180)",
+            "rgb(169,192,166)",
+            "rgb(134,184,159)",
+            "rgb(120,172,149)",
+            "rgb(114,164,141)",
+            "rgb(106,153,135)"
+        ].reverse();
+        const domain = d3.range(colorsWH.length).map(i => i / (colorsWH.length - 1));
+        const colorRampWH = d3.scaleLinear()
+            .domain(domain)
+            .range(colorsWH)
+            .interpolate(d3.interpolateLab);
+        //interpolateLab interpolateRgb
+
+        ramps = {
+            "Patterson-Jenny warm humid": colorRampWH,
+            "Green - Yellow - Red": (t) => d3.interpolateRdYlGn(0.95 - t * 0.9),
+            "Green": (t) => d3.interpolateGreens(1 - t),
+            "Gray": (t) => d3.interpolateGreys(0.8 - t * 0.8),
+            "Viridis": d3.interpolateViridis,
+            "Plasma": d3.interpolatePlasma,
+            "Cubehelix": (t) => d3.interpolateCubehelixDefault(0.1 + 0.9 * t),
+            "Rainbow": d3.interpolateRainbow,
+        }
+
+        // build colour ramps list
+        const hypscol = document.getElementById("hypscol");
+        for (let r in ramps) hypscol.add(new Option(r, r));
+        hypscol.addEventListener("change", update);
+
 
         const map = new gridviz.Map(document.getElementById('map'), {
             x: 4200000, y: 2800000, z: 1000,
@@ -116,22 +154,6 @@
             code: (cell) => "a",
             color: { 'a': seaColor },
         })
-
-        /*
-        const scalePopulation = gridviz.logarithmicScale(-3)
-        const stylePopulation = new gridviz.ShapeColorSizeStyle({
-            viewScale: cells => d3.max(cells, c => +c.POP_2021),
-            shape: () => "circle",
-            size: (c, r, z, max) => {
-                let t = +c.POP_2021 / max
-                //t = Math.pow(t, 0.6)
-                t = scalePopulation(t)
-                t = r * t * 1.4
-                if (t / z > 3) return t
-            },
-            color: () => "#aaa", //"#555",
-        })*/
-
 
         const strokeWidthPix = 1
         const fillColor = "#fffc"
@@ -234,6 +256,7 @@
             //define style
             const classNumber = sReliefNb.value
             const colors = []
+            const colorRamp = ramps[hypscol.value]
             for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
 
             /*let hypsoStyle = new gridviz.SquareColorWebGLStyle({
