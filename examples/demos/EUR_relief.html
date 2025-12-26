@@ -87,11 +87,11 @@
                 .domain(d3.range(colors.length).map(i => i / (colors.length - 1)))
                 .range(colors).interpolate(d3.interpolateLab); //interpolateLab interpolateRgb
         ramps = {
-            "Bartholomew": interpolateRamp(["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]),
             "Green - Yellow - Red": (t) => d3.interpolateRdYlGn(0.95 - t * 0.9),
+            "Patterson-Jenny warm humid": interpolateRamp(["rgb(245,245,245)", "rgb(235,235,237)", "rgb(220,220,220)", "rgb(212,207,204)", "rgb(212,193,179)", "rgb(212,184,163)", "rgb(212,201,180)", "rgb(169,192,166)", "rgb(134,184,159)", "rgb(120,172,149)", "rgb(114,164,141)", "rgb(106,153,135)"].reverse()),
+            "Bartholomew": interpolateRamp(["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]),
             "International map of the world": interpolateRamp(["#add7aa", "#d6e8b8", "#faf7c7", "#faf5be", "#fbcbb8", "#d9baca", "#f5e1e7"]),
             "Peuckers": interpolateRamp(["#a8bb9e", "#c9dcaa", "#f0f1af", "#fbf6b1", "#fde89f", "#f9a579", "#ea444b"]),
-            "Patterson-Jenny warm humid": interpolateRamp(["rgb(245,245,245)", "rgb(235,235,237)", "rgb(220,220,220)", "rgb(212,207,204)", "rgb(212,193,179)", "rgb(212,184,163)", "rgb(212,201,180)", "rgb(169,192,166)", "rgb(134,184,159)", "rgb(120,172,149)", "rgb(114,164,141)", "rgb(106,153,135)"].reverse()),
             "Green": (t) => d3.interpolateGreens(1 - t),
             "Gray": (t) => d3.interpolateGreys(0.8 - t * 0.8),
             "Viridis": d3.interpolateViridis,
@@ -236,7 +236,7 @@
 
             const adj = cbHypssea.checked
             const scaleReliefCoeff = 3 + 0.3 * +sReliefExageration.value
-            const scaleRelief = gridviz.exponentialScale(scaleReliefCoeff) //exponentialScale logarithmicScale
+            const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
 
             //define style
             const classNumber = sReliefNb.value
@@ -343,12 +343,17 @@
                 styleWater = fun(styleWater)
             }
 
-            /*
             //test https://d3js.org/d3-contour/density
             const smm2 = new gridviz.Style()
             smm2.drawFun = (cells, geoCanvas, resolution) => {
 
-            }*/
+                //horn slope
+                //horn z1,z2,z3,z4,z5,z6,z7,z8,z9
+                //if null, replicate nearest
+                const r8 = 2*resolution
+                const slopeX = (z3+2*z6+z9-z1-2*z4-z7)/r8
+                const slopeY = (z7+2*z8+z9-z1-2*z2-z3)/r8
+            }
 
 
 
