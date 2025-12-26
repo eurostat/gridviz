@@ -80,7 +80,6 @@
         //add some rivers ?
 
         const seaColor = "#a4c8e1"
-        const seaColorT = seaColor + "bb"
 
         // prepare color ramps
         const interpolateRamp = (colors) =>
@@ -231,7 +230,7 @@
             })*/
             let styleWater = new gridviz.SquareColorCategoryWebGLStyle({
                 code: (c) => "a",
-                color: { 'a': seaColorT },
+                color: { 'a': seaColor + "bb" },
                 filter: (c) => c.v <= seaLevel
             })
 
