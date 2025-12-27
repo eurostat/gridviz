@@ -23,44 +23,48 @@
                 line-height: 1.6;
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
-        <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>
-        <label for="radio_hyps">Relief - Hypsometric tints</label> <select id="hypscol"></select><br>
-        <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">
-        <label for="radio_joyplot">Relief - Joyplot</label><br>
-        <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
-        <br>
-        <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
-        <br>
-        <label for="cbBoundaries"><input type="checkbox" id="cbBoundaries" checked>Boundaries</label>
-        <br>
-        <label for="cbRoads"><input type="checkbox" id="cbRoads">Roads</label>
-        <br>
-        <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
-        <hr>
-        <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
-        <br>
-        <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
-        <br>
-        <div id="hyps_div">
+        <form id="form">
+            <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>
+            <label for="radio_hyps">Relief - Hypsometric tints</label> <select id="hypscol"></select><br>
+            <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">
+            <label for="radio_joyplot">Relief - Joyplot</label><br>
+            <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
+            <br>
+            <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
+            <br>
+            <label for="cbBoundaries"><input type="checkbox" id="cbBoundaries" checked>Boundaries</label>
+            <br>
+            <label for="cbRoads"><input type="checkbox" id="cbRoads">Roads</label>
+            <br>
+            <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
             <hr>
-            <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
+            <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
             <br>
-            <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
+            <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
             <br>
-            <label>Relief hypsometric tints number</label>
-            <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
-            <br>
-            <label>Relief exageration</label>
-            <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
-            <br>
-            <label>Relief smoothing (slow)</label>
-            <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
-            <br>
-            <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level rise</label>
-            <hr>
-            <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
-        </div>
-        <div id="joyplot_div" style="display: none;"></div>
+            <div id="hyps_div">
+                <hr>
+                <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
+                <br>
+                <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
+                <br>
+                <label>Relief hypsometric tints number</label>
+                <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
+                <br>
+                <label>Relief exageration</label>
+                <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
+                    style="width: 200px" />
+                <br>
+                <label>Relief smoothing (slow)</label>
+                <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+                <br>
+                <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
+                    rise</label>
+                <hr>
+                <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
+            </div>
+            <div id="joyplot_div" style="display: none;"></div>
+        </form>
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -388,27 +392,10 @@
             map.redraw()
         }
 
-        //add event listeners
-        document.getElementById("radio_hyps").addEventListener('input', update);
-        document.getElementById("radio_joyplot").addEventListener('input', update);
-        sSeaLevel.addEventListener('input', update);
-        cbTanaka.addEventListener("change", update);
-        cbHillshading.addEventListener("change", update);
-        sReliefSmoothing.addEventListener("input", update);
-        sReliefNb.addEventListener("input", update);
-        sReliefExageration.addEventListener("input", update);
-        cbCLC.addEventListener("change", update);
-        cbPopulation.addEventListener("change", update);
-        cbLabels.addEventListener("change", update);
-        cbBoundaries.addEventListener("change", update);
-        cbRoads.addEventListener("change", update);
-        cbHypssea.addEventListener("change", update);
-        cbHD.addEventListener("change", update);
-
-
+        //add form event listener
+        document.getElementById("form").addEventListener('input', update);
 
         //keyboard events
-        let animation = undefined
         window.addEventListener('keypress', e => {
             if (e.key == "h") {
                 const div = document.getElementById("control");
