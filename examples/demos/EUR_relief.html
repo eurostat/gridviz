@@ -133,7 +133,6 @@
             { preprocess: (c) => c.code == 40 || c.code == 41 || c.code == 42 || c.code == 43 || c.code == 44 }
         )
 
-
         //const styleCLCWater = new gridviz.ShapeColorSizeStyle({ color: () => seaColor, size: (c, r, z) => r + z * 0.3 })
         const styleCLCWater = new gridviz.SquareColorCategoryWebGLStyle({
             code: (cell) => "a",
@@ -238,22 +237,7 @@
             const colorRamp = ramps[hypscol.value]
             for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
 
-            /*let hypsoStyle = new gridviz.SquareColorWebGLStyle({
-                viewScale: cells => {
-                    [min, max] = d3.extent(cells, c => c.v)
-                    const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                    const breaks = []
-                    for (let i = 1; i < classNumber; i++) {
-                        let t = i / classNumber
-                        t = scaleRelief(t)
-                        breaks.push(min_ + (max - min_) * t)
-                    }
-                    return gridviz.classifier(breaks)
-                },
-                tFun: (c, r, z, vs) => vs(c.v) / classNumber,
-                colors: colors,
-            })*/
-
+            //hypso style
             let hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
                 viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
                     valueFunction: (c) => c.v,
