@@ -23,6 +23,10 @@
                 line-height: 1.6;
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
+        <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>
+        <label for="radio_hyps">Relief - Hypsometric tints</label> <select id="hypscol"></select><br>
+        <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">
+        <label for="radio_joyplot">Relief - Joyplot</label><br>
         <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
         <br>
         <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
@@ -32,9 +36,6 @@
         <label for="cbRoads"><input type="checkbox" id="cbRoads">Roads</label>
         <br>
         <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
-        <br>
-        <label for="cbRelief"><input type="checkbox" id="cbRelief" checked>Relief hypsometric tints</label> <select
-            id="hypscol"></select>
         <hr>
         <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
         <br>
@@ -42,20 +43,23 @@
         <br>
         <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level</label>
         <hr>
-        <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
-        <br>
-        <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
-        <br>
-        <label>Relief hypsometric tints number</label>
-        <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
-        <br>
-        <label>Relief exageration</label>
-        <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
-        <br>
-        <label>Relief smoothing (slow)</label>
-        <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
-        <hr>
-        <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
+        <div id="hyps_div">
+            <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
+            <br>
+            <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
+            <br>
+            <label>Relief hypsometric tints number</label>
+            <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
+            <br>
+            <label>Relief exageration</label>
+            <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" />
+            <br>
+            <label>Relief smoothing (slow)</label>
+            <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+            <hr>
+            <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
+        </div>
+        <div id="joyplot_div" style="display: none;">No option yet</div>
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -196,7 +200,6 @@
 
         const cbTanaka = document.getElementById("cbTanaka");
         const cbHillshading = document.getElementById("cbHillshading");
-        const cbRelief = document.getElementById("cbRelief");
         const sReliefSmoothing = document.getElementById('sReliefSmoothing');
         const sReliefNb = document.getElementById('sReliefNb');
         const sReliefExageration = document.getElementById('sReliefExageration');
@@ -214,11 +217,14 @@
         let scaleShadingCoeff = -2
         let shadingDiamond = false
         let quantile = false
-        let joyplot = false
 
         function update() {
             const seaLevel = +sSeaLevel.value;
             lbSeaLevel.textContent = seaLevel + ' m';
+
+            const rsty = document.querySelector('input[name="rdreliefstyle"]:checked').value;
+            document.getElementById("hyps_div").style.display = rsty == "hyps" ? 'inline-block' : 'none'
+            document.getElementById("joyplot_div").style.display = rsty == "joyplot" ? 'inline-block' : 'none'
 
             let styleWater = new gridviz.SquareColorCategoryWebGLStyle({
                 code: (c) => "a",
@@ -307,14 +313,14 @@
                 viewScale: cells => d3.extent(cells, c => c.v),
                 height: (c, r, z, [min, max]) => 15 * r * scaleRelief((c.v - min) / (max - min)),
                 lineColor: (y, ys, r, z) => "#b58500",
-                lineWidth: (y, ys, r, z) => z/1.5,
+                lineWidth: (y, ys, r, z) => z / 1.5,
                 fillColor: (y, ys, r, z) => "#b5850022"
             })
 
             // definition
             const mppc = (cbHD.checked ? 0.7 : 1.4) * resolutionCoeff
-            const mppcRelief = joyplot ? 3 * resolutionCoeff : mppc
-            let reliefStyle = joyplot ? joyplotStyle : hypsoStyle
+            const mppcRelief = rsty == "joyplot" ? 3 * resolutionCoeff : mppc
+            let reliefStyle = rsty == "joyplot" ? joyplotStyle : hypsoStyle
 
             // smoothing
             const sr = +sReliefSmoothing.value
@@ -355,12 +361,20 @@
 
             // set layers
             const layers = []
-            // relief
-            if (cbRelief.checked) layers.push(new gridviz.GridLayer(datasetRelief, [reliefStyle], { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
-            // relief tanaka
-            if (cbTanaka.checked) layers.push(new gridviz.GridLayer(datasetRelief, [tanakaStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
-            //relief shading
-            if (cbHillshading.checked) layers.push(new gridviz.GridLayer(datasetRelief, [shadingStyle], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+
+            //relief layer
+            const reliefStyles = []
+            if (rsty == "joyplot") reliefStyles.push(
+                new gridviz.SquareColorCategoryWebGLStyle({
+                    code: (c) => "a",
+                    color: { 'a': "white" },
+                    filter: (c) => c.v >=0,
+                }))
+            reliefStyles.push(reliefStyle)
+            if (cbTanaka.checked && rsty == "hyps") reliefStyles.push(tanakaStyle)
+            if (cbHillshading.checked && rsty == "hyps") reliefStyles.push(shadingStyle)
+            layers.push(new gridviz.GridLayer(datasetRelief, reliefStyles, { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
+
             // CLC waters
             if (cbCLC.checked) layers.push(new gridviz.GridLayer(datasetCLC, [styleCLCWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // population
@@ -379,10 +393,11 @@
         }
 
         //add event listeners
+        document.getElementById("radio_hyps").addEventListener('input', update);
+        document.getElementById("radio_joyplot").addEventListener('input', update);
         sSeaLevel.addEventListener('input', update);
         cbTanaka.addEventListener("change", update);
         cbHillshading.addEventListener("change", update);
-        cbRelief.addEventListener("change", update);
         sReliefSmoothing.addEventListener("input", update);
         sReliefNb.addEventListener("input", update);
         sReliefExageration.addEventListener("input", update);
@@ -406,11 +421,6 @@
             }
             //else if (e.key == "t") { tanaka = !tanaka; update() }
             else if (e.key == "q") { quantile = !quantile; update() }
-            else if (e.key == "j") {
-                joyplot = !joyplot;
-                map.setBackgroundColor("white")
-                update()
-            }
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "x") { scaleShadingCoeff += 0.25; console.log(scaleShadingCoeff); update() }
