@@ -222,18 +222,12 @@
             const seaLevel = +sSeaLevel.value;
             lbSeaLevel.textContent = seaLevel + ' m';
 
-            /*let styleWater = new gridviz.ShapeColorSizeStyle({
-                color: (c, r, z, vs) => {
-                    if (c.v > seaLevel) return
-                    return seaColorT
-                }
-            })*/
             let styleWater = new gridviz.SquareColorCategoryWebGLStyle({
                 code: (c) => "a",
-                color: { 'a': seaColor + "bb" },
-                filter: (c) => c.v <= seaLevel
+                color: { 'a': seaColor },
+                filter: (c) => c.v <= seaLevel,
+                alpha: () => 0.85,
             })
-
 
             const adj = cbHypssea.checked
             const scaleReliefCoeff = 3 + 0.3 * +sReliefExageration.value
