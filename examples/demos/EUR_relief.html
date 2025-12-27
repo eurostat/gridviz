@@ -41,9 +41,8 @@
         <br>
         <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
         <br>
-        <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level</label>
-        <hr>
         <div id="hyps_div">
+            <hr>
             <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
             <br>
             <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
@@ -56,10 +55,12 @@
             <br>
             <label>Relief smoothing (slow)</label>
             <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+            <br>
+            <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level rise</label>
             <hr>
             <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
         </div>
-        <div id="joyplot_div" style="display: none;">No option yet</div>
+        <div id="joyplot_div" style="display: none;"></div>
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -275,8 +276,6 @@
             })
             hypsoStyle.legends = [legend]
 
-
-
             let tanakaStyle = new gridviz.SideTanakaStyle({
                 classifier: quantile ? cells => {
                     const classifier = gridviz.viewScaleQuantileClassifer({
@@ -308,23 +307,9 @@
                 diamond: shadingDiamond,
             })
 
-            // joyplot style
-            let joyplotStyle = new gridviz.JoyPlotStyle({
-                viewScale: cells => d3.extent(cells, c => c.v),
-                height: (c, r, z, [min, max]) => 15 * r * scaleRelief((c.v - min) / (max - min)),
-                lineColor: (y, ys, r, z) => "#b58500",
-                lineWidth: (y, ys, r, z) => z / 1.5,
-                fillColor: (y, ys, r, z) => "#b5850022"
-            })
-
-            // definition
-            const mppc = (cbHD.checked ? 0.7 : 1.4) * resolutionCoeff
-            const mppcRelief = rsty == "joyplot" ? 3 * resolutionCoeff : mppc
-            let reliefStyle = rsty == "joyplot" ? joyplotStyle : hypsoStyle
-
             // smoothing
             const sr = +sReliefSmoothing.value
-            if (sr > 0) {
+            if (sr > 0 && rsty == "hyps") {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     smoothedProperty: "v",
@@ -333,12 +318,13 @@
                     filterSmoothed: (value) => value > 0.05,
                     styles: [style]
                 })
-                reliefStyle = fun(reliefStyle)
+                hypsoStyle = fun(hypsoStyle)
                 tanakaStyle = fun(tanakaStyle)
                 shadingStyle = fun(shadingStyle)
                 styleWater = fun(styleWater)
             }
 
+            /*
             //test https://d3js.org/d3-contour/density
             const smm2 = new gridviz.Style()
             smm2.drawFun = (cells, geoCanvas, resolution) => {
@@ -355,24 +341,34 @@
                 const r8 = 2 * resolution
                 const slopeX = (z3 + 2 * z6 + z9 - z1 - 2 * z4 - z7) / r8
                 const slopeY = (z7 + 2 * z8 + z9 - z1 - 2 * z2 - z3) / r8
-            }
+            }*/
 
 
 
             // set layers
             const layers = []
+            const mppc = (cbHD.checked ? 0.7 : 1.4) * resolutionCoeff
+            const mppcRelief = rsty == "joyplot" ? 3 * resolutionCoeff : mppc
 
             //relief layer
             const reliefStyles = []
-            if (rsty == "joyplot") reliefStyles.push(
-                new gridviz.SquareColorCategoryWebGLStyle({
-                    code: (c) => "a",
-                    color: { 'a': "white" },
-                    filter: (c) => c.v >=0,
+            if (rsty == "joyplot") {
+                //white land
+                reliefStyles.push(new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, filter: (c) => c.v >= 0, }))
+
+                const scaleRelief = t => t //gridviz.logarithmicScale(3) //exponentialScale logarithmicScale
+                reliefStyles.push(new gridviz.JoyPlotStyle({
+                    viewScale: cells => d3.extent(cells, c => c.v),
+                    height: (c, r, z, [min, max]) => 10 * r * scaleRelief((c.v - min) / (max - min)),
+                    lineColor: (y, ys, r, z) => "#b58500",
+                    lineWidth: (y, ys, r, z) => z / 1.5,
+                    fillColor: (y, ys, r, z) => "#b5850022"
                 }))
-            reliefStyles.push(reliefStyle)
-            if (cbTanaka.checked && rsty == "hyps") reliefStyles.push(tanakaStyle)
-            if (cbHillshading.checked && rsty == "hyps") reliefStyles.push(shadingStyle)
+            } else {
+                reliefStyles.push(hypsoStyle)
+                if (cbTanaka.checked) reliefStyles.push(tanakaStyle)
+                if (cbHillshading.checked) reliefStyles.push(shadingStyle)
+            }
             layers.push(new gridviz.GridLayer(datasetRelief, reliefStyles, { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
 
             // CLC waters
