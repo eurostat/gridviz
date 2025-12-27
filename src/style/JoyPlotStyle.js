@@ -2,6 +2,7 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
+import { cellsToGrid } from '../utils/utils.js'
 
 /**
  * @module style
@@ -47,15 +48,7 @@ export class JoyPlotStyle extends Style {
 
         //index cells by y and x
         /**  @type {object} */
-        const ind = {}
-        for (const cell of cells) {
-            let row = ind[cell.y]
-            if (!row) {
-                row = {}
-                ind[cell.y] = row
-            }
-            row[cell.x] = this.height(cell, resolution, z, viewScale)
-        }
+        const ind = cellsToGrid(cells, cell => this.height(cell, resolution, z, viewScale) )
 
         //compute extent
         const e = geoCanvas.extGeo

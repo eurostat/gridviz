@@ -25,6 +25,33 @@ export function nice(v, multiples = [8, 6, 5, 4, 2.5, 2]) {
     return v_
 }
 
+/**
+ * A grid cell.
+ * @typedef {{x: number, y: number}} Cell */
+
+/**
+ * Index cells by y and x
+ * @param {Array.<Cell>} cells
+ * @param {Function} [fun]
+ * @returns {Object}
+ */
+export function cellsToGrid(cells, fun) {
+    /** @type {Object} */
+    const ind = {}
+    for (const cell of cells) {
+        let row = ind[cell.y]
+        if (!row) {
+            row = {}
+            ind[cell.y] = row
+        }
+        row[cell.x] = fun ? fun(cell) : cell
+    }
+    return ind
+}
+
+
+
+
 /*
 //no longer used
 export function loadImage(src) {

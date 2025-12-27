@@ -305,15 +305,15 @@
             // joyplot style
             let joyplotStyle = new gridviz.JoyPlotStyle({
                 viewScale: cells => d3.extent(cells, c => c.v),
-                height: (c, r, z, [min, max]) => 3 * r * scaleRelief((c.v - min) / (max - min)),
-                lineColor: (y, ys, r, z) => "#ddd",
-                lineWidth: (y, ys, r, z) => z,
-                fillColor: (y, ys, r, z) => "#777"
+                height: (c, r, z, [min, max]) => 15 * r * scaleRelief((c.v - min) / (max - min)),
+                lineColor: (y, ys, r, z) => "#b58500",
+                lineWidth: (y, ys, r, z) => z/1.5,
+                fillColor: (y, ys, r, z) => "#b5850022"
             })
 
             // definition
             const mppc = (cbHD.checked ? 0.7 : 1.4) * resolutionCoeff
-            const mppcRelief = joyplot ? 8 * resolutionCoeff : mppc
+            const mppcRelief = joyplot ? 3 * resolutionCoeff : mppc
             let reliefStyle = joyplot ? joyplotStyle : hypsoStyle
 
             // smoothing
@@ -336,6 +336,12 @@
             //test https://d3js.org/d3-contour/density
             const smm2 = new gridviz.Style()
             smm2.drawFun = (cells, geoCanvas, resolution) => {
+                //keep only cells with population
+                //cells = cells.filter((c) => c.v);
+                if (cells.length == 0) return;
+
+                //index cells by y and x
+                const ind = gridviz.cellsToGrid(cells, c => c.v)
 
                 //horn slope
                 //horn z1,z2,z3,z4,z5,z6,z7,z8,z9
@@ -400,7 +406,11 @@
             }
             //else if (e.key == "t") { tanaka = !tanaka; update() }
             else if (e.key == "q") { quantile = !quantile; update() }
-            else if (e.key == "j") { joyplot = !joyplot; update() }
+            else if (e.key == "j") {
+                joyplot = !joyplot;
+                map.setBackgroundColor("white")
+                update()
+            }
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "x") { scaleShadingCoeff += 0.25; console.log(scaleShadingCoeff); update() }

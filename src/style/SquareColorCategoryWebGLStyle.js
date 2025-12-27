@@ -141,7 +141,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
             c = cells[i]
             const cat = this.code(c, resolution, z, viewScale)
             if (cat == undefined) {
-                console.log('Unexpected category: ' + cat)
+                //console.log('Unexpected category: ' + cat)
                 continue
             }
             const i_ = this.catToI[cat]
