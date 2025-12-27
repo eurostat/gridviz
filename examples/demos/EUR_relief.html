@@ -41,9 +41,8 @@
             <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
             <br>
             <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
-            <br>
+            <hr>
             <div id="hyps_div">
-                <hr>
                 <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
                 <br>
                 <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
@@ -63,7 +62,11 @@
                 <hr>
                 <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
             </div>
-            <div id="joyplot_div" style="display: none;"></div>
+            <div id="joyplot_div" style="display: none;">
+                <label>Relief exageration</label>
+                <input type="range" min="1" max="20" value="10" step="1" id="sReliefExagerationJP"
+                    style="width: 200px" />
+            </div>
         </form>
     </div>
 
@@ -202,30 +205,14 @@
         const cellInfoHTMLPop = (c) => `Population: ${c.POP_2021}`
         const cellInfoHTMLRelief = (c) => `Elevation: ${c.v}`
 
-
-        const cbTanaka = document.getElementById("cbTanaka");
-        const cbHillshading = document.getElementById("cbHillshading");
-        const sReliefSmoothing = document.getElementById('sReliefSmoothing');
-        const sReliefNb = document.getElementById('sReliefNb');
-        const sReliefExageration = document.getElementById('sReliefExageration');
-        const cbCLC = document.getElementById("cbCLC");
-        const cbPopulation = document.getElementById("cbPopulation");
-        const cbLabels = document.getElementById("cbLabels");
-        const cbBoundaries = document.getElementById("cbBoundaries");
-        const cbRoads = document.getElementById("cbRoads");
-        const sSeaLevel = document.getElementById('sSeaLevel');
-        const lbSeaLevel = document.getElementById("lbSeaLevel");
-        const cbHypssea = document.getElementById("cbHypssea");
-        const cbHD = document.getElementById("cbHD");
-
         let resolutionCoeff = 1
         let scaleShadingCoeff = -2
         let shadingDiamond = false
         let quantile = false
 
         function update() {
-            const seaLevel = +sSeaLevel.value;
-            lbSeaLevel.textContent = seaLevel + ' m';
+            const seaLevel = +document.getElementById('sSeaLevel').value;
+            document.getElementById("lbSeaLevel").textContent = seaLevel + ' m';
 
             const rsty = document.querySelector('input[name="rdreliefstyle"]:checked').value;
             document.getElementById("hyps_div").style.display = rsty == "hyps" ? 'inline-block' : 'none'
@@ -238,12 +225,13 @@
                 alpha: () => 0.85,
             })
 
-            const adj = cbHypssea.checked
-            const scaleReliefCoeff = 3 + 0.3 * +sReliefExageration.value
+            const adj = document.getElementById("cbHypssea").checked
+            const hd = document.getElementById("cbHD").checked;
+            const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
             const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
 
             //define style
-            const classNumber = sReliefNb.value
+            const classNumber = document.getElementById('sReliefNb').value
             const colors = []
             const colorRamp = ramps[hypscol.value]
             for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
@@ -303,7 +291,6 @@
                 diamond: shadingDiamond,
             })
 
-            //- 0.3 * +sReliefExageration.value
             const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
             let shadingStyle = new gridviz.ShadingStyle({
                 elevation: 'v',
@@ -312,13 +299,13 @@
             })
 
             // smoothing
-            const sr = +sReliefSmoothing.value
+            const sr = +document.getElementById('sReliefSmoothing').value
             if (sr > 0 && rsty == "hyps") {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     smoothedProperty: "v",
                     sigma: (r, z) => r + sr * z, // in geo unit - sr is in screen pixel
-                    factor: (cbHD.checked ? 1 : 3),
+                    factor: (hd ? 1 : 3),
                     filterSmoothed: (value) => value > 0.05,
                     styles: [style]
                 })
@@ -351,7 +338,7 @@
 
             // set layers
             const layers = []
-            const mppc = (cbHD.checked ? 0.7 : 1.4) * resolutionCoeff
+            const mppc = (hd ? 0.7 : 1.4) * resolutionCoeff
             const mppcRelief = rsty == "joyplot" ? 3 * resolutionCoeff : mppc
 
             //relief layer
@@ -360,33 +347,41 @@
                 //white land
                 reliefStyles.push(new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, filter: (c) => c.v >= 0, }))
 
-                const scaleRelief = t => t //gridviz.logarithmicScale(3) //exponentialScale logarithmicScale
+                //const scaleRelief = t => t //gridviz.logarithmicScale(3) //exponentialScale logarithmicScale
+                const fr = document.getElementById("sReliefExagerationJP").value
                 reliefStyles.push(new gridviz.JoyPlotStyle({
                     viewScale: cells => d3.extent(cells, c => c.v),
-                    height: (c, r, z, [min, max]) => 10 * r * scaleRelief((c.v - min) / (max - min)),
+                    height: (c, r, z, [min, max]) => fr * r * (c.v) / (max),
                     lineColor: (y, ys, r, z) => "#b58500",
                     lineWidth: (y, ys, r, z) => z / 1.5,
-                    fillColor: (y, ys, r, z) => "#b5850022"
+                    fillColor: (y, ys, r, z) => "#b5850011"
                 }))
             } else {
                 reliefStyles.push(hypsoStyle)
-                if (cbTanaka.checked) reliefStyles.push(tanakaStyle)
-                if (cbHillshading.checked) reliefStyles.push(shadingStyle)
+                if (document.getElementById("cbTanaka").checked)
+                    reliefStyles.push(tanakaStyle)
+                if (document.getElementById("cbHillshading").checked)
+                    reliefStyles.push(shadingStyle)
             }
             layers.push(new gridviz.GridLayer(datasetRelief, reliefStyles, { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
 
             // CLC waters
-            if (cbCLC.checked) layers.push(new gridviz.GridLayer(datasetCLC, [styleCLCWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+            if (document.getElementById("cbCLC").checked)
+                layers.push(new gridviz.GridLayer(datasetCLC, [styleCLCWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // population
-            if (cbPopulation.checked) layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4, cellInfoHTML: 'none' }))
+            if (document.getElementById("cbPopulation").checked)
+                layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4, cellInfoHTML: 'none' }))
             //boundaries
-            if (cbBoundaries.checked) layers.push(boundariesLayer);
+            if (document.getElementById("cbBoundaries").checked)
+                layers.push(boundariesLayer);
             //roads
-            if (cbRoads.checked) layers.push(roadsLayer);
+            if (document.getElementById("cbRoads").checked)
+                layers.push(roadsLayer);
             // sea level
             if (seaLevel) layers.push(new gridviz.GridLayer(datasetRelief, [styleWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             // labels
-            if (cbLabels.checked) layers.push(labelLayer)
+            if (document.getElementById("cbLabels").checked)
+                layers.push(labelLayer)
             map.layers = layers
 
             map.redraw()
