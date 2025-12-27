@@ -70,14 +70,16 @@
     <script>
 
         //TODO
+        //legend
         //better structure styles
         //slope-aspect styles
         //rayshading
-        //legend
         //DEM 50m
         //joyplot - smoothed: fix
         //Check doc and examples: tanaka, lego, contours.
         //add some rivers ?
+
+
 
         const seaColor = "#a4c8e1"
 
@@ -275,6 +277,18 @@
                 color: { ...colors },
             })
 
+            // hypso legend
+            const legendWidth = Math.min(window.innerWidth - 40, 400)
+            const legend = new gridviz.ColorDiscreteLegend({
+                title: "Elevation, in meters",
+                colors: () => colors,
+                breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
+                width: legendWidth,
+                //labelFormat: (text, i) => (+text).toFixed(0)
+            })
+            hypsoStyle.legends = [legend]
+
+
 
             let tanakaStyle = new gridviz.SideTanakaStyle({
                 classifier: quantile ? cells => {
@@ -321,7 +335,7 @@
             const mppcRelief = joyplot ? 8 * resolutionCoeff : mppc
             let reliefStyle = joyplot ? joyplotStyle : hypsoStyle
 
-            // apply smoothing
+            // smoothing
             const sr = +sReliefSmoothing.value
             if (sr > 0) {
                 const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
