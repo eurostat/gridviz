@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" style="height: 100%">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Relief in Europe</title>
@@ -38,9 +39,11 @@
             <br>
             <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
             <hr>
+                <label>Relief smoothing (slow)</label>
+                <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+                <br>
             <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
-            <br>
-            <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:300px;">
+            <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:200px;">
             <hr>
             <div id="hyps_div">
                 <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
@@ -53,9 +56,6 @@
                 <label>Relief exageration</label>
                 <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
                     style="width: 200px" />
-                <br>
-                <label>Relief smoothing (slow)</label>
-                <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
                 <br>
                 <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
                     rise</label>
@@ -82,6 +82,7 @@
     <script>
 
         //TODO
+        //interpolateur
         //better structure styles
         //slope-aspect styles
         //rayshading
@@ -205,103 +206,28 @@
         const cellInfoHTMLPop = (c) => `Population: ${c.POP_2021}`
         const cellInfoHTMLRelief = (c) => `Elevation: ${c.v}`
 
-        let resolutionCoeff = 1
         let scaleShadingCoeff = -2
         let shadingDiamond = false
         let quantile = false
 
         function update() {
+
+            //get sea level
             const seaLevel = +document.getElementById('sSeaLevel').value;
             document.getElementById("lbSeaLevel").textContent = seaLevel + ' m';
 
+            //get relief style
             const rsty = document.querySelector('input[name="rdreliefstyle"]:checked').value;
             document.getElementById("hyps_div").style.display = rsty == "hyps" ? 'inline-block' : 'none'
             document.getElementById("joyplot_div").style.display = rsty == "joyplot" ? 'inline-block' : 'none'
 
-            let styleWater = new gridviz.SquareColorCategoryWebGLStyle({
-                code: (c) => "a",
-                color: { 'a': seaColor },
-                filter: (c) => c.v <= seaLevel,
-                alpha: () => 0.85,
-            })
-
-            const adj = document.getElementById("cbHypssea").checked
+            //get HD parameter
             const hd = document.getElementById("cbHD").checked;
-            const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
-            const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
 
-            //define style
-            const classNumber = document.getElementById('sReliefNb').value
-            const colors = []
-            const colorRamp = ramps[hypscol.value]
-            for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
-
-            //hypso style
-            let hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
-                    valueFunction: (c) => c.v,
-                    classNumber: classNumber,
-                }) :
-                    cells => {
-                        [min, max] = d3.extent(cells, c => c.v)
-                        const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                        const breaks = []
-                        for (let i = 1; i < classNumber; i++) {
-                            let t = i / classNumber
-                            t = scaleRelief(t)
-                            breaks.push(min_ + (max - min_) * t)
-                        }
-                        return gridviz.classifier(breaks)
-                    },
-                code: (c, r, z, classifier) => classifier(c.v),
-                color: { ...colors },
-            })
-
-            // hypso legend
-            const legendWidth = Math.min(window.innerWidth - 40, 400)
-            const legend = new gridviz.ColorDiscreteLegend({
-                title: "Elevation, in meters",
-                colors: () => colors,
-                breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
-                width: legendWidth,
-                //labelFormat: (text, i) => (+text).toFixed(0)
-            })
-            hypsoStyle.legends = [legend]
-
-            let tanakaStyle = new gridviz.SideTanakaStyle({
-                classifier: quantile ? cells => {
-                    const classifier = gridviz.viewScaleQuantileClassifer({
-                        valueFunction: (c) => c.v,
-                        classNumber: classNumber,
-                    })(cells)
-                    return c => classifier(c.v)
-                } : cells => {
-                    // return a function which for each cell returns its class number
-                    [min, max] = d3.extent(cells, c => c.v)
-                    const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                    const breaks = []
-                    for (let i = 1; i < classNumber; i++) {
-                        let t = i / classNumber
-                        t = scaleRelief(t)
-                        breaks.push(min_ + (max - min_) * t)
-                    }
-                    const cs = gridviz.classifier(breaks)
-                    return c => cs(c.v)
-                },
-                diamond: shadingDiamond,
-            })
-
-            const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
-            let shadingStyle = new gridviz.ShadingStyle({
-                elevation: 'v',
-                scale: scaleShading,
-                diamond: shadingDiamond,
-            })
-
-            // smoothing
+            // define smoothing function
             const sr = +document.getElementById('sReliefSmoothing').value
-            if (sr > 0 && rsty == "hyps") {
-                const fun = (style) => new gridviz_smoothing.KernelSmoothingStyle({
+            let smoothingFunction = sr > 0 ?
+                (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     smoothedProperty: "v",
                     sigma: (r, z) => r + sr * z, // in geo unit - sr is in screen pixel
@@ -309,11 +235,7 @@
                     filterSmoothed: (value) => value > 0.05,
                     styles: [style]
                 })
-                hypsoStyle = fun(hypsoStyle)
-                tanakaStyle = fun(tanakaStyle)
-                shadingStyle = fun(shadingStyle)
-                styleWater = fun(styleWater)
-            }
+                : style => style
 
             /*
             //test https://d3js.org/d3-contour/density
@@ -338,8 +260,6 @@
 
             // set layers
             const layers = []
-            const mppc = (hd ? 0.7 : 1.4) * resolutionCoeff
-            const mppcRelief = rsty == "joyplot" ? 3 * resolutionCoeff : mppc
 
             //relief layer
             const reliefStyles = []
@@ -357,12 +277,89 @@
                     fillColor: (y, ys, r, z) => "white" //"#b5850011"
                 }))
             } else {
-                reliefStyles.push(hypsoStyle)
-                if (document.getElementById("cbTanaka").checked)
-                    reliefStyles.push(tanakaStyle)
-                if (document.getElementById("cbHillshading").checked)
-                    reliefStyles.push(shadingStyle)
+                const adj = document.getElementById("cbHypssea").checked
+                const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
+                const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
+                const classNumber = document.getElementById('sReliefNb').value
+
+                //hypso style
+                const colors = []
+                const colorRamp = ramps[hypscol.value]
+                for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
+
+                //hypso style
+                const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                    viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
+                        valueFunction: (c) => c.v,
+                        classNumber: classNumber,
+                    }) :
+                        cells => {
+                            [min, max] = d3.extent(cells, c => c.v)
+                            const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                            const breaks = []
+                            for (let i = 1; i < classNumber; i++) {
+                                let t = i / classNumber
+                                t = scaleRelief(t)
+                                breaks.push(min_ + (max - min_) * t)
+                            }
+                            return gridviz.classifier(breaks)
+                        },
+                    code: (c, r, z, classifier) => classifier(c.v),
+                    color: { ...colors },
+                })
+
+                // hypso legend
+                const legendWidth = Math.min(window.innerWidth - 40, 400)
+                const legend = new gridviz.ColorDiscreteLegend({
+                    title: "Elevation, in meters",
+                    colors: () => colors,
+                    breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
+                    width: legendWidth,
+                    //labelFormat: (text, i) => (+text).toFixed(0)
+                })
+                hypsoStyle.legends = [legend]
+                reliefStyles.push(smoothingFunction(hypsoStyle))
+
+                if (document.getElementById("cbTanaka").checked) {
+                    const tanakaStyle = new gridviz.SideTanakaStyle({
+                        classifier: quantile ? cells => {
+                            const classifier = gridviz.viewScaleQuantileClassifer({
+                                valueFunction: (c) => c.v,
+                                classNumber: classNumber,
+                            })(cells)
+                            return c => classifier(c.v)
+                        } : cells => {
+                            // return a function which for each cell returns its class number
+                            [min, max] = d3.extent(cells, c => c.v)
+                            const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                            const breaks = []
+                            for (let i = 1; i < classNumber; i++) {
+                                let t = i / classNumber
+                                t = scaleRelief(t)
+                                breaks.push(min_ + (max - min_) * t)
+                            }
+                            const cs = gridviz.classifier(breaks)
+                            return c => cs(c.v)
+                        },
+                        diamond: shadingDiamond,
+                    })
+                    reliefStyles.push(smoothingFunction(tanakaStyle))
+                }
+                if (document.getElementById("cbHillshading").checked) {
+                    const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
+                    const shadingStyle = new gridviz.ShadingStyle({
+                        elevation: 'v',
+                        scale: scaleShading,
+                        diamond: shadingDiamond,
+                    })
+                    reliefStyles.push(smoothingFunction(shadingStyle))
+                }
             }
+
+            // resolution / definition
+            const mppc = hd ? 0.7 : 1.4
+            const mppcRelief = rsty == "joyplot" ? 3 : mppc
+
             layers.push(new gridviz.GridLayer(datasetRelief, reliefStyles, { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
 
             // CLC waters
@@ -378,7 +375,15 @@
             if (document.getElementById("cbRoads").checked)
                 layers.push(roadsLayer);
             // sea level
-            if (seaLevel) layers.push(new gridviz.GridLayer(datasetRelief, [styleWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+            if (seaLevel) {
+                const styleWater = new gridviz.SquareColorCategoryWebGLStyle({
+                    code: (c) => "a",
+                    color: { 'a': seaColor },
+                    filter: (c) => c.v <= seaLevel,
+                    alpha: () => 0.85,
+                })
+                layers.push(new gridviz.GridLayer(datasetRelief, [smoothingFunction(styleWater)], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+            }
             // labels
             if (document.getElementById("cbLabels").checked)
                 layers.push(labelLayer)
@@ -402,8 +407,8 @@
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
             else if (e.key == "x") { scaleShadingCoeff += 0.25; console.log(scaleShadingCoeff); update() }
-            else if (e.key == "+") { resolutionCoeff /= 1.2; console.log(resolutionCoeff); update() }
-            else if (e.key == "-") { resolutionCoeff *= 1.2; console.log(resolutionCoeff); update() }
+            //else if (e.key == "+") { resolutionCoeff /= 1.2; console.log(resolutionCoeff); update() }
+            //else if (e.key == "-") { resolutionCoeff *= 1.2; console.log(resolutionCoeff); update() }
         })
 
         update()
