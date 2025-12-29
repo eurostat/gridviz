@@ -66,6 +66,7 @@ export class JoyPlotStyle extends Style {
         for (let y = yMax; y >= yMin; y -= resolution) {
             //get row
             const row = ind[y]
+            console.log(row)
 
             //no row
             if (!row) continue

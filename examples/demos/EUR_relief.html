@@ -39,10 +39,10 @@
             <br>
             <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
             <hr>
-                <label>Relief smoothing (slow)</label>
-                <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
-                <br>
-            <label>Sea level rise: <span id="lbSeaLevel">-</span></label>
+            <label>Relief smoothing (slow)</label>
+            <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+            <br>
+            <label>Sea level rise: <span id="lbSeaLevel">0 m</span></label>
             <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:200px;">
             <hr>
             <div id="hyps_div">
@@ -269,13 +269,14 @@
 
                 //const scaleRelief = t => t //gridviz.logarithmicScale(3) //exponentialScale logarithmicScale
                 const fr = document.getElementById("sReliefExagerationJP").value
-                reliefStyles.push(new gridviz.JoyPlotStyle({
+                const jpStyle = new gridviz.JoyPlotStyle({
                     viewScale: cells => d3.extent(cells, c => c.v),
                     height: (c, r, z, [min, max]) => fr * r * (c.v) / (max),
                     lineColor: (y, ys, r, z) => "#b58500",
                     lineWidth: (y, ys, r, z) => z / 1.5,
                     fillColor: (y, ys, r, z) => "white" //"#b5850011"
-                }))
+                })
+                reliefStyles.push(smoothingFunction(jpStyle))
             } else {
                 const adj = document.getElementById("cbHypssea").checked
                 const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value

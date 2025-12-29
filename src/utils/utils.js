@@ -1,6 +1,8 @@
 //@ts-check
 'use strict'
 
+import { min, max, extent } from 'd3-array'
+
 /**
  * Get the class id from a value and class break values
  *
@@ -48,6 +50,44 @@ export function cellsToGrid(cells, fun) {
     }
     return ind
 }
+
+
+
+/**
+ * Cells to grid.
+ * 
+ * @param {Array.<Cell>} cells
+ * @param {number} resolution
+ * @param {Function} [fun]
+ * @returns {Object}
+ * Grid[i][j] is the value for line i and column j.
+ * Numbered from top to bottom, from left to right.
+ * Properties x0 and y0 are the geo coordinates of the lower left corner of the top left cell.
+ * Properties minI, maxI, minJ, maxJ are the extent of the grid.
+ */
+export function cellsToGrid2(cells, resolution, fun) {
+    const minx = min(cells, c => c.x)
+    const maxy = max(cells, c => c.y)
+
+    const grid = {}
+    grid.x0 = minx
+    grid.y0 = maxy
+    grid.resolution = resolution
+
+    for (const c of cells) {
+        const i = Math.round((maxy - c.y) / resolution)
+        const j = Math.round((c.x - minx) / resolution)
+        const v = fun ? fun(c) : c
+        if(!grid.minI || i<grid.minI) grid.minI=i
+        if(!grid.maxI || i>grid.maxI) grid.maxI=i
+        if(!grid.minJ || j<grid.minJ) grid.minJ=j
+        if(!grid.maxJ || j>grid.maxJ) grid.maxJ=j
+        if (!grid[i]) grid[i] = { j: v }
+        else grid[i][j] = v
+    }
+    return grid
+}
+
 
 
 
