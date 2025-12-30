@@ -62,7 +62,7 @@ export { TernaryLegend } from './legend/TernaryLegend.js'
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
 export * from './utils/ternary.js'
-export { nice } from './utils/utils.js'
+export { nice, cellsToMatrix } from './utils/utils.js'
 
 import { GeoCanvas } from './core/GeoCanvas.js'
 export const getParameterByName = GeoCanvas.getParameterByName

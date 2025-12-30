@@ -48,7 +48,70 @@ export class JoyPlotStyle extends Style {
 
         //index cells by y and x
         /**  @type {object} */
-        const ind = cellsToGrid(cells, cell => this.height(cell, resolution, z, viewScale) )
+        const ind = cellsToGrid(cells, cell => this.height(cell, resolution, z, viewScale))
+
+
+        //make grid
+        /**  @type {object} */
+        /*const grid = cellsToGrid2(cells, resolution, cell => this.height(cell, resolution, z, viewScale))
+        if (!grid.maxI || !grid.maxJ) return
+
+        //TODO
+        const ys = { min: grid.y0 + resolution * grid.minI, max: grid.y0 + resolution * grid.maxI }
+
+        //draw lines, row by row, stating from the top
+        ctx.lineJoin = 'round'
+        for (let i = grid.minI; i <= grid.maxI; i++) {
+
+            //Get row data
+            const row = grid[i]
+            if (!row) continue
+
+            // y of the row
+            const y = grid.y0 - i * resolution
+
+            //store the previous height
+            let hG_
+
+            for (let j = grid.minJ; j <= grid.maxJ; j++) {
+                //get column value
+                let hG = row[j]
+                if (!hG) hG = 0
+
+                // x of the cell
+                const x = grid.x0 + j * resolution
+
+                if (hG || hG_) {
+                    //draw line only when at least one of both values is non-null
+                    //TODO test bezierCurveTo
+                    ctx.lineTo(x + resolution / 2, y + hG)
+                } else {
+                    //else move the point
+                    ctx.moveTo(x + resolution / 2, y)
+                }
+                //store the previous value
+                hG_ = hG
+            }
+            //last point
+            if (hG_) ctx.lineTo(grid.x0 + resolution * grid.maxJ + resolution / 2, y)
+
+            //draw fill
+            const fc = this.fillColor(y, ys, resolution, z)
+            if (fc && fc != 'none') {
+                ctx.fillStyle = fc
+                ctx.fill()
+            }
+
+            //draw line
+            const lc = this.lineColor(y, ys, resolution, z)
+            const lw = this.lineWidth(y, ys, resolution, z)
+            if (lc && lc != 'none' && lw > 0) {
+                ctx.strokeStyle = lc
+                ctx.lineWidth = lw
+                ctx.stroke()
+            }
+        }
+        */
 
         //compute extent
         const e = geoCanvas.extGeo
@@ -58,7 +121,6 @@ export class JoyPlotStyle extends Style {
         const yMin = Math.floor(e.yMin / resolution) * resolution
         const yMax = Math.floor(e.yMax / resolution) * resolution
 
-        /**  @type {{min:number, max:number}} */
         const ys = { min: yMin, max: yMax }
 
         //draw lines, row by row, stating from the top
@@ -66,7 +128,6 @@ export class JoyPlotStyle extends Style {
         for (let y = yMax; y >= yMin; y -= resolution) {
             //get row
             const row = ind[y]
-            console.log(row)
 
             //no row
             if (!row) continue
@@ -76,13 +137,11 @@ export class JoyPlotStyle extends Style {
             ctx.moveTo(xMin - resolution / 2, y)
 
             //store the previous height
-            /** @type {number|undefined} */
             let hG_
 
             //go through the line cells
             for (let x = xMin; x <= xMax; x += resolution) {
                 //get column value
-                /** @type {number} */
                 let hG = row[x]
                 if (!hG) hG = 0
 

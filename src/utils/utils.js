@@ -65,30 +65,37 @@ export function cellsToGrid(cells, fun) {
  * Properties x0 and y0 are the geo coordinates of the lower left corner of the top left cell.
  * Properties minI, maxI, minJ, maxJ are the extent of the grid.
  */
-export function cellsToGrid2(cells, resolution, fun) {
-    const minx = min(cells, c => c.x)
-    const maxy = max(cells, c => c.y)
+export function cellsToMatrix(cells, resolution, fun) {
 
-    const grid = {}
+    // get cells extent
+    const [minx, maxx] = extent(cells, c => c.x)
+    const [miny, maxy] = extent(cells, c => c.y)
+
+    // get grid dimension
+    const rows = Math.ceil((maxy - miny) / resolution) +1
+    const cols = Math.ceil((maxx - minx) / resolution) +1
+
+    // make empty grid
+    const grid = Array.from({ length: rows }, () =>
+        new Array(cols).fill(undefined)
+    );
     grid.x0 = minx
     grid.y0 = maxy
     grid.resolution = resolution
 
     for (const c of cells) {
-        const i = Math.round((maxy - c.y) / resolution)
-        const j = Math.round((c.x - minx) / resolution)
+        const i = Math.floor((maxy - c.y) / resolution)
+        const j = Math.floor((c.x - minx) / resolution)
         const v = fun ? fun(c) : c
-        if(!grid.minI || i<grid.minI) grid.minI=i
-        if(!grid.maxI || i>grid.maxI) grid.maxI=i
-        if(!grid.minJ || j<grid.minJ) grid.minJ=j
-        if(!grid.maxJ || j>grid.maxJ) grid.maxJ=j
-        if (!grid[i]) grid[i] = { j: v }
-        else grid[i][j] = v
+        /*if (grid.minI == undefined || i < grid.minI) grid.minI = i
+        if (grid.maxI == undefined || i > grid.maxI) grid.maxI = i
+        if (grid.minJ == undefined || j < grid.minJ) grid.minJ = j
+        if (grid.maxJ == undefined || j > grid.maxJ) grid.maxJ = j*/
+        //console.log(i,rows,j,cols,v)
+        grid[i][j] = v
     }
     return grid
 }
-
-
 
 
 

@@ -73,7 +73,7 @@
     <script src="../../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@3.0.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@3.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3.2.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -82,14 +82,109 @@
     <script>
 
         //TODO
+        //ray shading
         //interpolateur
         //better structure styles
         //slope-aspect styles
-        //rayshading
         //DEM 50m
-        //joyplot - smoothed: fix
         //Check doc and examples: tanaka, lego, contours.
         //add some rivers ?
+
+
+        /**
+         * Trig-free Ruisdael shadow algorithm with undefined handling
+         *
+         * @param {number[][]} elevation - DEM [row][col], may contain undefined
+         * @param {number} sunAzimuth - radians, clockwise from north (+Y)
+         * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
+         * @param {number} resolution
+         * @param {number} zFactor
+         * @returns {(number|undefined)[][]} shade 0..255 or undefined
+         */
+        function ruisdaelShadow(
+            elevation,
+            resolution = 1000,
+            sunAzimuth = -0.785398,
+            sunAltitude = 0.1,
+            zFactor = 1
+        ) {
+            const rows = elevation.length;
+            const cols = elevation[0].length;
+            console.log(rows, cols)
+
+            // Sun direction toward sun
+            const dx = Math.sin(sunAzimuth);
+            const dy = -Math.cos(sunAzimuth);
+
+            const tanAlt = Math.tan(sunAltitude);
+
+            // Stores maximum slope toward sun so far
+            const horizon = Array.from({ length: rows }, () =>
+                new Array(cols).fill(-Infinity)
+            );
+
+            const shade = Array.from({ length: rows }, () =>
+                new Array(cols).fill(undefined)
+            );
+
+            // Traversal order (CRITICAL)
+            const xStart = dx > 0 ? 0 : cols - 1;
+            const xEnd = dx > 0 ? cols : -1;
+            const xStep = dx > 0 ? 1 : -1;
+
+            const yStart = dy > 0 ? 0 : rows - 1;
+            const yEnd = dy > 0 ? rows : -1;
+            const yStep = dy > 0 ? 1 : -1;
+
+            for (let y = yStart; y !== yEnd; y += yStep) {
+                for (let x = xStart; x !== xEnd; x += xStep) {
+
+                    const z = elevation[y][x];
+                    if (z === undefined) {
+                        // No terrain → no shadow, no horizon
+                        horizon[y][x] = -Infinity;
+                        shade[y][x] = undefined;
+                        continue;
+                    }
+
+                    const z0 = z * zFactor;
+
+                    // Upstream neighbor
+                    const ux = Math.round(x - dx);
+                    const uy = Math.round(y - dy);
+
+                    let maxSlope = -Infinity;
+
+                    if (
+                        ux >= 0 && uy >= 0 &&
+                        ux < cols && uy < rows &&
+                        elevation[uy][ux] !== undefined
+                    ) {
+                        const zu = elevation[uy][ux] * zFactor;
+
+                        const dz = zu - z0;
+                        const slope = dz / resolution;
+
+                        // Propagate upstream horizon
+                        maxSlope = Math.max(horizon[uy][ux], slope);
+                    }
+
+                    horizon[y][x] = maxSlope;
+
+                    // Shadow test
+                    //shade[y][x] = maxSlope > tanAlt ? 0 : 255;
+                    const delta = maxSlope - tanAlt;
+                    if (delta > 0) {
+                        const softness = 0.5 * tanAlt;
+                        const s = Math.min(1, delta / softness);
+                        shade[y][x] = Math.round(255 * (1 - s));
+                    }
+                }
+            }
+            return shade;
+        }
+
+
 
         const seaColor = "#a4c8e1"
 
@@ -115,7 +210,6 @@
         // build colour ramps combo list
         const hypscol = document.getElementById("hypscol");
         for (let r in ramps) hypscol.add(new Option(r, r));
-        hypscol.addEventListener("change", update);
 
 
         const map = new gridviz.Map(document.getElementById('map'), {
@@ -209,6 +303,7 @@
         let scaleShadingCoeff = -2
         let shadingDiamond = false
         let quantile = false
+        let rc = false
 
         function update() {
 
@@ -230,12 +325,27 @@
                 (style) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     smoothedProperty: "v",
-                    sigma: (r, z) => r + sr * z, // in geo unit - sr is in screen pixel
-                    factor: (hd ? 1 : 3),
+                    sigma: (r, z) => sr * r / 2, //r + sr * z, // in geo unit - sr is in screen pixel
+                    resolutionSmoothed: (hd && rsty == "hyps" ? (r, z) => Math.ceil(z) : (r, z) => r),
                     filterSmoothed: (value) => value > 0.05,
                     styles: [style]
                 })
                 : style => style
+
+
+            const rcStyle = new gridviz.Style()
+            rcStyle.drawFun = (cells, geoCanvas, resolution) => {
+                //keep only cells with population
+                //cells = cells.filter((c) => c.v);
+                if (cells.length == 0) return;
+
+                //index cells by y and x
+                const m = gridviz.cellsToMatrix(cells, resolution, c => c.v)
+
+                // compute ray casting shadow
+                const out = ruisdaelShadow(m, resolution, zFactor = 1);
+            }
+
 
             /*
             //test https://d3js.org/d3-contour/density
@@ -285,7 +395,7 @@
 
                 //hypso style
                 const colors = []
-                const colorRamp = ramps[hypscol.value]
+                const colorRamp = ramps[document.getElementById("hypscol").value]
                 for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
 
                 //hypso style
@@ -355,6 +465,7 @@
                     })
                     reliefStyles.push(smoothingFunction(shadingStyle))
                 }
+                if (rc) reliefStyles.push(rcStyle)
             }
 
             // resolution / definition
@@ -404,6 +515,7 @@
                 else div.style.display = "none";
             }
             //else if (e.key == "t") { tanaka = !tanaka; update() }
+            else if (e.key == "r") { rc = !rc; update() }
             else if (e.key == "q") { quantile = !quantile; update() }
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }
