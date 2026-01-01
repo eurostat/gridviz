@@ -16,7 +16,12 @@ export class ShadingRayStyle extends Style {
         opts = opts || {}
 
         this.elevation = opts.elevation //(c,r,z,vs) => elevation
-        this.alpha = opts.alpha || (() => 0.4) //(r,z,vs)
+
+        this.sunAzimuth = opts.sunAzimuth || (() => 2.356) //(r,z,vs)=>
+        this.sunAltitude = opts.sunAltitude || (() => 0.2) //(r,z,vs)=>
+        this.zFactor = opts.zFactor || (() => 1) //(r,z,vs)=>
+
+        this.alpha = opts.alpha || (() => 0.5) //(r,z,vs)
         this.color = opts.color || (() => '0,0,0') //(r,z,vs) => {}
     }
 
@@ -42,7 +47,11 @@ export class ShadingRayStyle extends Style {
         const x0 = m.x0, y0 = m.y0
 
         // compute ray casting shadow
-        m = referenceShadow(m, resolution);
+        m = referenceShadow(m,
+            resolution,
+            this.sunAzimuth(resolution, z, viewScale),
+            this.sunAltitude(resolution, z, viewScale),
+            this.zFactor(resolution, z, viewScale));
 
         // make cells
         cells = []
