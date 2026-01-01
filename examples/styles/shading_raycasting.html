@@ -1,2 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gridviz hill shading raycasting example</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+            margin: 0;
+            /* Remove default margins to prevent scrolling */
+            overflow: hidden;
+            /* Prevent potential scrollbars */
+        }
+    </style>
+</head>
 
+<body>
+    <div id="map" style="height: 100%; width: 100%"></div>
+
+    <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
+    <script>
+        //define map with initial view
+        const map = new gridviz.Map(document.getElementById('map'), {
+            x: 4200000,
+            y: 2800000,
+            z: 30,
+            backgroundColor: '#ede4cc',
+        }).addZoomButtons()
+
+        //define dataset
+        const dataset = new gridviz.MultiResolutionDataset(
+            [100, 200, 500, 1000, 2000, 5000, 10000, 20000],
+            resolution => new gviz_par.TiledParquetGrid(map,
+                "https://raw.githubusercontent.com/jgaffuri/tiled-euroDEM/main/pub/v1/tiles_" + resolution + "/"),
+            { preprocess: (c) => c.v != undefined && c.v > 0 }
+        )
+
+        //define style
+        const style = new gridviz.ShadingRayStyle({
+            elevation: c => c.v
+        })
+
+        //add layer to map
+        map.layers = [
+            new gridviz.GridLayer(dataset, [style], {
+                minPixelsPerCell: 5,
+                cellInfoHTML: (c) => `Elevation: ${c.v}`
+            })
+        ]
+
+    </script>
+</body>
+
+</html>
