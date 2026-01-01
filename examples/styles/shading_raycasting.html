@@ -45,10 +45,24 @@
             elevation: c => c.v
         })
 
+        //hypsometric tints style
+        const colors = ["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]
+        const classNumber = colors.length
+        const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+            viewScale: cells => {
+                [min, max] = d3.extent(cells, c => c.v)
+                const breaks = []
+                for (let i = 1; i < classNumber; i++) breaks.push(min_ + (max - min) * i / classNumber)
+                return gridviz.classifier(breaks)
+            },
+            code: (c, r, z, classifier) => classifier(c.v),
+            color: { ...colors },
+        })
+
         //add layer to map
         map.layers = [
-            new gridviz.GridLayer(dataset, [style], {
-                minPixelsPerCell: 5,
+            new gridviz.GridLayer(dataset, [hypsoStyle, style], {
+                minPixelsPerCell: 2,
                 cellInfoHTML: (c) => `Elevation: ${c.v}`
             })
         ]
