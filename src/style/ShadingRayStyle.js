@@ -22,7 +22,7 @@ export class ShadingRayStyle extends Style {
         this.zFactor = opts.zFactor || (() => 1) //(r,z,vs)=>
 
         this.alpha = opts.alpha || (() => 0.5) //(r,z,vs)
-        this.color = opts.color || (() => '0,0,0') //(r,z,vs) => {}
+        this.color = opts.color || (() => 'black') //(r,z,vs) => {}
     }
 
     /**
@@ -65,10 +65,11 @@ export class ShadingRayStyle extends Style {
             }
         }
 
-        const col = "rgba(" + this.color(resolution, z, viewScale) + "," + this.alpha(resolution, z, viewScale) + ")"
+        const col = this.color(resolution, z, viewScale)
         const style = new SquareColorCategoryWebGLStyle({
             code: () => "a",
-            color: { 'a': col }
+            color: { 'a': col },
+            alpha: () => this.alpha(resolution, z, viewScale),
         })
         style.draw(cells, geoCanvas, resolution)
 
