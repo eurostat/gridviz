@@ -50,6 +50,9 @@
                 <br>
                 <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
                 <br>
+                <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Relief hillshading raycasting
+                    (slow)</label>
+                <br>
                 <label>Relief hypsometric tints number</label>
                 <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
                 <br>
@@ -354,7 +357,7 @@
                     })
                     reliefStyles.push(smoothingFunction(shadingStyle))
                 }
-                if (rc) {
+                if (document.getElementById("cbHillshadingRay").checked) {
                     const rcStyle = new gridviz.ShadingRayStyle({ elevation: c => c.v })
                     reliefStyles.push(smoothingFunction(rcStyle))
                 }
