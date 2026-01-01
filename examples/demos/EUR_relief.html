@@ -92,7 +92,14 @@
 
         /**
          * Ground-truth terrain shadow algorithm (ray-based)
-         * Correct by definition — use this to validate results
+         * Trig-free Ruisdael shadow algorithm with undefined handling
+         *
+         * @param {number[][]} elevation - DEM [row][col], may contain undefined
+         * @param {number} resolution
+         * @param {number} sunAzimuth - radians, clockwise from north (+Y)
+         * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
+         * @param {number} zFactor
+         * @returns {(number|undefined)[][]} shade 0,1 or undefined
          */
         function referenceShadow(
             elevation,
