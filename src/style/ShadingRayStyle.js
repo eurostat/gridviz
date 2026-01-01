@@ -21,7 +21,7 @@ export class ShadingRayStyle extends Style {
         this.sunAltitude = opts.sunAltitude || (() => 0.2) //(r,z,vs)=>
         this.zFactor = opts.zFactor || (() => 1) //(r,z,vs)=>
 
-        this.alpha = opts.alpha || (() => 0.5) //(r,z,vs)
+        this.alpha = opts.alpha || (() => 0.33) //(r,z,vs)
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
     }
 
