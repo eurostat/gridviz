@@ -90,95 +90,75 @@
         //Check doc and examples: tanaka, lego, contours.
         //add some rivers ?
 
-
         /**
-         * Trig-free Ruisdael shadow algorithm with undefined handling
-         *
-         * @param {number[][]} elevation - DEM [row][col], may contain undefined
-         * @param {number} sunAzimuth - radians, clockwise from north (+Y)
-         * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
-         * @param {number} resolution
-         * @param {number} zFactor
-         * @returns {(number|undefined)[][]} shade 0..255 or undefined
+         * Ground-truth terrain shadow algorithm (ray-based)
+         * Correct by definition — use this to validate results
          */
-        function ruisdaelShadow(
+        function referenceShadow(
             elevation,
             resolution = 1000,
-            sunAzimuth = -0.785398,
-            sunAltitude = 0.1,
+            sunAzimuth = 0.785398,
+            sunAltitude = 0.2,
             zFactor = 1
         ) {
             const rows = elevation.length;
             const cols = elevation[0].length;
-            console.log(rows, cols)
-
-            // Sun direction toward sun
-            const dx = Math.sin(sunAzimuth);
-            const dy = -Math.cos(sunAzimuth);
 
             const tanAlt = Math.tan(sunAltitude);
 
-            // Stores maximum slope toward sun so far
-            const horizon = Array.from({ length: rows }, () =>
-                new Array(cols).fill(-Infinity)
-            );
+            // Sun direction TOWARD the sun
+            const dx = Math.sin(sunAzimuth);
+            const dy = -Math.cos(sunAzimuth);
+
+            // Normalize horizontal direction
+            const len = Math.hypot(dx, dy);
+            const ux = dx / len;
+            const uy = dy / len;
 
             const shade = Array.from({ length: rows }, () =>
                 new Array(cols).fill(undefined)
             );
 
-            // Traversal order (CRITICAL)
-            const xStart = dx > 0 ? 0 : cols - 1;
-            const xEnd = dx > 0 ? cols : -1;
-            const xStep = dx > 0 ? 1 : -1;
+            for (let y0 = 0; y0 < rows; y0++) {
+                for (let x0 = 0; x0 < cols; x0++) {
 
-            const yStart = dy > 0 ? 0 : rows - 1;
-            const yEnd = dy > 0 ? rows : -1;
-            const yStep = dy > 0 ? 1 : -1;
+                    const z0raw = elevation[y0][x0];
+                    if (z0raw === undefined) continue;
 
-            for (let y = yStart; y !== yEnd; y += yStep) {
-                for (let x = xStart; x !== xEnd; x += xStep) {
+                    const z0 = z0raw * zFactor;
+                    let shadowed = false;
 
-                    const z = elevation[y][x];
-                    if (z === undefined) {
-                        // No terrain → no shadow, no horizon
-                        horizon[y][x] = -Infinity;
-                        shade[y][x] = undefined;
-                        continue;
+                    let t = resolution;
+
+                    while (true) {
+                        const x = x0 - ux * t / resolution;
+                        const y = y0 - uy * t / resolution;
+
+                        const ix = Math.round(x);
+                        const iy = Math.round(y);
+
+                        if (ix < 0 || iy < 0 || ix >= cols || iy >= rows) break;
+
+                        const zqraw = elevation[iy][ix];
+                        if (zqraw === undefined) break; // transparent gap
+
+                        const zq = zqraw * zFactor;
+                        const rayZ = z0 + tanAlt * t;
+
+                        const delta = zq - rayZ;
+                        if (delta > 0) {
+                            shadowed = delta;
+                            break;
+                        }
+
+                        t += resolution;
                     }
 
-                    const z0 = z * zFactor;
-
-                    // Upstream neighbor
-                    const ux = Math.round(x - dx);
-                    const uy = Math.round(y - dy);
-
-                    let maxSlope = -Infinity;
-
-                    if (
-                        ux >= 0 && uy >= 0 &&
-                        ux < cols && uy < rows &&
-                        elevation[uy][ux] !== undefined
-                    ) {
-                        const zu = elevation[uy][ux] * zFactor;
-
-                        const dz = zu - z0;
-                        const slope = dz / resolution;
-
-                        // Propagate upstream horizon
-                        maxSlope = Math.max(horizon[uy][ux], slope);
-                    }
-
-                    horizon[y][x] = maxSlope;
-
-                    // Shadow test
-                    //shade[y][x] = maxSlope > tanAlt ? 0 : 255;
-                    const delta = maxSlope - tanAlt;
-                    if (delta > 0) {
-                        const softness = 0.5 * tanAlt;
-                        const s = Math.min(1, delta / softness);
-                        shade[y][x] = Math.round(255 * (1 - s));
-                    }
+                    // softness scale controls penumbra width
+                    //const softness = 0.5; // radians
+                    //shadowStrength = Math.min(1, delta / softness);
+                    //shade[y][x] = Math.round(255 * (1 - shadowStrength));
+                    shade[y0][x0] = shadowed;
                 }
             }
             return shade;
@@ -343,7 +323,28 @@
                 const m = gridviz.cellsToMatrix(cells, resolution, c => c.v)
 
                 // compute ray casting shadow
-                const out = ruisdaelShadow(m, resolution, zFactor = 1);
+                const shadow = referenceShadow(m, resolution);
+                delete m
+
+                // make cells
+                cells = []
+                for (let i = 0; i < m.length; i++) {
+                    const row = shadow[i]
+                    const y = m.y0 - i * resolution
+                    for (let j = 0; j < row.length; j++) {
+                        const sh = row[j]
+                        if (!sh) continue
+                        cells.push({ x: m.x0 + j * resolution, y: y, shadow: sh })
+                    }
+                }
+                delete shadow
+
+                // draw in black
+                const sty = new gridviz.SquareColorCategoryWebGLStyle({
+                    code: (cell) => "a",
+                    color: { 'a': "black" },
+                })
+                sty.draw(cells, geoCanvas, resolution)
             }
 
 
