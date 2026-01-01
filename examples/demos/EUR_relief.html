@@ -236,10 +236,6 @@
                 })
                 : style => style
 
-
-            const rcStyle = new gridviz.ShadingRayStyle({ elevation: c=>c.v })
-
-
             /*
             //test https://d3js.org/d3-contour/density
             const smm2 = new gridviz.Style()
@@ -358,7 +354,10 @@
                     })
                     reliefStyles.push(smoothingFunction(shadingStyle))
                 }
-                if (rc) reliefStyles.push(rcStyle)
+                if (rc) {
+                    const rcStyle = new gridviz.ShadingRayStyle({ elevation: c => c.v })
+                    reliefStyles.push(smoothingFunction(rcStyle))
+                }
             }
 
             // resolution / definition
