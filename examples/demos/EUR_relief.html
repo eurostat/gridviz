@@ -92,20 +92,20 @@
 
         /**
          * Ground-truth terrain shadow algorithm (ray-based)
-         * Trig-free Ruisdael shadow algorithm with undefined handling
+         * Trig-free with undefined handling
          *
          * @param {number[][]} elevation - DEM [row][col], may contain undefined
          * @param {number} resolution
          * @param {number} sunAzimuth - radians, clockwise from north (+Y)
          * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
          * @param {number} zFactor
-         * @returns {(number|undefined)[][]} shade 0,1 or undefined
+         * @returns {(number|undefined)[][]} shade. Height above ground where ray light can be reached.
          */
         function referenceShadow(
             elevation,
             resolution = 1000,
-            sunAzimuth = 0.785398,
-            sunAltitude = 0.2,
+            sunAzimuth = 2.356, // 2PI/3
+            sunAltitude = 0.15,
             zFactor = 1
         ) {
             const rows = elevation.length;
@@ -152,6 +152,7 @@
                         const zq = zqraw * zFactor;
                         const rayZ = z0 + tanAlt * t;
 
+                        // the height above the ground where light ray can be reached
                         const delta = zq - rayZ;
                         if (delta > 0) {
                             shadowed = delta;
@@ -163,9 +164,10 @@
 
                     // softness scale controls penumbra width
                     //const softness = 0.5; // radians
-                    //shadowStrength = Math.min(1, delta / softness);
+                    //shadowStrength = Math.min(1, shadowed / softness);
                     //shade[y][x] = Math.round(255 * (1 - shadowStrength));
-                    shade[y0][x0] = shadowed;
+                    if (!shadowed) continue
+                    if (shadowed) shade[y0][x0] = shadowed;
                 }
             }
             return shade;
@@ -347,9 +349,10 @@
                 delete shadow
 
                 // draw in black
-                const sty = new gridviz.SquareColorCategoryWebGLStyle({
-                    code: (cell) => "a",
-                    color: { 'a': "black" },
+                const sty = new gridviz.SquareColorWebGLStyle({
+                    viewScale: cells => d3.max(cells, c => c.shadow),
+                    tFun: (c,r,z,max) => 0.4,//Math.min(1, c.shadow / max),
+                    color: t => "rgba(0,0,0," + t + ")",
                 })
                 sty.draw(cells, geoCanvas, resolution)
             }
