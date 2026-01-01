@@ -20,7 +20,7 @@
 
 <body>
     <form id="form">
-        <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Relief hillshading raycasting
+        <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay" checked>Relief hillshading raycasting
             (slow)</label>
         <br>
         <label>Shading transparency</label>
@@ -48,11 +48,6 @@
             { preprocess: (c) => c.v != undefined && c.v > 0 }
         )
 
-        //define style
-        const style = new gridviz.ShadingRayStyle({
-            elevation: c => c.v
-        })
-
         //hypsometric tints style
         const colors = ["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]
         const classNumber = colors.length
@@ -69,14 +64,30 @@
 
         //add layer to map
         map.layers = [
-            new gridviz.GridLayer(dataset, [hypsoStyle, style], {
+            new gridviz.GridLayer(dataset, [hypsoStyle, new gridviz.ShadingRayStyle({ elevation: c => c.v })], {
                 minPixelsPerCell: 1,
                 cellInfoHTML: (c) => `Elevation: ${c.v} m`
             })
         ]
 
         const update = () => {
+
+            //get shading style
+            const style = map.layers[0].styles[1]
+
+            //set shading style parameters based on GUI values
+            style.visible = document.getElementById("cbHillshadingRay").checked ? () => true : () => false
+            style.alpha = () => document.getElementById("sAlpha").value
+            style.sunAltitude = () => document.getElementById("sunAltitude").value
+            style.sunAzimuth = () => document.getElementById("sunAzimuth").value
+            style.zFactor = () => document.getElementById("zFactor").value
+
+            map.redraw()
         }
+
+        //add form event listener
+        document.getElementById("form").addEventListener('input', update);
+        update()
 
     </script>
 </body>
