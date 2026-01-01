@@ -65,13 +65,12 @@ export class ShadingRayStyle extends Style {
             }
         }
 
-        const col = this.color(resolution, z, viewScale)
-        const style = new SquareColorCategoryWebGLStyle({
+        //draw shadowed cells with webgl style
+        new SquareColorCategoryWebGLStyle({
             code: () => "a",
-            color: { 'a': col },
+            color: { 'a': this.color(resolution, z, viewScale) },
             alpha: () => this.alpha(resolution, z, viewScale),
-        })
-        style.draw(cells, geoCanvas, resolution)
+        }).draw(cells, geoCanvas, resolution)
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
