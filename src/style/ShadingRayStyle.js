@@ -3,7 +3,7 @@
 
 import { Style } from '../core/Style.js'
 import { cellsToMatrix } from '../utils/utils.js'
-import { SquareColorWebGLStyle } from './SquareColorWebGLStyle.js'
+import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
 
 /**
  * @module style
@@ -16,11 +16,8 @@ export class ShadingRayStyle extends Style {
         opts = opts || {}
 
         this.elevation = opts.elevation //(c,r,z,vs) => elevation
-
-        /** A function returning the color of the cell.
-         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => '#EA6BAC') //(c,r,z,vs) => {}
-
+        this.alpha = opts.alpha || (() => 0.4) //(r,z,vs)
+        this.color = opts.color || (() => '0,0,0') //(r,z,vs) => {}
     }
 
     /**
@@ -42,7 +39,7 @@ export class ShadingRayStyle extends Style {
 
         //index cells by y and x
         let m = cellsToMatrix(cells, resolution, c => this.elevation(c, resolution, z, viewScale))
-        const x0 = m.x0, y0=m.y0
+        const x0 = m.x0, y0 = m.y0
 
         // compute ray casting shadow
         m = referenceShadow(m, resolution);
@@ -59,14 +56,12 @@ export class ShadingRayStyle extends Style {
             }
         }
 
-        //TODO use category instead
-        const sty = new SquareColorWebGLStyle({
-            //viewScale: cells => d3.max(cells, c => c.shadow),
-            //tFun: (c, r, z, max) => 0.4,//Math.min(1, c.shadow / max),
-            tFun: () => 0.4,
-            color: t => "rgba(0,0,0," + t + ")",
+        const col = "rgba(" + this.color(resolution, z, viewScale) + "," + this.alpha(resolution, z, viewScale) + ")"
+        const style = new SquareColorCategoryWebGLStyle({
+            code: () => "a",
+            color: { 'a': col }
         })
-        sty.draw(cells, geoCanvas, resolution)
+        style.draw(cells, geoCanvas, resolution)
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
