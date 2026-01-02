@@ -4,6 +4,7 @@
 import { Style } from '../core/Style.js'
 import { cellsToGrid, cellsToMatrix } from '../utils/utils.js'
 import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
+import { extent } from 'd3-array'
 
 /**
  * @module style
@@ -71,14 +72,12 @@ export class ShadingRayStyle extends Style {
                 }
             }
         } else {
-            //index cells
-            const ind = cellsToGrid(cells, c => this.elevation(c, resolution, z, viewScale))
-            console.log(ind)
-
             //compute shading
-            referenceShadowV2(ind,
-                this.shadowProperty,
+            referenceShadowV2(
+                cells,
                 resolution,
+                ((c) => this.elevation(c, resolution, z, viewScale)),
+                this.shadowProperty,
                 this.sunAzimuth(resolution, z, viewScale),
                 this.sunAltitude(resolution, z, viewScale),
                 this.zFactor(resolution, z, viewScale));
@@ -102,24 +101,34 @@ export class ShadingRayStyle extends Style {
  * Ground-truth terrain shadow algorithm (ray-based)
  * Trig-free with undefined handling
  *
- * @param {number[][]} ind - DEM [row][col], may contain undefined
- * @param {string} shadowProperty
+ * @param {Array.<Cell>} cells - DEM [row][col], may contain undefined
  * @param {number} resolution
+ * @param {Function} elevationFun
+ * @param {string} shadowProperty
  * @param {number} sunAzimuth - radians, clockwise from north (+Y)
  * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
  * @param {number} zFactor
- * @returns {(number|undefined)[][]} shade. Height above ground where ray light can be reached.
  */
 function referenceShadowV2(
-    ind,
-    shadowProperty = "shadow",
+    cells,
     resolution = 1000,
+    elevationFun,
+    shadowProperty = "shadow",
     sunAzimuth = 2.356, // 2PI/3
     sunAltitude = 0.15,
     zFactor = 1
 ) {
-    const rows = elevation.length;
-    const cols = elevation[0].length;
+
+    //get geo extent
+    const [minx, maxx] = extent(cells, c => c.x)
+    const [miny, maxy] = extent(cells, c => c.y)
+
+    //get row and col number
+    const rows = Math.ceil((maxy - miny) / resolution);
+    const cols = Math.ceil((maxx - minx) / resolution);
+
+    //index cells by y and x
+    const ind = cellsToGrid(cells, elevationFun)
 
     const tanAlt = Math.tan(sunAltitude);
 
@@ -131,10 +140,6 @@ function referenceShadowV2(
     const len = Math.hypot(dx, dy);
     const ux = dx / len;
     const uy = dy / len;
-
-    const shade = Array.from({ length: rows }, () =>
-        new Array(cols).fill(undefined)
-    );
 
     for (let y0 = 0; y0 < rows; y0++) {
         for (let x0 = 0; x0 < cols; x0++) {
@@ -180,7 +185,6 @@ function referenceShadowV2(
             if (shadowed) shade[y0][x0] = shadowed;
         }
     }
-    return shade;
 }
 
 
