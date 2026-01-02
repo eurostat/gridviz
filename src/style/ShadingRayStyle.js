@@ -16,7 +16,7 @@ export class ShadingRayStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        this.elevation = opts.elevation //(c,r,z,vs) => elevation
+        this.elevation = opts.elevation //(c) => elevation
 
         this.sunAzimuth = opts.sunAzimuth || (() => 2.356) //(r,z,vs)=>
         this.sunAltitude = opts.sunAltitude || (() => 0.2) //(r,z,vs)=>
@@ -48,7 +48,7 @@ export class ShadingRayStyle extends Style {
 
         if (this.version == "1") {
             //index cells by y and x
-            let m = cellsToMatrix(cells, resolution, c => this.elevation(c, resolution, z, viewScale))
+            let m = cellsToMatrix(cells, resolution, c => this.elevation(c))
             const x0 = m.x0, y0 = m.y0
 
             // compute ray casting shadow
@@ -79,7 +79,7 @@ export class ShadingRayStyle extends Style {
             referenceShadowV2(
                 cells,
                 resolution,
-                ((c) => this.elevation(c, resolution, z, viewScale)),
+                (c) => this.elevation(c),
                 this.shadowProperty,
                 this.sunAzimuth(resolution, z, viewScale),
                 this.sunAltitude(resolution, z, viewScale),
@@ -147,7 +147,6 @@ function referenceShadowV2(
             if (z0raw === undefined) continue;
 
             const z0 = z0raw * zFactor;
-            let shadowed = false;
 
             let t = resolution;
 
@@ -155,9 +154,6 @@ function referenceShadowV2(
             while (true) {
                 const x = x0 + Math.round(ux * t / resolution) * resolution;
                 const y = y0 - Math.round(uy * t / resolution) * resolution;
-
-                //TODO usefull ?
-                //if (x < minx || y < miny || x > maxx || y > maxy) break;
 
                 if (!ind[y]) break; // transparent gap
                 const cellq = ind[y][x];
@@ -172,20 +168,11 @@ function referenceShadowV2(
                 const delta = zq - rayZ;
                 //console.log(delta)
                 if (delta > 0) {
-                    shadowed = delta;
+                    cell0[shadowProperty] = delta
                     break;
                 }
-
                 t += resolution;
             }
-
-            // softness scale controls penumbra width
-            //const softness = 0.5; // radians
-            //shadowStrength = Math.min(1, shadowed / softness);
-            //shade[y][x] = Math.round(255 * (1 - shadowStrength));
-            if (!shadowed) continue
-            cell0[shadowProperty] = shadowed;
-            //console.log(cell0)
         }
     }
 }
