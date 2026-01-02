@@ -211,8 +211,7 @@ function referenceShadow(
             if (z0raw === undefined) continue;
 
             // cast ray
-            const step = resolution
-            let t = step;
+            let t = resolution;
             while (true) {
                 const x = x0 - ux * t / resolution;
                 const y = y0 - uy * t / resolution;
@@ -231,7 +230,7 @@ function referenceShadow(
                     shade[y0][x0] = delta;
                     break;
                 }
-                t += step;
+                t += resolution;
             }
         }
     }
