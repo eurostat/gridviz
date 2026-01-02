@@ -146,27 +146,21 @@ function referenceShadowV2(
             const z0raw = elevationFun(cell0);
             if (z0raw === undefined) continue;
 
-            const z0 = z0raw * zFactor;
-
-            let t = resolution;
-
             // ray
+            let t = resolution;
             while (true) {
-                const x = x0 + Math.round(ux * t / resolution) * resolution;
                 const y = y0 - Math.round(uy * t / resolution) * resolution;
-
                 if (!ind[y]) break; // transparent gap
+
+                const x = x0 + Math.round(ux * t / resolution) * resolution;
                 const cellq = ind[y][x];
                 if (!cellq) break; // transparent gap
+
                 const zqraw = elevationFun(cellq);
                 if (zqraw === undefined) break; // transparent gap
 
-                const zq = zqraw * zFactor;
-                const rayZ = z0 + tanAlt * t;
-
                 // the height above the ground where light ray can be reached
-                const delta = zq - rayZ;
-                //console.log(delta)
+                const delta = (zqraw - z0raw) * zFactor - tanAlt * t;
                 if (delta > 0) {
                     cell0[shadowProperty] = delta
                     break;
