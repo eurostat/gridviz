@@ -23,6 +23,9 @@ export class ShadingRayStyle extends Style {
 
         this.alpha = opts.alpha || (() => 0.33) //(r,z,vs)
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
+
+        this.version = opts.version || 1
+        this.shadowProperty = opts.shadowProperty || "shadow"
     }
 
     /**
@@ -42,26 +45,30 @@ export class ShadingRayStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        //index cells by y and x
-        let m = cellsToMatrix(cells, resolution, c => this.elevation(c, resolution, z, viewScale))
-        const x0 = m.x0, y0 = m.y0
+        if (this.version == "1") {
+            //index cells by y and x
+            let m = cellsToMatrix(cells, resolution, c => this.elevation(c, resolution, z, viewScale))
+            const x0 = m.x0, y0 = m.y0
 
-        // compute ray casting shadow
-        m = referenceShadow(m,
-            resolution,
-            this.sunAzimuth(resolution, z, viewScale),
-            this.sunAltitude(resolution, z, viewScale),
-            this.zFactor(resolution, z, viewScale));
+            // compute ray casting shadow
+            m = referenceShadow(m,
+                resolution,
+                this.sunAzimuth(resolution, z, viewScale),
+                this.sunAltitude(resolution, z, viewScale),
+                this.zFactor(resolution, z, viewScale));
 
-        // make cells
-        cells = []
-        for (let i = 0; i < m.length; i++) {
-            const row = m[i]
-            const y = y0 - i * resolution
-            for (let j = 0; j < row.length; j++) {
-                const sh = row[j]
-                if (!sh) continue
-                cells.push({ x: x0 + j * resolution, y: y, shadow: sh })
+            // make cells
+            cells = []
+            for (let i = 0; i < m.length; i++) {
+                const row = m[i]
+                const y = y0 - i * resolution
+                for (let j = 0; j < row.length; j++) {
+                    const sh = row[j]
+                    if (!sh) continue
+                    const c = { x: x0 + j * resolution, y: y }
+                    c[this.shadowProperty] = sh
+                    cells.push(c)
+                }
             }
         }
 
