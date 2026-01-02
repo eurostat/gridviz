@@ -4,6 +4,7 @@
 import { Style } from '../core/Style.js'
 import { cellsToGrid, cellsToMatrix } from '../utils/utils.js'
 import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
+import { SquareColorWebGLStyle } from './SquareColorWebGLStyle.js'
 import { extent } from 'd3-array'
 
 /**
@@ -26,6 +27,7 @@ export class ShadingRayStyle extends Style {
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
 
         this.version = opts.version || 1
+        // used only for v2
         this.shadowProperty = opts.shadowProperty || "shadow"
     }
 
@@ -90,9 +92,15 @@ export class ShadingRayStyle extends Style {
         }
 
         //draw shadowed cells with webgl style
-        new SquareColorCategoryWebGLStyle({
+        /*new SquareColorCategoryWebGLStyle({
             code: () => "a",
             color: { 'a': this.color(resolution, z, viewScale) },
+            alpha: () => this.alpha(resolution, z, viewScale),
+        }).draw(cells, geoCanvas, resolution)*/
+        new SquareColorWebGLStyle({
+            filter: (c => c.shadow),
+            tFun: (c, r) => Math.min(1, c.shadow / 10000),
+            color: (t=>"rgba(0,0,0,"+(1-t)+")"),
             alpha: () => this.alpha(resolution, z, viewScale),
         }).draw(cells, geoCanvas, resolution)
 
@@ -227,7 +235,7 @@ function referenceShadow(
                 // the height above the ground where light ray can be reached
                 const delta = (zqraw - z0raw) * zFactor - tanAlt * t;
                 if (delta > 0) {
-                    shade[y0][x0] = delta;
+                    shade[y0][x0] = t //delta;
                     break;
                 }
                 t += resolution;
