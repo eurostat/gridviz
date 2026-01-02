@@ -210,8 +210,6 @@ function referenceShadow(
             const z0raw = elevation[y0][x0];
             if (z0raw === undefined) continue;
 
-            const z0 = z0raw * zFactor;
-
             // cast ray
             const step = resolution
             let t = step;
@@ -227,11 +225,8 @@ function referenceShadow(
                 const zqraw = elevation[iy][ix];
                 if (zqraw === undefined) break; // transparent gap
 
-                const zq = zqraw * zFactor;
-                const rayZ = z0 + tanAlt * t;
-
                 // the height above the ground where light ray can be reached
-                const delta = zq - rayZ;
+                const delta = (zqraw - z0raw) * zFactor - tanAlt * t;
                 if (delta > 0) {
                     shade[y0][x0] = delta;
                     break;
