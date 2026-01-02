@@ -20,7 +20,10 @@
 
 <body>
     <form id="form">
-        <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay" checked>Relief hillshading raycasting</label>
+        <label for="cbHyps"><input type="checkbox" id="cbHyps" checked>Hypsometric tints</label>
+        <br>
+        <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay" checked>Hillshading
+            raycasting</label>
         <br>
         <label>Shading opacity</label>
         <input type="range" min="0" max="1" value="0.5" step="0.01" id="sAlpha" style="width: 200px" />
@@ -44,7 +47,7 @@
             x: 4080000,
             y: 2550000,
             z: 100,
-            backgroundColor: "#a4c8e1",
+            //backgroundColor: "#a4c8e1",
         }).addZoomButtons()
 
         //define dataset
@@ -69,28 +72,29 @@
             color: { ...colors },
         })
 
+        const shadingStyle = new gridviz.ShadingRayStyle({ elevation: c => c.v })
+
+        const layer = new gridviz.GridLayer(dataset, [hypsoStyle, shadingStyle], {
+            minPixelsPerCell: 2,
+            cellInfoHTML: (c) => `Elevation: ${c.v} m`
+        })
+
         //add layer to map
-        map.layers = [
-            new gridviz.GridLayer(dataset, [hypsoStyle, new gridviz.ShadingRayStyle({ elevation: c => c.v })], {
-                minPixelsPerCell: 2,
-                cellInfoHTML: (c) => `Elevation: ${c.v} m`
-            })
-        ]
+        map.layers = [layer]
 
         const update = () => {
-
-            //get layer and shading style
-            const layer = map.layers[0]
-            const style = layer.styles[1]
 
             //set layer resolution
             layer.minPixelsPerCell = document.getElementById("cbHD").checked ? 0.8 : 2
 
+            //set hypso style visibility
+            hypsoStyle.visible = document.getElementById("cbHyps").checked ? () => true : () => false
+
             //set shading style parameters based on GUI values
-            style.visible = document.getElementById("cbHillshadingRay").checked ? () => true : () => false
-            style.alpha = () => document.getElementById("sAlpha").value
-            style.sunAltitude = () => document.getElementById("sunAltitude").value
-            style.sunAzimuth = () => document.getElementById("sunAzimuth").value
+            shadingStyle.visible = document.getElementById("cbHillshadingRay").checked ? () => true : () => false
+            shadingStyle.alpha = () => document.getElementById("sAlpha").value
+            shadingStyle.sunAltitude = () => document.getElementById("sunAltitude").value
+            shadingStyle.sunAzimuth = () => document.getElementById("sunAzimuth").value
 
             map.redraw()
         }
