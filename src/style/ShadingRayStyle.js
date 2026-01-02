@@ -73,6 +73,7 @@ export class ShadingRayStyle extends Style {
         } else {
             //index cells
             const ind = cellsToGrid(cells, c => this.elevation(c, resolution, z, viewScale))
+            console.log(ind)
 
             //compute shading
             referenceShadowV2(ind,
