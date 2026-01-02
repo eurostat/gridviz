@@ -221,9 +221,7 @@ function referenceShadow(
     const uy = -Math.cos(sunAzimuth);
     const tanAlt = Math.tan(sunAltitude);
 
-    const shade = Array.from({ length: rows }, () =>
-        new Array(cols).fill(undefined)
-    );
+    const shade = Array.from({ length: rows }, () => new Array(cols).fill(undefined));
 
     for (let y0 = 0; y0 < rows; y0++) {
         for (let x0 = 0; x0 < cols; x0++) {
@@ -232,8 +230,10 @@ function referenceShadow(
             if (z0raw === undefined) continue;
 
             const z0 = z0raw * zFactor;
-            let t = resolution;
 
+            // cast ray
+            const step = resolution
+            let t = step;
             while (true) {
                 const x = x0 - ux * t / resolution;
                 const y = y0 - uy * t / resolution;
@@ -255,8 +255,7 @@ function referenceShadow(
                     shade[y0][x0] = delta;
                     break;
                 }
-
-                t += resolution;
+                t += step;
             }
         }
     }
