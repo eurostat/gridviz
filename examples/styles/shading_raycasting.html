@@ -26,7 +26,7 @@
             raycasting</label>
         <br>
         <label>Shading opacity</label>
-        <input type="range" min="0" max="1" value="0.5" step="0.01" id="sAlpha" style="width: 200px" />
+        <input type="range" min="0" max="1" value="0.33" step="0.01" id="sAlpha" style="width: 200px" />
         <br>
         <label>Sun altitude</label>
         <input type="range" min="0.005" max="0.7" value="0.15" step="0.01" id="sunAltitude" style="width: 200px" />
@@ -74,7 +74,7 @@
 
         const shadingStyle = new gridviz.ShadingRayStyle({
             elevation: c => c.v,
-            version: "2",
+            version: "1",
         })
 
         const layer = new gridviz.GridLayer(dataset, [hypsoStyle, shadingStyle], {

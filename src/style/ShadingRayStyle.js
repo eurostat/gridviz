@@ -72,6 +72,9 @@ export class ShadingRayStyle extends Style {
                 }
             }
         } else {
+            //clean previsouly computed shadows
+            for (let c of cells) delete c[this.shadowProperty]
+
             //compute shading
             referenceShadowV2(
                 cells,
@@ -81,6 +84,9 @@ export class ShadingRayStyle extends Style {
                 this.sunAzimuth(resolution, z, viewScale),
                 this.sunAltitude(resolution, z, viewScale),
                 this.zFactor(resolution, z, viewScale));
+
+            //keep only those with shadow
+            cells = cells.filter(c => c.shadow)
         }
 
         //draw shadowed cells with webgl style
@@ -123,28 +129,21 @@ function referenceShadowV2(
     const [minx, maxx] = extent(cells, c => c.x)
     const [miny, maxy] = extent(cells, c => c.y)
 
-    //get row and col number
-    const rows = Math.ceil((maxy - miny) / resolution);
-    const cols = Math.ceil((maxx - minx) / resolution);
-
     //index cells by y and x
-    const ind = cellsToGrid(cells, elevationFun)
-
-    const tanAlt = Math.tan(sunAltitude);
+    const ind = cellsToGrid(cells)
 
     // Sun direction TOWARD the sun
-    const dx = Math.sin(sunAzimuth);
-    const dy = -Math.cos(sunAzimuth);
+    const ux = Math.sin(sunAzimuth);
+    const uy = Math.cos(sunAzimuth);
+    const tanAlt = Math.tan(sunAltitude);
 
-    // Normalize horizontal direction
-    const len = Math.hypot(dx, dy);
-    const ux = dx / len;
-    const uy = dy / len;
-
-    for (let y0 = 0; y0 < rows; y0++) {
-        for (let x0 = 0; x0 < cols; x0++) {
-
-            const z0raw = elevation[y0][x0];
+    for (let y0 = miny; y0 <= maxy; y0 += resolution) {
+        const row = ind[y0]
+        if (!row) continue
+        for (let x0 = minx; x0 <= maxx; x0 += resolution) {
+            const cell0 = row[x0]
+            if (!cell0) continue
+            const z0raw = elevationFun(cell0);
             if (z0raw === undefined) continue;
 
             const z0 = z0raw * zFactor;
@@ -152,16 +151,18 @@ function referenceShadowV2(
 
             let t = resolution;
 
+            // ray
             while (true) {
-                const x = x0 - ux * t / resolution;
-                const y = y0 - uy * t / resolution;
+                const x = x0 + Math.round(ux * t / resolution) * resolution;
+                const y = y0 - Math.round(uy * t / resolution) * resolution;
 
-                const ix = Math.round(x);
-                const iy = Math.round(y);
+                //TODO usefull ?
+                //if (x < minx || y < miny || x > maxx || y > maxy) break;
 
-                if (ix < 0 || iy < 0 || ix >= cols || iy >= rows) break;
-
-                const zqraw = elevation[iy][ix];
+                if (!ind[y]) break; // transparent gap
+                const cellq = ind[y][x];
+                if (!cellq) break; // transparent gap
+                const zqraw = elevationFun(cellq);
                 if (zqraw === undefined) break; // transparent gap
 
                 const zq = zqraw * zFactor;
@@ -169,6 +170,7 @@ function referenceShadowV2(
 
                 // the height above the ground where light ray can be reached
                 const delta = zq - rayZ;
+                //console.log(delta)
                 if (delta > 0) {
                     shadowed = delta;
                     break;
@@ -182,7 +184,8 @@ function referenceShadowV2(
             //shadowStrength = Math.min(1, shadowed / softness);
             //shade[y][x] = Math.round(255 * (1 - shadowStrength));
             if (!shadowed) continue
-            if (shadowed) shade[y0][x0] = shadowed;
+            cell0[shadowProperty] = shadowed;
+            //console.log(cell0)
         }
     }
 }
@@ -213,16 +216,10 @@ function referenceShadow(
     const rows = elevation.length;
     const cols = elevation[0].length;
 
-    const tanAlt = Math.tan(sunAltitude);
-
     // Sun direction TOWARD the sun
-    const dx = Math.sin(sunAzimuth);
-    const dy = -Math.cos(sunAzimuth);
-
-    // Normalize horizontal direction
-    const len = Math.hypot(dx, dy);
-    const ux = dx / len;
-    const uy = dy / len;
+    const ux = Math.sin(sunAzimuth);
+    const uy = -Math.cos(sunAzimuth);
+    const tanAlt = Math.tan(sunAltitude);
 
     const shade = Array.from({ length: rows }, () =>
         new Array(cols).fill(undefined)
@@ -235,8 +232,6 @@ function referenceShadow(
             if (z0raw === undefined) continue;
 
             const z0 = z0raw * zFactor;
-            let shadowed = false;
-
             let t = resolution;
 
             while (true) {
@@ -257,19 +252,12 @@ function referenceShadow(
                 // the height above the ground where light ray can be reached
                 const delta = zq - rayZ;
                 if (delta > 0) {
-                    shadowed = delta;
+                    shade[y0][x0] = delta;
                     break;
                 }
 
                 t += resolution;
             }
-
-            // softness scale controls penumbra width
-            //const softness = 0.5; // radians
-            //shadowStrength = Math.min(1, shadowed / softness);
-            //shade[y][x] = Math.round(255 * (1 - shadowStrength));
-            if (!shadowed) continue
-            if (shadowed) shade[y0][x0] = shadowed;
         }
     }
     return shade;
