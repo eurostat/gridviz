@@ -2,7 +2,7 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
-import { cellsToMatrix } from '../utils/utils.js'
+import { cellsToGrid, cellsToMatrix } from '../utils/utils.js'
 import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
 
 /**
@@ -70,6 +70,17 @@ export class ShadingRayStyle extends Style {
                     cells.push(c)
                 }
             }
+        } else {
+            //index cells
+            const ind = cellsToGrid(cells, c => this.elevation(c, resolution, z, viewScale))
+
+            //compute shading
+            referenceShadowV2(ind,
+                this.shadowProperty,
+                resolution,
+                this.sunAzimuth(resolution, z, viewScale),
+                this.sunAltitude(resolution, z, viewScale),
+                this.zFactor(resolution, z, viewScale));
         }
 
         //draw shadowed cells with webgl style
@@ -83,6 +94,96 @@ export class ShadingRayStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
+
+
+
+/**
+ * Ground-truth terrain shadow algorithm (ray-based)
+ * Trig-free with undefined handling
+ *
+ * @param {number[][]} ind - DEM [row][col], may contain undefined
+ * @param {string} shadowProperty
+ * @param {number} resolution
+ * @param {number} sunAzimuth - radians, clockwise from north (+Y)
+ * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
+ * @param {number} zFactor
+ * @returns {(number|undefined)[][]} shade. Height above ground where ray light can be reached.
+ */
+function referenceShadowV2(
+    ind,
+    shadowProperty = "shadow",
+    resolution = 1000,
+    sunAzimuth = 2.356, // 2PI/3
+    sunAltitude = 0.15,
+    zFactor = 1
+) {
+    const rows = elevation.length;
+    const cols = elevation[0].length;
+
+    const tanAlt = Math.tan(sunAltitude);
+
+    // Sun direction TOWARD the sun
+    const dx = Math.sin(sunAzimuth);
+    const dy = -Math.cos(sunAzimuth);
+
+    // Normalize horizontal direction
+    const len = Math.hypot(dx, dy);
+    const ux = dx / len;
+    const uy = dy / len;
+
+    const shade = Array.from({ length: rows }, () =>
+        new Array(cols).fill(undefined)
+    );
+
+    for (let y0 = 0; y0 < rows; y0++) {
+        for (let x0 = 0; x0 < cols; x0++) {
+
+            const z0raw = elevation[y0][x0];
+            if (z0raw === undefined) continue;
+
+            const z0 = z0raw * zFactor;
+            let shadowed = false;
+
+            let t = resolution;
+
+            while (true) {
+                const x = x0 - ux * t / resolution;
+                const y = y0 - uy * t / resolution;
+
+                const ix = Math.round(x);
+                const iy = Math.round(y);
+
+                if (ix < 0 || iy < 0 || ix >= cols || iy >= rows) break;
+
+                const zqraw = elevation[iy][ix];
+                if (zqraw === undefined) break; // transparent gap
+
+                const zq = zqraw * zFactor;
+                const rayZ = z0 + tanAlt * t;
+
+                // the height above the ground where light ray can be reached
+                const delta = zq - rayZ;
+                if (delta > 0) {
+                    shadowed = delta;
+                    break;
+                }
+
+                t += resolution;
+            }
+
+            // softness scale controls penumbra width
+            //const softness = 0.5; // radians
+            //shadowStrength = Math.min(1, shadowed / softness);
+            //shade[y][x] = Math.round(255 * (1 - shadowStrength));
+            if (!shadowed) continue
+            if (shadowed) shade[y0][x0] = shadowed;
+        }
+    }
+    return shade;
+}
+
+
+
 
 
 
