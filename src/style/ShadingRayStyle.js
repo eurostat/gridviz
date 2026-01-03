@@ -21,7 +21,6 @@ export class ShadingRayStyle extends Style {
 
         this.sunAzimuth = opts.sunAzimuth || (() => 2.356) //(r,z,vs)=>
         this.sunAltitude = opts.sunAltitude || (() => 0.2) //(r,z,vs)=>
-        this.zFactor = opts.zFactor || (() => 1) //(r,z,vs)=>
 
         this.alpha = opts.alpha || (() => 0.33) //(r,z,vs)
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
@@ -57,8 +56,7 @@ export class ShadingRayStyle extends Style {
             m = referenceShadow(m,
                 resolution,
                 this.sunAzimuth(resolution, z, viewScale),
-                this.sunAltitude(resolution, z, viewScale),
-                this.zFactor(resolution, z, viewScale));
+                this.sunAltitude(resolution, z, viewScale));
 
             // make cells
             cells = []
@@ -84,8 +82,7 @@ export class ShadingRayStyle extends Style {
                 (c) => this.elevation(c),
                 this.shadowProperty,
                 this.sunAzimuth(resolution, z, viewScale),
-                this.sunAltitude(resolution, z, viewScale),
-                this.zFactor(resolution, z, viewScale));
+                this.sunAltitude(resolution, z, viewScale));
 
             //keep only those with shadow
             cells = cells.filter(c => c.shadow)
@@ -99,8 +96,8 @@ export class ShadingRayStyle extends Style {
         }).draw(cells, geoCanvas, resolution)*/
         new SquareColorWebGLStyle({
             filter: (c => c.shadow),
-            tFun: (c, r) => Math.min(1, c.shadow / 10000),
-            color: (t=>"rgba(0,0,0,"+(1-t)+")"),
+            tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),
+            color: (t => "rgba(0,0,0," + t + ")"),
             alpha: () => this.alpha(resolution, z, viewScale),
         }).draw(cells, geoCanvas, resolution)
 
@@ -108,6 +105,86 @@ export class ShadingRayStyle extends Style {
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
+
+
+
+
+/**
+ * Ground-truth terrain shadow algorithm (ray-based)
+ * Trig-free with undefined handling
+ *
+ * @param {number[][]} elevation - DEM [row][col], may contain undefined
+ * @param {number} resolution
+ * @param {number} sunAzimuth - radians, clockwise from north (+Y)
+ * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
+ * @returns {(number|undefined)[][]} shade. Height above ground where ray light can be reached.
+ */
+function referenceShadow(
+    elevation,
+    resolution = 1000,
+    sunAzimuth = 2.356, // 2PI/3
+    sunAltitude = 0.15
+) {
+    const rows = elevation.length;
+    const cols = elevation[0].length;
+
+    // Sun direction TOWARD the sun
+    const ux = Math.sin(sunAzimuth);
+    const uy = -Math.cos(sunAzimuth);
+    const tanAlt = Math.tan(sunAltitude);
+
+    //const diffAngle = 40 * Math.PI / 180 // 0.5 deg
+    //const tanTop = Math.tan(sunAltitude + diffAngle)
+    //const tanBottom = Math.tan(Math.max(sunAltitude - diffAngle, 0))
+    //const tanBottom = Math.tan(sunAltitude - diffAngle)
+
+    const shade = Array.from({ length: rows }, () => new Array(cols).fill(undefined));
+
+    for (let y0 = 0; y0 < rows; y0++) {
+        for (let x0 = 0; x0 < cols; x0++) {
+
+            const z0raw = elevation[y0][x0];
+            if (z0raw === undefined) continue;
+
+            // cast ray
+            let t = resolution;
+            while (true) {
+                const x = x0 - ux * t / resolution;
+                const y = y0 - uy * t / resolution;
+
+                const ix = Math.round(x);
+                const iy = Math.round(y);
+
+                if (ix < 0 || iy < 0 || ix >= cols || iy >= rows) break;
+
+                const zqraw = elevation[iy][ix];
+                if (zqraw === undefined) break; // transparent gap
+
+                //const deltaBottom = zqraw - z0raw - tanBottom * t;
+                //if (deltaBottom > 0) {
+                const delta = zqraw - z0raw - tanAlt * t;
+                if (delta > 0) {
+                    shade[y0][x0] = 1
+                    break;
+                    /*}
+                    //const deltaTop = zqraw - z0raw - tanTop * t;
+                    //if (deltaTop > 0) {
+                    //    shade[y0][x0] = 0
+                    //    break;
+                    //} else {
+                        let r = 1 + delta / deltaBottom
+                        if (r < 0) r = 0
+                        if (r < 0 || r > 1) console.log(r)
+                        shade[y0][x0] = shade[y0][x0] ? Math.max(shade[y0][x0], r) : r
+                    //}*/
+                }
+                t += resolution;
+            }
+        }
+    }
+    return shade;
+}
+
 
 
 
@@ -121,7 +198,6 @@ export class ShadingRayStyle extends Style {
  * @param {string} shadowProperty
  * @param {number} sunAzimuth - radians, clockwise from north (+Y)
  * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
- * @param {number} zFactor
  */
 function referenceShadowV2(
     cells,
@@ -129,8 +205,7 @@ function referenceShadowV2(
     elevationFun,
     shadowProperty = "shadow",
     sunAzimuth = 2.356, // 2PI/3
-    sunAltitude = 0.15,
-    zFactor = 1
+    sunAltitude = 0.15
 ) {
 
     //get geo extent
@@ -168,7 +243,7 @@ function referenceShadowV2(
                 if (zqraw === undefined) break; // transparent gap
 
                 // the height above the ground where light ray can be reached
-                const delta = (zqraw - z0raw) * zFactor - tanAlt * t;
+                const delta = zqraw - z0raw - tanAlt * t;
                 if (delta > 0) {
                     cell0[shadowProperty] = delta
                     break;
@@ -179,68 +254,3 @@ function referenceShadowV2(
     }
 }
 
-
-
-
-
-
-/**
- * Ground-truth terrain shadow algorithm (ray-based)
- * Trig-free with undefined handling
- *
- * @param {number[][]} elevation - DEM [row][col], may contain undefined
- * @param {number} resolution
- * @param {number} sunAzimuth - radians, clockwise from north (+Y)
- * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
- * @param {number} zFactor
- * @returns {(number|undefined)[][]} shade. Height above ground where ray light can be reached.
- */
-function referenceShadow(
-    elevation,
-    resolution = 1000,
-    sunAzimuth = 2.356, // 2PI/3
-    sunAltitude = 0.15,
-    zFactor = 1
-) {
-    const rows = elevation.length;
-    const cols = elevation[0].length;
-
-    // Sun direction TOWARD the sun
-    const ux = Math.sin(sunAzimuth);
-    const uy = -Math.cos(sunAzimuth);
-    const tanAlt = Math.tan(sunAltitude);
-
-    const shade = Array.from({ length: rows }, () => new Array(cols).fill(undefined));
-
-    for (let y0 = 0; y0 < rows; y0++) {
-        for (let x0 = 0; x0 < cols; x0++) {
-
-            const z0raw = elevation[y0][x0];
-            if (z0raw === undefined) continue;
-
-            // cast ray
-            let t = resolution;
-            while (true) {
-                const x = x0 - ux * t / resolution;
-                const y = y0 - uy * t / resolution;
-
-                const ix = Math.round(x);
-                const iy = Math.round(y);
-
-                if (ix < 0 || iy < 0 || ix >= cols || iy >= rows) break;
-
-                const zqraw = elevation[iy][ix];
-                if (zqraw === undefined) break; // transparent gap
-
-                // the height above the ground where light ray can be reached
-                const delta = (zqraw - z0raw) * zFactor - tanAlt * t;
-                if (delta > 0) {
-                    shade[y0][x0] = t //delta;
-                    break;
-                }
-                t += resolution;
-            }
-        }
-    }
-    return shade;
-}

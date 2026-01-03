@@ -88,16 +88,16 @@
         const update = () => {
 
             //set layer resolution
-            layer.minPixelsPerCell = document.getElementById("cbHD").checked ? 0.7 : 2
+            layer.minPixelsPerCell = document.getElementById("cbHD").checked ? 0.5 : 2
 
             //set hypso style visibility
             hypsoStyle.visible = document.getElementById("cbHyps").checked ? () => true : () => false
 
             //set shading style parameters based on GUI values
             shadingStyle.visible = document.getElementById("cbHillshadingRay").checked ? () => true : () => false
-            shadingStyle.alpha = () => document.getElementById("sAlpha").value
-            shadingStyle.sunAltitude = () => document.getElementById("sunAltitude").value
-            shadingStyle.sunAzimuth = () => document.getElementById("sunAzimuth").value
+            shadingStyle.alpha = () => +document.getElementById("sAlpha").value
+            shadingStyle.sunAltitude = () => +document.getElementById("sunAltitude").value
+            shadingStyle.sunAzimuth = () => +document.getElementById("sunAzimuth").value
 
             map.redraw()
         }
