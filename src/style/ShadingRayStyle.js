@@ -31,6 +31,8 @@ export class ShadingRayStyle extends Style {
         this.alpha = opts.alpha || (() => 0.33) //(r,z,vs)
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
 
+        this.undefinedValue = opts.undefinedValue || 0
+
         //this.version = opts.version || 1
         // used only for v2
         //this.shadowProperty = opts.shadowProperty || "shadow"
@@ -59,10 +61,12 @@ export class ShadingRayStyle extends Style {
         const x0 = m.x0, y0 = m.y0
 
         // compute ray casting shadow
-        m = referenceShadow(m,
+        m = referenceShadow(
+            m,
             resolution,
             this.sunAzimuth(resolution, z, viewScale),
-            this.sunAltitude(resolution, z, viewScale));
+            this.sunAltitude(resolution, z, viewScale),
+            this.undefinedValue);
 
         // make cells
         cells = []
@@ -124,13 +128,15 @@ export class ShadingRayStyle extends Style {
  * @param {number} resolution
  * @param {number} sunAzimuth - radians, clockwise from north (+Y)
  * @param {number} sunAltitude - radians - solar elevation angle above the local horizontal plane
+ * @param {number|undefined} undefinedValue - The value to set for cells with no elevation value
  * @returns {(number|undefined)[][]} shade. Height above ground where ray light can be reached.
  */
 function referenceShadow(
     elevation,
     resolution = 1000,
     sunAzimuth = 2.356, // 2PI/3
-    sunAltitude = 0.15
+    sunAltitude = 0.15,
+    undefinedValue = undefined,
 ) {
     const rows = elevation.length;
     const cols = elevation[0].length;
@@ -150,7 +156,7 @@ function referenceShadow(
     for (let y0 = 0; y0 < rows; y0++) {
         for (let x0 = 0; x0 < cols; x0++) {
 
-            const z0raw = elevation[y0][x0];
+            const z0raw = elevation[y0][x0] || undefinedValue;
             if (z0raw === undefined) continue;
 
             // cast ray
@@ -164,7 +170,7 @@ function referenceShadow(
 
                 if (ix < 0 || iy < 0 || ix >= cols || iy >= rows) break;
 
-                const zqraw = elevation[iy][ix];
+                const zqraw = elevation[iy][ix] || undefinedValue;
                 if (zqraw === undefined) break; // transparent gap
 
                 //const deltaBottom = zqraw - z0raw - tanBottom * t;
