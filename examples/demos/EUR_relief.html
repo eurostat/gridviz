@@ -53,17 +53,31 @@
                 <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Relief hillshading raycasting
                     (slow)</label>
                 <br>
-                <label>Relief hypsometric tints number</label>
-                <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
-                <br>
-                <label>Relief exageration</label>
-                <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
-                    style="width: 200px" />
-                <br>
-                <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
-                    rise</label>
-                <hr>
-                <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
+                <div id="rc_div" style="border: solid black 1px; padding: 1px;">
+                    <label>Sun ray azimuth</label>
+                    <input type="range" min="0" max="6.3" value="2.4" step="0.05" id="sunrayAzimuth"
+                        style="width: 200px" />
+                    <br>
+                    <label>Sun altitude</label>
+                    <input type="range" min="0.005" max="0.7" value="0.15" step="0.01" id="sunrayAltitude"
+                        style="width: 200px" />
+                    <br>
+                    <label>Sun light opacity</label>
+                    <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha" style="width: 200px" />
+                </div>
+                <div>
+                    <label>Relief hypsometric tints number</label>
+                    <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
+                    <br>
+                    <label>Relief exageration</label>
+                    <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
+                        style="width: 200px" />
+                    <br>
+                    <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
+                        rise</label>
+                    <hr>
+                    <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
+                </div>
             </div>
             <div id="joyplot_div" style="display: none;">
                 <label>Relief exageration</label>
@@ -85,6 +99,7 @@
     <script>
 
         //TODO
+        // set raycast shadow
         //interpolateur
         //better structure styles
         //slope-aspect styles
@@ -221,6 +236,7 @@
             const rsty = document.querySelector('input[name="rdreliefstyle"]:checked').value;
             document.getElementById("hyps_div").style.display = rsty == "hyps" ? 'inline-block' : 'none'
             document.getElementById("joyplot_div").style.display = rsty == "joyplot" ? 'inline-block' : 'none'
+            document.getElementById("rc_div").style.display = document.getElementById("cbHillshadingRay").checked ? 'inline-block' : 'none'
 
             //get HD parameter
             const hd = document.getElementById("cbHD").checked;
@@ -357,7 +373,12 @@
                     reliefStyles.push(smoothingFunction(shadingStyle))
                 }
                 if (document.getElementById("cbHillshadingRay").checked) {
-                    const rcStyle = new gridviz.ShadingRayStyle({ elevation: c => c.v })
+                    const rcStyle = new gridviz.ShadingRayStyle({
+                        elevation: c => c.v,
+                        alpha: () => +document.getElementById("sunrayAlpha").value,
+                        sunAltitude: c => +document.getElementById("sunrayAltitude").value,
+                        sunAzimuth: c => +document.getElementById("sunrayAzimuth").value,
+                    })
                     reliefStyles.push(smoothingFunction(rcStyle))
                 }
             }
