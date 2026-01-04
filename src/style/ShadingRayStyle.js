@@ -4,7 +4,7 @@
 import { Style } from '../core/Style.js'
 import { cellsToGrid, cellsToMatrix } from '../utils/utils.js'
 import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.js'
-import { SquareColorWebGLStyle } from './SquareColorWebGLStyle.js'
+//import { SquareColorWebGLStyle } from './SquareColorWebGLStyle.js'
 import { extent } from 'd3-array'
 
 
