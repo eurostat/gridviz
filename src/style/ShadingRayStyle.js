@@ -11,6 +11,7 @@ import { extent } from 'd3-array'
 //TODO:
 // make faster algo by setting shades by sun ray
 // diffusion effect ? based on distance to light (altitude - sun ray height)
+// style with SquareColorWebGLStyle, improved version !
 
 /**
  * @module style
@@ -72,13 +73,13 @@ export class ShadingRayStyle extends Style {
                     const sh = row[j]
                     if (!sh) continue
                     const c = { x: x0 + j * resolution, y: y }
-                    c[this.shadowProperty] = sh
+                    //c[this.shadowProperty] = sh
                     cells.push(c)
                 }
             }
         } else {
             //clean previsouly computed shadows
-            for (let c of cells) delete c[this.shadowProperty]
+            /*for (let c of cells) delete c[this.shadowProperty]
 
             //compute shading
             referenceShadowV2(
@@ -90,21 +91,22 @@ export class ShadingRayStyle extends Style {
                 this.sunAltitude(resolution, z, viewScale));
 
             //keep only those with shadow
-            cells = cells.filter(c => c.shadow)
+            cells = cells.filter(c => c.shadow)*/
         }
 
         //draw shadowed cells with webgl style
-        /*new SquareColorCategoryWebGLStyle({
+        new SquareColorCategoryWebGLStyle({
             code: () => "a",
             color: { 'a': this.color(resolution, z, viewScale) },
             alpha: () => this.alpha(resolution, z, viewScale),
-        }).draw(cells, geoCanvas, resolution)*/
-        new SquareColorWebGLStyle({
+        }).draw(cells, geoCanvas, resolution)
+
+        /*new SquareColorWebGLStyle({
             filter: (c => c.shadow),
             tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),//c.shadow, //,
             color: (t => "rgba(0,0,0," + t + ")"),
             alpha: () => this.alpha(resolution, z, viewScale),
-        }).draw(cells, geoCanvas, resolution)
+        }).draw(cells, geoCanvas, resolution)*/
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
@@ -169,7 +171,7 @@ function referenceShadow(
                 //if (deltaBottom > 0) {
                 const delta = zqraw - z0raw - tanAlt * t;
                 if (delta > 0) {
-                    shade[y0][x0] = Math.min(3000 / t, 1)
+                    shade[y0][x0] = 1 //Math.min(3000 / t, 1)
                     break;
                     /*}
                     //const deltaTop = zqraw - z0raw - tanTop * t;
