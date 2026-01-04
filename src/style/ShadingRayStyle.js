@@ -92,24 +92,24 @@ export class ShadingRayStyle extends Style {
 
         //keep only those with shadow
         cells = cells.filter(c => c.shadow)*/
-    //}
+        //}
 
         //draw shadowed cells with webgl style
         new SquareColorCategoryWebGLStyle({
-        code: () => "a",
-        color: { 'a': this.color(resolution, z, viewScale) },
-        alpha: () => this.alpha(resolution, z, viewScale),
-    }).draw(cells, geoCanvas, resolution)
+            code: () => "a",
+            color: { 'a': this.color(resolution, z, viewScale) },
+            alpha: () => this.alpha(resolution, z, viewScale),
+        }).draw(cells, geoCanvas, resolution)
 
-/*new SquareColorWebGLStyle({
-    filter: (c => c.shadow),
-    tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),//c.shadow, //,
-    color: (t => "rgba(0,0,0," + t + ")"),
-    alpha: () => this.alpha(resolution, z, viewScale),
-}).draw(cells, geoCanvas, resolution)*/
+        /*new SquareColorWebGLStyle({
+            filter: (c => c.shadow),
+            tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),//c.shadow, //,
+            color: (t => "rgba(0,0,0," + t + ")"),
+            alpha: () => this.alpha(resolution, z, viewScale),
+        }).draw(cells, geoCanvas, resolution)*/
 
-//update legends
-this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+        //update legends
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
 
