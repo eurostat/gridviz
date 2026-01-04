@@ -31,9 +31,9 @@ export class ShadingRayStyle extends Style {
         this.alpha = opts.alpha || (() => 0.33) //(r,z,vs)
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
 
-        this.version = opts.version || 1
+        //this.version = opts.version || 1
         // used only for v2
-        this.shadowProperty = opts.shadowProperty || "shadow"
+        //this.shadowProperty = opts.shadowProperty || "shadow"
     }
 
     /**
@@ -53,63 +53,63 @@ export class ShadingRayStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        if (this.version == "1") {
-            //index cells by y and x
-            let m = cellsToMatrix(cells, resolution, c => this.elevation(c))
-            const x0 = m.x0, y0 = m.y0
+        //if (this.version == "1") {
+        //index cells by y and x
+        let m = cellsToMatrix(cells, resolution, c => this.elevation(c))
+        const x0 = m.x0, y0 = m.y0
 
-            // compute ray casting shadow
-            m = referenceShadow(m,
-                resolution,
-                this.sunAzimuth(resolution, z, viewScale),
-                this.sunAltitude(resolution, z, viewScale));
+        // compute ray casting shadow
+        m = referenceShadow(m,
+            resolution,
+            this.sunAzimuth(resolution, z, viewScale),
+            this.sunAltitude(resolution, z, viewScale));
 
-            // make cells
-            cells = []
-            for (let i = 0; i < m.length; i++) {
-                const row = m[i]
-                const y = y0 - i * resolution
-                for (let j = 0; j < row.length; j++) {
-                    const sh = row[j]
-                    if (!sh) continue
-                    const c = { x: x0 + j * resolution, y: y }
-                    //c[this.shadowProperty] = sh
-                    cells.push(c)
-                }
+        // make cells
+        cells = []
+        for (let i = 0; i < m.length; i++) {
+            const row = m[i]
+            const y = y0 - i * resolution
+            for (let j = 0; j < row.length; j++) {
+                const sh = row[j]
+                if (!sh) continue
+                const c = { x: x0 + j * resolution, y: y }
+                //c[this.shadowProperty] = sh
+                cells.push(c)
             }
-        } else {
-            //clean previsouly computed shadows
-            /*for (let c of cells) delete c[this.shadowProperty]
-
-            //compute shading
-            referenceShadowV2(
-                cells,
-                resolution,
-                (c) => this.elevation(c),
-                this.shadowProperty,
-                this.sunAzimuth(resolution, z, viewScale),
-                this.sunAltitude(resolution, z, viewScale));
-
-            //keep only those with shadow
-            cells = cells.filter(c => c.shadow)*/
         }
+        //} else {
+        //clean previsouly computed shadows
+        /*for (let c of cells) delete c[this.shadowProperty]
+
+        //compute shading
+        referenceShadowV2(
+            cells,
+            resolution,
+            (c) => this.elevation(c),
+            this.shadowProperty,
+            this.sunAzimuth(resolution, z, viewScale),
+            this.sunAltitude(resolution, z, viewScale));
+
+        //keep only those with shadow
+        cells = cells.filter(c => c.shadow)*/
+    //}
 
         //draw shadowed cells with webgl style
         new SquareColorCategoryWebGLStyle({
-            code: () => "a",
-            color: { 'a': this.color(resolution, z, viewScale) },
-            alpha: () => this.alpha(resolution, z, viewScale),
-        }).draw(cells, geoCanvas, resolution)
+        code: () => "a",
+        color: { 'a': this.color(resolution, z, viewScale) },
+        alpha: () => this.alpha(resolution, z, viewScale),
+    }).draw(cells, geoCanvas, resolution)
 
-        /*new SquareColorWebGLStyle({
-            filter: (c => c.shadow),
-            tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),//c.shadow, //,
-            color: (t => "rgba(0,0,0," + t + ")"),
-            alpha: () => this.alpha(resolution, z, viewScale),
-        }).draw(cells, geoCanvas, resolution)*/
+/*new SquareColorWebGLStyle({
+    filter: (c => c.shadow),
+    tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),//c.shadow, //,
+    color: (t => "rgba(0,0,0," + t + ")"),
+    alpha: () => this.alpha(resolution, z, viewScale),
+}).draw(cells, geoCanvas, resolution)*/
 
-        //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+//update legends
+this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
 
