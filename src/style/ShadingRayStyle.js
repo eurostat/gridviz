@@ -7,6 +7,11 @@ import { SquareColorCategoryWebGLStyle } from './SquareColorCategoryWebGLStyle.j
 import { SquareColorWebGLStyle } from './SquareColorWebGLStyle.js'
 import { extent } from 'd3-array'
 
+
+//TODO:
+// make faster algo by setting shades by sun ray
+// diffusion effect ? based on distance to light (altitude - sun ray height)
+
 /**
  * @module style
  * @author Julien Gaffuri
@@ -96,7 +101,7 @@ export class ShadingRayStyle extends Style {
         }).draw(cells, geoCanvas, resolution)*/
         new SquareColorWebGLStyle({
             filter: (c => c.shadow),
-            tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),
+            tFun: (c, r) => c.shadow, //1-Math.min(1, c.shadow / 10000),//c.shadow, //,
             color: (t => "rgba(0,0,0," + t + ")"),
             alpha: () => this.alpha(resolution, z, viewScale),
         }).draw(cells, geoCanvas, resolution)
@@ -164,7 +169,7 @@ function referenceShadow(
                 //if (deltaBottom > 0) {
                 const delta = zqraw - z0raw - tanAlt * t;
                 if (delta > 0) {
-                    shade[y0][x0] = 1
+                    shade[y0][x0] = Math.min(3000 / t, 1)
                     break;
                     /*}
                     //const deltaTop = zqraw - z0raw - tanTop * t;
