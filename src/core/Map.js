@@ -190,9 +190,11 @@ export class Map {
             if (layer.visible && !layer.visible(z)) continue
 
             //set layer alpha and blend mode
-            ctx.save()
-            if (layer.alpha) ctx.globalAlpha = layer.alpha(z)
-            if (layer.blendOperation) ctx.globalCompositeOperation = layer.blendOperation(z)
+            if (layer.alpha || layer.blendOperation) {
+                ctx.save()
+                if (layer.alpha) ctx.globalAlpha = layer.alpha(z)
+                if (layer.blendOperation) ctx.globalCompositeOperation = layer.blendOperation(z)
+            }
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
@@ -204,7 +206,7 @@ export class Map {
             if (layer.filterColor) layer.drawFilter(this.geoCanvas)
 
             //restore default alpha and blend operation
-            ctx.restore()
+            if (layer.alpha || layer.blendOperation) ctx.restore()
         }
 
         // one drawImage call: draw the offscreen canvas to the main canvas
