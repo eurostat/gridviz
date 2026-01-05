@@ -67,7 +67,8 @@ export class GridLayer extends Layer {
 
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?
-            ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
+            ctx.save()
+            if (s.alpha) ctx.globalAlpha = s.alpha(z)
             if (s.blendOperation) ctx.globalCompositeOperation = s.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
@@ -78,6 +79,9 @@ export class GridLayer extends Layer {
 
             //draw style filter
             if (s.filterColor) s.drawFilter(geoCanvas)
+
+            //restore default alpha and blend operation
+            ctx.restore()
         }
 
         //add legend element

@@ -182,14 +182,17 @@ export class Map {
         const z = this.geoCanvas.view.z
         this.updateExtentGeo()
 
+        const ctx = this.geoCanvas.offscreenCtx
+
         //go through the layers
         for (const layer of this.layers) {
             //check if layer is visible
             if (layer.visible && !layer.visible(z)) continue
 
             //set layer alpha and blend mode
-            this.geoCanvas.offscreenCtx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-            if (layer.blendOperation) this.geoCanvas.offscreenCtx.globalCompositeOperation = layer.blendOperation(z)
+            ctx.save()
+            if (layer.alpha) ctx.globalAlpha = layer.alpha(z)
+            if (layer.blendOperation) ctx.globalCompositeOperation = layer.blendOperation(z)
 
             //set affin transform to draw with geographical coordinates
             this.geoCanvas.setCanvasTransform()
@@ -201,8 +204,7 @@ export class Map {
             if (layer.filterColor) layer.drawFilter(this.geoCanvas)
 
             //restore default alpha and blend operation
-            this.geoCanvas.offscreenCtx.globalAlpha = 1.0
-            this.geoCanvas.offscreenCtx.globalCompositeOperation = this.defaultGlobalCompositeOperation
+            ctx.restore()
         }
 
         // one drawImage call: draw the offscreen canvas to the main canvas
