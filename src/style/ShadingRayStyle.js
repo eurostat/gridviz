@@ -28,7 +28,7 @@ export class ShadingRayStyle extends Style {
         this.sunAzimuth = opts.sunAzimuth || (() => 2.356) //(r,z,vs)=>
         this.sunAltitude = opts.sunAltitude || (() => 0.2) //(r,z,vs)=>
 
-        this.alpha = opts.alpha || (() => 0.33) //(r,z,vs)
+        //this.alpha = opts.alpha || (() => 0.33) //(z,vs)
         this.color = opts.color || (() => 'black') //(r,z,vs) => {}
 
         this.undefinedValue = opts.undefinedValue || 0
@@ -98,11 +98,19 @@ export class ShadingRayStyle extends Style {
         cells = cells.filter(c => c.shadow)*/
         //}
 
+        //set style alpha and blend mode
+        //TODO: multiply by layer alpha ?
+        //geoCanvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
+        //if (s.blendOperation) geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
+
+        //set affin transform to draw with geographical coordinates
+        //geoCanvas.setCanvasTransform()
+
         //draw shadowed cells with webgl style
         new SquareColorCategoryWebGLStyle({
             code: () => "a",
             color: { 'a': this.color(resolution, z, viewScale) },
-            alpha: () => this.alpha(resolution, z, viewScale),
+            //alpha: () => this.alpha(resolution, z, viewScale),
         }).draw(cells, geoCanvas, resolution)
 
         /*new SquareColorWebGLStyle({
@@ -111,6 +119,9 @@ export class ShadingRayStyle extends Style {
             color: (t => "rgba(0,0,0," + t + ")"),
             alpha: () => this.alpha(resolution, z, viewScale),
         }).draw(cells, geoCanvas, resolution)*/
+
+        //draw style filter
+        //if (s.filterColor) s.drawFilter(geoCanvas)
 
         //update legends
         this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
