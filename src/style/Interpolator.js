@@ -43,7 +43,7 @@ export class Interpolator extends Style {
      */
     draw(cells, geoCanvas, resolution) {
 
-        //filter
+        //filter cells
         if (this.filter) cells = cells.filter(this.filter)
         if (cells.length == 0) return;
 
