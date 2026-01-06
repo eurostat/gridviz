@@ -135,7 +135,7 @@
 
 
         const map = new gridviz.Map(document.getElementById('map'), {
-            x: 4200000, y: 2800000, z: 50,
+            x: 4200000, y: 2800000, z: 1800,
             backgroundColor: seaColor
         })
             .setZoomExtent([5, 5000])
@@ -190,6 +190,8 @@
                 ctx.fillStyle = fillColor;
                 ctx.strokeStyle = strokeColor;
                 ctx.lineWidth = strokeWidthPix * cg.view.z;
+
+                console.log('z=', cg.view.z);
 
                 const z = cg.view.z;
                 for (let c of cells) {
