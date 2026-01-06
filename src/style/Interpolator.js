@@ -19,8 +19,9 @@ export class Interpolator extends Style {
         this.value = opts.value //(c) => elevation
 
         /** The target resolution. As a function (resolution, z) => targetResolution
+         * NB: Try to make sure that resolution/targetResolution is an integer.
          * @type { function } } */
-        this.targetResolution = opts.targetResolution || ((r, z) => 3 * z)
+        this.targetResolution = opts.targetResolution || ((r, z) => r / 5)
 
         /** the property name to store the interpolated value in the cell
          * @type { string } } */
@@ -61,7 +62,7 @@ export class Interpolator extends Style {
         const targetResolution = this.targetResolution(resolution, z)
 
         // compute ray casting shadow
-        m = bilinearInterpolator(m, resolution, targetResolution);
+        m = bilinearInterpolator(m, Math.round(resolution / targetResolution));
 
         // make cells
         cells = []
@@ -109,11 +110,10 @@ export class Interpolator extends Style {
 }
 
 
-function bilinearInterpolator(coarseGrid, inputResolution, targetResolution) {
-    const scaleFactor = Math.round(targetResolution / inputResolution);
-    const rows = coarseGrid.length;
+function bilinearInterpolator(grid, scaleFactor = 5) {
+    const rows = grid.length;
     if (rows === 0) return [];
-    const cols = coarseGrid[0].length;
+    const cols = grid[0].length;
     const fineRows = rows * scaleFactor;
     const fineCols = cols * scaleFactor;
     const fineGrid = Array(fineRows).fill().map(() => Array(fineCols).fill(undefined));
@@ -121,10 +121,10 @@ function bilinearInterpolator(coarseGrid, inputResolution, targetResolution) {
         const coarseI = Math.min(Math.floor(i / scaleFactor), rows - 2);
         for (let j = 0; j < fineCols; j++) {
             const coarseJ = Math.min(Math.floor(j / scaleFactor), cols - 2);
-            const topLeft = coarseGrid[coarseI][coarseJ];
-            const topRight = coarseGrid[coarseI][coarseJ + 1];
-            const bottomLeft = coarseGrid[coarseI + 1][coarseJ];
-            const bottomRight = coarseGrid[coarseI + 1][coarseJ + 1]; // If all four are defined, interpolate normally
+            const topLeft = grid[coarseI][coarseJ];
+            const topRight = grid[coarseI][coarseJ + 1];
+            const bottomLeft = grid[coarseI + 1][coarseJ];
+            const bottomRight = grid[coarseI + 1][coarseJ + 1]; // If all four are defined, interpolate normally
             if (topLeft !== undefined && topRight !== undefined && bottomLeft !== undefined && bottomRight !== undefined) {
                 const xRatio = (i % scaleFactor) / scaleFactor;
                 const yRatio = (j % scaleFactor) / scaleFactor;
