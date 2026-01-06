@@ -37,7 +37,7 @@
             <br>
             <label for="cbRoads"><input type="checkbox" id="cbRoads">Roads</label>
             <br>
-            <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Land cover waters</label>
+            <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Inland waters</label>
             <hr>
             <label>Relief smoothing (slow)</label>
             <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
@@ -63,7 +63,8 @@
                         style="width: 200px" />
                     <br>
                     <label>Sun light opacity</label>
-                    <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha" style="width: 200px" />
+                    <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha"
+                        style="width: 200px" />
                 </div>
                 <div>
                     <label>Relief hypsometric tints number</label>
@@ -99,10 +100,11 @@
     <script>
 
         //TODO
-        //interpolateur
-        //better structure styles
+        // no rayshade on sea margin ?
+        //interpolateur for large scale - replace smoothing ?
         //slope-aspect styles
-        //DEM 50m
+        //contour style based on d3 ? interpolated ?
+        //better structure styles
         //Check doc and examples: tanaka, lego, contours, raycast shading.
         //add some rivers ?
 
@@ -133,15 +135,15 @@
 
 
         const map = new gridviz.Map(document.getElementById('map'), {
-            x: 4200000, y: 2800000, z: 1000,
+            x: 4200000, y: 2800000, z: 50,
             backgroundColor: seaColor
         })
-            .setZoomExtent([10, 5000])
+            .setZoomExtent([5, 5000])
             .addZoomButtons()
             .setViewFromURL()
 
         const datasetRelief = new gridviz.MultiResolutionDataset(
-            [100, 200, 500, 1000, 2000, 5000, 10000, 20000],
+            [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000],
             resolution => new gviz_par.TiledParquetGrid(map,
                 "https://raw.githubusercontent.com/jgaffuri/tiled-euroDEM/main/pub/v1/tiles_" + resolution + "/"),
             { preprocess: (c) => c.v != undefined && c.v != 0 }
@@ -371,15 +373,6 @@
                     })
                     reliefStyles.push(smoothingFunction(shadingStyle))
                 }
-                if (document.getElementById("cbHillshadingRay").checked) {
-                    const rcStyle = new gridviz.ShadingRayStyle({
-                        elevation: c => c.v,
-                        alpha: () => +document.getElementById("sunrayAlpha").value,
-                        sunAltitude: c => +document.getElementById("sunrayAltitude").value,
-                        sunAzimuth: c => +document.getElementById("sunrayAzimuth").value,
-                    })
-                    reliefStyles.push(smoothingFunction(rcStyle))
-                }
             }
 
             // resolution / definition
@@ -391,15 +384,15 @@
             // CLC waters
             if (document.getElementById("cbCLC").checked)
                 layers.push(new gridviz.GridLayer(datasetCLC, [styleCLCWater], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+            //roads
+            if (document.getElementById("cbRoads").checked)
+                layers.push(roadsLayer);
             // population
             if (document.getElementById("cbPopulation").checked)
                 layers.push(new gridviz.GridLayer(datasetPop, [bertinPointsStyle], { minPixelsPerCell: 4, cellInfoHTML: 'none' }))
             //boundaries
             if (document.getElementById("cbBoundaries").checked)
                 layers.push(boundariesLayer);
-            //roads
-            if (document.getElementById("cbRoads").checked)
-                layers.push(roadsLayer);
             // sea level
             if (seaLevel) {
                 const styleWater = new gridviz.SquareColorCategoryWebGLStyle({
@@ -409,6 +402,16 @@
                     alpha: () => 0.85,
                 })
                 layers.push(new gridviz.GridLayer(datasetRelief, [smoothingFunction(styleWater)], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+            }
+            //raycasting hillshading
+            if (document.getElementById("cbHillshadingRay").checked) {
+                const rcStyle = new gridviz.ShadingRayStyle({
+                    elevation: c => c.v,
+                    alpha: () => +document.getElementById("sunrayAlpha").value,
+                    sunAltitude: c => +document.getElementById("sunrayAltitude").value,
+                    sunAzimuth: c => +document.getElementById("sunrayAzimuth").value,
+                })
+                layers.push(new gridviz.GridLayer(datasetRelief, [smoothingFunction(rcStyle)], { minPixelsPerCell: mppcRelief, cellInfoHTML: 'none' }))
             }
             // labels
             if (document.getElementById("cbLabels").checked)
