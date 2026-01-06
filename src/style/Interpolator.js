@@ -133,8 +133,10 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
                 fineGrid[i][j] = top + (bottom - top) * xRatio;
             } // If only two diagonally opposite points are defined, interpolate along diagonal
             else if (topLeft !== undefined && bottomRight !== undefined) {
+                //TODO: improve diagonal interpolation ? Do not take the middle of the two points but interpolate according to position
                 fineGrid[i][j] = (topLeft + bottomRight) / 2;
             } else if (topRight !== undefined && bottomLeft !== undefined) {
+                //TODO: improve diagonal interpolation ? Do not take the middle of the two points but interpolate according to position
                 fineGrid[i][j] = (topRight + bottomLeft) / 2;
             } // If only one point is defined, use that value
             else if (topLeft !== undefined) {
