@@ -17,7 +17,8 @@ export class Interpolator extends Style {
 
         this.value = opts.value //(c) => elevation
         this.targetResolution = opts.targetResolution || ((r,z)=> 3*z)
-        //this.type = opts.type || 'bilinear' // 'nearest', 'bilinear'
+        this.interpolatedProperty = opts.interpolatedProperty || 'value'
+        //this.method = opts.method || 'bilinear' // 'nearest', 'bilinear'
     }
 
     /**
@@ -53,10 +54,10 @@ export class Interpolator extends Style {
             const row = m[i]
             const y = y0 - i * targetResolution
             for (let j = 0; j < row.length; j++) {
-                const sh = row[j]
-                if (!sh) continue
+                const v = row[j]
+                if (!v) continue
                 const c = { x: x0 + j * targetResolution, y: y }
-                //c[this.shadowProperty] = sh
+                c[this.interpolatedProperty] = v
                 cells.push(c)
             }
         }
