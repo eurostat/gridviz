@@ -68,6 +68,53 @@ export class Interpolator extends Style {
 }
 
 
+function bilinearInterpolator(coarseGrid, inputResolution, targetResolution) {
+    const scaleFactor = Math.round(targetResolution / inputResolution);
+    const rows = coarseGrid.length;
+    if (rows === 0) return [];
+    const cols = coarseGrid[0].length;
+    const fineRows = rows * scaleFactor;
+    const fineCols = cols * scaleFactor;
+    const fineGrid = Array(fineRows).fill().map(() => Array(fineCols).fill(undefined));
+    for (let i = 0; i < fineRows; i++) {
+        const coarseI = Math.min(Math.floor(i / scaleFactor), rows - 2);
+        for (let j = 0; j < fineCols; j++) {
+            const coarseJ = Math.min(Math.floor(j / scaleFactor), cols - 2);
+            const topLeft = coarseGrid[coarseI][coarseJ];
+            const topRight = coarseGrid[coarseI][coarseJ + 1];
+            const bottomLeft = coarseGrid[coarseI + 1][coarseJ];
+            const bottomRight = coarseGrid[coarseI + 1][coarseJ + 1]; // If all four are defined, interpolate normally
+            if (topLeft !== undefined && topRight !== undefined && bottomLeft !== undefined && bottomRight !== undefined) {
+                const xRatio = (i % scaleFactor) / scaleFactor;
+                const yRatio = (j % scaleFactor) / scaleFactor;
+                const top = topLeft + (topRight - topLeft) * yRatio;
+                const bottom = bottomLeft + (bottomRight - bottomLeft) * yRatio;
+                fineGrid[i][j] = top + (bottom - top) * xRatio;
+            } // If only two diagonally opposite points are defined, interpolate along diagonal
+            else if (topLeft !== undefined && bottomRight !== undefined) {
+                fineGrid[i][j] = (topLeft + bottomRight) / 2;
+            } else if (topRight !== undefined && bottomLeft !== undefined) {
+                fineGrid[i][j] = (topRight + bottomLeft) / 2;
+            } // If only one point is defined, use that value
+            else if (topLeft !== undefined) {
+                fineGrid[i][j] = topLeft;
+            } else if (topRight !== undefined) {
+                fineGrid[i][j] = topRight;
+            } else if (bottomLeft !== undefined) {
+                fineGrid[i][j] = bottomLeft;
+            } else if (bottomRight !== undefined) {
+                fineGrid[i][j] = bottomRight;
+            } // Otherwise, leave as undefined
+            else {
+                fineGrid[i][j] = undefined;
+            }
+        }
+    }
+    return fineGrid;
+}
+
+
+/*
 function bilinearInterpolator(m, inputResolution, targetResolution) {
     const scale = Math.round(targetResolution / inputResolution)
     const nm = []
@@ -92,3 +139,4 @@ function bilinearInterpolator(m, inputResolution, targetResolution) {
     }
     return nm
 }
+*/
