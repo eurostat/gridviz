@@ -19,6 +19,11 @@ export class Interpolator extends Style {
         this.targetResolution = opts.targetResolution || ((r,z)=> 3*z)
         this.interpolatedProperty = opts.interpolatedProperty || 'value'
         //this.method = opts.method || 'bilinear' // 'nearest', 'bilinear'
+
+        /** The styles to represent the interpolated grid.
+         * @type {Array.<Style>}
+         */
+        this.styles = opts.styles || []
     }
 
     /**
@@ -62,7 +67,33 @@ export class Interpolator extends Style {
             }
         }
 
-        //TODO style
+        //draw smoothed cells from styles
+        const ctx = geoCanvas.offscreenCtx
+        for (let s of this.styles) {
+
+            //check if style is visible
+            if (s.visible && !s.visible(z)) continue
+
+            //set style alpha and blend mode
+            //TODO: multiply by layer alpha ?
+            if (s.alpha || s.blendOperation) {
+                ctx.save()
+                if (s.alpha) ctx.globalAlpha = s.alpha(z)
+                if (s.blendOperation) ctx.globalCompositeOperation = s.blendOperation(z)
+            }
+
+            //set affin transform to draw with geographical coordinates
+            geoCanvas.setCanvasTransform()
+
+            //draw with style
+            s.draw(cells, geoCanvas, targetResolution)
+
+            //draw style filter
+            if (s.filterColor) s.drawFilter(geoCanvas)
+
+            //restore ctx
+            if (s.alpha || s.blendOperation) ctx.restore()
+        }
 
     }
 }
