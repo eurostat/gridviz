@@ -3,7 +3,6 @@
 
 import { Style } from '../core/Style.js'
 import { cellsToMatrix } from '../utils/utils.js'
-//import { extent } from 'd3-array'
 
 /**
  * @module style
@@ -15,14 +14,23 @@ export class Interpolator extends Style {
         super(opts)
         opts = opts || {}
 
+        /** The cell value to interpolate
+         * @type { function } } */
         this.value = opts.value //(c) => elevation
+
+        /** The target resolution. As a function (resolution, z) => targetResolution
+         * @type { function } } */
         this.targetResolution = opts.targetResolution || ((r,z)=> 3*z)
+
+        /** the property name to store the interpolated value in the cell
+         * @type { string } } */
         this.interpolatedProperty = opts.interpolatedProperty || 'value'
+
+        // the interpolation method: currently only 'bilinear' is supported
         //this.method = opts.method || 'bilinear' // 'nearest', 'bilinear'
 
         /** The styles to represent the interpolated grid.
-         * @type {Array.<Style>}
-         */
+         * @type {Array.<Style>} */
         this.styles = opts.styles || []
     }
 
