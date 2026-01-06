@@ -72,13 +72,11 @@ export function cellsToMatrix(cells, resolution, fun) {
     const [miny, maxy] = extent(cells, c => c.y)
 
     // get grid dimension
-    const rows = Math.ceil((maxy - miny) / resolution) +1
-    const cols = Math.ceil((maxx - minx) / resolution) +1
+    const rows = Math.ceil((maxy - miny) / resolution) + 1
+    const cols = Math.ceil((maxx - minx) / resolution) + 1
 
     // make empty grid
-    const grid = Array.from({ length: rows }, () =>
-        new Array(cols).fill(undefined)
-    );
+    const grid = Array.from({ length: rows }, () => new Array(cols).fill(undefined));
     grid.x0 = minx
     grid.y0 = maxy
     grid.resolution = resolution
@@ -87,11 +85,6 @@ export function cellsToMatrix(cells, resolution, fun) {
         const i = Math.floor((maxy - c.y) / resolution)
         const j = Math.floor((c.x - minx) / resolution)
         const v = fun ? fun(c) : c
-        /*if (grid.minI == undefined || i < grid.minI) grid.minI = i
-        if (grid.maxI == undefined || i > grid.maxI) grid.maxI = i
-        if (grid.minJ == undefined || j < grid.minJ) grid.minJ = j
-        if (grid.maxJ == undefined || j > grid.maxJ) grid.maxJ = j*/
-        //console.log(i,rows,j,cols,v)
         grid[i][j] = v
     }
     return grid

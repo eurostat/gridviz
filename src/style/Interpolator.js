@@ -20,7 +20,7 @@ export class Interpolator extends Style {
 
         /** The target resolution. As a function (resolution, z) => targetResolution
          * @type { function } } */
-        this.targetResolution = opts.targetResolution || ((r,z)=> 3*z)
+        this.targetResolution = opts.targetResolution || ((r, z) => 3 * z)
 
         /** the property name to store the interpolated value in the cell
          * @type { string } } */
@@ -34,6 +34,7 @@ export class Interpolator extends Style {
         this.styles = opts.styles || []
     }
 
+
     /**
      *
      * @param {Array.<import("../core/Dataset.js").Cell>} cells
@@ -41,6 +42,7 @@ export class Interpolator extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
+
         //filter
         if (this.filter) cells = cells.filter(this.filter)
         if (cells.length == 0) return;
@@ -60,7 +62,7 @@ export class Interpolator extends Style {
 
         // compute ray casting shadow
         m = bilinearInterpolator(m, resolution, targetResolution);
- 
+
         // make cells
         cells = []
         for (let i = 0; i < m.length; i++) {
