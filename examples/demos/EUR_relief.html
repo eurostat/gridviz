@@ -105,6 +105,7 @@
     <script>
 
         //TODO
+        // finalise interpolator
         // test interpolateur for large scale - replace smoothing ?
         // better use smoothing - if necessary
         // smartphone compatibility
@@ -255,7 +256,7 @@
 
             //get relief style
             const rsty = document.querySelector('input[name="rdreliefstyle"]:checked').value;
-            document.getElementById("hyps_div").style.display = rsty == "hyps" ? 'inline-block' : 'none'
+            document.getElementById("hyps_div").style.display = rsty != "joyplot" ? 'inline-block' : 'none'
             document.getElementById("joyplot_div").style.display = rsty == "joyplot" ? 'inline-block' : 'none'
             document.getElementById("rc_div").style.display = document.getElementById("cbHillshadingRay").checked ? 'inline-block' : 'none'
 
