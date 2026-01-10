@@ -25,10 +25,13 @@
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
         <form id="form">
+            <label>Relief</label><br>
             <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>
-            <label for="radio_hyps">Relief - Hypsometric tints</label> <select id="hypscol"></select><br>
+            <label for="radio_hyps">Hypsometric tints</label> <select id="hypscol"></select><br>
             <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">
-            <label for="radio_joyplot">Relief - Joyplot</label><br>
+            <label for="radio_joyplot">Joyplot</label><br>
+            <input type="radio" id="radio_none" name="rdreliefstyle" value="none">
+            <label for="radio_none">None</label><br>
             <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
             <br>
             <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
@@ -70,7 +73,7 @@
                 </div>
                 <div>
                     <label>Hypsometric tints number</label>
-                    <input type="range" min="2" max="50" value="10" step="1" id="sReliefNb" style="width: 200px" />
+                    <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" style="width: 200px" />
                     <br>
                     <label>Relief exageration</label>
                     <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
