@@ -331,42 +331,44 @@
                 const classNumber = document.getElementById('sReliefNb').value
 
                 //hypso style
-                const colors = []
-                const colorRamp = ramps[document.getElementById("hypscol").value]
-                for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
+                if (rsty == "hyps") {
+                    const colors = []
+                    const colorRamp = ramps[document.getElementById("hypscol").value]
+                    for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
 
-                //hypso style
-                const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                    viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
-                        valueFunction: (c) => c.v,
-                        classNumber: classNumber,
-                    }) :
-                        cells => {
-                            [min, max] = d3.extent(cells, c => c.v)
-                            const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                            const breaks = []
-                            for (let i = 1; i < classNumber; i++) {
-                                let t = i / classNumber
-                                t = scaleRelief(t)
-                                breaks.push(min_ + (max - min_) * t)
-                            }
-                            return gridviz.classifier(breaks)
-                        },
-                    code: (c, r, z, classifier) => classifier(c.v),
-                    color: { ...colors },
-                })
+                    //hypso style
+                    const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                        viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
+                            valueFunction: (c) => c.v,
+                            classNumber: classNumber,
+                        }) :
+                            cells => {
+                                [min, max] = d3.extent(cells, c => c.v)
+                                const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                                const breaks = []
+                                for (let i = 1; i < classNumber; i++) {
+                                    let t = i / classNumber
+                                    t = scaleRelief(t)
+                                    breaks.push(min_ + (max - min_) * t)
+                                }
+                                return gridviz.classifier(breaks)
+                            },
+                        code: (c, r, z, classifier) => classifier(c.v),
+                        color: { ...colors },
+                    })
 
-                // hypso legend
-                const legendWidth = Math.min(window.innerWidth - 40, 400)
-                const legend = new gridviz.ColorDiscreteLegend({
-                    title: "Elevation, in meters",
-                    colors: () => colors,
-                    breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
-                    width: legendWidth,
-                    //labelFormat: (text, i) => (+text).toFixed(0)
-                })
-                hypsoStyle.legends = [legend]
-                reliefStyles.push(hypsoStyle)
+                    // hypso legend
+                    const legendWidth = Math.min(window.innerWidth - 40, 400)
+                    const legend = new gridviz.ColorDiscreteLegend({
+                        title: "Elevation, in meters",
+                        colors: () => colors,
+                        breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
+                        width: legendWidth,
+                        //labelFormat: (text, i) => (+text).toFixed(0)
+                    })
+                    hypsoStyle.legends = [legend]
+                    reliefStyles.push(hypsoStyle)
+                }
 
                 if (document.getElementById("cbTanaka").checked) {
                     const tanakaStyle = new gridviz.SideTanakaStyle({
