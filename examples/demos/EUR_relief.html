@@ -368,6 +368,10 @@
                     })
                     hypsoStyle.legends = [legend]
                     reliefStyles.push(hypsoStyle)
+                } else {
+                    //none
+                    const styleNone = new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, })
+                    reliefStyles.push(styleNone)
                 }
 
                 if (document.getElementById("cbTanaka").checked) {
