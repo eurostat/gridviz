@@ -39,18 +39,20 @@
             <br>
             <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Inland waters</label>
             <hr>
-            <label>Relief smoothing (slow)</label>
-            <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
-            <br>
+            <div style="display: none;">
+                <label>Relief smoothing (slow)</label>
+                <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
+                <br>
+            </div>
             <label>Sea level rise: <span id="lbSeaLevel">0 m</span></label>
             <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:200px;">
             <hr>
             <div id="hyps_div">
-                <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Relief tanaka style (slow)</label>
+                <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Tanaka style (slow)</label>
                 <br>
-                <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Relief hillshading (slow)</label>
+                <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Hillshading (slow)</label>
                 <br>
-                <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Relief hillshading raycasting
+                <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Hillshading raycasting
                     (slow)</label>
                 <br>
                 <div id="rc_div" style="border: solid black 1px; padding: 1px;">
@@ -67,8 +69,8 @@
                         style="width: 200px" />
                 </div>
                 <div>
-                    <label>Relief hypsometric tints number</label>
-                    <input type="range" min="2" max="25" value="8" step="1" id="sReliefNb" style="width: 200px" />
+                    <label>Hypsometric tints number</label>
+                    <input type="range" min="2" max="40" value="10" step="1" id="sReliefNb" style="width: 200px" />
                     <br>
                     <label>Relief exageration</label>
                     <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
@@ -101,6 +103,8 @@
 
         //TODO
         // test interpolateur for large scale - replace smoothing ?
+        // better use smoothing - if necessary
+        // smartphone compatibility
         //slope-aspect styles
         //contour style based on d3 ? interpolated ?
         // no rayshade on sea margin ?
@@ -191,7 +195,7 @@
                 ctx.strokeStyle = strokeColor;
                 ctx.lineWidth = strokeWidthPix * cg.view.z;
 
-                console.log('z=', cg.view.z);
+                //console.log('z=', cg.view.z);
 
                 const z = cg.view.z;
                 for (let c of cells) {
@@ -221,13 +225,24 @@
         })
 
         // tooltip content
-        const cellInfoHTMLPop = (c) => `Population: ${c.POP_2021}`
+        //const cellInfoHTMLPop = (c) => `Population: ${c.POP_2021}`
         const cellInfoHTMLRelief = (c) => `Elevation: ${c.v}`
 
         let scaleShadingCoeff = -2
         let shadingDiamond = false
         let quantile = false
-        let rc = false
+
+        //define interpolator for relief layers
+        const interpFun = styles => {
+            const interp = new gridviz.Interpolator({
+                value: (c) => c.v,
+                interpolatedProperty: 'v',
+                targetResolution: (r, z) => Math.min(Math.floor(z * r) / r, r),
+            })
+            interp.styles = styles
+            return [interp]
+        }
+
 
         function update() {
 
@@ -245,17 +260,18 @@
             const hd = document.getElementById("cbHD").checked;
 
             // define smoothing function
+            //TODO no ! all styles must be there. style -> styles
             const sr = +document.getElementById('sReliefSmoothing').value
             let smoothingFunction = sr > 0 ?
-                (style) => new gridviz_smoothing.KernelSmoothingStyle({
+                (styles) => new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     smoothedProperty: "v",
                     sigma: (r, z) => sr * r / 2, //r + sr * z, // in geo unit - sr is in screen pixel
                     resolutionSmoothed: (hd && rsty == "hyps" ? (r, z) => Math.ceil(z) : (r, z) => r),
                     filterSmoothed: (value) => value > 0.05,
-                    styles: [style]
+                    styles: styles
                 })
-                : style => style
+                : styles => styles
 
             /*
             //test https://d3js.org/d3-contour/density
@@ -281,6 +297,10 @@
             // set layers
             const layers = []
 
+            // resolution / definition
+            const mppc = hd ? 0.7 : 1.4
+            const mppcRelief = rsty == "joyplot" ? 3 : hd ? 1.5 : 3
+
             //relief layer
             const reliefStyles = []
             if (rsty == "joyplot") {
@@ -296,7 +316,11 @@
                     lineWidth: (y, ys, r, z) => z / 1.5,
                     fillColor: (y, ys, r, z) => "white" //"#b5850011"
                 })
-                reliefStyles.push(smoothingFunction(jpStyle))
+                reliefStyles.push(jpStyle)
+
+                //
+                layers.push(new gridviz.GridLayer(datasetRelief, smoothingFunction(reliefStyles), { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
+
             } else {
                 const adj = document.getElementById("cbHypssea").checked
                 const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
@@ -339,7 +363,7 @@
                     //labelFormat: (text, i) => (+text).toFixed(0)
                 })
                 hypsoStyle.legends = [legend]
-                reliefStyles.push(smoothingFunction(hypsoStyle))
+                reliefStyles.push(hypsoStyle)
 
                 if (document.getElementById("cbTanaka").checked) {
                     const tanakaStyle = new gridviz.SideTanakaStyle({
@@ -364,7 +388,7 @@
                         },
                         diamond: shadingDiamond,
                     })
-                    reliefStyles.push(smoothingFunction(tanakaStyle))
+                    reliefStyles.push(tanakaStyle)
                 }
                 if (document.getElementById("cbHillshading").checked) {
                     const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
@@ -373,15 +397,12 @@
                         scale: scaleShading,
                         diamond: shadingDiamond,
                     })
-                    reliefStyles.push(smoothingFunction(shadingStyle))
+                    reliefStyles.push(shadingStyle)
                 }
+
+                //
+                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction(reliefStyles)), { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
             }
-
-            // resolution / definition
-            const mppc = hd ? 0.7 : 1.4
-            const mppcRelief = rsty == "joyplot" ? 3 : mppc
-
-            layers.push(new gridviz.GridLayer(datasetRelief, reliefStyles, { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
 
             // CLC waters
             if (document.getElementById("cbCLC").checked)
@@ -403,7 +424,7 @@
                     filter: (c) => c.v <= seaLevel,
                     alpha: () => 0.85,
                 })
-                layers.push(new gridviz.GridLayer(datasetRelief, [smoothingFunction(styleWater)], { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
+                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction([styleWater])), { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             }
             //raycasting hillshading
             if (document.getElementById("cbHillshadingRay").checked) {
@@ -413,7 +434,7 @@
                     sunAltitude: c => +document.getElementById("sunrayAltitude").value,
                     sunAzimuth: c => +document.getElementById("sunrayAzimuth").value,
                 })
-                layers.push(new gridviz.GridLayer(datasetRelief, [smoothingFunction(rcStyle)], { minPixelsPerCell: mppcRelief, cellInfoHTML: 'none' }))
+                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction([rcStyle])), { minPixelsPerCell: mppcRelief, cellInfoHTML: 'none' }))
             }
             // labels
             if (document.getElementById("cbLabels").checked)
@@ -434,7 +455,6 @@
                 else div.style.display = "none";
             }
             //else if (e.key == "t") { tanaka = !tanaka; update() }
-            else if (e.key == "r") { rc = !rc; update() }
             else if (e.key == "q") { quantile = !quantile; update() }
             else if (e.key == "d") { shadingDiamond = !shadingDiamond; update() }
             else if (e.key == "w") { scaleShadingCoeff -= 0.25; console.log(scaleShadingCoeff); update() }

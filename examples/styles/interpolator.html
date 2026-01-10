@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gridviz interpolator example</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+            margin: 0;
+            /* Remove default margins to prevent scrolling */
+            overflow: hidden;
+            /* Prevent potential scrollbars */
+        }
+    </style>
+</head>
+
+<body>
+    <form id="form">
+        <label>Interpolation resolution</label>
+        <input type="range" min="1" max="25" value="5" step="1" id="sInterpScaleFactor" style="width: 200px" />
+    </form>
+    <div id="map" style="height: 600px; width: 900px"></div>
+
+    <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3.2.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+    <script>
+        //define map with initial view
+        const map = new gridviz.Map(document.getElementById('map'), {
+            x: 4080000,
+            y: 2550000,
+            z: 100,
+            //backgroundColor: "#a4c8e1",
+        }).addZoomButtons()
+
+        //define dataset
+        const dataset = new gridviz.MultiResolutionDataset(
+            [100, 200, 500, 1000, 2000, 5000, 10000, 20000],
+            resolution => new gviz_par.TiledParquetGrid(map,
+                "https://raw.githubusercontent.com/jgaffuri/tiled-euroDEM/main/pub/v1/tiles_" + resolution + "/"),
+            { preprocess: (c) => c.v != undefined && c.v > 0 }
+        )
+
+        //hypsometric tints style
+        //const colors = ["#bbcc9e", "#dde4c7", "#e0ebd9", "#e9f0d1", "#ece8c1", "#e9d6ad", "#e7c18c", "#e2b470", "#dda255", "#de8f4e", "#d57751", "#c8705e", "#d38487", "#dca3a4", "#edc7c2"]
+        const classNumber = 25 //colors.length
+        const colors = []
+        for (let i = 0; i < classNumber; i++) colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
+        const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+            viewScale: cells => {
+                [min, max] = d3.extent(cells, c => c.v)
+                const breaks = []
+                for (let i = 1; i < classNumber; i++) breaks.push(min + (max - min) * i / classNumber)
+                return gridviz.classifier(breaks)
+            },
+            code: (c, r, z, classifier) => classifier(c.v),
+            color: { ...colors },
+        })
+
+        //define interpolator
+        const interp = new gridviz.Interpolator({
+            value: (c) => c.v,
+            targetResolution: (r, z) => r / parseInt(document.getElementById("sInterpScaleFactor").value),
+            interpolatedProperty: 'v',
+        })
+        interp.styles.push(hypsoStyle)
+
+        //define layer
+        const layer = new gridviz.GridLayer(dataset, [interp], {
+            minPixelsPerCell: 5,
+            cellInfoHTML: (c) => `Elevation: ${c.v} m`
+        })
+
+        //add layer to map
+        map.layers = [layer]
+
+        const update = () => {
+            console.log(document.getElementById("sInterpScaleFactor").value)
+            //interp.targetResolution = (r, z) => z*parseInt(document.getElementById("sInterpScaleFactor").value)
+            interp.targetResolution = (r, z) => r / parseInt(document.getElementById("sInterpScaleFactor").value)
+            //interp.targetResolution = (r, z) => Math.min(Math.floor(z * r) / r, r)
+            map.redraw()
+        }
+
+        //add form event listener
+        document.getElementById("form").addEventListener('input', update);
+        update()
+
+    </script>
+</body>
+
+</html>
