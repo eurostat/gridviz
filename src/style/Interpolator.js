@@ -126,6 +126,7 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
     const rows = grid.length;
     if (rows === 0) return [];
     const cols = grid[0].length;
+
     const fineRows = rows * scaleFactor;
     const fineCols = cols * scaleFactor;
     const fineGrid = Array(fineRows).fill().map(() => Array(fineCols).fill(undefined));
@@ -150,7 +151,7 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
             const bottomLeft = grid[coarseI + 1][coarseJ];
             const bottomRight = grid[coarseI + 1][coarseJ + 1];
 
-/*
+
             if (sfIsEven) {
                 if (topLeft === undefined && i <= i_ && j <= j_) continue
                 if (topRight === undefined && i <= i_ && j >= j_) continue
@@ -161,7 +162,7 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
                 if (topRight === undefined && i < i_ && j > j_) continue
                 if (bottomLeft === undefined && i > i_ && j < j_) continue
                 if (bottomRight === undefined && i > i_ && j > j_) continue
-            }*/
+            }
 
             // general case: bilinear interpolation
             // If all four are defined, interpolate normally
@@ -241,31 +242,3 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
     }
     return fineGrid;
 }
-
-
-/*
-function bilinearInterpolator(m, inputResolution, targetResolution) {
-    const scale = Math.round(targetResolution / inputResolution)
-    const nm = []
-    for (let i = 0; i < m.length * scale; i++) {
-        nm[i] = []
-        for (let j = 0; j < (m[0].length * scale); j++) {
-            const x = j / scale
-            const y = i / scale
-            const x0 = Math.floor(x)
-            const y0 = Math.floor(y)
-            const x1 = Math.min(x0 + 1, m[0].length - 1)
-            const y1 = Math.min(y0 + 1, m.length - 1)
-            const q11 = m[y0][x0] || 0
-            const q21 = m[y0][x1] || 0
-            const q12 = m[y1][x0] || 0
-            const q22 = m[y1][x1] || 0
-            const r1 = ((x1 - x) * q11) + ((x - x0) * q21)
-            const r2 = ((x1 - x) * q12) + ((x - x0) * q22)
-            const p = ((y1 - y) * r1) + ((y - y0) * r2)
-            nm[i][j] = p
-        }
-    }
-    return nm
-}
-*/
