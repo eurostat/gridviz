@@ -42,10 +42,12 @@
                 <label>Hypsometric tints number</label>
                 <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" style="width: 200px" />
                 <br>
-                <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on map</label>
+                <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on
+                    map</label>
                 <br>
                 <div id="refexhyps">
-                    <label>Relief exageration<input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" /></label>
+                    <label>Relief exageration<input type="range" min="-15" max="15" value="0" step="1"
+                            id="sReliefExageration" style="width: 200px" /></label>
                 </div>
                 <br>
                 <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
@@ -107,16 +109,37 @@
 
         //TODO
         // revamp GUI
+        // smartphone compatibility
         // finalise interpolator
         // test interpolateur for large scale - replace smoothing ?
         // better use smoothing - if necessary
-        // smartphone compatibility
         //slope-aspect styles
+        /*
+        //test https://d3js.org/d3-contour/density
+        const smm2 = new gridviz.Style()
+        smm2.drawFun = (cells, geoCanvas, resolution) => {
+            //keep only cells with population
+            //cells = cells.filter((c) => c.v);
+            if (cells.length == 0) return;
+
+            //index cells by y and x
+            const ind = gridviz.cellsToGrid(cells, c => c.v)
+
+            //horn slope
+            //horn z1,z2,z3,z4,z5,z6,z7,z8,z9
+            //if null, replicate nearest
+            const r8 = 2 * resolution
+            const slopeX = (z3 + 2 * z6 + z9 - z1 - 2 * z4 - z7) / r8
+            const slopeY = (z7 + 2 * z8 + z9 - z1 - 2 * z2 - z3) / r8
+        }*/
+
         //contour style based on d3 ? interpolated ?
         // no rayshade on sea margin ?
         //better structure styles
         //Check doc and examples: tanaka, lego, contours, raycast shading.
         //add some rivers ?
+
+
 
         const seaColor = "#a4c8e1"
 
@@ -240,7 +263,7 @@
         let quantile = false
 
         //define interpolator for relief layers
-        const interpFun = styles => {
+        const interpFun = styles => styles /*{
             const interp = new gridviz.Interpolator({
                 value: (c) => c.v,
                 interpolatedProperty: 'v',
@@ -248,7 +271,7 @@
             })
             interp.styles = styles
             return [interp]
-        }
+        }*/
 
 
         function update() {
@@ -259,17 +282,16 @@
 
             //get relief style
             const rsty = document.querySelector('input[name="rdreliefstyle"]:checked').value;
-            document.getElementById("hyps_div").style.display = rsty != "joyplot" ? 'inline-block' : 'none'
+
+            document.getElementById("hyps_div").style.display = rsty == "hyps" ? 'inline-block' : 'none'
             document.getElementById("joyplot_div").style.display = rsty == "joyplot" ? 'inline-block' : 'none'
             document.getElementById("rc_div").style.display = document.getElementById("cbHillshadingRay").checked ? 'inline-block' : 'none'
-
             document.getElementById("refexhyps").style.display = document.getElementById("cbHypsDyn").checked ? 'inline-block' : 'none'
 
             //get HD parameter
             const hd = document.getElementById("cbHD").checked;
 
             // define smoothing function
-            //TODO no ! all styles must be there. style -> styles
             const sr = +document.getElementById('sReliefSmoothing').value
             let smoothingFunction = sr > 0 ?
                 (styles) => new gridviz_smoothing.KernelSmoothingStyle({
@@ -282,36 +304,120 @@
                 })
                 : styles => styles
 
-            /*
-            //test https://d3js.org/d3-contour/density
-            const smm2 = new gridviz.Style()
-            smm2.drawFun = (cells, geoCanvas, resolution) => {
-                //keep only cells with population
-                //cells = cells.filter((c) => c.v);
-                if (cells.length == 0) return;
-
-                //index cells by y and x
-                const ind = gridviz.cellsToGrid(cells, c => c.v)
-
-                //horn slope
-                //horn z1,z2,z3,z4,z5,z6,z7,z8,z9
-                //if null, replicate nearest
-                const r8 = 2 * resolution
-                const slopeX = (z3 + 2 * z6 + z9 - z1 - 2 * z4 - z7) / r8
-                const slopeY = (z7 + 2 * z8 + z9 - z1 - 2 * z2 - z3) / r8
-            }*/
-
-
-
             // set layers
             const layers = []
 
             // resolution / definition
-            const mppc = hd ? 0.7 : 1.4
-            const mppcRelief = rsty == "joyplot" ? 3 : hd ? 1.5 : 3
+            let mppc = 1.5
+            let mppcRelief = rsty == "joyplot" ? 3 : 1.5
+            if(hd) { mppc /=2; mppcRelief /=2; }
 
             //relief layer
             const reliefStyles = []
+
+            // hypsometric tints
+            if (rsty == "hyps") {
+                const adj = document.getElementById("cbHypssea").checked
+                const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
+                const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
+                const classNumber = document.getElementById('sReliefNb').value
+
+                const colors = []
+                const colorRamp = ramps[document.getElementById("hypscol").value]
+                for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
+
+                const adaptive = document.getElementById("cbHypsDyn").checked
+                if (adaptive) {
+                    const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                        viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
+                            valueFunction: (c) => c.v,
+                            classNumber: classNumber,
+                        }) :
+                            cells => {
+                                [min, max] = d3.extent(cells, c => c.v)
+                                const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                                const breaks = []
+                                for (let i = 1; i < classNumber; i++) {
+                                    let t = i / classNumber
+                                    t = scaleRelief(t)
+                                    breaks.push(min_ + (max - min_) * t)
+                                }
+                                return gridviz.classifier(breaks)
+                            },
+                        code: (c, r, z, classifier) => classifier(c.v),
+                        color: { ...colors },
+                    })
+
+                    // hypso legend
+                    const legendWidth = Math.min(window.innerWidth - 40, 400)
+                    const legend = new gridviz.ColorDiscreteLegend({
+                        title: "Elevation, in meters",
+                        colors: () => colors,
+                        breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
+                        width: legendWidth,
+                        //labelFormat: (text, i) => (+text).toFixed(0)
+                    })
+                    hypsoStyle.legends = [legend]
+                    reliefStyles.push(hypsoStyle)
+                } else {
+                    const breaks = []
+                    const min = adj && seaLevel ? seaLevel : 0
+                    for (let i = 0; i < classNumber; i++) {
+                        colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
+                        if (i > 0) breaks.push(min + (3000 - min) * i / (classNumber - 1))
+                    }
+                    const classifierHyps = gridviz.classifier(breaks)
+
+                    //hypso style
+                    const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                        code: (c) => classifierHyps(c.v),
+                        color: { ...colors },
+                    })
+
+                    //TODO legend
+
+                    reliefStyles.push(hypsoStyle)
+                }
+            }
+
+            // tanaka style
+            if (rsty == "hyps" && document.getElementById("cbTanaka").checked) {
+                const tanakaStyle = new gridviz.SideTanakaStyle({
+                    classifier: quantile ? cells => {
+                        const classifier = gridviz.viewScaleQuantileClassifer({
+                            valueFunction: (c) => c.v,
+                            classNumber: classNumber,
+                        })(cells)
+                        return c => classifier(c.v)
+                    } : cells => {
+                        // return a function which for each cell returns its class number
+                        [min, max] = d3.extent(cells, c => c.v)
+                        const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                        const breaks = []
+                        for (let i = 1; i < classNumber; i++) {
+                            let t = i / classNumber
+                            t = scaleRelief(t)
+                            breaks.push(min_ + (max - min_) * t)
+                        }
+                        const cs = gridviz.classifier(breaks)
+                        return c => cs(c.v)
+                    },
+                    diamond: shadingDiamond,
+                })
+                reliefStyles.push(tanakaStyle)
+            }
+
+            if (document.getElementById("cbHillshading").checked) {
+                const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
+                const shadingStyle = new gridviz.ShadingStyle({
+                    elevation: 'v',
+                    scale: scaleShading,
+                    diamond: shadingDiamond,
+                })
+                reliefStyles.push(shadingStyle)
+            }
+
+
             if (rsty == "joyplot") {
                 //white land
                 reliefStyles.push(new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, filter: (c) => c.v >= 0, }))
@@ -326,120 +432,10 @@
                     fillColor: (y, ys, r, z) => "white" //"#b5850011"
                 })
                 reliefStyles.push(jpStyle)
-
-                //
-                layers.push(new gridviz.GridLayer(datasetRelief, smoothingFunction(reliefStyles), { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
-
-            } else {
-                const adj = document.getElementById("cbHypssea").checked
-                const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
-                const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
-                const classNumber = document.getElementById('sReliefNb').value
-
-                //hypso style
-                if (rsty == "hyps") {
-                    const colors = []
-                    const colorRamp = ramps[document.getElementById("hypscol").value]
-                    for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
-
-                    const adaptive = document.getElementById("cbHypsDyn").checked
-                    if (adaptive) {
-                        //hypso style
-                        const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                            viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
-                                valueFunction: (c) => c.v,
-                                classNumber: classNumber,
-                            }) :
-                                cells => {
-                                    [min, max] = d3.extent(cells, c => c.v)
-                                    const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                                    const breaks = []
-                                    for (let i = 1; i < classNumber; i++) {
-                                        let t = i / classNumber
-                                        t = scaleRelief(t)
-                                        breaks.push(min_ + (max - min_) * t)
-                                    }
-                                    return gridviz.classifier(breaks)
-                                },
-                            code: (c, r, z, classifier) => classifier(c.v),
-                            color: { ...colors },
-                        })
-
-                        // hypso legend
-                        const legendWidth = Math.min(window.innerWidth - 40, 400)
-                        const legend = new gridviz.ColorDiscreteLegend({
-                            title: "Elevation, in meters",
-                            colors: () => colors,
-                            breaks: (viewScale) => viewScale?.breaks.map((b) => Math.round(b)),
-                            width: legendWidth,
-                            //labelFormat: (text, i) => (+text).toFixed(0)
-                        })
-                        hypsoStyle.legends = [legend]
-                        reliefStyles.push(hypsoStyle)
-                    } else {
-                        const breaks = []
-                        const min = adj && seaLevel ? seaLevel : 0
-                        for (let i = 0; i < classNumber; i++) {
-                            colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
-                            if (i > 0) breaks.push(min + (3000 - min) * i / (classNumber - 1))
-                        }
-                        const classifierHyps = gridviz.classifier(breaks)
-
-                        //hypso style
-                        const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                            code: (c) => classifierHyps(c.v),
-                            color: { ...colors },
-                        })
-
-                        //TODO legend
-
-                        reliefStyles.push(hypsoStyle)
-                    }
-
-                } else {
-                    //none
-                    const styleNone = new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, })
-                    reliefStyles.push(styleNone)
-                }
-
-                if (document.getElementById("cbTanaka").checked) {
-                    const tanakaStyle = new gridviz.SideTanakaStyle({
-                        classifier: quantile ? cells => {
-                            const classifier = gridviz.viewScaleQuantileClassifer({
-                                valueFunction: (c) => c.v,
-                                classNumber: classNumber,
-                            })(cells)
-                            return c => classifier(c.v)
-                        } : cells => {
-                            // return a function which for each cell returns its class number
-                            [min, max] = d3.extent(cells, c => c.v)
-                            const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                            const breaks = []
-                            for (let i = 1; i < classNumber; i++) {
-                                let t = i / classNumber
-                                t = scaleRelief(t)
-                                breaks.push(min_ + (max - min_) * t)
-                            }
-                            const cs = gridviz.classifier(breaks)
-                            return c => cs(c.v)
-                        },
-                        diamond: shadingDiamond,
-                    })
-                    reliefStyles.push(tanakaStyle)
-                }
-                if (document.getElementById("cbHillshading").checked) {
-                    const scaleShading = gridviz.exponentialScale(scaleShadingCoeff) //gridviz.exponentialScale(-1)
-                    const shadingStyle = new gridviz.ShadingStyle({
-                        elevation: 'v',
-                        scale: scaleShading,
-                        diamond: shadingDiamond,
-                    })
-                    reliefStyles.push(shadingStyle)
-                }
-
-                //
-                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction(reliefStyles)), { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
             }
+
+            //
+            layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction(reliefStyles)), { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
 
             // CLC waters
             if (document.getElementById("cbCLC").checked)
