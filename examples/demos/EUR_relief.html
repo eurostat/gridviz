@@ -26,8 +26,10 @@
             ">
         <form id="form">
             Relief:
-            <label for="radio_hyps"><input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>Hypsometric tints</label>
-            <label for="radio_joyplot"><input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">Joyplot</label><br>
+            <label for="radio_hyps"><input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps"
+                    checked>Hypsometric tints</label>
+            <label for="radio_joyplot"><input type="radio" id="radio_joyplot" name="rdreliefstyle"
+                    value="joyplot">Joyplot</label><br>
             <hr>
             <div style="display: none;">
                 <label>Relief smoothing (slow)</label>
@@ -40,12 +42,11 @@
                 <label>Hypsometric tints number</label>
                 <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" style="width: 200px" />
                 <br>
-                <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on
-                    map</label>
+                <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on map</label>
                 <br>
-                <label>Relief exageration</label>
-                <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
-                    style="width: 200px" />
+                <div id="refexhyps">
+                    <label>Relief exageration<input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" style="width: 200px" /></label>
+                </div>
                 <br>
                 <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
                     rise</label>
@@ -60,6 +61,7 @@
             </div>
             <br>
             <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Hillshading (slow)</label>
+
             <br>
             <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Hillshading raycasting
                 (slow)</label>
@@ -76,8 +78,9 @@
             </div>
             <br>
             <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
-            <label>Sea level rise: <span id="lbSeaLevel">0 m</span></label>
-            <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:200px;">
+            <br>
+            <label>Sea level rise: <span id="lbSeaLevel">0 m</span><input type="range" id="sSeaLevel" min="0" max="100"
+                    step="1" value="0" style="width:200px;"></label>
             <hr>
             <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
             <br>
@@ -103,6 +106,7 @@
     <script>
 
         //TODO
+        // revamp GUI
         // finalise interpolator
         // test interpolateur for large scale - replace smoothing ?
         // better use smoothing - if necessary
@@ -259,6 +263,8 @@
             document.getElementById("joyplot_div").style.display = rsty == "joyplot" ? 'inline-block' : 'none'
             document.getElementById("rc_div").style.display = document.getElementById("cbHillshadingRay").checked ? 'inline-block' : 'none'
 
+            document.getElementById("refexhyps").style.display = document.getElementById("cbHypsDyn").checked ? 'inline-block' : 'none'
+
             //get HD parameter
             const hd = document.getElementById("cbHD").checked;
 
@@ -372,9 +378,10 @@
                         reliefStyles.push(hypsoStyle)
                     } else {
                         const breaks = []
+                        const min = adj && seaLevel ? seaLevel : 0
                         for (let i = 0; i < classNumber; i++) {
                             colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
-                            if (i > 0) breaks.push(3000 * i / (classNumber - 1))
+                            if (i > 0) breaks.push(min + (3000 - min) * i / (classNumber - 1))
                         }
                         const classifierHyps = gridviz.classifier(breaks)
 
