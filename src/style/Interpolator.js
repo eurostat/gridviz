@@ -113,8 +113,15 @@ export class Interpolator extends Style {
 }
 
 
+const interp = (topLeft, topRight, bottomLeft, bottomRight, xRatio, yRatio) => {
+    const top = topLeft + (topRight - topLeft) * xRatio;
+    const bottom = bottomLeft + (bottomRight - bottomLeft) * xRatio;
+    return top + (bottom - top) * yRatio;
+}
+
+
 function bilinearInterpolator(grid, scaleFactor = 5) {
-    console.log('bilinearInterpolator scaleFactor=', scaleFactor)
+    console.log('scaleFactor=', scaleFactor)
     if (scaleFactor === 1) return grid;
     const rows = grid.length;
     if (rows === 0) return [];
@@ -123,7 +130,7 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
     const fineCols = cols * scaleFactor;
     const fineGrid = Array(fineRows).fill().map(() => Array(fineCols).fill(undefined));
 
-    //const sfIsEven = scaleFactor % 2 === 0
+    const sfIsEven = scaleFactor % 2 === 0
 
     //compute output grid values
     for (let i = 0; i < fineRows; i++) {
@@ -143,61 +150,91 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
             const bottomLeft = grid[coarseI + 1][coarseJ];
             const bottomRight = grid[coarseI + 1][coarseJ + 1];
 
-            /*
+
             if (sfIsEven) {
-                //TODO
-                if (topLeft === undefined && i <= i_ && j <= j_) continue
-            } else {
                 if (topLeft === undefined && i <= i_ && j <= j_) continue
                 if (topRight === undefined && i <= i_ && j >= j_) continue
                 if (bottomLeft === undefined && i >= i_ && j <= j_) continue
                 if (bottomRight === undefined && i >= i_ && j >= j_) continue
-            }*/
+            } else {
+                if (topLeft === undefined && i < i_ && j < j_) continue
+                if (topRight === undefined && i < i_ && j > j_) continue
+                if (bottomLeft === undefined && i > i_ && j < j_) continue
+                if (bottomRight === undefined && i > i_ && j > j_) continue
+            }
 
+            // general case: bilinear interpolation
             // If all four are defined, interpolate normally
             if (topLeft !== undefined && topRight !== undefined && bottomLeft !== undefined && bottomRight !== undefined) {
-                const top = topLeft + (topRight - topLeft) * xRatio;
-                const bottom = bottomLeft + (bottomRight - bottomLeft) * xRatio;
-                fineGrid[i][j] = top + (bottom - top) * yRatio;
+                fineGrid[i][j] = interp(topLeft, topRight, bottomLeft, bottomRight, xRatio, yRatio)
+                continue
             }
-            // If only one is not defined, interpolate using the other three
-            /*else if (topLeft === undefined && topRight !== undefined && bottomLeft !== undefined && bottomRight !== undefined) {
-                //const bottom = bottomLeft + (bottomRight - bottomLeft) * xRatio;
-                //fineGrid[i][j] = bottom;
-            }*/
+
+            // If only one is not defined, use average value of 2 adjacents and interpolate
+            if (topLeft === undefined && topRight !== undefined && bottomLeft !== undefined && bottomRight !== undefined) {
+                const v = topRight + bottomLeft
+                fineGrid[i][j] = interp(v / 2, topRight, bottomLeft, bottomRight, xRatio, yRatio)
+                continue
+            }
+            if (topLeft !== undefined && topRight === undefined && bottomLeft !== undefined && bottomRight !== undefined) {
+                const v = topLeft + bottomRight
+                fineGrid[i][j] = interp(topLeft, v / 2, bottomLeft, bottomRight, xRatio, yRatio)
+                continue
+            }
+            if (topLeft !== undefined && topRight !== undefined && bottomLeft === undefined && bottomRight !== undefined) {
+                const v = topLeft + bottomRight
+                fineGrid[i][j] = interp(topLeft, topRight, v / 2, bottomRight, xRatio, yRatio)
+                continue
+            }
+            if (topLeft !== undefined && topRight !== undefined && bottomLeft !== undefined && bottomRight === undefined) {
+                const v = topRight + bottomLeft
+                fineGrid[i][j] = interp(topLeft, topRight, bottomLeft, v / 2, xRatio, yRatio)
+                continue
+            }
+
             // If only two diagonally opposite points are defined, interpolate along diagonal
-            else if (topLeft !== undefined && bottomRight !== undefined) {
-                //const top = topLeft + (bottomRight - topLeft) * xRatio;
-                //const bottom = topLeft + (bottomRight - topLeft) * xRatio;
-                //fineGrid[i][j] = top + (bottom - top) * yRatio;
-                fineGrid[i][j] = topLeft + (bottomRight - topLeft) * ((xRatio + yRatio) / 2);
-            } else if (topRight !== undefined && bottomLeft !== undefined) {
-                //const top = topRight + (bottomLeft - topRight) * xRatio;
-                //const bottom = topRight + (bottomLeft - topRight) * xRatio;
-                //fineGrid[i][j] = top + (bottom - top) * yRatio;
-                fineGrid[i][j] = topRight + (bottomLeft - topRight) * ((xRatio + yRatio) / 2);
+            if (topLeft !== undefined && bottomRight !== undefined) {
+                const t = (xRatio + yRatio) * Math.SQRT1_2
+                fineGrid[i][j] = topLeft * t + bottomRight * (1 - t);
+                continue
             }
+            if (topRight !== undefined && bottomLeft !== undefined) {
+                const t = (1 - xRatio + yRatio) * Math.SQRT1_2
+                fineGrid[i][j] = topRight * t + bottomLeft * (1 - t);
+                continue
+            }
+
             // If only two adjacent points are defined, interpolate between them
-            else if (topLeft !== undefined && bottomLeft !== undefined) {
+            if (topLeft !== undefined && bottomLeft !== undefined) {
                 fineGrid[i][j] = topLeft + (bottomLeft - topLeft) * yRatio;
+                continue
             }
-            else if (topRight !== undefined && bottomRight !== undefined) {
+            if (topRight !== undefined && bottomRight !== undefined) {
                 fineGrid[i][j] = topRight + (bottomRight - topRight) * yRatio;
+                continue
             }
-            else if (topLeft !== undefined && topRight !== undefined) {
+            if (topLeft !== undefined && topRight !== undefined) {
                 fineGrid[i][j] = topLeft + (topRight - topLeft) * xRatio;
             }
-            else if (bottomLeft !== undefined && bottomRight !== undefined) {
+            if (bottomLeft !== undefined && bottomRight !== undefined) {
                 fineGrid[i][j] = bottomLeft + (bottomRight - bottomLeft) * xRatio;
+                continue
             }
+
             // If only one point is defined, use that value
-            else if (topLeft !== undefined) {
+            if (topLeft !== undefined) {
                 fineGrid[i][j] = topLeft;
-            } else if (topRight !== undefined) {
+                continue
+            }
+            if (topRight !== undefined) {
                 fineGrid[i][j] = topRight;
-            } else if (bottomLeft !== undefined) {
+                continue
+            }
+            if (bottomLeft !== undefined) {
                 fineGrid[i][j] = bottomLeft;
-            } else if (bottomRight !== undefined) {
+                continue
+            }
+            if (bottomRight !== undefined) {
                 fineGrid[i][j] = bottomRight;
             }
         }
