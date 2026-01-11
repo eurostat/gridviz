@@ -25,13 +25,9 @@
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
         <form id="form">
-            <label>Relief</label><br>
-            <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>
-            <label for="radio_hyps">Hypsometric tints</label><br>
-            <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">
-            <label for="radio_joyplot">Joyplot</label><br>
-            <input type="radio" id="radio_none" name="rdreliefstyle" value="none">
-            <label for="radio_none">None</label>
+            Relief:
+            <label for="radio_hyps"><input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>Hypsometric tints</label>
+            <label for="radio_joyplot"><input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">Joyplot</label><br>
             <hr>
             <div style="display: none;">
                 <label>Relief smoothing (slow)</label>
@@ -80,7 +76,6 @@
             </div>
             <br>
             <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
-            <hr>
             <label>Sea level rise: <span id="lbSeaLevel">0 m</span></label>
             <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:200px;">
             <hr>
@@ -138,6 +133,7 @@
             "Plasma": d3.interpolatePlasma,
             "Cubehelix": (t) => d3.interpolateCubehelixDefault(0.15 + 0.85 * t),
             "Rainbow": d3.interpolateRainbow,
+            "None (white)": t => "white",
         }
 
         // build colour ramps combo list
