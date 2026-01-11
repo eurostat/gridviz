@@ -150,7 +150,7 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
             const bottomLeft = grid[coarseI + 1][coarseJ];
             const bottomRight = grid[coarseI + 1][coarseJ + 1];
 
-
+/*
             if (sfIsEven) {
                 if (topLeft === undefined && i <= i_ && j <= j_) continue
                 if (topRight === undefined && i <= i_ && j >= j_) continue
@@ -161,7 +161,7 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
                 if (topRight === undefined && i < i_ && j > j_) continue
                 if (bottomLeft === undefined && i > i_ && j < j_) continue
                 if (bottomRight === undefined && i > i_ && j > j_) continue
-            }
+            }*/
 
             // general case: bilinear interpolation
             // If all four are defined, interpolate normally
@@ -206,18 +206,18 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
 
             // If only two adjacent points are defined, interpolate between them
             if (topLeft !== undefined && bottomLeft !== undefined) {
-                fineGrid[i][j] = topLeft + (bottomLeft - topLeft) * yRatio;
+                fineGrid[i][j] = bottomLeft * yRatio + topLeft * (1 - yRatio);
                 continue
             }
             if (topRight !== undefined && bottomRight !== undefined) {
-                fineGrid[i][j] = topRight + (bottomRight - topRight) * yRatio;
+                fineGrid[i][j] = bottomRight * yRatio + topRight * (1 - yRatio);
                 continue
             }
             if (topLeft !== undefined && topRight !== undefined) {
-                fineGrid[i][j] = topLeft + (topRight - topLeft) * xRatio;
+                fineGrid[i][j] = topRight * xRatio + topLeft * (1 - xRatio);
             }
             if (bottomLeft !== undefined && bottomRight !== undefined) {
-                fineGrid[i][j] = bottomLeft + (bottomRight - bottomLeft) * xRatio;
+                fineGrid[i][j] = bottomRight * xRatio + bottomLeft * (1 - xRatio);
                 continue
             }
 
