@@ -308,9 +308,7 @@
             const layers = []
 
             // resolution / definition
-            let mppc = 1.5
-            let mppcRelief = rsty == "joyplot" ? 3 : 1.5
-            if(hd) { mppc /=2; mppcRelief /=2; }
+            let mppc = hd ? 0.7 : 1.5
 
             //relief layer
             const reliefStyles = []
@@ -417,10 +415,14 @@
                 reliefStyles.push(shadingStyle)
             }
 
+            //
+            if(reliefStyles)
+                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction(reliefStyles)), { minPixelsPerCell: mppc, cellInfoHTML: cellInfoHTMLRelief }))
+
 
             if (rsty == "joyplot") {
                 //white land
-                reliefStyles.push(new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, filter: (c) => c.v >= 0, }))
+                const ws = new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => "a", color: { 'a': "white" }, filter: (c) => c.v >= 0, })
 
                 //const scaleRelief = t => t //gridviz.logarithmicScale(3) //exponentialScale logarithmicScale
                 const fr = document.getElementById("sReliefExagerationJP").value
@@ -431,11 +433,9 @@
                     lineWidth: (y, ys, r, z) => z / 1.5,
                     fillColor: (y, ys, r, z) => "white" //"#b5850011"
                 })
-                reliefStyles.push(jpStyle)
-            }
 
-            //
-            layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction(reliefStyles)), { minPixelsPerCell: mppcRelief, cellInfoHTML: cellInfoHTMLRelief }))
+                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction([ws, jpStyle])), { minPixelsPerCell: mppc * 2, cellInfoHTML: cellInfoHTMLRelief }))
+            }
 
             // CLC waters
             if (document.getElementById("cbCLC").checked)
@@ -467,7 +467,7 @@
                     sunAltitude: c => +document.getElementById("sunrayAltitude").value,
                     sunAzimuth: c => +document.getElementById("sunrayAzimuth").value,
                 })
-                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction([rcStyle])), { minPixelsPerCell: mppcRelief, cellInfoHTML: 'none' }))
+                layers.push(new gridviz.GridLayer(datasetRelief, interpFun(smoothingFunction([rcStyle])), { minPixelsPerCell: mppc, cellInfoHTML: 'none' }))
             }
             // labels
             if (document.getElementById("cbLabels").checked)
