@@ -82,7 +82,7 @@
         map.layers = [layer]
 
         const update = () => {
-            console.log(document.getElementById("sInterpScaleFactor").value)
+            //console.log(document.getElementById("sInterpScaleFactor").value)
             //interp.targetResolution = (r, z) => z*parseInt(document.getElementById("sInterpScaleFactor").value)
             interp.targetResolution = (r, z) => r / parseInt(document.getElementById("sInterpScaleFactor").value)
             //interp.targetResolution = (r, z) => Math.min(Math.floor(z * r) / r, r)

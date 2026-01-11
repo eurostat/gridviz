@@ -121,16 +121,20 @@ const interp = (topLeft, topRight, bottomLeft, bottomRight, xRatio, yRatio) => {
 
 
 function bilinearInterpolator(grid, scaleFactor = 5) {
-    console.log('scaleFactor=', scaleFactor)
+
     if (scaleFactor === 1) return grid;
+
+    // input grid dimensions
     const rows = grid.length;
     if (rows === 0) return [];
     const cols = grid[0].length;
 
+    // output grid dimensions
     const fineRows = rows * scaleFactor;
     const fineCols = cols * scaleFactor;
     const fineGrid = Array(fineRows).fill().map(() => Array(fineCols).fill(undefined));
 
+    // check if scale factor is even
     const sfIsEven = scaleFactor % 2 === 0
 
     //compute output grid values
