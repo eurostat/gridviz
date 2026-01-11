@@ -27,59 +27,59 @@
         <form id="form">
             <label>Relief</label><br>
             <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked>
-            <label for="radio_hyps">Hypsometric tints</label> <select id="hypscol"></select><br>
+            <label for="radio_hyps">Hypsometric tints</label><br>
             <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot">
             <label for="radio_joyplot">Joyplot</label><br>
             <input type="radio" id="radio_none" name="rdreliefstyle" value="none">
-            <label for="radio_none">None</label><br>
+            <label for="radio_none">None</label>
+            <hr>
             <div style="display: none;">
                 <label>Relief smoothing (slow)</label>
                 <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
                 <br>
             </div>
+
             <div id="hyps_div">
+                Hypsometric tints <select id="hypscol"></select><br>
+                <label>Hypsometric tints number</label>
+                <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" style="width: 200px" />
+                <br>
+                <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on
+                    map</label>
+                <br>
+                <label>Relief exageration</label>
+                <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
+                    style="width: 200px" />
+                <br>
+                <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
+                    rise</label>
+                <br>
                 <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Tanaka style (slow)</label>
-                <br>
-                <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Hillshading (slow)</label>
-                <br>
-                <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Hillshading raycasting
-                    (slow)</label>
-                <br>
-                <div id="rc_div" style="border: solid black 1px; padding: 1px;">
-                    <label>Sun ray azimuth</label>
-                    <input type="range" min="0" max="6.3" value="2.4" step="0.05" id="sunrayAzimuth"
-                        style="width: 200px" />
-                    <br>
-                    <label>Sun altitude</label>
-                    <input type="range" min="0.005" max="0.7" value="0.15" step="0.01" id="sunrayAltitude"
-                        style="width: 200px" />
-                    <br>
-                    <label>Sun light opacity</label>
-                    <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha"
-                        style="width: 200px" />
-                </div>
-                <div>
-                    <label>Hypsometric tints number</label>
-                    <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" style="width: 200px" />
-                    <br>
-                    <label>Relief exageration</label>
-                    <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration"
-                        style="width: 200px" />
-                    <br>
-                    <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on
-                        map</label>
-                    <br>
-                    <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
-                        rise</label>
-                    <hr>
-                    <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
-                </div>
             </div>
+
             <div id="joyplot_div" style="display: none;">
                 <label>Relief exageration</label>
                 <input type="range" min="1" max="20" value="10" step="1" id="sReliefExagerationJP"
                     style="width: 200px" />
             </div>
+            <br>
+            <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Hillshading (slow)</label>
+            <br>
+            <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Hillshading raycasting
+                (slow)</label>
+            <div id="rc_div" style="border: solid black 1px; padding: 1px;">
+                <label>Sun ray azimuth</label>
+                <input type="range" min="0" max="6.3" value="2.4" step="0.05" id="sunrayAzimuth" style="width: 200px" />
+                <br>
+                <label>Sun altitude</label>
+                <input type="range" min="0.005" max="0.7" value="0.15" step="0.01" id="sunrayAltitude"
+                    style="width: 200px" />
+                <br>
+                <label>Sun light opacity</label>
+                <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha" style="width: 200px" />
+            </div>
+            <br>
+            <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
             <hr>
             <label>Sea level rise: <span id="lbSeaLevel">0 m</span></label>
             <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" style="width:200px;">
