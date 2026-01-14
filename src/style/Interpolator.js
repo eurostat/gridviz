@@ -30,6 +30,10 @@ export class Interpolator extends Style {
         // the interpolation method: currently only 'bilinear' is supported
         //this.method = opts.method || 'bilinear' // 'nearest', 'bilinear'
 
+        /** when a neighbor cell has no value, take zero value or average of surrounding cells
+         * @type { string } } */
+        this.nodataHandling = opts.nodataHandling || "zero" // 'zero', 'average'
+
         /** The styles to represent the interpolated grid.
          * @type {Array.<Style>} */
         this.styles = opts.styles || []
@@ -200,12 +204,12 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
             // If only two diagonally opposite points are defined, interpolate along diagonal
             if (topLeft !== undefined && bottomRight !== undefined) {
                 const t = (xRatio + yRatio) * Math.SQRT1_2
-                fineGrid[i][j] = topLeft * t + bottomRight * (1 - t);
+                fineGrid[i][j] = topLeft * (1 - t) + bottomRight * t;
                 continue
             }
             if (topRight !== undefined && bottomLeft !== undefined) {
                 const t = (1 - xRatio + yRatio) * Math.SQRT1_2
-                fineGrid[i][j] = topRight * t + bottomLeft * (1 - t);
+                fineGrid[i][j] = topRight * (1 - t) + bottomLeft * t;
                 continue
             }
 
