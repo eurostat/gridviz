@@ -30,7 +30,7 @@ export class Drawable {
          * The function parameter is the zoom level.
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {function(number):GlobalCompositeOperation} */
-        this.blendOperation = opts.blendOperation || ((z) => 'source-over')
+        this.blendOperation = opts.blendOperation //|| ((z) => 'source-over')
 
         /** @type {(function(number):string)|undefined} */
         this.filterColor = opts.filterColor // (z) => "#eee7"

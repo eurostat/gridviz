@@ -60,13 +60,21 @@ export class GridLayer extends Layer {
         //update dataset view cache
         dsc.updateViewCache(geoCanvas.extGeo)
 
+
+        //set layer alpha and blend mode
+        if (this.alpha || this.blendOperation) {
+            ctx.save()
+            if (this.alpha) ctx.globalAlpha = this.alpha(z)
+            if (this.blendOperation) ctx.globalCompositeOperation = this.blendOperation(z)
+        }
+
         //draw cells, style by style
         for (const s of this.styles) {
             //check if style is visible
             if (s.visible && !s.visible(z)) continue
 
-            //set style alpha and blend mode
-            //TODO: multiply by layer alpha ?
+            // set style alpha and blend mode
+            //TODO: multiply style alpha by layer alpha ?
             if (s.alpha || s.blendOperation) {
                 ctx.save()
                 if (s.alpha) ctx.globalAlpha = s.alpha(z)
@@ -82,9 +90,12 @@ export class GridLayer extends Layer {
             //draw style filter
             if (s.filterColor) s.drawFilter(geoCanvas)
 
-            //restore default alpha and blend operation
+            //restore default alpha and blend operation - before style change
             if (s.alpha || s.blendOperation) ctx.restore()
         }
+
+        //restore default alpha and blend operation - before layer change
+        if (this.alpha || this.blendOperation) ctx.restore()
 
         //add legend element
         if (legend) {
