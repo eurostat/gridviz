@@ -68,7 +68,7 @@ export class Interpolator extends Style {
         targetResolution = resolution / scaleFactor
 
         // compute ray casting shadow
-        m = bilinearInterpolator(m, scaleFactor);
+        m = bilinearInterpolator(m, scaleFactor, this.nodataHandling);
 
         // make cells
         cells = []
@@ -124,7 +124,7 @@ const interp = (topLeft, topRight, bottomLeft, bottomRight, xRatio, yRatio) => {
 }
 
 
-function bilinearInterpolator(grid, scaleFactor = 5) {
+function bilinearInterpolator(grid, scaleFactor = 5, nodataHandling = "zero") {
 
     if (scaleFactor === 1) return grid;
 
@@ -170,6 +170,12 @@ function bilinearInterpolator(grid, scaleFactor = 5) {
                 if (topRight === undefined && i < i_ && j > j_) continue
                 if (bottomLeft === undefined && i > i_ && j < j_) continue
                 if (bottomRight === undefined && i > i_ && j > j_) continue
+            }
+
+            if(nodataHandling === "zero") {
+                // replace undefined values by zero
+                fineGrid[i][j] = interp(topLeft || 0, topRight || 0, bottomLeft || 0, bottomRight || 0, xRatio, yRatio)
+                continue
             }
 
             // general case: bilinear interpolation
