@@ -1,3 +1,5 @@
+weaving style - test for 4 categories (pop + no data)
+
 use gridviz-parquet update 1.1.1
 use gridviz-eurostat 2.1.1
 
