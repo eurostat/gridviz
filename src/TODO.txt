@@ -1,4 +1,7 @@
 weaving style - test for 4 categories (pop + no data)
+https://mapoftheweek.substack.com/p/weaving-a-map
+https://geospatialstuff.com/weaving-space/presentations/NZCS-Nov-2021/make-weave-map.html
+https://geospatialstuff.com/weaving-space/presentations/Palmerston-North-Nov-2022/slides/index.html?utm_source=substack&utm_medium=email#/title-slide
 
 use gridviz-parquet update 1.1.1
 use gridviz-eurostat 2.1.1

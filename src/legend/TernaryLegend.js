@@ -19,7 +19,7 @@ export class TernaryLegend extends Legend {
         this.classifier = opts.classifier
 
         this.width = opts.width || 150
-        this.selectionColor = this.selectionColor || 'red'
+        this.selectionColor = opts.selectionColor || 'red'
         this.tooltip = opts.tooltip
         this.texts = opts.texts
 
