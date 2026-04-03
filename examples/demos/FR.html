@@ -29,7 +29,8 @@
                     <select id="year">
                         <option value="2015">2015</option>
                         <option value="2017">2017</option>
-                        <option value="2019" selected>2019</option>
+                        <option value="2019">2019</option>
+                        <option value="2021" selected>2021</option>
                     </select>
                     <br />
                     <span style="font-size: 1.25em; font-weight: bold">Population</span><br />
@@ -92,7 +93,7 @@
                 <hr />
                 Source:
                 <a
-                    href="https://www.insee.fr/fr/statistiques/7655515"
+                    href="https://www.insee.fr/fr/statistiques/8735243"
                     target="_blank"
                     rel="noopener noreferrer"
                     >INSEE - Filosofi - 200m</a
@@ -119,7 +120,7 @@
             //const baseURL = "http://localhost:1234/"
             for (let geo of ['met', 'reun', 'mart']) {
                 ds[geo] = { ind: {}, men: {}, log: {}, inc: {} }
-                for (let year of [2015, 2017, 2019]) {
+                for (let year of [2015, 2017, 2019, 2021]) {
                     //dataset on population by age
                     ds[geo].ind[year] = app.makeMultiScaleTiledGridDataset(
                         [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
