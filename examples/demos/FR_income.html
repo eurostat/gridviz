@@ -29,7 +29,8 @@
             <select id="year">
                 <option value="2015">2015</option>
                 <option value="2017">2017</option>
-                <option value="2019" selected>2019</option>
+                <option value="2019">2019</option>
+                <option value="2021" selected>2021</option>
             </select>
             <br />
             <input type="radio" name="layer" id="color" value="color" checked />
@@ -62,7 +63,7 @@
         <label for="background">Fond</label>
         <hr />
         Source:
-        <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
+        <a href="https://www.insee.fr/fr/statistiques/8735243" target="_blank" rel="noopener noreferrer">INSEE -
             Filosofi - 200m</a>
     </div>
 
@@ -105,7 +106,7 @@
             )
         for (let geo of ['met', 'reun', 'mart']) {
             incDataset[geo] = {}
-            for (let year of ['2015', '2017', '2019']) incDataset[geo][year] = getDataset(geo, year)
+            for (let year of ['2015', '2017', '2019', '2021']) incDataset[geo][year] = getDataset(geo, year)
         }
 
         //income timeseries datasets, indexed by geo region
@@ -126,7 +127,7 @@
                     preprocess: (c) => {
                         //x,y,ind2015,ind_snv2015,ind2017,ind_snv2017,ind2019,ind_snv2019
                         //income per inhabitant per month
-                        for (let year of ['2015', '2017', '2019'])
+                        for (let year of ['2015', '2017', '2019', '2021'])
                             c['revind' + year] = Math.round(c['ind_snv' + year] / c['ind' + year] / 12)
                     },
                 }
@@ -330,7 +331,7 @@
                 )
             } else if (layCode == 'ts') {
                 //define time series list of years
-                const ts = ['revind2015', 'revind2017', 'revind2019']
+                const ts = ['revind2015', 'revind2017', 'revind2019', 'revind2021']
 
                 //colors
                 const colR = d3.scaleQuantize(
@@ -350,18 +351,18 @@
                     incTsDataset[geo],
                     [
                         new gridviz.TimeSeriesStyle({
-                            filter: (c) => +c.ind2019 > 0,
+                            filter: (c) => +c.ind2021 > 0,
                             ts: ts,
-                            lineWidth: (c, r, z, vs) => vs(c.ind2019),
+                            lineWidth: (c, r, z, vs) => vs(c.ind2021),
                             viewScale: gridviz.viewScaleQuantile({
-                                valueFunction: (c) => +c.ind2019,
+                                valueFunction: (c) => +c.ind2021,
                                 classNumber: widthClassNumber,
                                 minSizePix: 2,
                                 maxSizeFactor: 0.5,
                             }),
                             //color: () => "black",
                             color: (c) => {
-                                const t = (c.revind2019 - incMin) / (incMax - incMin)
+                                const t = (c.revind2021 - incMin) / (incMax - incMin)
                                 return colR(t > 1 ? 1 : t < 0 ? 0 : t)
                             },
                         }),
@@ -437,7 +438,7 @@
                 //color
                 gridLayer.styles[0].legends.push(
                     new gridviz.ColorLegend({
-                        title: 'Niveau de revenu (2019)',
+                        title: 'Niveau de revenu (2021)',
                         width: 150,
                         colorScale: colR,
                         ticks: 2,
@@ -448,7 +449,7 @@
                 //width
                 gridLayer.styles[0].legends.push(
                     gridviz.sizeDiscreteViewScaleLegend(widthClassNumber, {
-                        title: 'Population (2019)',
+                        title: 'Population (2021)',
                         shape: 'line',
                         color: 'black',
                         length: (resolution) => 1.5 * resolution,
