@@ -170,11 +170,11 @@
         })
 
         const legendInc = new gridviz.ColorLegend({
-            title: 'Revenu, en € par mois et par personne',
+            title: 'Revenu mensuel moyen par personne en €',
             width: 320,
             ticks: 6,
             colorScale: colR,
-            textScale: (t) => incMin + t * (incMax - incMin),
+            textScale: (t) => incMin + t * (incMax - incMin), //+ (t==0||t==1?'€':''),
         })
 
         //side layers
