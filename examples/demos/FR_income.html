@@ -115,7 +115,7 @@
         const getTsDataset = (geo) =>
             new gridviz.MultiResolutionDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
-                (r) => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/parquet/' + geo + '/ts_ind_snv/' + +r + 'm/'),
+                (r) => new gviz_par.TiledParquetGrid(map, dsurl + geo + '/ts_ind_snv/' + +r + 'm/'),
                 {
                     preprocess: (c) => {
                         //x,y,ind2015,ind_snv2015,ind2017,ind_snv2017,ind2019,ind_snv2019
