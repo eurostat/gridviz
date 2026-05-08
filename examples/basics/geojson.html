@@ -19,7 +19,7 @@
     const geojsonLayer = new gridviz.GeoJSONLayer({
         url: 'https://raw.githubusercontent.com/eurostat/gridviz/master/examples/basics/geojson_test.json',
         shape: (f, z) => (f.properties.name == 'Fox' ? 'circle' : 'square'),
-        //size: (f, z) => Math.max(2, 10000 / z),
+        size: (f, z) => Math.max(10, 10 / z),
         //strokeStyle: (f, z) => 'black',
         //fillStyle: (f, z) => 'red',
         //lineWidth: (f, z) => (z < 2000 ? 2 : 0),
