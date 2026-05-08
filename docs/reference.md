@@ -227,15 +227,19 @@ const backgroundLayer = new gridviz.BackgroundLayerWMS({
 #### GeoJSONLayer
 
 ```javascript
-const pointLayer = new gridviz.GeoJSONLayer({
-    url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/nutspt_3.json',
-    shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
-    size: (f, z) => Math.max(2, 10000 / z),
+const geojsonLayer = new gridviz.GeoJSONLayer({
+    url: 'https://raw.githubusercontent.com/eurostat/gridviz/master/examples/basics/geojson_test.json',
+    shape: (f, z) => (f.properties.name == 'Fox' ? 'circle' : 'square'),
+    size: (f, z) => Math.max(15, 10 / z),
     strokeStyle: (f, z) => 'black',
+    lineWidth: (f, z) => Math.max(3, 30 / z),
     fillStyle: (f, z) => 'red',
-    lineWidth: (f, z) => (z < 2000 ? 2 : 0),
 })
 ```
+-   See [this example](https://eurostat.github.io/gridviz/examples/basics/geojson.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/examples/basics/geojson.html)).
+-   See [this other example for points only](https://eurostat.github.io/gridviz/examples/basics/points.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/points.html)).
+-   See [this other example for lines only](https://eurostat.github.io/gridviz/examples/basics/boundaries.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/boundaries.html)).
+
 
 #### LabelLayer
 
