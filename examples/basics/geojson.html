@@ -5,8 +5,8 @@
 <script>
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4500000,
-        y: 2900000,
+        x: 4046000,
+        y: 2654000,
         z: 1000,
     }).addZoomButtons()
 
@@ -14,6 +14,17 @@
     const backgroundLayer = new gridviz.BackgroundLayer(
         gridviz_eurostat.giscoBackgroundLayer('OSMPositronBackground', 18, 'EPSG3035')
     )
+
+    //make geojson layer
+    const pointLayer = new gridviz.GeoJSONLayer({
+        url: 'https://raw.githubusercontent.com/eurostat/gridviz/master/examples/basics/geojson_test.geojson',
+        shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
+        size: (f, z) => Math.max(2, 10000 / z),
+        strokeStyle: (f, z) => 'black',
+        fillStyle: (f, z) => 'red',
+        lineWidth: (f, z) => (z < 2000 ? 2 : 0),
+    })
+
 
     //add layer to map
     map.layers = [backgroundLayer]
