@@ -118,6 +118,7 @@ export class GeoJSONLayer extends Layer {
             //get style parameters for the point feature
             const shape = this.shape(f, z)
             if (!shape || shape == 'none') return
+            console.log('shape:', shape, 'name', f.properties.name)
             const size = this.size(f, z) * z
             if (!size) return
 
