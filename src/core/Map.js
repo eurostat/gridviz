@@ -90,6 +90,12 @@ export class Map {
          * @type {Tooltip} */
         this.tooltip = new Tooltip(opts.tooltip)
 
+        /** 
+         * Set to true so that the tooltip appears for the first layer starting from top where a cell is found.
+         * Otherwise, it shows a tooltip only for the first layer from the top with a cellInfoHTML property, even if there is no cell at the mouse position for this layer.
+         * @type {boolean} */
+        this.digForTooltip = opts.digForTooltip || false
+
         // add event listeners to container
         this.mouseOverHandler = (e) => this.focusCell(e)
         this.mouseMoveHandler = (e) => this.focusCell(e)
@@ -330,15 +336,20 @@ export class Map {
      * @protected
      */
     getCellFocusInfo(posGeo) {
-        //go through the layers, starting from top
+
+        // go through the layers, starting from top one
         const z = this.geoCanvas.view.z
         for (let i = this.layers.length - 1; i >= 0; i--) {
+
             /** @type {import("./Layer.js").Layer} */
             const layer = this.layers[i]
+
             if (layer.visible && !layer.visible(z)) continue
-            if (layer.cellInfoHTML === 'none') continue // this is necessary in order to not show tooltips for layers 'on top' (e.g. population circles on top of squares)
+            if (layer.cellInfoHTML === 'none') continue
             if (!layer.cellInfoHTML) continue
             if (!layer.getDataset) continue
+
+            // get dataset
             const dsc = layer.getDataset(z)
             if (!dsc) continue
 
@@ -346,7 +357,12 @@ export class Map {
             /** @type {import('./Dataset.js').Cell|undefined} */
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
 
-            if (!cell) return undefined
+            // no cell found at theis position for this layer
+            if (!cell)
+                // dig to the next layer below
+                if (this.digForTooltip) continue
+                // no tooltip to show
+                else return undefined
 
             //rare case for a dataset with mixed resolutions
             if (dsc.mixedResolution) {
