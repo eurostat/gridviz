@@ -17,7 +17,7 @@
 
     //make geojson layer
     const pointLayer = new gridviz.GeoJSONLayer({
-        url: 'https://raw.githubusercontent.com/eurostat/gridviz/master/examples/basics/geojson_test.geojson',
+        url: 'https://raw.githubusercontent.com/eurostat/gridviz/master/examples/basics/geojson_test.json',
         shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
         size: (f, z) => Math.max(2, 10000 / z),
         strokeStyle: (f, z) => 'black',
