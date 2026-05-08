@@ -1,19 +1,13 @@
 <div id="map" style="height: 100%; width: 100%"></div>
 
 <script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
 <script>
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), {
-        x: 4046000,
+        x: 4047400,
         y: 2654000,
         z: 4,
     }).addZoomButtons()
-
-    //define background layer
-    const backgroundLayer = new gridviz.BackgroundLayer(
-        gridviz_eurostat.giscoBackgroundLayer('OSMPositronBackground', 18, 'EPSG3035')
-    )
 
     //make geojson layer
     const geojsonLayer = new gridviz.GeoJSONLayer({
@@ -25,8 +19,7 @@
         fillStyle: (f, z) => 'red',
     })
 
-
     //add layer to map
-    map.layers = [backgroundLayer, geojsonLayer]
+    map.layers = [geojsonLayer]
     map.redraw()
 </script>
