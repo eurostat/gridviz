@@ -236,7 +236,7 @@ const geojsonLayer = new gridviz.GeoJSONLayer({
     fillStyle: (f, z) => 'red',
 })
 ```
--   See [this example](https://eurostat.github.io/gridviz/examples/basics/geojson.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/examples/basics/geojson.html)).
+-   See [this example](https://eurostat.github.io/gridviz/examples/basics/geojson.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/geojson.html)).
 -   See [this other example for points only](https://eurostat.github.io/gridviz/examples/basics/points.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/points.html)).
 -   See [this other example for lines only](https://eurostat.github.io/gridviz/examples/basics/boundaries.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/boundaries.html)).
 
