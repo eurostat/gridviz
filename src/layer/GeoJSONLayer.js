@@ -30,6 +30,7 @@ export class GeoJSONLayer extends Layer {
         this.preprocess = opts.preprocess
 
         //for points
+
         /**
          * @private
          * @type {function(object,number):string} */
@@ -39,35 +40,31 @@ export class GeoJSONLayer extends Layer {
          * @private
          * @type {function(object,number):number} */
         this.size = opts.size || ((f, z) => 10)
-        /**
-         * @private
-         * @type {function(object,number):string} */
-        this.strokeStyle = opts.strokeStyle || ((f, z) => 'red')
-        /**
-         * @private
-         * @type {function(object,number):string} */
-        this.fillStyle = opts.fillStyle || ((f, z) => 'black')
-        /**
-         * In pixel
-         * @private
-         * @type {function(object,number):number} */
-        this.lineWidth = opts.lineWidth || ((f, z) => 2)
 
-        //for lines
+        // for lines and polygon outlines
 
         /**
          * @private
          * @type {function(object,number):string} */
-        this.color = opts.color || ((f, z) => 'gray')
+        this.strokeStyle = opts.strokeStyle || opts.color || ((f, z) => 'gray')
         /**
          * In pixel
          * @private
          * @type {function(object,number):number} */
-        this.width = opts.width || ((f, z) => 2)
+        this.lineWidth = opts.lineWidth || opts.width || ((f, z) => 2)
         /**
          * @private
          * @type {function(object,number):Array.<number>|undefined} */
         this.lineDash = opts.lineDash || ((f, z) => undefined)
+
+
+        // for polygon filling and point symbol filling
+        /**
+         * @private
+         * @type {function(object,number):string} */
+        this.fillStyle = opts.fillStyle || ((f, z) => 'black')
+
+
 
         /**
          * @private
@@ -118,7 +115,6 @@ export class GeoJSONLayer extends Layer {
             //get style parameters for the point feature
             const shape = this.shape(f, z)
             if (!shape || shape == 'none') return
-            console.log('shape:', shape, 'name', f.properties.name)
             const size = this.size(f, z) * z
             if (!size) return
 
@@ -152,16 +148,16 @@ export class GeoJSONLayer extends Layer {
                     if (strokeStyle && lineWidth) ctx.stroke()
                 }
             } else {
-                console.error('Unexpected shape for point geojson: ' + shape)
+                console.error('Unexpected shape for point GeoJSON: ' + shape)
             }
             ctx.restore()
 
         } else if (gt == 'LineString' || gt == 'MultiLineString') {
 
-            const col = this.color(f, z)
+            const col = this.strokeStyle(f, z)
             if (!col || col === 'none') return
 
-            const wP = this.width(f, z)
+            const wP = this.lineWidth(f, z)
             if (!wP || wP < 0) return
 
             ctx.save()
@@ -200,18 +196,18 @@ export class GeoJSONLayer extends Layer {
             }
 
             // Fill
-            const col = this.color(f, z)
-            if (col && col !== 'none') {
-                ctx.fillStyle = col
+            const fillStyle = this.fillStyle(f, z)
+            if (fillStyle && fillStyle !== 'none') {
+                ctx.fillStyle = fillStyle
                 ctx.fill('evenodd')         // even-odd punches holes correctly regardless of ring winding order
             }
 
             // Stroke (optional, only if style provides a width)
-            const wP = this.width(f, z)
+            const wP = this.lineWidth(f, z)
             if (wP && wP > 0) {
-                const strokeCol = this.strokeColor?.(f, z) ?? col
-                if (strokeCol && strokeCol !== 'none') {
-                    ctx.strokeStyle = strokeCol
+                const strokeStyle = this.strokeStyle?.(f, z) ?? fillStyle
+                if (strokeStyle && strokeStyle !== 'none') {
+                    ctx.strokeStyle = strokeStyle
                     ctx.lineWidth = wP * z
                     ctx.setLineDash(this.lineDash?.(f, z) || [])
                     ctx.stroke()
@@ -236,7 +232,7 @@ export class GeoJSONLayer extends Layer {
      */
     async load(callback) {
         if (!this.url) {
-            console.log('Failed loading boundaries: No URL specified. ' + this.url)
+            console.log('Failed loading GeoJSON data: No URL specified. ' + this.url)
             this.loadingStatus = 'failed'
             this.labels = []
             return
@@ -272,7 +268,7 @@ export class GeoJSONLayer extends Layer {
             //redraw
             if (callback) callback()
         } catch (error) {
-            console.log('Failed loading boundaries from ' + this.url)
+            console.log('Failed loading GeoJSON from ' + this.url)
             this.fs = []
             this.loadingStatus = 'failed'
         }
