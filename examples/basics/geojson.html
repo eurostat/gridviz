@@ -15,7 +15,7 @@
         shape: (f, z) => (f.properties.name == 'Fox' ? 'circle' : 'square'),
         size: (f, z) => Math.max(15, 10 / z),
         strokeStyle: (f, z) => 'black',
-        lineWidth: (f, z) => (z < 2000 ? 2 : 0),
+        lineWidth: (f, z) => Math.max(3, 30 / z),
         fillStyle: (f, z) => 'red',
     })
 
