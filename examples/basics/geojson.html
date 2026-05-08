@@ -7,7 +7,7 @@
     const map = new gridviz.Map(document.getElementById('map'), {
         x: 4046000,
         y: 2654000,
-        z: 1000,
+        z: 10,
     }).addZoomButtons()
 
     //define background layer
@@ -16,7 +16,7 @@
     )
 
     //make geojson layer
-    const pointLayer = new gridviz.GeoJSONLayer({
+    const geojsonLayer = new gridviz.GeoJSONLayer({
         url: 'https://raw.githubusercontent.com/eurostat/gridviz/master/examples/basics/geojson_test.json',
         shape: (f, z) => (f.properties.id.includes('DE') ? 'square' : 'circle'),
         size: (f, z) => Math.max(2, 10000 / z),
@@ -27,6 +27,6 @@
 
 
     //add layer to map
-    map.layers = [backgroundLayer]
+    map.layers = [backgroundLayer, geojsonLayer]
     map.redraw()
 </script>
