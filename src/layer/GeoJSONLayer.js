@@ -106,11 +106,13 @@ export class GeoJSONLayer extends Layer {
                 if (!shape || shape == 'none') continue
                 const size = this.size(f, z) * z
                 if (!size) continue
+
                 const strokeStyle = this.strokeStyle(f, z)
                 const fillStyle = this.fillStyle(f, z)
                 const lineWidth = this.lineWidth(f, z) * z
 
                 //set canvas drawing parameters
+                ctx.save()
                 if (strokeStyle) ctx.strokeStyle = strokeStyle
                 if (fillStyle) ctx.fillStyle = fillStyle
                 if (lineWidth) ctx.lineWidth = lineWidth
@@ -137,21 +139,50 @@ export class GeoJSONLayer extends Layer {
                 } else {
                     console.error('Unexpected shape for point geojson: ' + shape)
                 }
+                ctx.restore()
+
             } else if (gt == 'LineString' || gt == 'MultiLineString') {
 
-                //set color
                 const col = this.color(f, z)
-                if (!col || col == 'none') continue
+                if (!col || col === 'none') continue
+
+                const wP = this.width(f, z)
+                if (!wP || wP < 0) continue
+
+                ctx.save()
+                ctx.strokeStyle = col
+                ctx.lineWidth = wP * z
+                ctx.setLineDash(this.lineDash(f, z) || [])
+
+                //
+                const css = gt === 'LineString' ? [f.geometry.coordinates] : f.geometry.coordinates
+
+                for (const cs of css) {
+                    if (cs.length < 2) continue
+                    ctx.beginPath()
+                    ctx.moveTo(cs[0][0], cs[0][1])
+                    for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
+                    ctx.stroke()
+                }
+
+                ctx.restore()
+
+                /*
+    const col = this.color(f, z)
+    if (!col || col === 'none') continue
+
+    const wP = this.width(f, z)
+    if (!wP || wP < 0) continue
+
+                //set color
                 ctx.strokeStyle = col
 
                 //set linewidth
-                const wP = this.width(f, z)
-                if (!wP || wP < 0) continue
                 ctx.lineWidth = wP * z
 
                 //set line dash
                 const ldP = this.lineDash(f, z)
-                if (ldP) ctx.setLineDash(ldP)
+                if (ldP) ctx.setLineDash(ldP || [])
 
                 let css = f.geometry.coordinates
                 if (gt == 'LineString') css = [css]
@@ -163,9 +194,47 @@ export class GeoJSONLayer extends Layer {
                     ctx.moveTo(cs[0][0], cs[0][1])
                     for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
                     ctx.stroke()
-                }
+                }*/
             } else if (gt == 'Polygon' || gt == 'MultiPolygon') {
-                console.log('Polygon geometry type not yet supported in GeoJSONLayer')
+                //console.log('Polygon geometry type not yet supported in GeoJSONLayer')
+                ctx.save()
+
+                // Normalise to array-of-polygons to share draw loop with MultiPolygon
+                // A Polygon is [ outerRing, ...holes ]
+                // A MultiPolygon is [ [ outerRing, ...holes ], ... ]
+                const polygons = gt === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates
+
+                ctx.beginPath()
+
+                for (const rings of polygons) {
+                    for (const cs of rings) {
+                        if (cs.length < 2) continue
+                        ctx.moveTo(cs[0][0], cs[0][1])
+                        for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
+                        ctx.closePath()
+                    }
+                }
+
+                // Fill
+                const col = this.color(f, z)
+                if (col && col !== 'none') {
+                    ctx.fillStyle = col
+                    ctx.fill('evenodd')         // even-odd punches holes correctly regardless of ring winding order
+                }
+
+                // Stroke (optional, only if style provides a width)
+                const wP = this.width(f, z)
+                if (wP && wP > 0) {
+                    const strokeCol = this.strokeColor?.(f, z) ?? col
+                    if (strokeCol && strokeCol !== 'none') {
+                        ctx.strokeStyle = strokeCol
+                        ctx.lineWidth = wP * z
+                        ctx.setLineDash(this.lineDash?.(f, z) || [])
+                        ctx.stroke()
+                    }
+                }
+                ctx.restore()
+
             } else if (gt == 'GeometryCollection') {
                 console.log('GeometryCollection geometry type not yet supported in GeoJSONLayer')
             } else {
