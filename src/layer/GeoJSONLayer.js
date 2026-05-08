@@ -164,8 +164,12 @@ export class GeoJSONLayer extends Layer {
                     for (let i = 1; i < cs.length; i++) ctx.lineTo(cs[i][0], cs[i][1])
                     ctx.stroke()
                 }
+            } else if (gt == 'Polygon' || gt == 'MultiPolygon') {
+                console.log('Polygon geometry type not yet supported in GeoJSONLayer')
+            } else if (gt == 'GeometryCollection') {
+                console.log('GeometryCollection geometry type not yet supported in GeoJSONLayer')
             } else {
-                console.log('Unsupported geometry type in GeoJSONLayer: ' + gt)
+                console.log('Unexpected geometry type in GeoJSONLayer: ' + gt)
             }
         }
 
