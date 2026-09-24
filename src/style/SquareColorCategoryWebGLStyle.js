@@ -204,7 +204,9 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //create canvas and webgl renderer
+        let contextRecreated = false
         if (!this.cvWGL || geoCanvas.w != this.cvWGL.width || geoCanvas.h != this.cvWGL.height) {
+            contextRecreated = true
             this.init(geoCanvas.w, geoCanvas.h)
             this.bindColors()
         }
@@ -216,7 +218,18 @@ export class SquareColorCategoryWebGLStyle extends Style {
         gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
 
         //
-        if (this.mapContentChanged(geoCanvas.view, cells.length))
+        // mapContentChanged() is a cheap proxy for "did the content change" based
+        // on view x/y/z and cell count alone - it has no idea the WebGL context
+        // itself was just thrown away and recreated a few lines up (geoCanvas.w/h
+        // changing, e.g. from a browser/devtools resize, recreates cvWGL with a
+        // fresh, empty vertex buffer). A resize alone often leaves the geographic
+        // view and cell count identical to the previous draw, so without forcing
+        // a rebind here, mapContentChanged reports "unchanged" and the rebind gets
+        // skipped - leaving the new context's vertex buffer never populated and
+        // gl.drawArrays() drawing nothing, silently (confirmed via a resize-storm
+        // test: reinit-without-rebind happened on 5 of 9 context recreations).
+        const shouldRebind = this.mapContentChanged(geoCanvas.view, cells.length) || contextRecreated
+        if (shouldRebind)
             //bind vertices
             this.bindVertices(cells, resolution, z, viewScale)
             //transformation
