@@ -2,7 +2,7 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
-import { makeWebGLCanvas } from '../utils/webGLUtils.js'
+import { getSharedWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvanced.js'
 
 /**
@@ -80,13 +80,9 @@ export class SquareColorWebGLStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        //create canvas and webgl renderer
+        //the shared webgl canvas (one context for all styles, instead of a new one per draw)
         //for opacity control, see: https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html
-        const cvWGL = makeWebGLCanvas(
-            geoCanvas.w + '',
-            geoCanvas.h + '',
-            this.opacity != undefined ? { premultipliedAlpha: false } : undefined
-        )
+        const cvWGL = getSharedWebGLCanvas(geoCanvas.w, geoCanvas.h, this.opacity != undefined ? { premultipliedAlpha: false } : undefined)
         if (!cvWGL) {
             console.error('No webGL')
             return

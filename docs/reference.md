@@ -148,6 +148,9 @@ new gridviz.Map(document.getElementById('map'), {
 | _opts_.**onZoomFun**                  | Function | null         | Event handler for when a pan/zoom event is occurring.                                                                                                               |
 | _opts_.**onZoomEndFun**               | Function | null         | Event handler for when a pan/zoom event has finished.                                                                                                               |
 | _opts_.**tooltip**                    | Object   | undefined    | See [tooltip](#tooltip)                                                                                                                                             |
+| _opts_.**asyncRedraw**                | boolean  | false        | When true, _map.redraw()_ schedules a single redraw for the next animation frame, however many times it is called before then (e.g. as tiles arrive). _map.redrawNow()_ always draws at once. |
+
+The map is redrawn with _map.redraw()_. With the default options it draws at once; with _asyncRedraw_ it draws once at the next animation frame. _map.redrawNow()_ draws at once in either case. _map.destroy()_ removes the map's event listeners and stops observing its container.
 
 ## Adding data
 

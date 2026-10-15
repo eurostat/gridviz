@@ -3,7 +3,7 @@
 
 import { Style } from '../core/Style.js'
 import { randomNormal } from 'd3-random'
-import { checkWebGLSupport, makeWebGLCanvas } from '../utils/webGLUtils.js'
+import { checkWebGLSupport, getSharedWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoring } from '../utils/WebGLSquareColoring.js'
 import { color } from 'd3-color'
 
@@ -62,8 +62,8 @@ export class DotDensityStyle extends Style {
         const ctx = geoCanvas.offscreenCtx
 
         if (checkWebGLSupport()) {
-            //create canvas and webgl renderer
-            const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
+            //the shared webgl canvas (one context for all styles, instead of a new one per draw)
+            const cvWGL = getSharedWebGLCanvas(geoCanvas.w, geoCanvas.h)
             if (!cvWGL) {
                 console.error('No webGL')
                 return

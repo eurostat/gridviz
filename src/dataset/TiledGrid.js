@@ -55,20 +55,41 @@ export class TiledGrid extends Dataset {
      */
     loadInfo() {
         if (!this.info && this.infoLoadingStatus === 'notLoaded') {
+            // marked before the request, so the redraws that happen while it's under way
+            // don't request it again
+            this.infoLoadingStatus = 'loading'
             ;(async () => {
                 try {
                     const data = await json(this.url + 'info.json')
                     this.info = data
                     this.resolution = data.resolutionGeo
                     this.infoLoadingStatus = 'loaded'
-                    this.map.redraw()
+                    // all the resolutions of a multi-resolution dataset load their info at
+                    // once: only the one currently shown needs a redraw
+                    if (this.isShown()) this.map.redraw()
                 } catch (error) {
                     //mark as failed
                     this.infoLoadingStatus = 'failed'
                 }
             })()
-        } else if (this.infoLoadingStatus === 'loaded' || this.infoLoadingStatus === 'failed') this.map.redraw()
+        }
+        // (no redraw for a failed info.json: every redraw would ask again - an endless loop)
         return this
+    }
+
+    /**
+     * True when a visible layer of the map shows this dataset at the current zoom.
+     * @returns {boolean}
+     */
+    isShown() {
+        if (!this.map || !this.map.layers) return false
+        const z = this.map.getZoom()
+        for (const lay of this.map.layers) {
+            if (lay.visible && !lay.visible(z)) continue
+            if (!lay.getDataset) continue
+            if (lay.getDataset(z) == this) return true
+        }
+        return false
     }
 
     /**
@@ -197,19 +218,7 @@ export class TiledGrid extends Dataset {
         // Check if any visible layer depends on this dataset
         // check if redraw is really needed, that is if:
         // 1. the dataset belongs to a layer which is visible at the current zoom level
-        let needsRedraw = false
-        //go through the layers
-        const z = this.map.getZoom()
-        for (const lay of this.map.layers) {
-            if (lay.visible && !lay.visible(z)) continue
-            if (!lay.getDataset) continue
-            if (lay.getDataset(z) != this) continue
-            //found one layer. No need to seek more.
-            needsRedraw = true
-            break
-        }
-
-        if (!needsRedraw) return
+        if (!this.isShown()) return
 
         // Check if tile intersects the current view
         const env = this.map.updateExtentGeo()

@@ -30,6 +30,16 @@ export class Map {
          * */
         this.layers = opts.layers || []
 
+        /**
+         * When true, redraw() schedules one redraw for the next animation frame instead of
+         * drawing at once, so the many redraw requests of a busy moment (every tile that
+         * arrives, every info.json, every setting change) are drawn once. redrawNow() still
+         * draws at once. Off by default: redraw() stays synchronous, as it always was.
+         * @type {boolean} */
+        this.asyncRedraw = !!opts.asyncRedraw
+        /** @private @type {number|null} */
+        this._redrawFrame = null
+
         //get container element
         this.container = container || document.getElementById('gridviz')
         if (!this.container) {
@@ -96,10 +106,31 @@ export class Map {
          * @type {boolean} */
         this.digForTooltip = opts.digForTooltip || false
 
-        // add event listeners to container
-        this.mouseOverHandler = (e) => this.focusCell(e)
-        this.mouseMoveHandler = (e) => this.focusCell(e)
-        this.mouseOutHandler = (e) => this.tooltip.hide()
+        // add event listeners to the canvas. Mouse moves are handled at most once per
+        // animation frame (the latest one): finding the cell and redrawing the highlight
+        // for every intermediate event only delays the one that's shown.
+        /** @private */
+        this._focusFrame = null
+        /** @private */
+        this._focusEvent = null
+        const scheduleFocus = (e) => {
+            this._focusEvent = e
+            if (this._focusFrame) return
+            this._focusFrame = requestAnimationFrame(() => {
+                this._focusFrame = null
+                const ev = this._focusEvent
+                this._focusEvent = null
+                if (ev) this.focusCell(ev)
+            })
+        }
+        this.mouseOverHandler = scheduleFocus
+        this.mouseMoveHandler = scheduleFocus
+        this.mouseOutHandler = (e) => {
+            if (this._focusFrame) cancelAnimationFrame(this._focusFrame)
+            this._focusFrame = null
+            this._focusEvent = null
+            this.tooltip.hide()
+        }
         this.geoCanvas.canvas.addEventListener('mouseover', this.mouseOverHandler)
         this.geoCanvas.canvas.addEventListener('mousemove', this.mouseMoveHandler)
         this.geoCanvas.canvas.addEventListener('mouseout', this.mouseOutHandler)
@@ -176,8 +207,31 @@ export class Map {
         return this
     }
 
-    /** @returns {this} */
+    /**
+     * Redraws the map: at once, or, with the asyncRedraw option, once at the next
+     * animation frame however many times it's called before then.
+     * @returns {this} */
     redraw() {
+        if (this.asyncRedraw) {
+            if (!this._redrawFrame && !this._destroyed)
+                this._redrawFrame = requestAnimationFrame(() => {
+                    this._redrawFrame = null
+                    this.redrawNow()
+                })
+            return this
+        }
+        return this.redrawNow()
+    }
+
+    /**
+     * Redraws the map at once, whatever the asyncRedraw option (and cancels a scheduled redraw).
+     * @returns {this} */
+    redrawNow() {
+        if (this._redrawFrame) cancelAnimationFrame(this._redrawFrame)
+        this._redrawFrame = null
+        // a destroyed map can still be asked to redraw by a dataset it shared (see destroy)
+        if (this._destroyed) return this
+
         //remove legend elements
         if (this.legend) this.legend.selectAll('*').remove()
 
@@ -220,6 +274,8 @@ export class Map {
         this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
 
         this.canvasSave = null
+        // the canvas holds no focus rectangle any more
+        this._focusedCell = undefined
 
         return this
     }
@@ -245,6 +301,18 @@ export class Map {
         }
         /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
         const focus = this.getCellFocusInfo(mousePositionGeo)
+
+        // Same cell as the one already highlighted (or still no cell): the canvas is right
+        // as it is, only the tooltip follows the mouse. Saves a full-canvas copy per move.
+        const focusedCell = focus ? focus.cell : null
+        if (focusedCell === this._focusedCell) {
+            if (focus) {
+                this.tooltip.setPosition(e)
+                this.tooltip.show()
+            } else this.tooltip.hide()
+            return
+        }
+        this._focusedCell = focusedCell
 
         // Transparent background (Leaflet): redraw base, then draw focus rect directly on the visible canvas
         if (this.transparentBackground) {
@@ -536,6 +604,8 @@ export class Map {
         })
 
         resizeObserver.observe(this.container)
+        /** @private */
+        this._resizeObserver = resizeObserver
     }
 
     /**
@@ -544,14 +614,26 @@ export class Map {
      * @memberof App
      */
     destroy() {
+        this._destroyed = true
+
         // clear layers
         this.layers = []
         this.bgLayers = []
 
-        // remove event listeners from container
-        this.container.removeEventListener('mouseover', this.mouseOverHandler)
-        this.container.removeEventListener('mousemove', this.mouseMoveHandler)
-        this.container.removeEventListener('mouseout', this.mouseOutHandler)
+        // cancel scheduled work
+        if (this._redrawFrame) cancelAnimationFrame(this._redrawFrame)
+        this._redrawFrame = null
+        if (this._focusFrame) cancelAnimationFrame(this._focusFrame)
+        this._focusFrame = null
+
+        // stop observing the container: the observer would otherwise keep this map alive
+        if (this._resizeObserver) this._resizeObserver.disconnect()
+        this._resizeObserver = null
+
+        // remove event listeners, from the canvas they were added to
+        this.geoCanvas.canvas.removeEventListener('mouseover', this.mouseOverHandler)
+        this.geoCanvas.canvas.removeEventListener('mousemove', this.mouseMoveHandler)
+        this.geoCanvas.canvas.removeEventListener('mouseout', this.mouseOutHandler)
 
         // remove canvas
         this.geoCanvas.canvas.remove()

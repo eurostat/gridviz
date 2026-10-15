@@ -120,6 +120,32 @@ export class Dataset {
 
         /** @type {number} */
         const r = this.getResolution()
+
+        // Look the cell up in an index of the cells by grid position, built once per cell
+        // list (the view cache is a new array after each redraw) instead of scanning every
+        // cell on every mouse move.
+        const index = this.cellIndex(cells, r)
+        if (index) {
+            const fx = (posGeo.x - index.ox) / r
+            const fy = (posGeo.y - index.oy) / r
+            const ix = Math.floor(fx)
+            const iy = Math.floor(fy)
+            // a position on a cell's right/top edge also belongs to that cell (inclusive
+            // bounds, as in the scan below): check the cells left of and below it too
+            for (const [dx, dy] of [
+                [0, 0],
+                [-1, 0],
+                [0, -1],
+                [-1, -1],
+            ]) {
+                if (dx && fx !== ix) continue
+                if (dy && fy !== iy) continue
+                const cell = index.cells.get(cellKey(ix + dx, iy + dy))
+                if (cell) return cell
+            }
+            return undefined
+        }
+
         for (const cell of cells) {
             if (posGeo.x < cell.x) continue
             else if (cell.x + r < posGeo.x) continue
@@ -128,6 +154,46 @@ export class Dataset {
             else return cell
         }
         return undefined
+    }
+
+    /**
+     * An index of cells by their position on the grid of resolution r, or null when some
+     * cell isn't on a common grid (then the caller scans the cells). Cached for the last
+     * cell list given.
+     *
+     * @param {Array.<Cell>} cells
+     * @param {number} r
+     * @returns {{cells: Map<number, Cell>, ox: number, oy: number} | null}
+     * @protected
+     */
+    cellIndex(cells, r) {
+        if (this._index && this._indexCells === cells && this._indexLength === cells.length && this._indexR === r) return this._index
+        let index = null
+        if (cells.length && r > 0) {
+            const ox = +cells[0].x
+            const oy = +cells[0].y
+            const map = new Map()
+            index = { cells: map, ox, oy }
+            for (const cell of cells) {
+                const fx = (+cell.x - ox) / r
+                const fy = (+cell.y - oy) / r
+                const ix = Math.round(fx)
+                const iy = Math.round(fy)
+                // not on the grid: no index, scan instead
+                if (Math.abs(fx - ix) > 1e-6 || Math.abs(fy - iy) > 1e-6) {
+                    index = null
+                    break
+                }
+                const key = cellKey(ix, iy)
+                // the first cell at a position wins, as in the scan
+                if (!map.has(key)) map.set(key, cell)
+            }
+        }
+        this._index = index
+        this._indexCells = cells
+        this._indexLength = cells.length
+        this._indexR = r
+        return index
     }
 
     //getters and setters
@@ -151,4 +217,15 @@ export class Dataset {
     getDataset(z, minPixelsPerCell) {
         return this
     }
+}
+
+/**
+ * One number per grid position: cell positions relative to the first cell stay well
+ * within +-2^21, so x * 2^22 + y is exact.
+ * @param {number} ix
+ * @param {number} iy
+ * @returns {number}
+ */
+function cellKey(ix, iy) {
+    return ix * 4194304 + iy
 }
