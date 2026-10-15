@@ -35,8 +35,10 @@ export class ColorLegend extends Legend {
         this.fontSize = opts.fontSize || '0.8em'
         this.invert = opts.invert
 
-        this.width = opts.width || 300
+        // a number of pixels, or 'fill' for the width of the container
+        this.width = opts.width === 'fill' ? 300 : opts.width || 300
         this.height = opts.height || 15
+        this.setType('color')
     }
 
     /**
@@ -49,7 +51,8 @@ export class ColorLegend extends Legend {
         //title
         this.makeTitle()
 
-        const svgW = this.width + 2 * this.margin
+        const width = this.availableWidth(this.width)
+        const svgW = width + 2 * this.margin
         const svgH = this.height + this.margin + this.tickSize + 10
         const svg = this.div.append('svg').attr('width', svgW).attr('height', svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
@@ -57,13 +60,14 @@ export class ColorLegend extends Legend {
         const g = svg.append('g').attr('transform', 'translate(' + this.margin + ' ' + 0 + ')')
 
         //draw color bar
-        const w = this.width,
+        const w = width,
             h = this.height
         const step = 5
         for (let i = 0; i < w; i += step) {
             let t = i / (w - 1)
             if (this.invert) t = 1 - t
             g.append('rect')
+                .classed('gridviz-legend-swatch', true)
                 .attr('x', i)
                 .attr('y', 0)
                 .attr('width', step)
@@ -76,6 +80,7 @@ export class ColorLegend extends Legend {
 
             //tick line
             g.append('line')
+                .classed('gridviz-legend-tick', true)
                 .attr('x1', w * t)
                 .attr('y1', 0)
                 .attr('x2', w * t)
@@ -84,6 +89,7 @@ export class ColorLegend extends Legend {
 
             //prepare tick label
             g.append('text')
+                .classed('gridviz-legend-label', true)
                 .attr('id', 'ticklabel_' + i)
                 .attr('x', w * t)
                 .attr('y', h + this.tickSize + 2)

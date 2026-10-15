@@ -13,6 +13,7 @@ export class OrientationLegend extends Legend {
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
+        this.setType('orientation')
         opts = opts || {}
 
         //orientation
@@ -38,7 +39,7 @@ export class OrientationLegend extends Legend {
         //title
         this.makeTitle()
 
-        const d = this.div.append('div')
+        const d = this.div.append('div').classed('gridviz-legend-category', true)
 
         //compute segment color, width and length
         const color = this.color(opts.resolution, opts.z, opts.viewScale)
@@ -63,9 +64,10 @@ export class OrientationLegend extends Legend {
 
         //label
         d.append('div')
+            .classed('gridviz-legend-label', true)
             .style('display', 'inline')
             .style('padding-left', '5px')
-            .style('font-size', this.labelFontSize)
+            .style('font-size', this.labelFontSizeCSS())
             .text(this.label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

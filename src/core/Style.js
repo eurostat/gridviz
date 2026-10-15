@@ -1,6 +1,7 @@
 //@ts-check
 'use strict'
 
+import { color as d3color } from 'd3-color'
 import { Drawable } from './Drawable.js'
 
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"triangle_up"|"triangle_down"|"triangle_left"|"triangle_right"|"none"} Shape */
@@ -47,6 +48,48 @@ export class Style extends Drawable {
          * @public
          * @type {Array.<import("./Legend").Legend>} */
         this.legends = []
+
+        /**
+         * The colours of the cells to show while a legend swatch is hovered (see Legend.highlight),
+         * normalised with Style.normalizeColor. Null when nothing is highlighted.
+         * Styles that draw cells in a colour per class honour it with isHighlighted.
+         * @type {Array.<string>|null} */
+        this.highlightColors = null
+    }
+
+    /**
+     * A colour as a canonical string, so that '#ccc', 'rgb(204,204,204)' and '#cccccc' compare equal.
+     * @param {string} c
+     * @returns {string}
+     */
+    static normalizeColor(c) {
+        let n = Style._normalizedColors.get(c)
+        if (n === undefined) {
+            const parsed = d3color(c)
+            n = parsed ? parsed.formatRgb() : String(c)
+            // a style drawing millions of distinct colours must not grow this without bound
+            if (Style._normalizedColors.size > 10000) Style._normalizedColors.clear()
+            Style._normalizedColors.set(c, n)
+        }
+        return n
+    }
+
+    /**
+     * Show only the cells drawn in some colours: what hovering a legend swatch does.
+     * The map has to be redrawn for it to show (Legend.highlight does).
+     * @param {Array.<string>|null|undefined} colors The colours to show, or null to show everything again
+     * @returns {this} */
+    setHighlight(colors) {
+        this.highlightColors = colors && colors.length ? colors.map(Style.normalizeColor) : null
+        return this
+    }
+
+    /**
+     * Whether cells drawn in a colour are shown: always, unless a legend swatch is hovered and it is another colour.
+     * @param {string} c
+     * @returns {boolean} */
+    isHighlighted(c) {
+        return !this.highlightColors || this.highlightColors.includes(Style.normalizeColor(c))
     }
 
     /**
@@ -78,6 +121,8 @@ export class Style extends Drawable {
      * @param {object} opts
      * @returns {this} */
     updateLegends(opts) {
+        // the legend being hovered must keep its elements, or it would lose the mouse
+        if (this.highlightColors) return this
         Style.updateLegendsRecursive(this.legends, opts)
         return this
     }
@@ -96,3 +141,6 @@ export class Style extends Drawable {
         return this
     }
 }
+
+/** @type {Map<string,string>} */
+Style._normalizedColors = new Map()

@@ -15,6 +15,7 @@ export class SizeLegend extends Legend {
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
+        this.setType('size')
         opts = opts || {}
 
         /** A function returning the text label, from the view scale and list of cells, resolution and zoom
@@ -62,7 +63,7 @@ export class SizeLegend extends Legend {
         //format label, if specified and possible
         if (this.labelFormat && !isNaN(+label)) label = this.labelFormat(label)
 
-        const d = this.div.append('div')
+        const d = this.div.append('div').classed('gridviz-legend-category', true)
         //to enable vertical centering
         //.style("position", "relative")
 
@@ -127,9 +128,10 @@ export class SizeLegend extends Legend {
 
         //label
         d.append('div')
+            .classed('gridviz-legend-label', true)
             .style('display', 'inline')
             .style('padding-left', '5px')
-            .style('font-size', this.labelFontSize)
+            .style('font-size', this.labelFontSizeCSS())
             .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

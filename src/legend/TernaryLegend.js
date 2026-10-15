@@ -28,6 +28,7 @@ export class TernaryLegend extends Legend {
         this.rightText = opts.rightText || 'Category 2'
 
         this.centerCoefficient = opts.centerCoefficient || this.classifier.centerCoefficient
+        this.setType('ternary')
     }
 
     /**
@@ -51,6 +52,7 @@ export class TernaryLegend extends Legend {
 
         const padding = 2
         const fontSize = 12
+        const legend = this
 
         //make svg element
         const svg = this.div
@@ -62,6 +64,7 @@ export class TernaryLegend extends Legend {
         svg.append('text')
             .attr('x', w / 2)
             .attr('y', padding + fontSize)
+            .classed('gridviz-legend-label', true)
             .text(this.topText)
             .attr('font-size', fontSize)
             .attr('text-anchor', 'middle')
@@ -69,6 +72,7 @@ export class TernaryLegend extends Legend {
         svg.append('text')
             .attr('x', 0)
             .attr('y', 3 * padding + 2 * fontSize + h)
+            .classed('gridviz-legend-label', true)
             .text(this.leftText)
             .attr('font-size', fontSize)
             .attr('text-anchor', 'start')
@@ -76,6 +80,7 @@ export class TernaryLegend extends Legend {
         svg.append('text')
             .attr('x', w)
             .attr('y', 3 * padding + 2 * fontSize + h)
+            .classed('gridviz-legend-label', true)
             .text(this.rightText)
             .attr('font-size', fontSize)
             .attr('text-anchor', 'end')
@@ -96,12 +101,16 @@ export class TernaryLegend extends Legend {
         const setAttributes = (elt, color, text) => {
             //elt.raise();
             elt.attr('fill', color)
+                .classed('gridviz-legend-swatch', true)
                 //.attr("stroke", colorOver)
                 //.attr("stroke-width", 0)
                 //.attr("stroke-linejoin", "round")
+                .style('cursor', this.interactive ? 'pointer' : null)
                 .on('mouseover', function (e) {
                     /*this.parentNode.appendChild(this); select(this).attr("stroke-width", selectionStrokeWidth);*/
                     select(this).attr('fill', selectionColor)
+                    // show only the cells of this class on the map
+                    legend.highlight([color])
                     if (!tt || !text) return
                     tt.html(text)
                     tt.setPosition(e)
@@ -110,6 +119,7 @@ export class TernaryLegend extends Legend {
                 .on('mouseout', function () {
                     /*select(this).attr("stroke-width", 0);*/
                     select(this).attr('fill', color)
+                    legend.highlight(null)
                     if (tt) tt.hide()
                 })
             if (tt && text)

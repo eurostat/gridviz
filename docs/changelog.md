@@ -38,6 +38,9 @@
 -   Many changes in legends.
 -   Creation of examples for all use cases.
 -   Segment width legend was merged with size legend. Set shape property to "line".
+-   New `labelsAsHTML` legend option (title and category labels as HTML, off by default) and `onLegendUpdate` map callback (called with the legend container after each draw).
+-   Legends can be styled from a stylesheet: CSS classes on the legends and their parts, `--gridviz-legend-*` CSS variables for the fonts and padding, a `className` option, and `width: 'fill'` to fit the legend to its container.
+-   Interactive legends: hovering a swatch of a color discrete, color category or ternary legend shows only the matching cells on the map (`interactive: false` to turn it off).
 
 ### Modules
 

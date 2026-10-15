@@ -87,6 +87,13 @@ export class Map {
             ? select(opts.legendContainer) // Wrap the provided HTML node in a D3 selection
             : null
         this._legendProvidedByUser = !!opts.legendContainer
+
+        /**
+         * Called with the legend container (an HTML element) each time the map has drawn and its legends
+         * are in the container, for a host that needs to adjust them (fit their width, restyle...).
+         * It can also be set after the map is created.
+         * @type {function(HTMLElement):void|undefined} */
+        this.onLegendUpdate = opts.onLegendUpdate
         if (!this.legend) this.initialiseLegend()
 
         //tooltip
@@ -232,8 +239,9 @@ export class Map {
         // a destroyed map can still be asked to redraw by a dataset it shared (see destroy)
         if (this._destroyed) return this
 
-        //remove legend elements
-        if (this.legend) this.legend.selectAll('*').remove()
+        //remove legend elements: the legends themselves only, not what is inside them
+        //(a legend keeps its content while one of its swatches is hovered, see Style.updateLegends)
+        if (this.legend) this.legend.selectAll(':scope > *').remove()
 
         //clear
         this.geoCanvas.initCanvasTransform()
@@ -276,6 +284,9 @@ export class Map {
         this.canvasSave = null
         // the canvas holds no focus rectangle any more
         this._focusedCell = undefined
+
+        // the legends are in the container now
+        if (this.onLegendUpdate && this.legend) this.onLegendUpdate(this.legend.node())
 
         return this
     }

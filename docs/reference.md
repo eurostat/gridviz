@@ -589,6 +589,23 @@ new gridviz.SizeLegend({
 }).style('padding', '0px 5px')
 ```
 
+### Legend options for hosts
+
+-   `labelsAsHTML: true` on a legend makes its title and, for _ColorCategoryLegend_, its labels HTML instead of plain text, to italicise a word for example. It is off by default, and the text is not escaped, so only use it for text you trust.
+-   `onLegendUpdate`, a function given to the _Map_ (or set on it afterwards), is called with the legend container each time the map has been drawn and its legends are in the container, for a host that adjusts them. Together with the `legendContainer` option, it lets an application render the legends straight into its own panel.
+
+### Styling legends from a stylesheet
+
+-   **CSS classes.** Every legend has the class `gridviz-legend` and one for its type (`gridviz-legend--discrete`, `--color`, `--category`, `--ternary`, `--size`, `--orientation`). The parts have `gridviz-legend-title`, `-label`, `-swatch`, `-tick` and, for a row of a category, size or orientation legend, `-category`. A swatch being hovered also has `gridviz-legend-swatch--active` (a category row `gridviz-legend-category--active`). Add your own class to a legend with the `className` option, for example to style one legend, like a "not available" entry, differently.
+-   **CSS variables.** The font, its sizes and the padding are CSS variables with the usual values as fallback, so a page can change them without `!important`: `--gridviz-legend-font-family`, `--gridviz-legend-title-font-size`, `--gridviz-legend-title-font-weight`, `--gridviz-legend-label-font-size`, `--gridviz-legend-padding`. An option given to the legend (`labelFontSize`, `padding`...) still wins.
+-   **Width.** `width: 'fill'` on a _ColorLegend_ or a _ColorDiscreteLegend_ draws it at the width of the element the legends are in (the map's `legendContainer`), less its padding, each time the legend is drawn. A number of pixels is used as before.
+
+### Interactive legends
+
+Hovering a swatch of a _ColorDiscreteLegend_, _ColorCategoryLegend_ or _TernaryLegend_ shows only the cells drawn in that colour on the map, and hovering out shows them all again. This works for the styles that draw cells in a colour per class: _ShapeColorSizeStyle_ and _SquareColorCategoryWebGLStyle_. It matches the colour the style draws with against the colour of the swatch, so the two should be the same colour. Set `interactive: false` on a legend to turn it off.
+
+A custom style can take part too: skip the cells for which `this.isHighlighted(color)` is false. Custom legends can call `this.bindHover(selection, color)` on each swatch.
+
 ### Color legend
 
 ![](img/legends/color_legend.png)

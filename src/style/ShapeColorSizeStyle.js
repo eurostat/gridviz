@@ -45,6 +45,9 @@ export class ShapeColorSizeStyle extends Style {
 
         const r2 = resolution * 0.5
 
+        // the legend swatch hovered, if any: only the cells of its colour are drawn
+        const highlight = this.highlightColors
+
         // Precompute if color, size, and shape are functions, for efficiency
         const isColorFunction = typeof this.color === 'function'
         const isSizeFunction = typeof this.size === 'function'
@@ -64,6 +67,7 @@ export class ShapeColorSizeStyle extends Style {
             //@ts-ignore
             const col = colorFunction ? colorFunction(c, resolution, z, viewScale) : defaultColor
             if (!col || col === 'none') continue
+            if (highlight && !this.isHighlighted(col)) continue
 
             // Determine size
             //@ts-ignore

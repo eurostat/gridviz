@@ -68,6 +68,9 @@ export class GridLayer extends Layer {
             if (this.blendOperation) ctx.globalCompositeOperation = this.blendOperation(z)
         }
 
+        // tell the legends where they are drawn, so that they can fit it (width:'fill')
+        if (legend) for (const s of this.styles) GridLayer.setLegendContainer(legend.node(), s.legends, s['styles'])
+
         //draw cells, style by style
         for (const s of this.styles) {
             //check if style is visible
@@ -102,14 +105,14 @@ export class GridLayer extends Layer {
             for (const s of this.styles) {
                 //check if style is visible
                 if (s.visible && !s.visible(z)) continue
-                GridLayer.addLegends(legend, s.legends)
+                GridLayer.addLegends(legend, s.legends, s, geoCanvas)
 
                 //case for styles of styles, like kernel smoothing
                 //TODO do better
                 if (s['styles']) {
                     for (const s2 of s['styles']) {
                         if (s2.visible && !s2.visible(z)) continue
-                        GridLayer.addLegends(legend, s2.legends)
+                        GridLayer.addLegends(legend, s2.legends, s2, geoCanvas)
                     }
                 }
             }
@@ -117,9 +120,25 @@ export class GridLayer extends Layer {
     }
 
     /** @private */
-    static addLegends(legendComp, lg) {
-        if (Array.isArray(lg)) for (const lg_ of lg) this.addLegends(legendComp, lg_)
-        else legendComp.node().append(lg.div.node())
+    static setLegendContainer(container, legends, subStyles) {
+        // legends can be nested in arrays, like in Style.updateLegendsRecursive
+        const set = (lg) => {
+            if (Array.isArray(lg)) lg.forEach(set)
+            else if (lg) lg.container = container
+        }
+        set(legends)
+        for (const s2 of subStyles || []) GridLayer.setLegendContainer(container, s2.legends, undefined)
+    }
+
+    /** @private */
+    static addLegends(legendComp, lg, style, geoCanvas) {
+        if (Array.isArray(lg)) for (const lg_ of lg) this.addLegends(legendComp, lg_, style, geoCanvas)
+        else {
+            // so that hovering a swatch can highlight the cells of the style on the map
+            lg.style_ = style
+            lg.redraw = () => (geoCanvas.redraw ? geoCanvas.redraw() : undefined)
+            legendComp.node().append(lg.div.node())
+        }
     }
 
     /**

@@ -86,6 +86,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
         this.y = undefined
         this.z = undefined
         this.cellsNb = undefined
+        /** The highlight (see Style.setHighlight) the vertices were bound with @private */
+        this.highlightKey = ''
     }
 
     /**
@@ -149,6 +151,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
             nb = cells.length
         const verticesBuffer = new Float32Array(2 * nb)
         const iBuffer = new Float32Array(nb)
+        // categories shown while a legend swatch is hovered: those drawn in the colour of the swatch
+        const shown = this.highlightColors ? this.colors.map((c) => this.isHighlighted(c)) : null
         let n = 0
         for (let i = 0; i < nb; i++) {
             c = cells[i]
@@ -162,6 +166,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
                 console.log('Unexpected category index: ' + cat + ' ' + i_)
                 continue
             }
+            if (shown && !shown[+i_]) continue
             verticesBuffer[2 * n] = c.x + r2
             verticesBuffer[2 * n + 1] = c.y + r2
             iBuffer[n] = +i_
@@ -228,7 +233,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
         // x/y/z and cell count alone. The upload is also needed when the shared buffers
         // hold another style's data (bufferOwner), or the context is new to this style
         // (e.g. replaced after being lost).
-        const contentChanged = this.mapContentChanged(geoCanvas.view, cells.length)
+        const highlightKey = this.highlightColors ? this.highlightColors.join('|') : ''
+        const highlightChanged = highlightKey !== this.highlightKey
+        this.highlightKey = highlightKey
+        const contentChanged = this.mapContentChanged(geoCanvas.view, cells.length) || highlightChanged
         if (contentChanged || contextChanged || bufferOwner(gl, POSITION_BUFFER) !== this)
             this.pointsNb = this.bindVertices(cells, resolution, z, viewScale)
         this.bindAttributes()
