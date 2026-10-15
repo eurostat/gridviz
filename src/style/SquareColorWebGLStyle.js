@@ -82,7 +82,11 @@ export class SquareColorWebGLStyle extends Style {
 
         //the shared webgl canvas (one context for all styles, instead of a new one per draw)
         //for opacity control, see: https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html
-        const cvWGL = getSharedWebGLCanvas(geoCanvas.w, geoCanvas.h, this.opacity != undefined ? { premultipliedAlpha: false } : undefined)
+        const cvWGL = getSharedWebGLCanvas(
+            geoCanvas.w,
+            geoCanvas.h,
+            this.opacity != undefined ? { premultipliedAlpha: false } : undefined
+        )
         if (!cvWGL) {
             console.error('No webGL')
             return

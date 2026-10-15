@@ -82,7 +82,11 @@ export function getProgram(gl, vertexSource, fragmentSource) {
     const key = vertexSource + '\u0000' + fragmentSource
     let program = programs.get(key)
     if (!program) {
-        program = initShaderProgram(gl, createShader(gl, gl.VERTEX_SHADER, vertexSource), createShader(gl, gl.FRAGMENT_SHADER, fragmentSource))
+        program = initShaderProgram(
+            gl,
+            createShader(gl, gl.VERTEX_SHADER, vertexSource),
+            createShader(gl, gl.FRAGMENT_SHADER, fragmentSource)
+        )
         programs.set(key, program)
     }
     return program

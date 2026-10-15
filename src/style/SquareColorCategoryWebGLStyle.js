@@ -229,11 +229,16 @@ export class SquareColorCategoryWebGLStyle extends Style {
         // hold another style's data (bufferOwner), or the context is new to this style
         // (e.g. replaced after being lost).
         const contentChanged = this.mapContentChanged(geoCanvas.view, cells.length)
-        if (contentChanged || contextChanged || bufferOwner(gl, POSITION_BUFFER) !== this) this.pointsNb = this.bindVertices(cells, resolution, z, viewScale)
+        if (contentChanged || contextChanged || bufferOwner(gl, POSITION_BUFFER) !== this)
+            this.pointsNb = this.bindVertices(cells, resolution, z, viewScale)
         this.bindAttributes()
 
         //transformation
-        gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
+        gl.uniformMatrix3fv(
+            gl.getUniformLocation(this.program, 'mat'),
+            false,
+            new Float32Array(geoCanvas.getWebGLTransform())
+        )
 
         // Clear the color buffer bit
         gl.clearColor(0, 0, 0, 0)

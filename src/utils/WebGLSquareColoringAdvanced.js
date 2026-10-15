@@ -4,11 +4,6 @@
 import { getProgram, getBuffer } from './webGLUtils.js'
 import { color } from 'd3-color'
 
-/**
- * Everything to easily draw colored squares with webGL.
- * All the same size, but different fill color.
- * The color interpolation is computed in the fragment shader program, by the GPU, thus it is less flexible but faster.
- */
 const VERTEX_SHADER = `
         attribute vec2 pos;
         uniform float sizePix;
@@ -24,6 +19,11 @@ const VERTEX_SHADER = `
         }
       `
 
+/**
+ * Everything to easily draw colored squares with webGL.
+ * All the same size, but different fill color.
+ * The color interpolation is computed in the fragment shader program, by the GPU, thus it is less flexible but faster.
+ */
 export class WebGLSquareColoringAdvanced {
     //see:
     //https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
@@ -45,8 +45,6 @@ export class WebGLSquareColoringAdvanced {
         //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         //gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-        const vShader = VERTEX_SHADER
 
         //prepare fragment shader code
         //declare the uniform and other variables
@@ -156,7 +154,7 @@ export class WebGLSquareColoringAdvanced {
 
         // compiled once per context and fragment source (colours, stretching), then reused
         /** @type {WebGLProgram} */
-        this.program = getProgram(gl, vShader, fshString)
+        this.program = getProgram(gl, VERTEX_SHADER, fshString)
         gl.useProgram(this.program)
 
         //set uniforms

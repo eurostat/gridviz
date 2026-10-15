@@ -4,10 +4,6 @@
 import { getProgram, getBuffer } from './webGLUtils.js'
 import { color } from 'd3-color'
 
-/**
- * Everything to easily draw colored squares with webGL.
- * All the same size, but different fill color.
- */
 const VERTEX_SHADER = `
             attribute vec2 pos;
             uniform float sizePix;
@@ -30,6 +26,10 @@ const FRAGMENT_SHADER = `
                 gl_FragColor = vColor_;
             }`
 
+/**
+ * Everything to easily draw colored squares with webGL.
+ * All the same size, but different fill color.
+ */
 export class WebGLSquareColoring {
     /**
      *

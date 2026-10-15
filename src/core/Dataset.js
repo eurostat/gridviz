@@ -167,7 +167,8 @@ export class Dataset {
      * @protected
      */
     cellIndex(cells, r) {
-        if (this._index && this._indexCells === cells && this._indexLength === cells.length && this._indexR === r) return this._index
+        if (this._index && this._indexCells === cells && this._indexLength === cells.length && this._indexR === r)
+            return this._index
         let index = null
         if (cells.length && r > 0) {
             const ox = +cells[0].x
