@@ -1,8 +1,23 @@
 //@ts-check
 'use strict'
 
-import { initShaderProgram, createShader } from './webGLUtils.js'
+import { getProgram, getBuffer } from './webGLUtils.js'
 import { color } from 'd3-color'
+
+const VERTEX_SHADER = `
+        attribute vec2 pos;
+        uniform float sizePix;
+        uniform mat3 mat;
+
+        attribute float t;
+        varying float vt;
+
+        void main() {
+          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+          gl_PointSize = sizePix;
+          vt = t;
+        }
+      `
 
 /**
  * Everything to easily draw colored squares with webGL.
@@ -30,26 +45,6 @@ export class WebGLSquareColoringAdvanced {
         //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         //gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-        /** @type {WebGLShader} */
-        const vShader = createShader(
-            gl,
-            gl.VERTEX_SHADER,
-            `
-        attribute vec2 pos;
-        uniform float sizePix;
-        uniform mat3 mat;
-
-        attribute float t;
-        varying float vt;
-
-        void main() {
-          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-          gl_PointSize = sizePix;
-          vt = t;
-        }
-      `
-        )
 
         //prepare fragment shader code
         //declare the uniform and other variables
@@ -157,11 +152,9 @@ export class WebGLSquareColoringAdvanced {
         //let fshString = fshBuff.join("\n")
         //console.log(fshString)
 
-        /** @type {WebGLShader} */
-        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString)
-
+        // compiled once per context and fragment source (colours, stretching), then reused
         /** @type {WebGLProgram} */
-        this.program = initShaderProgram(gl, vShader, fShader)
+        this.program = getProgram(gl, VERTEX_SHADER, fshString)
         gl.useProgram(this.program)
 
         //set uniforms
@@ -191,9 +184,11 @@ export class WebGLSquareColoringAdvanced {
         const gl = this.gl
         const program = this.program
 
-        //vertice data
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW)
+        gl.useProgram(program)
+
+        //vertice data, in a buffer reused from draw to draw
+        gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, 'WebGLSquareColoringAdvanced.pos'))
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.DYNAMIC_DRAW)
         const position = gl.getAttribLocation(program, 'pos')
         gl.vertexAttribPointer(
             position,
@@ -206,8 +201,8 @@ export class WebGLSquareColoringAdvanced {
         gl.enableVertexAttribArray(position)
 
         //t data
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tBuffer), gl.STATIC_DRAW)
+        gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, 'WebGLSquareColoringAdvanced.t'))
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tBuffer), gl.DYNAMIC_DRAW)
         const t = gl.getAttribLocation(program, 't')
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(t)
@@ -218,6 +213,7 @@ export class WebGLSquareColoringAdvanced {
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);
         // Clear the color buffer bit
+        gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT)
         // Set the view port
         //gl.viewport(0, 0, cg.w, cg.h);

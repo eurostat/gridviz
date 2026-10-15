@@ -2,8 +2,35 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
-import { initShaderProgram, createShader, makeWebGLCanvas } from '../utils/webGLUtils.js'
+import { getSharedWebGLCanvas, getProgram, getBuffer, bufferOwner } from '../utils/webGLUtils.js'
 import { color } from 'd3-color'
+
+const VERTEX_SHADER = `
+        attribute vec2 pos;
+        uniform float sizePix;
+        uniform mat3 mat;
+        attribute float i;
+        varying float vi;
+        void main() {
+          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+          gl_PointSize = sizePix;
+          vi = i;
+        }`
+
+const FRAGMENT_SHADER = `
+        precision highp float;
+        varying float vi;
+        uniform sampler2D colorLUT;
+        uniform float lutSize;
+        void main(void) {
+            float idx = floor(vi + 0.5);
+            float u = (idx + 0.5) / lutSize;
+            gl_FragColor = texture2D(colorLUT, vec2(u, 0.5));
+        }`
+
+// names of the buffers this style fills in the shared context (getBuffer)
+const POSITION_BUFFER = 'SquareColorCategoryWebGLStyle.pos'
+const INDEX_BUFFER = 'SquareColorCategoryWebGLStyle.i'
 
 /**
  * Style based on webGL
@@ -45,9 +72,15 @@ export class SquareColorCategoryWebGLStyle extends Style {
          * @type {function(number,number):number} */
         this.size = opts.size // (resolution, z) => ...
 
-        /**  * @type {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext, width:number, height:number }}*/
+        /** The shared WebGL canvas this style last drew into (getSharedWebGLCanvas)
+         * @type {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext, width:number, height:number }}*/
         this.cvWGL = undefined
-        this.programm = undefined
+        /** @type {WebGLRenderingContext|undefined} */
+        this.gl = undefined
+        this.program = undefined
+        this.lutTexture = undefined
+        /** Number of points in the shared buffers, for drawArrays */
+        this.pointsNb = 0
 
         this.x = undefined
         this.y = undefined
@@ -55,88 +88,68 @@ export class SquareColorCategoryWebGLStyle extends Style {
         this.cellsNb = undefined
     }
 
+    /**
+     * Binds this style's program, colour lookup texture and uniforms in the shared WebGL
+     * context (getSharedWebGLCanvas): compiled once per context, so a new style instance
+     * (e.g. a setting change rebuilding the style) costs no new context or program.
+     * @returns {boolean} true when the context is new to this style (its data must be re-uploaded)
+     */
     init(w, h) {
-        this.cvWGL = makeWebGLCanvas(w + '', h + '')
-        if (!this.cvWGL) { console.error('No webGL'); return }
-
+        this.cvWGL = getSharedWebGLCanvas(w, h)
         const gl = this.cvWGL.gl
-
-        //draw
-        const vectorShader = `
-        attribute vec2 pos;
-        uniform float sizePix;
-        uniform mat3 mat;
-        attribute float i;
-        varying float vi;
-        void main() {
-          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-          gl_PointSize = sizePix;
-          vi = i;
-        }`
-        /** @type {WebGLShader} */
-        const vShader = createShader(gl, gl.VERTEX_SHADER, vectorShader)
-
-        const fragmentShader = `
-        precision highp float;
-        varying float vi;
-        uniform sampler2D colorLUT;
-        uniform float lutSize;
-        void main(void) {
-            float idx = floor(vi + 0.5);
-            float u = (idx + 0.5) / lutSize;
-            gl_FragColor = texture2D(colorLUT, vec2(u, 0.5));
-        }`
-        /** @type {WebGLShader} */
-        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShader)
-
-        /** @type {WebGLProgram} */
-        this.program = initShaderProgram(gl, vShader, fShader)
+        const contextChanged = this.gl !== gl
+        if (contextChanged) {
+            this.gl = gl
+            this.program = getProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER)
+            this.lutTexture = undefined
+        }
         gl.useProgram(this.program)
+        this.bindColors()
+        return contextChanged
     }
 
     bindColors() {
         const gl = this.cvWGL.gl
-        const lutSize = this.colors.length;
-        const lutData = new Uint8Array(lutSize * 4); // RGBA for each entry
+        const lutSize = this.colors.length
 
-        // Fill lutData with your color values (e.g., rainbow, grayscale, etc.)
-        for (let i = 0; i < lutSize; i++) {
-            const c = color(this.colors[i])
-            lutData[i * 4] = +c.r;     // R
-            lutData[i * 4 + 1] = c.g; // G
-            lutData[i * 4 + 2] = c.b; // B
-            lutData[i * 4 + 3] = c?.opacity * 255; // A
+        // created once per style and context
+        if (!this.lutTexture) {
+            const lutData = new Uint8Array(lutSize * 4) // RGBA for each entry
+            for (let i = 0; i < lutSize; i++) {
+                const c = color(this.colors[i])
+                lutData[i * 4] = +c.r
+                lutData[i * 4 + 1] = c.g
+                lutData[i * 4 + 2] = c.b
+                lutData[i * 4 + 3] = c?.opacity * 255
+            }
+            this.lutTexture = gl.createTexture()
+            gl.bindTexture(gl.TEXTURE_2D, this.lutTexture)
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, lutSize, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, lutData)
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
         }
 
-        // Create and bind texture
-        const lutTexture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, lutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, lutSize, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, lutData);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-        // Get uniform locations
-        const uColorLUT = gl.getUniformLocation(this.program, 'colorLUT');
-        const uLutSize = gl.getUniformLocation(this.program, 'lutSize');
-
-        // Set uniform values
-        gl.uniform1i(uColorLUT, 0); // Texture unit 0
-        gl.uniform1f(uLutSize, lutSize);
-
-        // Bind the texture to texture unit 0
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, lutTexture);
+        gl.uniform1i(gl.getUniformLocation(this.program, 'colorLUT'), 0) // Texture unit 0
+        gl.uniform1f(gl.getUniformLocation(this.program, 'lutSize'), lutSize)
+        gl.activeTexture(gl.TEXTURE0)
+        gl.bindTexture(gl.TEXTURE_2D, this.lutTexture)
     }
 
+    /**
+     * Fills the shared position and colour index buffers with the cells to draw.
+     * @returns {number} the number of points uploaded (cells without a category are left out)
+     */
     bindVertices(cells, resolution, z, viewScale) {
         const gl = this.cvWGL.gl
         //add vertice and fragment data
         const r2 = resolution / 2
-        let c, nb = cells.length
-        const verticesBuffer = []
-        const iBuffer = []
+        let c,
+            nb = cells.length
+        const verticesBuffer = new Float32Array(2 * nb)
+        const iBuffer = new Float32Array(nb)
+        let n = 0
         for (let i = 0; i < nb; i++) {
             c = cells[i]
             const cat = this.code(c, resolution, z, viewScale)
@@ -149,33 +162,32 @@ export class SquareColorCategoryWebGLStyle extends Style {
                 console.log('Unexpected category index: ' + cat + ' ' + i_)
                 continue
             }
-            verticesBuffer.push(c.x + r2, c.y + r2)
-            iBuffer.push(+i_)
+            verticesBuffer[2 * n] = c.x + r2
+            verticesBuffer[2 * n + 1] = c.y + r2
+            iBuffer[n] = +i_
+            n++
         }
 
-        //bind vertice data
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW)
-        const position = gl.getAttribLocation(this.program, 'pos')
-        gl.vertexAttribPointer(
-            position,
-            2, //numComponents
-            gl.FLOAT, //type
-            false, //normalise
-            0, //stride
-            0 //offset
-        )
-        gl.enableVertexAttribArray(position)
+        gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, POSITION_BUFFER))
+        gl.bufferData(gl.ARRAY_BUFFER, verticesBuffer.subarray(0, 2 * n), gl.DYNAMIC_DRAW)
+        gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, INDEX_BUFFER))
+        gl.bufferData(gl.ARRAY_BUFFER, iBuffer.subarray(0, n), gl.DYNAMIC_DRAW)
+        bufferOwner(gl, POSITION_BUFFER, this)
+        return n
+    }
 
-        //i data
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(iBuffer), gl.STATIC_DRAW)
+    /** Points the program's attributes at the shared buffers (whatever another style left bound). */
+    bindAttributes() {
+        const gl = this.cvWGL.gl
+        const position = gl.getAttribLocation(this.program, 'pos')
+        gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, POSITION_BUFFER))
+        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
+        gl.enableVertexAttribArray(position)
         const i = gl.getAttribLocation(this.program, 'i')
+        gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, INDEX_BUFFER))
         gl.vertexAttribPointer(i, 1, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(i)
     }
-
-
 
     // check if the vertices have to be bound again
     mapContentChanged(v, cellsNb) {
@@ -203,13 +215,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        //create canvas and webgl renderer
-        let contextRecreated = false
-        if (!this.cvWGL || geoCanvas.w != this.cvWGL.width || geoCanvas.h != this.cvWGL.height) {
-            contextRecreated = true
-            this.init(geoCanvas.w, geoCanvas.h)
-            this.bindColors()
-        }
+        //bind this style's program in the shared WebGL context
+        const contextChanged = this.init(geoCanvas.w, geoCanvas.h)
         const gl = this.cvWGL.gl
         const canvas = this.cvWGL.canvas
 
@@ -217,32 +224,29 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const sizePix = this.size ? this.size(resolution, z) / z : resolution / z + 0.2
         gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
 
-        //
-        // mapContentChanged() is a cheap proxy for "did the content change" based
-        // on view x/y/z and cell count alone - it has no idea the WebGL context
-        // itself was just thrown away and recreated a few lines up (geoCanvas.w/h
-        // changing, e.g. from a browser/devtools resize, recreates cvWGL with a
-        // fresh, empty vertex buffer). A resize alone often leaves the geographic
-        // view and cell count identical to the previous draw, so without forcing
-        // a rebind here, mapContentChanged reports "unchanged" and the rebind gets
-        // skipped - leaving the new context's vertex buffer never populated and
-        // gl.drawArrays() drawing nothing, silently (confirmed via a resize-storm
-        // test: reinit-without-rebind happened on 5 of 9 context recreations).
-        const shouldRebind = this.mapContentChanged(geoCanvas.view, cells.length) || contextRecreated
-        if (shouldRebind)
-            //bind vertices
-            this.bindVertices(cells, resolution, z, viewScale)
-            //transformation
-            gl.uniformMatrix3fv(gl.getUniformLocation(this.program, 'mat'), false, new Float32Array(geoCanvas.getWebGLTransform()))
+        // mapContentChanged() is a cheap proxy for "did the content change", based on view
+        // x/y/z and cell count alone. The upload is also needed when the shared buffers
+        // hold another style's data (bufferOwner), or the context is new to this style
+        // (e.g. replaced after being lost).
+        const contentChanged = this.mapContentChanged(geoCanvas.view, cells.length)
+        if (contentChanged || contextChanged || bufferOwner(gl, POSITION_BUFFER) !== this)
+            this.pointsNb = this.bindVertices(cells, resolution, z, viewScale)
+        this.bindAttributes()
 
-        // Enable the depth test
-        //gl.enable(gl.DEPTH_TEST);
+        //transformation
+        gl.uniformMatrix3fv(
+            gl.getUniformLocation(this.program, 'mat'),
+            false,
+            new Float32Array(geoCanvas.getWebGLTransform())
+        )
+
         // Clear the color buffer bit
+        gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT)
-        // Set the view port
-        //gl.viewport(0, 0, cg.w, cg.h);
 
-        gl.drawArrays(gl.POINTS, 0, cells.length)
+        // only the points actually uploaded: cells without a category are left out, and
+        // drawing past the end of the buffer is a WebGL error that draws nothing at all
+        gl.drawArrays(gl.POINTS, 0, this.pointsNb)
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
