@@ -127,6 +127,9 @@ export class Legend {
     highlight(colors) {
         if (!this.interactive || !this.style_) return
         const before = this.style_.highlightColors
+        // flag the legend while hovered, so that the map's redraw leaves its element in place:
+        // a hovered element that is detached and appended again never gets its mouseleave
+        if (this.div) this.div.attr('data-gridviz-hovered', colors && colors.length ? '' : null)
         this.style_.setHighlight(colors)
         // nothing to redraw when the highlight didn't change (mouse moving between a swatch's parts)
         if (before === null && this.style_.highlightColors === null) return

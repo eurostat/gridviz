@@ -137,7 +137,8 @@ export class GridLayer extends Layer {
             // so that hovering a swatch can highlight the cells of the style on the map
             lg.style_ = style
             lg.redraw = () => (geoCanvas.redraw ? geoCanvas.redraw() : undefined)
-            legendComp.node().append(lg.div.node())
+            // a hovered legend is still in place (see Map.redrawNow): moving it would lose its mouseleave
+            if (lg.div.node().parentNode !== legendComp.node()) legendComp.node().append(lg.div.node())
         }
     }
 
