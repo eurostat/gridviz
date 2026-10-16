@@ -17,9 +17,32 @@ import { scaleQuantile } from 'd3-scale'
  */
 
 /**
+ * The inverse of a stretching function, within [0,1]: its own invert function if it has one,
+ * else found by bisection (a stretching is increasing).
+ * @param {function(number):number} stretching
+ * @param {number} t
+ * @returns {number}
+ */
+const invertStretching = (stretching, t) => {
+    // @ts-ignore
+    if (stretching.invert) return stretching.invert(t)
+    let lo = 0,
+        hi = 1
+    for (let i = 0; i < 50; i++) {
+        const mid = (lo + hi) / 2
+        if (stretching(mid) < t) lo = mid
+        else hi = mid
+    }
+    return (lo + hi) / 2
+}
+
+/**
  * Generic function for view scale - continuous or discrete
  *
  * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number, classNumber?:number}} opts
+ * The scale has an invert(t) function, like the one of viewScaleColor: it returns the value of the domain
+ * for a t within [0,1] (what a legend needs to write its labels).
+ *
  * @returns {function(Array.<import("../core/Dataset").Cell>):Scale}
  */
 export const viewScale = (opts) => {
@@ -38,7 +61,7 @@ export const viewScale = (opts) => {
             domainMin = domain[0]
         const rangeSize = range[1] - range[0],
             rangeMin = range[0]
-        return (t) => {
+        const scale = (t) => {
             //scale to [0,1]
             t = (t - domainMin) / domainSize
             //stretch
@@ -48,6 +71,12 @@ export const viewScale = (opts) => {
             //scale to range
             return rangeMin + t * rangeSize
         }
+        //the domain value for a position t within [0,1], as the invert of viewScaleColor
+        scale.invert = (t) => {
+            if (stretching) t = invertStretching(stretching, t)
+            return domainMin + t * domainSize
+        }
+        return scale
     }
 }
 

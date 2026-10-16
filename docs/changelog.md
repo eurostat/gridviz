@@ -32,6 +32,8 @@
 -   Stretching function structure change and renaming. See examples.
 -   Add _layers\_()_ method to _Map_ class, to get or set map layers.
 -   Add _styles\_()_ method to _GridLayer_ class, to get or set layer styles.
+-   _viewScale_ scales have an _invert(t)_ function, like the ones of _viewScaleColor_, so that a _ColorLegend_ can write its labels from them (#165).
+-   Zooming while the mouse moves no longer makes the map jolt when the zoom ends: the picture shown during the zoom is placed from the views it was taken at and the current one, instead of from a zoom anchor that is supposed to stay put (#161).
 
 ### Legends
 

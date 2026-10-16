@@ -114,6 +114,7 @@ export class GeoCanvas {
                     this.canvasSave.dx = 0
                     this.canvasSave.dy = 0
                     this.canvasSave.f = 1
+                    this.canvasSave.view = { x: this.view.x, y: this.view.y, z: this.view.z }
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
                 .on('end', (e) => {
@@ -179,7 +180,7 @@ export class GeoCanvas {
         this.zoomExtent = opts.zoomExtent || [0, Infinity]
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
-         *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
+         *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number,view?:{x:number,y:number,z:number}}} */
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
     }
 
@@ -200,21 +201,7 @@ export class GeoCanvas {
         this.updateExtentGeo()
 
         if (this.canvasSave.c) {
-            const scale = 1 / this.view.z
-
-            // Update saved canvas offset
-            this.canvasSave.dx -= dxGeo * scale
-            this.canvasSave.dy += dyGeo * scale
-
-            // clear canvas
-            this.clear(this.backgroundColor)
-
-            // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
-            //this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
-            this.offscreenCtx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
-
-            // Render the offscreen canvas to the visible context
-            this.ctx.drawImage(this.offscreenCtx.canvas, 0, 0)
+            this._drawSnapshot()
         } else {
             console.log('no canvas save')
         }
@@ -258,29 +245,38 @@ export class GeoCanvas {
         this._drawZoomFrame(f, xGeo, yGeo)
     }
 
-    _drawZoomFrame(f, xGeo, yGeo) {
+    _drawZoomFrame() {
         // zoom in on the current canvas state
-        if (this.canvasSave.c) {
-            this.clear(this.backgroundColor)
-            this.canvasSave.f /= f
-            this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
-            this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
-            this.clear(this.backgroundColor)
-            this.offscreenCtx.drawImage(
-                this.canvasSave.c,
-                this.canvasSave.dx,
-                this.canvasSave.dy,
-                this.canvasSave.f * this.canvasSave.c.width,
-                this.canvasSave.f * this.canvasSave.c.height
-            )
-            this.ctx.drawImage(
-                this.offscreenCanvas, // Use offscreen canvas as the source
-                0,
-                0, // Position the offscreen canvas at the top-left corner of the main canvas
-                this.canvas.width, // The width of the visible canvas
-                this.canvas.height // The height of the visible canvas
-            )
-        }
+        if (this.canvasSave.c) this._drawSnapshot()
+    }
+
+    /**
+     * Draw the canvas saved when the pan/zoom started where it belongs in the current view.
+     * It is placed from the two views (the one it was taken at and the current one) rather than
+     * accumulated from each step: the zoom anchor follows the mouse, and an accumulation that
+     * assumes it stays put leaves the picture away from where the final redraw puts it.
+     * @private
+     */
+    _drawSnapshot() {
+        const sv = this.canvasSave.view
+        const f = sv ? sv.z / this.view.z : 1
+        // where the saved canvas' top left corner is in the current view
+        const dx = sv ? (sv.x - (this.w * 0.5) * sv.z - this.view.x) / this.view.z + this.w * 0.5 : 0
+        const dy = sv ? this.h * 0.5 - (sv.y + (this.h * 0.5) * sv.z - this.view.y) / this.view.z : 0
+        this.canvasSave.f = f
+        this.canvasSave.dx = dx
+        this.canvasSave.dy = dy
+
+        this.clear(this.backgroundColor)
+        // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98 : drawn on the offscreen canvas first
+        this.offscreenCtx.drawImage(
+            this.canvasSave.c,
+            dx,
+            dy,
+            f * this.canvasSave.c.width,
+            f * this.canvasSave.c.height
+        )
+        this.ctx.drawImage(this.offscreenCanvas, 0, 0, this.canvas.width, this.canvas.height)
     }
 
     /**
