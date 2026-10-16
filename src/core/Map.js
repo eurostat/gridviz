@@ -245,7 +245,11 @@ export class Map {
         //remove legend elements: the legends themselves only, not what is inside them
         //(a legend keeps its content while one of its swatches is hovered, see Style.updateLegends)
         //except the one being hovered, which would lose its mouseleave (see Legend.highlight)
-        if (this.legend) this.legend.selectAll(':scope > *:not([data-gridviz-hovered])').remove()
+        if (this.legend) {
+            this.legend.selectAll(':scope > *:not([data-gridviz-hovered])').remove()
+            // the legends of this draw are placed one after the other (see GridLayer.addLegends)
+            this.legend.node()._gridvizLegendCursor = null
+        }
 
         //clear
         this.geoCanvas.initCanvasTransform()

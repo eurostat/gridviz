@@ -137,8 +137,16 @@ export class GridLayer extends Layer {
             // so that hovering a swatch can highlight the cells of the style on the map
             lg.style_ = style
             lg.redraw = () => (geoCanvas.redraw ? geoCanvas.redraw() : undefined)
-            // a hovered legend is still in place (see Map.redrawNow): moving it would lose its mouseleave
-            if (lg.div.node().parentNode !== legendComp.node()) legendComp.node().append(lg.div.node())
+            // The legends go in the order they are drawn, after the one placed before them. A hovered legend is
+            // still in the container (see Map.redrawNow) and is left where it is: moving it would lose its mouseleave,
+            // and appending the others after it would put it above the legends that come before it.
+            const container = legendComp.node()
+            const el = lg.div.node()
+            const previous = container._gridvizLegendCursor
+            if (previous) {
+                if (el.previousSibling !== previous) previous.after(el)
+            } else if (container.firstChild !== el) container.prepend(el)
+            container._gridvizLegendCursor = el
         }
     }
 
