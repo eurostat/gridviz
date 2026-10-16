@@ -57,6 +57,7 @@ export class TernaryLegend extends Legend {
         //make svg element
         const svg = this.div
             .append('svg')
+            .classed('gridviz-legend-graphic', true)
             .attr('width', w + selectionStrokeWidth)
             .attr('height', h + 4 * padding + 2 * fontSize)
 
@@ -88,6 +89,7 @@ export class TernaryLegend extends Legend {
         //triangle group
         const g = svg
             .append('g')
+            .classed('gridviz-legend-triangle', true)
             .attr(
                 'transform',
                 'translate(' +
@@ -108,7 +110,7 @@ export class TernaryLegend extends Legend {
                 .style('cursor', this.interactive ? 'pointer' : null)
                 .on('mouseover', function (e) {
                     /*this.parentNode.appendChild(this); select(this).attr("stroke-width", selectionStrokeWidth);*/
-                    select(this).attr('fill', selectionColor)
+                    select(this).classed('gridviz-legend-swatch--active', true).attr('fill', selectionColor)
                     // show only the cells of this class on the map
                     legend.highlight([color])
                     if (!tt || !text) return
@@ -118,7 +120,7 @@ export class TernaryLegend extends Legend {
                 })
                 .on('mouseout', function () {
                     /*select(this).attr("stroke-width", 0);*/
-                    select(this).attr('fill', color)
+                    select(this).classed('gridviz-legend-swatch--active', false).attr('fill', color)
                     legend.highlight(null)
                     if (tt) tt.hide()
                 })

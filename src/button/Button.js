@@ -30,7 +30,8 @@ export class Button {
         }
 
         if (opts.title) this.div.attr('title', opts.title)
-        if (opts.class) this.div.attr('class', opts.class)
+        this.div.classed('gridviz-button', true)
+        if (opts.class) for (const c of String(opts.class).split(/\s+/)) if (c) this.div.classed(c, true)
 
         // add events
         if (opts.onClickFunction) this.div.on('click', opts.onClickFunction)

@@ -71,6 +71,7 @@ export class SizeLegend extends Legend {
         const svg = () =>
             d
                 .append('svg')
+                .classed('gridviz-legend-graphic', true)
                 .attr('width', sizePix + this.strokeWidth + 2)
                 .attr('height', sizePix + this.strokeWidth + 2)
                 .style('', 'inline-block')
@@ -78,6 +79,7 @@ export class SizeLegend extends Legend {
         if (this.shape === 'square') {
             svg()
                 .append('rect')
+                .classed('gridviz-legend-symbol', true)
                 .attr('x', 0)
                 .attr('y', 0)
                 .attr('width', sizePix)
@@ -90,6 +92,7 @@ export class SizeLegend extends Legend {
             const r = (sizePix + this.strokeWidth) * 0.5
             svg()
                 .append('circle')
+                .classed('gridviz-legend-symbol', true)
                 .attr('cx', r + 1)
                 .attr('cy', r + 1)
                 .attr('r', r)
@@ -109,6 +112,7 @@ export class SizeLegend extends Legend {
 
             const svg = d
                 .append('svg')
+                .classed('gridviz-legend-graphic', true)
                 .attr('width', lengthPix)
                 .attr('height', sizePix)
                 .style('', 'inline-block')
@@ -116,6 +120,7 @@ export class SizeLegend extends Legend {
             //TODO orientation
             //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
             svg.append('line')
+                .classed('gridviz-legend-symbol', true)
                 .attr('x1', 0)
                 .attr('y1', sizePix / 2)
                 .attr('x2', lengthPix)

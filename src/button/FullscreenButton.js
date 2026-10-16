@@ -24,10 +24,12 @@ export class FullscreenButton extends Button {
 
     constructor(opts) {
         super(opts)
+        this.div.classed('gridviz-fullscreen-button', true)
 
         // append fullscreen icon to button container
         this.div.node().innerHTML = `
         <svg
+            class="gridviz-fullscreen-icon"
             style="height: 1.2rem; width: 1.2rem; fill:black; margin:0;"
             focusable="false"
             aria-hidden="true"

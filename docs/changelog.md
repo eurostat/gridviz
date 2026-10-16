@@ -40,6 +40,7 @@
 -   Segment width legend was merged with size legend. Set shape property to "line".
 -   New `labelsAsHTML` legend option (title and category labels as HTML, off by default) and `onLegendUpdate` map callback (called with the legend container after each draw).
 -   Legends can be styled from a stylesheet: CSS classes on the legends and their parts, `--gridviz-legend-*` CSS variables for the fonts and padding, a `className` option, and `width: 'fill'` to fit the legend to its container.
+-   CSS classes on the other elements too: `gridviz-map`, `gridviz-canvas`, `gridviz-legends`, `gridviz-tooltip` (also on a tooltip element you give), `gridviz-button` with `gridviz-zoom-buttons` / `gridviz-fullscreen-button`, `gridviz-legend-graphic`, `-symbol`, `-symbol-wrapper`, `-bar` and `-triangle` inside the legends.
 -   Interactive legends: hovering a swatch of a color discrete, color category or ternary legend shows only the matching cells on the map (`interactive: false` to turn it off).
 
 ### Modules

@@ -56,6 +56,7 @@ export class ColorDiscreteLegend extends Legend {
         //make svg element
         const svg = this.div
             .append('svg')
+            .classed('gridviz-legend-graphic', true)
             .attr('width', width)
             .attr('height', this.height + this.tickSize + 2 + 10)
 

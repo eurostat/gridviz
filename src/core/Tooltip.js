@@ -75,6 +75,9 @@ export class Tooltip {
         this.tooltip.style('left', '0')
         this.tooltip.style('top', '0')
 
+        // a tooltip element given by the user gets the class too
+        this.tooltip.classed('gridviz-tooltip', true)
+
         // aria-labels (thanks to wahlatlas)
         this.tooltip.attr('role', 'tooltip').attr('aria-live', 'polite')
     }

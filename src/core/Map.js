@@ -46,6 +46,7 @@ export class Map {
             console.error('Cannot find gridviz container element.')
             return
         }
+        this.container.classList.add('gridviz-map')
 
         //https://css-tricks.com/absolute-positioning-inside-relative-positioning/
         this.container.style.position = 'relative' // container element must have relative positioning
@@ -174,6 +175,7 @@ export class Map {
      */
     initialiseCanvas() {
         const canvas = document.createElement('canvas')
+        canvas.classList.add('gridviz-canvas')
         canvas.setAttribute('width', '' + this.w)
         canvas.setAttribute('height', '' + this.h)
         this.container.appendChild(canvas)
@@ -184,6 +186,7 @@ export class Map {
         this.legend = select(this.container)
             .append('div') // Create a new container
             .attr('id', 'gridviz-legend')
+            .classed('gridviz-legends', true)
             .style('position', 'absolute')
             .style('width', 'auto')
             .style('height', 'auto')

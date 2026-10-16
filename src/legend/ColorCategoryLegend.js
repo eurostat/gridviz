@@ -64,9 +64,11 @@ export class ColorCategoryLegend extends Legend {
                 const h = this.dimension.h || 15
                 const w = this.dimension.w || 20
                 d.append('div')
+                    .classed('gridviz-legend-symbol-wrapper', true)
                     .style('display', 'inline')
 
                     .append('svg')
+                    .classed('gridviz-legend-graphic', true)
                     .attr('width', w + 2 * sw)
                     .attr('height', h + 2 * sw)
 
@@ -83,9 +85,11 @@ export class ColorCategoryLegend extends Legend {
                 const r = this.dimension.r || 8
                 const h = 2 * r + 2 * sw
                 d.append('div')
+                    .classed('gridviz-legend-symbol-wrapper', true)
                     .style('display', 'inline')
 
                     .append('svg')
+                    .classed('gridviz-legend-graphic', true)
                     .attr('width', h)
                     .attr('height', h)
 

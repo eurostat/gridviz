@@ -54,10 +54,10 @@ export class ColorLegend extends Legend {
         const width = this.availableWidth(this.width)
         const svgW = width + 2 * this.margin
         const svgH = this.height + this.margin + this.tickSize + 10
-        const svg = this.div.append('svg').attr('width', svgW).attr('height', svgH)
+        const svg = this.div.append('svg').classed('gridviz-legend-graphic', true).attr('width', svgW).attr('height', svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
-        const g = svg.append('g').attr('transform', 'translate(' + this.margin + ' ' + 0 + ')')
+        const g = svg.append('g').classed('gridviz-legend-bar', true).attr('transform', 'translate(' + this.margin + ' ' + 0 + ')')
 
         //draw color bar
         const w = width,

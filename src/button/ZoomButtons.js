@@ -15,11 +15,12 @@ export class ZoomButtons extends Button {
 
         this.onZoom = opts.onZoom // custom user event handler
         this.delta = opts.delta || 0.2
+        this.div.classed('gridviz-zoom-buttons', true)
 
         // Create zoom in button
         this.zoomInBtn = document.createElement('a')
         this.zoomInBtn.id = 'zoom-in'
-        this.zoomInBtn.className = 'gridviz-zoom-button'
+        this.zoomInBtn.className = 'gridviz-zoom-button gridviz-zoom-button--in'
         this.zoomInBtn.title = 'Zoom in'
         this.zoomInBtn.textContent = '+'
         this.zoomInBtn.addEventListener('click', (e) => {
@@ -35,7 +36,7 @@ export class ZoomButtons extends Button {
         // Create zoom out button
         this.zoomOutBtn = document.createElement('a')
         this.zoomOutBtn.id = 'zoom-out'
-        this.zoomOutBtn.className = 'gridviz-zoom-button'
+        this.zoomOutBtn.className = 'gridviz-zoom-button gridviz-zoom-button--out'
         this.zoomOutBtn.title = 'Zoom out'
         this.zoomOutBtn.textContent = '-'
         this.zoomOutBtn.addEventListener('click', (e) => {

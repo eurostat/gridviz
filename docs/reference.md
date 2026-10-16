@@ -596,9 +596,18 @@ new gridviz.SizeLegend({
 
 ### Styling legends from a stylesheet
 
--   **CSS classes.** Every legend has the class `gridviz-legend` and one for its type (`gridviz-legend--discrete`, `--color`, `--category`, `--ternary`, `--size`, `--orientation`). The parts have `gridviz-legend-title`, `-label`, `-swatch`, `-tick` and, for a row of a category, size or orientation legend, `-category`. A swatch being hovered also has `gridviz-legend-swatch--active` (a category row `gridviz-legend-category--active`). Add your own class to a legend with the `className` option, for example to style one legend, like a "not available" entry, differently.
+-   **CSS classes.** Every legend has the class `gridviz-legend` and one for its type (`gridviz-legend--discrete`, `--color`, `--category`, `--ternary`, `--size`, `--orientation`). The parts have `gridviz-legend-title`, `-label`, `-swatch`, `-tick` and, for a row of a category, size or orientation legend, `-category`. The drawing of a legend is an `svg` with `gridviz-legend-graphic` (inside a `gridviz-legend-symbol-wrapper` in a category row), the shapes of a size or orientation legend have `gridviz-legend-symbol`, the colour bar's group has `gridviz-legend-bar` and the ternary triangle's `gridviz-legend-triangle`. A swatch being hovered also has `gridviz-legend-swatch--active` (a category row `gridviz-legend-category--active`). Add your own class to a legend with the `className` option, for example to style one legend, like a "not available" entry, differently.
 -   **CSS variables.** The font, its sizes and the padding are CSS variables with the usual values as fallback, so a page can change them without `!important`: `--gridviz-legend-font-family`, `--gridviz-legend-title-font-size`, `--gridviz-legend-title-font-weight`, `--gridviz-legend-label-font-size`, `--gridviz-legend-padding`. An option given to the legend (`labelFontSize`, `padding`...) still wins.
 -   **Width.** `width: 'fill'` on a _ColorLegend_ or a _ColorDiscreteLegend_ draws it at the width of the element the legends are in (the map's `legendContainer`), less its padding, each time the legend is drawn. A number of pixels is used as before.
+
+### Styling the rest of the map from a stylesheet
+
+The other elements gridviz creates have classes too, so that a page can restyle them (inline styles set by gridviz need `!important` to be overridden):
+
+-   `gridviz-map`: the element the map is drawn in. `gridviz-canvas`: the map's canvas.
+-   `gridviz-legends`: the element the legends are in, when gridviz makes it (not when you give a `legendContainer`).
+-   `gridviz-tooltip`: the tooltip, also when you give your own `tooltipElement`.
+-   `gridviz-button` on every button, with `gridviz-zoom-buttons` (and `gridviz-zoom-button--in` / `--out` on the two links inside it) or `gridviz-fullscreen-button` (its icon is `gridviz-fullscreen-icon`). The `class` option adds your own classes.
 
 ### Interactive legends
 

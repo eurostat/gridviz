@@ -48,13 +48,14 @@ export class OrientationLegend extends Legend {
 
         //draw SVG segment
         const svgS = Math.max(lengthPix, widthPix)
-        const svg = d.append('svg').attr('width', svgS).attr('height', svgS).style('', 'inline-block')
+        const svg = d.append('svg').classed('gridviz-legend-graphic', true).attr('width', svgS).attr('height', svgS).style('', 'inline-block')
 
         const cos = Math.cos((-this.orientation * Math.PI) / 180)
         const sin = Math.sin((-this.orientation * Math.PI) / 180)
         const dc = svgS * 0.5,
             l2 = lengthPix * 0.5
         svg.append('line')
+            .classed('gridviz-legend-symbol', true)
             .attr('x1', dc - cos * l2)
             .attr('y1', dc - sin * l2)
             .attr('x2', dc + cos * l2)
