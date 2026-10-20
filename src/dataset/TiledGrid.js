@@ -10,6 +10,17 @@ import { Dataset } from '../core/Dataset.js'
 // external
 import { json, csv } from 'd3-fetch'
 
+// The tiles that are loaded are kept, so that going back to a place needs no new request. They are kept as lists of cell objects, which
+// take a lot of memory (the education grid of the Statistical Atlas reached 1.5 GB after some minutes of panning and zooming), so the
+// number of cells kept by all the TiledGrid together is limited (TiledGrid.maxCachedCells): when there are more, the tiles that were used
+// the longest time ago are dropped, and loaded again if the map needs them. The tiles of the view on the screen, and those used in the
+// last KEEP_MS ms, are never dropped.
+const KEEP_MS = 3000
+/** All the tiles kept, of every dataset. */
+const keptTiles = new Set()
+let keptCells = 0
+const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now())
+
 /**
  * A tiled dataset, composed of CSV tiles.
  *
@@ -152,6 +163,8 @@ export class TiledGrid extends Dataset {
 
                 // Skip already loaded tiles or retry failed ones
                 if (this.cache[xT][yT] && this.cache[xT][yT] !== 'failed') {
+                    // in the view: not to be dropped
+                    if (typeof this.cache[xT][yT] === 'object') this.cache[xT][yT].lastUsed = now()
                     ++processedTiles
                     continue
                 }
@@ -163,6 +176,7 @@ export class TiledGrid extends Dataset {
                     this.loadTile(xT, yT, signal)
                         .then((tile) => {
                             this.cache[xT][yT] = tile
+                            this._keep(tile)
 
                             // Check if this is the last tile
                             const isLastTile = ++processedTiles === totalTiles
@@ -236,6 +250,45 @@ export class TiledGrid extends Dataset {
     }
 
     /**
+     * Counts a tile that was loaded in the cells kept, and drops the tiles used the longest time ago when there are too many.
+     *
+     * @param {any} tile
+     * @private
+     */
+    _keep(tile) {
+        // a failed tile is the string 'failed', not a tile
+        if (!tile || typeof tile !== 'object' || !tile.cells) return
+        tile.lastUsed = now()
+        tile.owner = this
+        keptTiles.add(tile)
+        keptCells += tile.cells.length
+        if (keptCells <= TiledGrid.maxCachedCells) return
+        const limit = now() - KEEP_MS
+        const unused = [...keptTiles].filter((t) => t.lastUsed < limit).sort((a, b) => a.lastUsed - b.lastUsed)
+        for (const t of unused) {
+            if (keptCells <= TiledGrid.maxCachedCells) break
+            t.owner._drop(t)
+        }
+    }
+
+    /**
+     * Forgets a tile: it is loaded again when the map needs it.
+     *
+     * @param {any} tile
+     * @private
+     */
+    _drop(tile) {
+        const column = this.cache[tile.x]
+        if (column && column[tile.y] === tile) {
+            delete column[tile.y]
+            if (!Object.keys(column).length) delete this.cache[tile.x]
+        }
+        if (keptTiles.delete(tile)) keptCells -= tile.cells.length
+        tile.owner = undefined
+        tile.cells = []
+    }
+
+    /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
      * @param {import("../core/GeoCanvas.js").Envelope} extGeo
@@ -264,6 +317,7 @@ export class TiledGrid extends Dataset {
                 /** @type {object} */
                 const tile = this.cache[xT][yT]
                 if (!tile || typeof tile === 'string') continue
+                tile.lastUsed = now()
 
                 //get cells
                 //this.cellsViewCache = this.cellsViewCache.concat(tile.cells)
@@ -279,6 +333,14 @@ export class TiledGrid extends Dataset {
         }
     }
 }
+
+/**
+ * The most cells kept in memory by the tiles of all the TiledGrid together (a cell is an object of the values of a place, some hundred
+ * bytes: about 250 MB for a million). It can be changed at any time.
+ *
+ * @type {number}
+ */
+TiledGrid.maxCachedCells = 1500000
 
 function getGridTile(cells, xT, yT, gridInfo) {
     const tile = {}
