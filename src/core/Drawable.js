@@ -2,6 +2,19 @@
 'use strict'
 
 /**
+ * Tells if an element (a layer or a style) is visible at a zoom level: its visible property is a function of the zoom
+ * level, or a boolean; it is visible when not specified. Works for any object, whether it is a Drawable or not.
+ *
+ * @param {{visible?: (function(number):boolean)|boolean}} element
+ * @param {number} z The zoom level.
+ * @returns {boolean}
+ */
+export function isVisibleAt(element, z) {
+    const v = element.visible
+    return typeof v === 'function' ? !!v(z) : v !== false
+}
+
+/**
  * This is an abstract class used to group elements shared between Layer and Style classes.
  *
  * @abstract
@@ -15,9 +28,9 @@ export class Drawable {
     constructor(opts) {
         opts = opts || {}
 
-        /** A function specifying if the element should be visible or not.
-         * The function parameter is the zoom level.
-         * @type {function(number):boolean} */
+        /** Specifies if the element should be visible or not: a function of the zoom level, or a boolean
+         * (to show or hide the element, then call map.redraw()). Visible when not specified.
+         * @type {(function(number):boolean)|boolean|undefined} */
         this.visible = opts.visible
 
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
@@ -36,6 +49,15 @@ export class Drawable {
         this.filterColor = opts.filterColor // (z) => "#eee7"
         /** @type {(function(number):GlobalCompositeOperation|"none")|undefined} */
         this.filterBlendOperation = opts.filterBlendOperation // (z) => "multiply"
+    }
+
+    /**
+     * Tells if the element is visible at a zoom level.
+     * @param {number} z The zoom level.
+     * @returns {boolean}
+     */
+    isVisible(z) {
+        return isVisibleAt(this, z)
     }
 
     /**

@@ -2,6 +2,7 @@
 'use strict'
 
 // internal imports
+import { isVisibleAt } from './Drawable.js'
 import { GeoCanvas } from './GeoCanvas.js'
 import { Tooltip } from './Tooltip.js'
 import { ZoomButtons } from '../button/ZoomButtons.js'
@@ -31,12 +32,12 @@ export class Map {
         this.layers = opts.layers || []
 
         /**
-         * When true, redraw() schedules one redraw for the next animation frame instead of
-         * drawing at once, so the many redraw requests of a busy moment (every tile that
-         * arrives, every info.json, every setting change) are drawn once. redrawNow() still
-         * draws at once. Off by default: redraw() stays synchronous, as it always was.
+         * When true (the default), redraw() schedules one redraw for the next animation frame
+         * instead of drawing at once, so the many redraw requests of a busy moment (every tile
+         * that arrives, every info.json, every setting change) are drawn once. redrawNow() still
+         * draws at once. Set it to false for redraw() to be synchronous, as it was before 3.1.0.
          * @type {boolean} */
-        this.asyncRedraw = !!opts.asyncRedraw
+        this.asyncRedraw = opts.asyncRedraw !== false
         /** @private @type {number|null} */
         this._redrawFrame = null
 
@@ -263,7 +264,7 @@ export class Map {
         //go through the layers
         for (const layer of this.layers) {
             //check if layer is visible
-            if (layer.visible && !layer.visible(z)) continue
+            if (!isVisibleAt(layer, z)) continue
 
             //set layer alpha and blend mode
             if (layer.alpha || layer.blendOperation) {
@@ -431,7 +432,7 @@ export class Map {
             /** @type {import("./Layer.js").Layer} */
             const layer = this.layers[i]
 
-            if (layer.visible && !layer.visible(z)) continue
+            if (!isVisibleAt(layer, z)) continue
             if (layer.cellInfoHTML === 'none') continue
             if (!layer.cellInfoHTML) continue
             if (!layer.getDataset) continue

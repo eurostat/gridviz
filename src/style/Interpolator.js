@@ -2,6 +2,7 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
+import { isVisibleAt } from '../core/Drawable.js'
 import { cellsToMatrix } from '../utils/utils.js'
 
 /**
@@ -90,7 +91,7 @@ export class Interpolator extends Style {
         for (let s of this.styles) {
 
             //check if style is visible
-            if (s.visible && !s.visible(z)) continue
+            if (!isVisibleAt(s, z)) continue
 
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?

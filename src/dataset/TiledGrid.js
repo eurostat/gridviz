@@ -5,6 +5,7 @@
 
 // internal
 import { Dataset } from '../core/Dataset.js'
+import { isVisibleAt } from '../core/Drawable.js'
 //import { monitor, monitorDuration } from '../utils/Utils.js'
 
 // external
@@ -96,7 +97,7 @@ export class TiledGrid extends Dataset {
         if (!this.map || !this.map.layers) return false
         const z = this.map.getZoom()
         for (const lay of this.map.layers) {
-            if (lay.visible && !lay.visible(z)) continue
+            if (!isVisibleAt(lay, z)) continue
             if (!lay.getDataset) continue
             if (lay.getDataset(z) == this) return true
         }
@@ -152,8 +153,6 @@ export class TiledGrid extends Dataset {
         const yMin = Math.max(tb.yMin, gbYMin)
         const yMax = Math.min(tb.yMax, gbYMax)
 
-        const totalTiles = (xMax - xMin + 1) * (yMax - yMin + 1)
-        let processedTiles = 0
         const tilePromises = []
 
         // Iterate over tiles within bounds
@@ -161,11 +160,13 @@ export class TiledGrid extends Dataset {
             for (let yT = yMin; yT <= yMax; yT++) {
                 if (!this.cache[xT]) this.cache[xT] = {}
 
-                // Skip already loaded tiles or retry failed ones
-                if (this.cache[xT][yT] && this.cache[xT][yT] !== 'failed') {
+                // Skip the tiles loaded, under way, or that failed recently
+                const kept = this.cache[xT][yT]
+                const retry =
+                    kept && kept.failed && !kept.missing && now() - kept.failed >= TiledGrid.retryFailedAfterMs
+                if (kept && !retry) {
                     // in the view: not to be dropped
-                    if (typeof this.cache[xT][yT] === 'object') this.cache[xT][yT].lastUsed = now()
-                    ++processedTiles
+                    if (kept.cells) kept.lastUsed = now()
                     continue
                 }
 
@@ -173,25 +174,65 @@ export class TiledGrid extends Dataset {
                 this.cache[xT][yT] = 'loading'
 
                 tilePromises.push(
-                    this.loadTile(xT, yT, signal)
-                        .then((tile) => {
+                    this.loadTile(xT, yT, signal).then(
+                        (tile) => {
                             this.cache[xT][yT] = tile
                             this._keep(tile)
 
                             // Check if this is the last tile
-                            const isLastTile = ++processedTiles === totalTiles
+                            // (tiles under way for another request count: the one that ends last is the one that draws)
+                            const isLastTile = !this._anyLoading(xMin, xMax, yMin, yMax)
                             this.checkAndRedraw(tile, isLastTile)
-                        })
-                        .catch(() => {
-                            this.cache[xT][yT] = 'failed'
-                            ++processedTiles
-                        })
+                        },
+                        (error) => {
+                            if (error && error.name === 'AbortError') {
+                                // cancelled, not failed: the next request loads it
+                                delete this.cache[xT][yT]
+                                return
+                            }
+                            // Most of the time a tile that fails is one the server doesn't have (the tiles of a grid are
+                            // often sparse). It is remembered as failed, and not asked for again at every redraw.
+                            // A 404 is final ('missing'). Any other failure is tried again after retryFailedAfterMs: a
+                            // browser doesn't give the status of a response without CORS headers, so a 404 from such a
+                            // server can't be told from a network error.
+                            this.cache[xT][yT] = {
+                                failed: now(),
+                                missing: /^(404|410)\b/.test(error && error.message),
+                            }
+                            // it changes nothing on the map, except when it was waited for to draw
+                            if (
+                                this.onlyDrawWhenAllTilesReady &&
+                                !this._anyLoading(xMin, xMax, yMin, yMax) &&
+                                this.isShown()
+                            )
+                                this.map.redraw()
+                        }
+                    )
                 )
             }
         }
 
         await Promise.allSettled(tilePromises)
         return this
+    }
+
+    /**
+     * Tells if some tiles of a tiling envelope are still being loaded, by this request or any other one.
+     *
+     * @param {number} xMin
+     * @param {number} xMax
+     * @param {number} yMin
+     * @param {number} yMax
+     * @returns {boolean}
+     * @private
+     */
+    _anyLoading(xMin, xMax, yMin, yMax) {
+        for (let xT = xMin; xT <= xMax; xT++) {
+            const column = this.cache[xT]
+            if (!column) continue
+            for (let yT = yMin; yT <= yMax; yT++) if (column[yT] === 'loading') return true
+        }
+        return false
     }
 
     /**
@@ -234,19 +275,20 @@ export class TiledGrid extends Dataset {
         // 1. the dataset belongs to a layer which is visible at the current zoom level
         if (!this.isShown()) return
 
+        // Waiting for all the tiles: drawn when the last one arrives, wherever it is (the tiles asked for are those of the
+        // view and of a margin around it, so the last one to arrive may be outside the view)
+        if (this.onlyDrawWhenAllTilesReady) {
+            if (isLastTile) this.map.redraw()
+            return
+        }
+
         // Check if tile intersects the current view
         const env = this.map.updateExtentGeo()
         const { xMin, xMax, yMin, yMax } = tile.extGeo
         if (env.xMax <= xMin || env.xMin >= xMax || env.yMax <= yMin || env.yMin >= yMax) return
 
         // Trigger redraw
-        if (this.onlyDrawWhenAllTilesReady) {
-            if (isLastTile) {
-                this.map.redraw()
-            }
-        } else {
-            this.map.redraw()
-        }
+        this.map.redraw()
     }
 
     /**
@@ -256,7 +298,7 @@ export class TiledGrid extends Dataset {
      * @private
      */
     _keep(tile) {
-        // a failed tile is the string 'failed', not a tile
+        // a failed tile is not a tile
         if (!tile || typeof tile !== 'object' || !tile.cells) return
         tile.lastUsed = now()
         tile.owner = this
@@ -316,7 +358,7 @@ export class TiledGrid extends Dataset {
                 //get tile
                 /** @type {object} */
                 const tile = this.cache[xT][yT]
-                if (!tile || typeof tile === 'string') continue
+                if (!tile || !tile.cells) continue
                 tile.lastUsed = now()
 
                 //get cells
@@ -341,6 +383,14 @@ export class TiledGrid extends Dataset {
  * @type {number}
  */
 TiledGrid.maxCachedCells = 1500000
+
+/**
+ * How long, in ms, a tile that failed to load is remembered, before it is requested again. It doesn't apply to a tile the
+ * server answered 404 or 410 for: that one isn't requested again. It can be changed at any time.
+ *
+ * @type {number}
+ */
+TiledGrid.retryFailedAfterMs = 30000
 
 function getGridTile(cells, xT, yT, gridInfo) {
     const tile = {}

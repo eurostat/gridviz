@@ -2,6 +2,7 @@
 'use strict'
 
 import { Layer } from '../core/Layer.js'
+import { isVisibleAt } from '../core/Drawable.js'
 
 /**
  * A layer, which specifies a dataset to be shown with specified styles.
@@ -74,7 +75,7 @@ export class GridLayer extends Layer {
         //draw cells, style by style
         for (const s of this.styles) {
             //check if style is visible
-            if (s.visible && !s.visible(z)) continue
+            if (!isVisibleAt(s, z)) continue
 
             // set style alpha and blend mode
             //TODO: multiply style alpha by layer alpha ?
@@ -104,14 +105,14 @@ export class GridLayer extends Layer {
         if (legend) {
             for (const s of this.styles) {
                 //check if style is visible
-                if (s.visible && !s.visible(z)) continue
+                if (!isVisibleAt(s, z)) continue
                 GridLayer.addLegends(legend, s.legends, s, geoCanvas)
 
                 //case for styles of styles, like kernel smoothing
                 //TODO do better
                 if (s['styles']) {
                     for (const s2 of s['styles']) {
-                        if (s2.visible && !s2.visible(z)) continue
+                        if (!isVisibleAt(s2, z)) continue
                         GridLayer.addLegends(legend, s2.legends, s2, geoCanvas)
                     }
                 }

@@ -148,9 +148,9 @@ new gridviz.Map(document.getElementById('map'), {
 | _opts_.**onZoomFun**                  | Function | null         | Event handler for when a pan/zoom event is occurring.                                                                                                               |
 | _opts_.**onZoomEndFun**               | Function | null         | Event handler for when a pan/zoom event has finished.                                                                                                               |
 | _opts_.**tooltip**                    | Object   | undefined    | See [tooltip](#tooltip)                                                                                                                                             |
-| _opts_.**asyncRedraw**                | boolean  | false        | When true, _redraw()_ draws once, at the next animation frame, however many times it is called before then.                                                         |
+| _opts_.**asyncRedraw**                | boolean  | true         | When true, _redraw()_ draws once, at the next animation frame, however many times it is called before then. Set it to false for _redraw()_ to draw at once.          |
 
-The map is redrawn with _map.redraw()_. With the default options it draws at once; with _asyncRedraw_ it draws once at the next animation frame. _map.redrawNow()_ draws at once in either case. _map.destroy()_ removes the map's event listeners and stops observing its container.
+The map is redrawn with _map.redraw()_. By default it draws once at the next animation frame, however many times it is called before then; with _asyncRedraw_ set to false it draws at once. _map.redrawNow()_ draws at once in either case, and is the one to use before reading the canvas (to export an image, for example). _map.destroy()_ removes the map's event listeners and stops observing its container.
 
 ## Adding data
 
@@ -263,6 +263,7 @@ const labelLayer = new gridviz.LabelLayer({
         return '1.5em Arial'
     },
     haloColor: () => 'white',
+    textAlign: 'center', //Where the text is drawn from the label position: 'start' (default), 'end', 'left', 'right' or 'center'.
 })
 ```
 
