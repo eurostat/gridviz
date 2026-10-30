@@ -19,6 +19,7 @@
     - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Square color WebGL Style](#square-color-webgl-style)
     - [Square color category WebGL style](#square-color-category-webgl-style)
+    - [Circle color size WebGL style](#circle-color-size-webgl-style)
     - [Composition style](#composition-style)
     - [Segment style](#segment-style)
     - [Stroke style](#stroke-style)
@@ -307,6 +308,23 @@ This style displays each cell as a square, with a changing color. This style use
 This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailed resolutions.
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorcatwgl.html)).
+
+### Circle color size WebGL style
+
+This style displays each cell as a circle, with a changing color and size, like the _circle_ shape of the [Shape/Color/Size style](#shapecolorsize-style) but with webGL. All the circles of the style are drawn at once by the GPU, and copied on the map in a single operation. It should be used rather than the Shape/Color/Size style when there are many circles (tens of thousands or more), and with a `blendOperation` such as `'multiply'`, which is then applied once for the style instead of for each circle. It needs webGL 2: without it, the circles are drawn one by one.
+
+```javascript
+new gridviz.CircleColorSizeWebGLStyle({
+    color: (cell, resolution, z, viewScale) => 'rgb(0,200,235)', // the color of the circle
+    size: (cell, resolution, z, viewScale) => resolution * 0.5, // its diameter, in geographical unit. 0 to not draw it
+    alpha: () => 0.85,
+    blendOperation: () => 'multiply',
+})
+```
+
+The circles of one style do not blend with each other: they are drawn first, then blended with what is below. To show several variables with circles which blend, use one style per variable.
+
+-   See [this multivariate map with nested circles and a Venn diagram legend](https://eurostat.github.io/gridviz/examples/test/venn/birth/index.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/test/venn/birth/index.html)).
 
 ### Composition style
 
