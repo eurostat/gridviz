@@ -7,6 +7,7 @@
   - [Concepts](#concepts)
   - [Defining the map](#defining-the-map)
   - [Adding data](#adding-data)
+    - [Dataset classes](#dataset-classes)
     - [Layers](#layers)
       - [GridLayer](#gridlayer)
       - [BackgroundLayer](#backgroundlayer)
@@ -180,6 +181,30 @@ For [Parquet](https://parquet.apache.org/) data support, see the [gridviz-parque
 
 For better efficiency, it is recommended to use multi-resolution tiled parquet data.
 
+### Dataset classes
+
+| Class                    | Constructor                                                                      | Data                                                                                                                         |
+| ------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `JSGrid`                 | `new gridviz.JSGrid(resolution, cells, opts)`                                    | The cells, as an array of JavaScript objects with a `x` and a `y` property.                                                  |
+| `CSVGrid`                | `new gridviz.CSVGrid(map, url, resolution, opts)`                                | A CSV file with a `x` and a `y` column, and the values of the cells. Options: `preprocess`, `delimiter`.                      |
+| `TiledGrid`              | `new gridviz.TiledGrid(map, url, opts)`                                          | A folder of CSV tiles, in the [tiled grid format](tiledformat.md). Options: `preprocess`, `onlyDrawWhenAllTilesReady`.      |
+| `MultiResolutionDataset` | `new gridviz.MultiResolutionDataset(resolutions, datasets, opts)`                | Several datasets, one for each resolution: `datasets` is an array of datasets, or a function which makes the dataset of a resolution. Option: `preprocess`. |
+
+```javascript
+const dataset = new gridviz.MultiResolutionDataset([1000, 2000, 5000], (resolution) => new gridviz.CSVGrid(map, resolution + 'm.csv', resolution), {
+    preprocess: (cell) => {
+        cell.population = +cell.population // the values of a CSV file are text
+        if (cell.population == 0) return false // a cell for which it returns false is not kept
+    },
+})
+```
+
+-   The `x` and `y` of a cell are in the coordinate system of the map, and the resolution is a distance in its unit.
+-   `preprocess` is called once for each cell, when it is loaded. It can change the cell (to convert or compute values), and it removes the cell by returning `false`.
+-   A layer with a multi-resolution dataset shows the finest resolution whose cells are at least `minPixelsPerCell` pixels wide at the current zoom (see [GridLayer](#gridlayer)).
+-   A tile which could not be loaded is not asked for again at each redraw: never when it does not exist (404), and again after `TiledGrid.retryFailedAfterMs` milliseconds (30000 by default) for any other failure. With `onlyDrawWhenAllTilesReady: true`, the map is drawn only when all the tiles of the view are there.
+-   Parquet tiles are supported by the [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/), with `TiledParquetGrid`.
+
 ### Layers
 
 There are a few different types of layers that can be added to a gridviz map:
@@ -196,6 +221,14 @@ new gridviz.GridLayer(dataset, [style], {
     minPixelsPerCell: 12, //optional
 })
 ```
+
+| Option             | Type                                      | Default                           | Description                                                                                                                                    |
+| ------------------ | ----------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minPixelsPerCell` | number                                    | `3`                               | With a multi-resolution dataset, the smallest size on the screen, in pixels, of the cells of the resolution shown. A higher value draws fewer, bigger cells. |
+| `cellInfoHTML`     | `function(cell):string` or `'none'`       | the list of the cell properties   | The text of the [tooltip](#tooltip) of a cell, as HTML. `'none'` for no tooltip.                                                               |
+| `visible`          | boolean or `function(z)`                  | `true`                            | Whether the layer is drawn, according to the zoom level.                                                                                       |
+| `alpha`            | `function(z)`                             | opaque                            | The opacity of the layer.                                                                                                                      |
+| `blendOperation`   | `function(z)`                             | `'source-over'`                   | How the layer is blended with the layers below it. See [transparency](#transparency).                                                          |
 
 #### BackgroundLayer
 
@@ -283,6 +316,20 @@ The gridded data may be pre-processed after loading, and filtered:
 
 ## Basic styles
 
+All the styles are classes of the `gridviz` module, which are given to a [GridLayer](#gridlayer) as a list. Each one of the sections below tells the class of its style, and the options it reads. The options which all the styles share are:
+
+| Option                                   | Type                                          | Default            | Description                                                                                                                                 |
+| ---------------------------------------- | --------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `visible`                                | boolean or `function(z)`                      | `true`             | Whether the style is drawn, according to the zoom level `z`.                                                                                |
+| `alpha`                                  | `function(z)`                                 | opaque             | The opacity of the style.                                                                                                                   |
+| `blendOperation`                         | `function(z)`                                 | `'source-over'`    | How the style is blended with what is below: any [canvas composite operation](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation), such as `'multiply'`. |
+| `filter`                                 | `function(cell):boolean`                      | all the cells      | The cells for which it returns false are not drawn.                                                                                         |
+| `offset`                                 | `function(cell, resolution, z)`               | no offset          | Moves the symbols, in geographical unit: returns `{dx, dy}`.                                                                                |
+| `viewScale`                              | function                                      | -                  | A scale computed from the cells in the view, given to the other functions of the style. See [view scale](#view-scale).                     |
+| `filterColor`, `filterBlendOperation`    | `function(z)`                                 | -                  | A color drawn over the style (with this blend operation), for example to fade it.                                                           |
+
+The legends of a style are set after its creation: `style.legends = [legend1, legend2]`. See [legends](#legends).
+
 ### Shape/Color/Size Style
 
 [![shape color size style](img/styles/shapesizecolor_sc.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html)
@@ -352,6 +399,8 @@ A few things to know:
 
 ### Composition style
 
+Class: `gridviz.CompositionStyle`. Options: `color`, `type`, `size`, `stripesOrientation`, `offsetAngle`, `agePyramidHeight`, `pieChartInternalRadiusFactor`, plus the options common to all the styles.
+
 [![composition style](img/styles/composition_flag.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_piechart.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_ring.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
@@ -364,6 +413,8 @@ This style shows a composition at cell level in various different ways: Flags, p
 
 ### Segment style
 
+Class: `gridviz.SegmentStyle`. Options: `color`, `width`, `length`, `orientation`, plus the options common to all the styles.
+
 [![segment style](img/styles/segment_width.png)](https://eurostat.github.io/gridviz/examples/styles/segment_width.html)
 [![segment style](img/styles/segment_random.png)](https://eurostat.github.io/gridviz/examples/styles/segment_random.html)
 
@@ -373,6 +424,8 @@ This style displays each cell as a segment with a changeable color, length, widt
 -   See [this example with random segment orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/segment_random.html)).
 
 ### Stroke style
+
+Class: `gridviz.StrokeStyle`. Options: `strokeColor`, `size`, `strokeWidth`, `shape`, plus the options common to all the styles.
 
 [![stroke style](img/styles/stroke.png)](https://eurostat.github.io/gridviz/examples/styles/stroke.html)
 [![stroke style](img/styles/stroke_random.png)](https://eurostat.github.io/gridviz/examples/styles/stroke_random.html)
@@ -386,6 +439,8 @@ This style shows the stroke of each cell with different colors, widths, shapes a
 
 ### Dot density style
 
+Class: `gridviz.DotDensityStyle`. Options: `dotNumber`, `color`, `dotSize`, `sigma`, plus the options common to all the styles.
+
 [![dot density style](img/styles/dotdensity.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html)
 [![dot density style](img/styles/dotdensity_random.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity_random.html)
 
@@ -396,6 +451,8 @@ This style displays each cell as randomly located points, with changeable densit
 
 ### Pillars style
 
+Class: `gridviz.PillarStyle`. Options: `height`, `color`, `width`, `simple`, `viewHeightFactor`, `viewSX`, `viewSY`, `shadowDirection`, `shadowFactor`, `shadowColor`, `outlineCol`, `outlineWidthPix`, plus the options common to all the styles.
+
 [![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
 [![pillars style](img/styles/pillar_simple.png)](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html)
 
@@ -405,6 +462,8 @@ This style shows the grid cells as 3D pillars or, with changeable height, width 
 -   See [this basic example with simple style](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar_simple.html)).
 
 ### Ternary style
+
+There is no style of its own: the cells are drawn with a [Shape/Color/Size style](#shapecolorsize-style) whose color comes from a ternary classifier, and the `gridviz.TernaryLegend` shows the colors (see [the ternary color legend](#ternary-color-legend)).
 
 [![ternary map style](img/styles/ternary.png)](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html)
 
@@ -417,6 +476,8 @@ Note that this style is not really a new style - it relies on a specific classif
 
 ### Text style
 
+Class: `gridviz.TextStyle`. Options: `text`, `color`, `fontSize`, `fontFamily`, `fontWeight`, plus the options common to all the styles.
+
 [![text style](img/styles/text_elevation.png)](https://eurostat.github.io/gridviz/examples/styles/text_elevation.html)
 [![text style](img/styles/text.png)](https://eurostat.github.io/gridviz/examples/styles/text.html)
 
@@ -427,6 +488,8 @@ This style shows the grid cells as text labels. The text, its color and font siz
 
 ### Image style
 
+Class: `gridviz.ImageStyle`. Options: `image`, `size`, plus the options common to all the styles.
+
 [![image style](img/styles/image_kitten.png)](https://eurostat.github.io/gridviz/examples/styles/image_kitten.html)
 [![chernoff faces image style](img/styles/image_chernoff.png)](https://eurostat.github.io/gridviz/examples/styles/image_chernoff.html)
 
@@ -436,6 +499,8 @@ This style shows the grid cells as an image. The image and its size can be set a
 -   See [this example, with Chernoff faces](https://eurostat.github.io/gridviz/examples/styles/image_chernoff.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/image_chernoff.html)).
 
 ### Time series style
+
+Class: `gridviz.TimeSeriesStyle`. Options: `ts`, `noData`, `offsetX`, `width`, `offsetY`, `height`, `anchorModeY`, `lineWidth`, `color`, plus the options common to all the styles.
 
 [![time series style](img/styles/timeseries.png)](https://eurostat.github.io/gridviz/examples/styles/time_series.html)
 
@@ -449,6 +514,8 @@ The **side styles** are special:They do not display the cells, but their sides. 
 
 ### Side style
 
+Class: `gridviz.SideStyle`. Options: `color`, `width`, `length`, `diamond`, plus the options common to all the styles.
+
 [![side style](img/styles/side.png)](https://eurostat.github.io/gridviz/examples/styles/side.html)
 
 This style displays the sides of the cells as segments with different colors and widths, depending on the values of the 2 adjacent cells.
@@ -456,6 +523,8 @@ This style displays the sides of the cells as segments with different colors and
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/side.html)).
 
 ### Side category style
+
+Class: `gridviz.SideCategoryStyle`, which extends the side style. Options: `code`, `color`, plus the options common to all the styles.
 
 [![side category style](img/styles/sidecat.png)](https://eurostat.github.io/gridviz/examples/styles/sidecat.html)
 
@@ -465,6 +534,8 @@ This style displays the sides of the cells as segments with different colors dep
 
 ### Contour style
 
+Class: `gridviz.SideTanakaStyle`, with the same color for all the lines (see the [Tanaka style](#tanaka-style) for its options).
+
 [![contour style](img/styles/side_contour.png)](https://eurostat.github.io/gridviz/examples/styles/side_contour.html)
 
 This style displays the sides of the cells depending on discontinuities between the 2 adjacent cells, like contour lines. For this style, the Tanaka style is simply reused with the same color for all lines.
@@ -472,6 +543,8 @@ This style displays the sides of the cells depending on discontinuities between 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/side_contour.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/side_contour.html)).
 
 ### Isometric fence style
+
+Class: `gridviz.IsoFenceStyle`. Options: `color`, `height`, `angle`, `cornerLineStrokeColor`, `cornerLineWidth`, `sVert`, `sHor`, plus the options common to all the styles.
 
 [![Isometric fence style](img/styles/isofence.png)](https://eurostat.github.io/gridviz/examples/styles/isofence.html)
 
@@ -512,6 +585,8 @@ The other options of the [side style](#side-style) and of the styles in general 
 
 ### JoyPlot Style
 
+Class: `gridviz.JoyPlotStyle`. Options: `height`, `lineColor`, `lineWidth`, `fillColor`, plus the options common to all the styles.
+
 [![joyplot style](img/styles/joyplot.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot.html)
 [![joyplot style](img/styles/joyplot_full.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_shading.html)
 [![joyplot style](img/styles/joyplot_random.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_random.html)
@@ -524,6 +599,8 @@ This style shows cell rows in the form of a 'joyplot' - named after Joy Division
 
 ### Mosaic style
 
+Class: `gridviz.MosaicStyle`. Options: `color`, `mosaicFactor`, `shadowFactor`, `shadowColor`, plus the options common to all the styles.
+
 [![mosaic style](img/styles/mosaic_basic.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic.html)
 [![mosaic style](img/styles/mosaic_roman.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 
@@ -533,6 +610,8 @@ This style shows the cell as pseudo-irregular square shapes giving a [mosaic](ht
 -   See [this roman style example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/mosaic_full.html)).
 
 ### Ninja star style
+
+Class: `gridviz.NinjaStarStyle`. Options: `color`, `size`, `shape`, plus the options common to all the styles.
 
 [![Ninja star style](img/styles/ninja_star.png)](https://eurostat.github.io/gridviz/examples/styles/ninja_star.html)
 [![Ninja star style](img/styles/ninja_star_p.png)](https://eurostat.github.io/gridviz/examples/styles/ninja_star_p.html)
@@ -544,6 +623,8 @@ This style shows the cell as a star polygon whose compacity depends on a variabl
 
 ### Tanaka style
 
+Class: `gridviz.SideTanakaStyle`. Options: `classifier`, `width`, `length`, `colorDark`, `colorBright`, `revert`, `diamond`, `limit`, plus the options common to all the styles.
+
 [![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
 
 This style shows the grid cells in a [Tanaka style](https://manifold.net/doc/mfd9/example__tanaka_contours.htm), that is with discrete colors and a shadow effect.
@@ -552,6 +633,8 @@ This style shows the grid cells in a [Tanaka style](https://manifold.net/doc/mfd
 
 ### Lego style
 
+Class: `gridviz.LegoStyle`. It makes a list of styles, one for each color of the bricks: `gridviz.LegoStyle.get(value, breaks, colors, opts)`, where `value` is a function of a cell, `breaks` the class limits and `colors` the color of each class (`opts`: `colDark`, `colBright`).
+
 [![lego style](img/styles/lego.png)](https://eurostat.github.io/gridviz/examples/styles/lego.html)
 
 This style shows the grid cells as lego bricks with changeable colors and height based on a quantitative variable.
@@ -559,6 +642,8 @@ This style shows the grid cells as lego bricks with changeable colors and height
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego.html)).
 
 ### Lego category style
+
+Class: `gridviz.LegoStyle`, with `gridviz.LegoStyle.getCategory(code, color, opts)`: `code` is a function of a cell which returns its category and `color` the color of each category.
 
 [![lego style](img/styles/lego_category.png)](https://eurostat.github.io/gridviz/examples/styles/lego_category.html)
 
@@ -639,7 +724,18 @@ The cells with a zero value after interpolation are not drawn. Since there are m
 
 ## Custom styles
 
-The style can be freely defined through the **drawFun**, which specifies how to draw the list of cells within the view on the map canvas.
+A style is an instance of `gridviz.Style`, which can be freely defined through the **drawFun**. It specifies how to draw the list of cells within the view on the map canvas:
+
+```javascript
+new gridviz.Style({
+    drawFun: (cells, geoCanvas, resolution) => {
+        const ctx = geoCanvas.offscreenCtx // draw here, in geographical coordinates
+        for (const cell of cells) ctx.fillRect(cell.x, cell.y, resolution, resolution)
+    },
+})
+```
+
+The options common to all the styles can be used. Two helpers are exported for custom styles: `gridviz.nice(v)`, which rounds a value down to a round number (a power of ten, or a multiple of it), and `gridviz.cellsToMatrix(cells, resolution, valueFunction)`, which puts the cells in a matrix (a list of rows, from top to bottom), to compute on neighbour cells.
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/basics/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/custom_style.html)) to define a simple style to draw each cell as an arrow symbol.
 
@@ -667,13 +763,44 @@ To handle layer and style transparency, blending modes and alpha values may be d
 
 ## Tooltip
 
-A tooltip may be customised for the grid cells passed over the mouse pointer. By default, the list of properties is shown.
+A tooltip shows information about the grid cell under the mouse pointer. By default, it lists the properties of the cell.
 
--   See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)) to define the tooltip text.
+-   The text is the `cellInfoHTML` option of the [GridLayer](#gridlayer): a function of the cell which returns HTML, or `'none'` for no tooltip. See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)).
+-   The tooltip itself is set with the `tooltip` option of the map:
+
+```javascript
+new gridviz.Map(document.getElementById('map'), {
+    tooltip: { maxWidth: 'none', fontSize: '0.9rem' },
+})
+```
+
+| Option                           | Default                                                                  | Description                                                                                                                    |
+| -------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `maxWidth`                       | `'20em'`                                                                 | The widest the tooltip can be. What does not fit is clipped: use `'none'` for a tooltip with long lines.                       |
+| `fontSize`, `font-family`        | `'1rem'`, `'Helvetica Neue', Arial, Helvetica, sans-serif`               | The text.                                                                                                                      |
+| `color`, `lineHeight`            | `'#171a22'`, `'1.5'`                                                     | The color of the text and the height of its lines.                                                                             |
+| `background`, `padding`          | `'white'`, `'4px'`                                                       | The inside of the tooltip.                                                                                                     |
+| `border`, `border-radius`        | `'1px solid #d5d5d5'`, `'6px'`                                           | Its outline.                                                                                                                   |
+| `box-shadow`                     | `'0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)'`     | Its shadow.                                                                                                                    |
+| `xOffset`, `yOffset`             | `30`, `20`                                                               | Its distance from the pointer, in pixels. `xMouseOffset` and `yMouseOffset` shift the point where the mouse is taken, for example so that the cursor does not cover the cell which is highlighted (default 0).      |
+| `transitionDuration`             | `100`                                                                    | The duration of its fade in and out, in milliseconds.                                                                          |
+| `parentElement`, `tooltipElement` | the page body, a new element                                            | Where the tooltip is added, and an element of the page to use as the tooltip instead of a new one.                              |
+
+The defaults are the look of the tooltips of the statistical atlas. The tooltip has the class `gridviz-tooltip`, so that a stylesheet can restyle it (the inline styles need `!important` to be overridden).
 
 ## Buttons
 
-To show zoom and full screen mode buttons, see [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)).
+The map has a zoom button and a full screen button, added with two methods which can be chained:
+
+```javascript
+const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 }).addZoomButtons().addFullscreenButton()
+```
+
+-   `addZoomButtons({ id, class, x, y, onZoom, delta })`: the two buttons "+" and "−". `delta` is the change of zoom at each click (0.2 by default), and `onZoom` a function called after it. By default the buttons are 10 pixels from the right and from the top.
+-   `addFullscreenButton({ id, class, x, y })`: by default 10 pixels from the right and 90 pixels from the top.
+-   `x` and `y` are the distances, in pixels, of the button from the left and from the top of the map. `class` adds your own CSS classes.
+
+See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)). The look of the buttons is the one of the map controls of the statistical atlas, and can be changed with CSS variables: see [styling the rest of the map](#styling-the-rest-of-the-map-from-a-stylesheet).
 
 ## View scale
 
@@ -771,6 +898,8 @@ A custom style can take part too: skip the cells for which `this.isHighlighted(c
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorCategoryLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorCategoryLegend.html)).
 
 ### Orientation legend
+
+Class: `gridviz.OrientationLegend`.
 
 ![](img/legends/segment_orientation_legend.png)
 

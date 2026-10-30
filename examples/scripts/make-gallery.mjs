@@ -151,14 +151,16 @@ const worker = async () => {
         const errors = []
         page.on('pageerror', (err) => errors.push('error: ' + err.message.slice(0, 200)))
         page.on('console', (m) => {
-            if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text().slice(0, 200))
+            if (m.type() === 'error' && !/Failed to load resource/.test(m.text()))
+                errors.push('console: ' + m.text().slice(0, 200))
         })
         // a missing tile (404) is normal for tiled grids and backgrounds: the other failures are not
         page.on('requestfailed', (r) => {
             if (r.resourceType() !== 'image') errors.push('request failed: ' + r.url().slice(0, 120))
         })
         page.on('response', (r) => {
-            if (r.status() >= 400 && r.status() !== 404) errors.push('http ' + r.status() + ': ' + r.url().slice(0, 120))
+            if (r.status() >= 400 && r.status() !== 404)
+                errors.push('http ' + r.status() + ': ' + r.url().slice(0, 120))
             if (r.status() === 404 && r.url().startsWith(base)) errors.push('http 404: ' + r.url().slice(0, 120))
         })
         try {

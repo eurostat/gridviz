@@ -84,7 +84,7 @@
             </div>
             <div class="label">Circle area: area of the crop (km²)</div>
             <div id="legends"></div>
-                    </div>
+        </div>
         <div id="source">Data: CORINE Land Cover 2018, aggregated from 1 km cells | Background: Eurostat/GISCO</div>
 
         <script src="../../../../dist/gridviz.js"></script>
@@ -116,8 +116,6 @@
                 { key: 'v', code: 15, label: 'Vineyards', rgb: [255, 20, 147] },
             ]
 
-
-
             //the map
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -131,7 +129,10 @@
 
             //background: the land, from the Nuts2json countries (cntrg), without their outline. Kosovo is part of Serbia in them.
             //The countries of the NUTS regions (nutsrg_0) are kept, plus UK and Moldova.
-            const COUNTRIES = ('AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD').split(' ')
+            const COUNTRIES =
+                'AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD'.split(
+                    ' '
+                )
             const LAND_COLOR = '#e6e6e6'
             const land = new gridviz.GeoJSONLayer({
                 url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/cntrg.json',
@@ -160,7 +161,8 @@
                 (crop) =>
                     new gridviz.CircleColorSizeWebGLStyle({
                         color: () => 'rgb(' + crop.rgb.join(',') + ')',
-                        size: (c, r, z) => (c[crop.key] > 0 ? Math.max(circleDiameter(c[crop.key], r), MIN_DIAMETER_PIX * z) : 0),
+                        size: (c, r, z) =>
+                            c[crop.key] > 0 ? Math.max(circleDiameter(c[crop.key], r), MIN_DIAMETER_PIX * z) : 0,
                         alpha: () => OPACITY,
                         blendOperation: () => 'multiply',
                     })
@@ -173,13 +175,14 @@
             }
             const fmt = (v) => spaced(v < 10 ? v.toFixed(1) : Math.round(v))
             const gridLayer = new gridviz.GridLayer(dataset, styles, {
-
                 minPixelsPerCell: 6,
                 //one line per crop, with a badge of its colour. The crops which are not in the cell are dimmed.
                 cellInfoHTML: (c) =>
                     CROPS.map(
                         (cr) =>
-                            `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;${c[cr.key] > 0 ? '' : 'opacity:0.4'}">` +
+                            `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;${
+                                c[cr.key] > 0 ? '' : 'opacity:0.4'
+                            }">` +
                             `<span style="width:12px;height:12px;border-radius:50%;flex:none;background:rgb(${cr.rgb});box-shadow:0 0 0 1px #0003 inset"></span>` +
                             `<span>${cr.label}: <b>${fmt(c[cr.key])}</b> km²</span></div>`
                     ).join(''),
@@ -216,7 +219,8 @@
                     new gridviz.SizeLegend({
                         ...sizeLegendOptions,
                         label: (viewScale, cells, resolution, z) => formatValue(legendValues(resolution, z)[i]),
-                        size: (viewScale, resolution, z) => legendSymbol(DIAMETER_PER_SQRT_KM2 * Math.sqrt(legendValues(resolution, z)[i]), z),
+                        size: (viewScale, resolution, z) =>
+                            legendSymbol(DIAMETER_PER_SQRT_KM2 * Math.sqrt(legendValues(resolution, z)[i]), z),
                     })
             )
 

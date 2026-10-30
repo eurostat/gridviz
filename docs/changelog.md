@@ -39,6 +39,9 @@
 -   New default look of the tooltip, the legends and the buttons, which is the one of the statistical atlas. Tooltip options `color` and `lineHeight`, and CSS variables `--gridviz-legend-label-color` and `--gridviz-button-*`.
 -   New examples gallery page (`examples/index.html`) listing all the examples by chapter, with a thumbnail for each. An example opens beside its source code (`examples/view.html?example=styles/lego.html`): the code is highlighted, can be copied, and the panel can be resized or hidden. The button "Examples" goes back to the gallery as it was left (same chapter, search and scroll position).
 -   _ShadingStyle_, _ShadingRayStyle_ and _Interpolator_ are now documented in the reference. Fix: the `width` option of _ShadingStyle_ was truncated to a whole number (and the default width was 0 when zoomed in far).
+-   The reference now names the dataset classes (_JSGrid_, _CSVGrid_, _TiledGrid_, _MultiResolutionDataset_), and gives the class and the options of each style, the options common to all the styles, the options of _GridLayer_, of the tooltip and of the buttons. `examples/README.md` explains the examples gallery.
+-   `jsdoc` is now a development dependency: it was a dependency, so it was installed with gridviz, with its own dependencies (which have known vulnerabilities). A user of gridviz now installs only the d3 modules it uses (7 direct dependencies), and `npm audit --omit=dev` finds no vulnerability.
+-   The _VennLegend_ has an accessible name (`role="img"` and an `aria-label`).
 
 ### Legends
 
@@ -55,8 +58,8 @@
 
 -   In gridviz-eurostat module, a new function to ease GISCO background layers creation.
 -   Modules gridviz-smoothing and gridviz-eurostat were upgraded to a new version which is compatible with this new version 3.
--   No upgrade so far for gridviz-parquet and gridviz-leaflet
+-   gridviz-parquet works with this version (use gridviz-parquet 1.1 or later). No upgrade so far for gridviz-leaflet.
 
 ### Out
 
--   Lego and Tanaka styles not included: coming back soon !
+-   Nothing is left out any more: the Lego and Tanaka styles, which were not included at first, are back.

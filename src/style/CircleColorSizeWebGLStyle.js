@@ -125,7 +125,9 @@ export class CircleColorSizeWebGLStyle extends Style {
 
         //fill the data of the circles
         if (instances.length < FLOATS_PER_CIRCLE * cells.length)
-            instances = new Float32Array(FLOATS_PER_CIRCLE * Math.max(cells.length, 2 * (instances.length / FLOATS_PER_CIRCLE)))
+            instances = new Float32Array(
+                FLOATS_PER_CIRCLE * Math.max(cells.length, 2 * (instances.length / FLOATS_PER_CIRCLE))
+            )
         let n = 0
         for (const c of cells) {
             //@ts-ignore
@@ -235,7 +237,10 @@ export class CircleColorSizeWebGLStyle extends Style {
         geoCanvas.setCanvasTransform()
         for (let k = 0; k < n; k++) {
             const i = k * FLOATS_PER_CIRCLE
-            ctx.fillStyle = 'rgba(' + [255 * instances[i + 3], 255 * instances[i + 4], 255 * instances[i + 5], instances[i + 6]].join(',') + ')'
+            ctx.fillStyle =
+                'rgba(' +
+                [255 * instances[i + 3], 255 * instances[i + 4], 255 * instances[i + 5], instances[i + 6]].join(',') +
+                ')'
             ctx.beginPath()
             ctx.arc(instances[i] + vx, instances[i + 1] + vy, instances[i + 2], 0, 2 * Math.PI)
             ctx.fill()

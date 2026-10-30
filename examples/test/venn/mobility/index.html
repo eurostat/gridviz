@@ -84,8 +84,11 @@
             </div>
             <div class="label">Circle area: number of people</div>
             <div id="legends"></div>
-                    </div>
-        <div id="source">Data: Eurostat Census 2021 grid (usual residence on 1 January 2021 compared to 1 January 2020) | Background: Eurostat/GISCO</div>
+        </div>
+        <div id="source">
+            Data: Eurostat Census 2021 grid (usual residence on 1 January 2021 compared to 1 January 2020) | Background:
+            Eurostat/GISCO
+        </div>
 
         <script src="../../../../dist/gridviz.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
@@ -120,8 +123,6 @@
                 { key: 'CHG_OUT', label: 'Moved from another country', rgb: [255, 20, 147] },
             ]
 
-
-
             //the map
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -135,7 +136,10 @@
 
             //background: the land, from the Nuts2json countries (cntrg), without their outline. Kosovo is part of Serbia in them.
             //The countries of the NUTS regions (nutsrg_0) are kept, plus UK and Moldova.
-            const COUNTRIES = ('AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD').split(' ')
+            const COUNTRIES =
+                'AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD'.split(
+                    ' '
+                )
             const LAND_COLOR = '#e6e6e6'
             const land = new gridviz.GeoJSONLayer({
                 url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/cntrg.json',
@@ -168,7 +172,13 @@
                         size: (c, r, z) => {
                             const d = circleDiameter(c[type.key], r)
                             //the first type is always visible. The others, which are minorities, are hidden when too small: overlapping dots would turn black.
-                            return type === TYPES[0] ? (c[type.key] > 0 ? Math.max(d, MIN_DIAMETER_PIX * z) : 0) : d >= MIN_DIAMETER_PIX * z ? d : 0
+                            return type === TYPES[0]
+                                ? c[type.key] > 0
+                                    ? Math.max(d, MIN_DIAMETER_PIX * z)
+                                    : 0
+                                : d >= MIN_DIAMETER_PIX * z
+                                ? d
+                                : 0
                         },
                         alpha: () => OPACITY,
                         blendOperation: () => 'multiply',
@@ -187,7 +197,9 @@
                 cellInfoHTML: (c) =>
                     TYPES.map(
                         (cr) =>
-                            `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;${c[cr.key] > 0 ? '' : 'opacity:0.4'}">` +
+                            `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;${
+                                c[cr.key] > 0 ? '' : 'opacity:0.4'
+                            }">` +
                             `<span style="width:12px;height:12px;border-radius:50%;flex:none;background:rgb(${cr.rgb});box-shadow:0 0 0 1px #0003 inset"></span>` +
                             `<span>${cr.label}: <b>${fmt(c[cr.key])}</b></span></div>`
                     ).join(''),
@@ -225,7 +237,8 @@
                     new gridviz.SizeLegend({
                         ...sizeLegendOptions,
                         label: (viewScale, cells, resolution, z) => formatValue(legendValues(resolution, z)[i]),
-                        size: (viewScale, resolution, z) => legendSymbol(DIAMETER_PER_SQRT_PERSON * Math.sqrt(legendValues(resolution, z)[i]), z),
+                        size: (viewScale, resolution, z) =>
+                            legendSymbol(DIAMETER_PER_SQRT_PERSON * Math.sqrt(legendValues(resolution, z)[i]), z),
                     })
             )
 

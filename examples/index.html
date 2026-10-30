@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -221,9 +221,7 @@
                 overflow: hidden;
                 display: flex;
                 flex-direction: column;
-                transition:
-                    box-shadow 0.15s,
-                    transform 0.15s;
+                transition: box-shadow 0.15s, transform 0.15s;
             }
 
             .card:hover {
@@ -318,12 +316,22 @@
         <main class="wrap">
             <section class="hero">
                 <h1>gridviz examples</h1>
-                <p class="sub">Interactive maps of statistical grids, made with gridviz. Click an example to see it beside its code.</p>
+                <p class="sub">
+                    Interactive maps of statistical grids, made with gridviz. Click an example to see it beside its
+                    code.
+                </p>
                 <div class="actions">
-                    <a class="btn primary" href="https://github.com/eurostat/gridviz/blob/master/docs/reference.md" target="_blank" rel="noopener noreferrer">
+                    <a
+                        class="btn primary"
+                        href="https://github.com/eurostat/gridviz/blob/master/docs/reference.md"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         Documentation
                     </a>
-                    <a class="btn" href="https://github.com/eurostat/gridviz" target="_blank" rel="noopener noreferrer">Project on GitHub</a>
+                    <a class="btn" href="https://github.com/eurostat/gridviz" target="_blank" rel="noopener noreferrer"
+                        >Project on GitHub</a
+                    >
                 </div>
             </section>
 
@@ -336,7 +344,13 @@
                 </aside>
 
                 <div class="main">
-                    <input class="search" id="search" type="search" placeholder="Search the examples" aria-label="Search the examples" />
+                    <input
+                        class="search"
+                        id="search"
+                        type="search"
+                        placeholder="Search the examples"
+                        aria-label="Search the examples"
+                    />
                     <p class="stats" id="stats"></p>
                     <section class="grid" id="grid"></section>
                 </div>
@@ -372,7 +386,10 @@
             history.scrollRestoration = 'manual'
             window.addEventListener('pagehide', () => {
                 try {
-                    sessionStorage.setItem(STATE_KEY, JSON.stringify({ hash: location.hash, search: search.value, scrollY: window.scrollY }))
+                    sessionStorage.setItem(
+                        STATE_KEY,
+                        JSON.stringify({ hash: location.hash, search: search.value, scrollY: window.scrollY })
+                    )
                 } catch (e) {
                     /* the storage may be refused: the page is then simply shown from the top */
                 }
@@ -405,7 +422,9 @@
                 scrollToRestore = s.scrollY || 0
             }
             const hashOf = (a) =>
-                a.category === ALL ? location.pathname : '#' + encodeURIComponent(a.category) + (a.group ? '/' + encodeURIComponent(a.group) : '')
+                a.category === ALL
+                    ? location.pathname
+                    : '#' + encodeURIComponent(a.category) + (a.group ? '/' + encodeURIComponent(a.group) : '')
 
             const select = (category, group) => {
                 scrollToRestore = null
@@ -432,7 +451,8 @@
 
             const renderNav = () => {
                 const categories = [...new Set(examples.map((e) => e.category))]
-                if (active.category !== ALL && !categories.includes(active.category)) active = { category: ALL, group: null }
+                if (active.category !== ALL && !categories.includes(active.category))
+                    active = { category: ALL, group: null }
                 nav.textContent = ''
                 nav.appendChild(navLink(ALL, examples.length, active.category === ALL, ALL, null))
                 for (const c of categories) {
@@ -444,7 +464,15 @@
                         const sub = document.createElement('ul')
                         sub.className = 'sub'
                         for (const g of [...new Set(inCategory.map((e) => e.group))])
-                            sub.appendChild(navLink(g, inCategory.filter((e) => e.group === g).length, active.group === g, STYLES, g))
+                            sub.appendChild(
+                                navLink(
+                                    g,
+                                    inCategory.filter((e) => e.group === g).length,
+                                    active.group === g,
+                                    STYLES,
+                                    g
+                                )
+                            )
                         li.appendChild(sub)
                     }
                 }
@@ -495,7 +523,10 @@
                     (e) =>
                         (active.category === ALL || e.category === active.category) &&
                         (!active.group || e.group === active.group) &&
-                        (!q || [e.title, e.description, e.path, e.category, e.group || ''].some((s) => s.toLowerCase().includes(q)))
+                        (!q ||
+                            [e.title, e.description, e.path, e.category, e.group || ''].some((s) =>
+                                s.toLowerCase().includes(q)
+                            ))
                 )
                 stats.textContent = shown.length + ' of ' + examples.length + ' examples'
                 grid.textContent = ''
@@ -558,7 +589,8 @@
                     scrollToRestore = null
                 })
                 .catch(() => {
-                    stats.textContent = 'The list of examples could not be loaded (gallery.json). Serve this folder over http.'
+                    stats.textContent =
+                        'The list of examples could not be loaded (gallery.json). Serve this folder over http.'
                 })
         </script>
     </body>

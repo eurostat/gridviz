@@ -128,6 +128,9 @@ export class VennLegend extends Legend {
             .classed('gridviz-legend-graphic', true)
             .attr('width', w)
             .attr('height', height)
+            // a description for the screen readers: the diagram is a picture, made of the variables it shows
+            .attr('role', 'img')
+            .attr('aria-label', (this.title ? this.title + ': ' : '') + this.items.map((item) => item.label).join(', '))
             .style('overflow', 'visible')
             // the circles blend with each other only, not with what is behind the legend
             .style('isolation', 'isolate')
@@ -171,7 +174,11 @@ export class VennLegend extends Legend {
             const key = hit.join(',')
             if (key === this._hovered) return
             this._hovered = key || null
-            circles.forEach((c, i) => c.classed('gridviz-legend-swatch--active', hit.includes(i)).style('opacity', hit.length && !hit.includes(i) ? 0.25 : 1))
+            circles.forEach((c, i) =>
+                c
+                    .classed('gridviz-legend-swatch--active', hit.includes(i))
+                    .style('opacity', hit.length && !hit.includes(i) ? 0.25 : 1)
+            )
             this.highlight(hit.length ? hit.map((i) => this.items[i].color) : null)
         }
 
@@ -184,7 +191,8 @@ export class VennLegend extends Legend {
                 const hit = []
                 for (let i = 0; i < n; i++) if (Math.hypot(x - cx[i], y - cy[i]) <= R) hit.push(i)
                 // not over a circle (over a label, for example): the label takes it
-                if (hit.length || !(/** @type {Element} */ (event.target).classList.contains('gridviz-legend-label'))) hover(hit)
+                if (hit.length || !(/** @type {Element} */ (event.target).classList.contains('gridviz-legend-label')))
+                    hover(hit)
             })
             .on('mouseleave', () => hover([]))
 

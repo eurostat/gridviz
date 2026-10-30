@@ -1,10 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>gridviz example</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.10.0/styles/atom-one-dark.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.10.0/styles/atom-one-dark.min.css"
+        />
         <style>
             :root {
                 --bar-height: 46px;
@@ -139,9 +142,7 @@
                 flex-direction: column;
                 background: var(--code-bg);
                 border-radius: 10px;
-                box-shadow:
-                    0 20px 68px rgba(0, 0, 0, 0.55),
-                    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+                box-shadow: 0 20px 68px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
                 overflow: hidden;
             }
 
@@ -271,22 +272,42 @@
         <header class="bar">
             <a href="./" id="back" title="All the examples">&larr; Examples</a>
             <div class="title" id="title"></div>
-            <a id="open" href="#" title="Open the example alone, without the code" target="_blank" rel="noopener">Open alone &#8599;</a>
-            <a id="github" href="#" title="The source of the example on GitHub" target="_blank" rel="noopener">GitHub</a>
+            <a id="open" href="#" title="Open the example alone, without the code" target="_blank" rel="noopener"
+                >Open alone &#8599;</a
+            >
+            <a id="github" href="#" title="The source of the example on GitHub" target="_blank" rel="noopener"
+                >GitHub</a
+            >
             <button id="toggle" type="button" aria-pressed="true" title="Show or hide the code">&lt;/&gt; Code</button>
         </header>
 
         <div class="app">
             <section class="stage"><iframe id="frame" title="The example"></iframe></section>
-            <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" aria-label="Resize the code panel" tabindex="0"></div>
+            <div
+                class="splitter"
+                id="splitter"
+                role="separator"
+                aria-orientation="vertical"
+                aria-label="Resize the code panel"
+                tabindex="0"
+            ></div>
             <aside class="code" aria-label="Source code of the example">
                 <div class="window">
                     <div class="window-bar">
                         <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
                         <span class="window-title" id="filename"></span>
                         <div class="tabs" id="tabs">
-                            <button type="button" data-view="page" aria-pressed="true" title="The whole page">Page</button>
-                            <button type="button" data-view="script" aria-pressed="false" title="Only the JavaScript of the page">Script</button>
+                            <button type="button" data-view="page" aria-pressed="true" title="The whole page">
+                                Page
+                            </button>
+                            <button
+                                type="button"
+                                data-view="script"
+                                aria-pressed="false"
+                                title="Only the JavaScript of the page"
+                            >
+                                Script
+                            </button>
                         </div>
                         <button class="copy" id="copy" type="button" title="Copy the code">Copy</button>
                     </div>
@@ -341,7 +362,9 @@
                 try {
                     const ref = new URL(document.referrer)
                     const list = new URL('./', location.href)
-                    fromList = ref.origin === list.origin && (ref.pathname === list.pathname || ref.pathname === list.pathname + 'index.html')
+                    fromList =
+                        ref.origin === list.origin &&
+                        (ref.pathname === list.pathname || ref.pathname === list.pathname + 'index.html')
                 } catch (err) {
                     /* no referrer: the list is opened */
                 }

@@ -22,7 +22,11 @@
             // The Venn legend shows the colors. Hovering a part of it shows only the matching cells on the map.
 
             //define map with initial view
-            const map = new gridviz.Map(document.getElementById('map'), { x: 4300000, y: 2700000, z: 4500 }).addZoomButtons()
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4300000,
+                y: 2700000,
+                z: 4500,
+            }).addZoomButtons()
 
             //define dataset: the area (km2) of fruit trees (f), olive groves (o) and vineyards (v) in 5 km cells
             const dataset = new gridviz.CSVGrid(map, '../test/venn/crops/5000.csv', 5000, {

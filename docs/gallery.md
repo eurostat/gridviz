@@ -11,6 +11,9 @@ Here are some examples of the different styles available in gridviz!
 [Circle color size WebGL](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)  
 [![](img/overviews/ov_circle_webgl.png)](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)
 
+[Ternary](https://eurostat.github.io/gridviz/docs/reference#ternary-style)  
+[![](img/overviews/ov_ternary.png)](https://eurostat.github.io/gridviz/docs/reference#ternary-style)
+
 [Composition](https://eurostat.github.io/gridviz/docs/reference#composition-style)  
 [![](img/overviews/ov_flag.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
 [![](img/overviews/ov_piechart.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
@@ -30,6 +33,9 @@ Here are some examples of the different styles available in gridviz!
 [Lego](https://eurostat.github.io/gridviz/docs/reference#lego-style)  
 [![lego map](img/overviews/ov_lego.png)](https://eurostat.github.io/gridviz/docs/reference#lego-style)
 
+[Lego category](https://eurostat.github.io/gridviz/docs/reference#lego-category-style)  
+[![](img/overviews/ov_lego_category.png)](https://eurostat.github.io/gridviz/docs/reference#lego-category-style)
+
 [Timeseries](https://eurostat.github.io/gridviz/docs/reference#time-series-style)  
 [![timeseries map](img/overviews/ov_timeseries.png)](https://eurostat.github.io/gridviz/docs/reference#time-series-style)
 
@@ -47,8 +53,14 @@ Here are some examples of the different styles available in gridviz!
 [![tanaka style map](img/overviews/ov_tanaka_dark.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
 [![tanaka style map](img/overviews/ov_tanaka.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
 
+[Contour](https://eurostat.github.io/gridviz/docs/reference#contour-style)  
+[![](img/overviews/ov_contour.png)](https://eurostat.github.io/gridviz/docs/reference#contour-style)
+
 [Square/Color WebGL](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)  
 [![](img/overviews/ov_dark.png)](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
+
+[Square color category WebGL](https://eurostat.github.io/gridviz/docs/reference#square-color-category-webgl-style)  
+[![](img/overviews/ov_square_cat_wgl.png)](https://eurostat.github.io/gridviz/docs/reference#square-color-category-webgl-style)
 
 [Kernel Smoothing (heatmap)](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)  
 [![](img/overviews/ov_kersmoo.png)](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
@@ -71,3 +83,9 @@ Here are some examples of the different styles available in gridviz!
 [Image](https://eurostat.github.io/gridviz/docs/reference#image-style)  
 [![kitten map](img/overviews/ov_image_kitten.png)](https://eurostat.github.io/gridviz/docs/reference#image-style)
 [![chernoff faces map](img/overviews/ov_image_chernoff.png)](https://eurostat.github.io/gridviz/docs/reference#image-style)
+
+[Shading](https://eurostat.github.io/gridviz/docs/reference#shading-style)  
+[![](img/overviews/ov_shading.png)](https://eurostat.github.io/gridviz/docs/reference#shading-style)
+
+[Shading ray casting](https://eurostat.github.io/gridviz/docs/reference#shading-ray-casting-style)  
+[![](img/overviews/ov_shading_raycasting.png)](https://eurostat.github.io/gridviz/docs/reference#shading-ray-casting-style)
