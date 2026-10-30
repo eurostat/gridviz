@@ -237,7 +237,7 @@
             updateLayers()
 
             // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
-            // Always three circles are shown: the biggest one which fits (a round number), and two smaller ones.
+            // Always three circles are shown, from the smallest to the biggest: the biggest is the one which fits (a round number), and the two others are smaller.
             // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones.
             // The biggest is at most MAX_LEGEND_DIAMETER_PIX pixels wide and, so that the three circles can be told apart, at least
             // MIN_LEGEND_DIAMETER_PIX: it can then be bigger than the biggest circle of the map (MAX_DIAMETER_FACTOR times the cell size).
@@ -255,7 +255,7 @@
                     Math.max(MAX_DIAMETER_FACTOR * resolution, MIN_LEGEND_DIAMETER_PIX * z)
                 )
                 const biggest = roundBelow((maxDiameter / DIAMETER_PER_SQRT_KM2) ** 2)
-                return [biggest, roundBelow(biggest / 5), roundBelow(biggest / 25)]
+                return [roundBelow(biggest / 25), roundBelow(biggest / 5), biggest]
             }
             //the size (in m) of a legend symbol, never smaller than the smallest circle of the map
             const legendSymbol = (diameter, z) => Math.max(diameter, MIN_DIAMETER_PIX * z)
