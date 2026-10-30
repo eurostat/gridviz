@@ -106,7 +106,7 @@ export class GridLayer extends Layer {
             for (const s of this.styles) {
                 //check if style is visible
                 if (!isVisibleAt(s, z)) continue
-                GridLayer.addLegends(legend, s.legends, s, geoCanvas)
+                GridLayer.addLegends(legend, s.legends, s, geoCanvas, this.styles)
 
                 //case for styles of styles, like kernel smoothing
                 //TODO do better
@@ -132,11 +132,12 @@ export class GridLayer extends Layer {
     }
 
     /** @private */
-    static addLegends(legendComp, lg, style, geoCanvas) {
-        if (Array.isArray(lg)) for (const lg_ of lg) this.addLegends(legendComp, lg_, style, geoCanvas)
+    static addLegends(legendComp, lg, style, geoCanvas, layerStyles) {
+        if (Array.isArray(lg)) for (const lg_ of lg) this.addLegends(legendComp, lg_, style, geoCanvas, layerStyles)
         else {
             // so that hovering a swatch can highlight the cells of the style on the map
             lg.style_ = style
+            lg.layerStyles = layerStyles
             lg.redraw = () => (geoCanvas.redraw ? geoCanvas.redraw() : undefined)
             // The legends go in the order they are drawn, after the one placed before them. A hovered legend is
             // still in the container (see Map.redrawNow) and is left where it is: moving it would lose its mouseleave,

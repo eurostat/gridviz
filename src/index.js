@@ -60,6 +60,7 @@ export {
 } from './legend/SizeLegend.js'
 export { OrientationLegend, orientationLegend } from './legend/OrientationLegend.js'
 export { TernaryLegend } from './legend/TernaryLegend.js'
+export { VennLegend } from './legend/VennLegend.js'
 
 // export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from './utils/stretching.js'

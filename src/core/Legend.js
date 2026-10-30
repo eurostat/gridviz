@@ -107,6 +107,10 @@ export class Legend {
          * The style the legend belongs to, and a function to redraw the map. Both set by the layer when it draws.
          * @type {import('./Style.js').Style|undefined} */
         this.style_ = undefined
+        /**
+         * All the styles of the layer the legend is in, set by the layer when it draws.
+         * @type {Array.<import('./Style.js').Style>|undefined} */
+        this.layerStyles = undefined
         /** @type {function|undefined} */
         this.redraw = undefined
         /**
@@ -125,15 +129,26 @@ export class Legend {
      * @param {Array.<string>|null} colors
      */
     highlight(colors) {
-        if (!this.interactive || !this.style_) return
-        const before = this.style_.highlightColors
+        const styles = this.highlightedStyles()
+        if (!this.interactive || !styles.length) return
+        const before = styles.some((s) => s.highlightColors !== null)
         // flag the legend while hovered, so that the map's redraw leaves its element in place:
         // a hovered element that is detached and appended again never gets its mouseleave
         if (this.div) this.div.attr('data-gridviz-hovered', colors && colors.length ? '' : null)
-        this.style_.setHighlight(colors)
+        for (const s of styles) s.setHighlight(colors)
         // nothing to redraw when the highlight didn't change (mouse moving between a swatch's parts)
-        if (before === null && this.style_.highlightColors === null) return
+        if (!before && styles.every((s) => s.highlightColors === null)) return
         if (this.redraw) this.redraw()
+    }
+
+    /**
+     * The styles whose cells are highlighted when a swatch is hovered: the style of the legend, by default.
+     * A legend of several styles (a Venn diagram, for example) gives more.
+     * @returns {Array.<import('./Style.js').Style>}
+     * @protected
+     */
+    highlightedStyles() {
+        return this.style_ ? [this.style_] : []
     }
 
     /**

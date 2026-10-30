@@ -49,6 +49,7 @@
 -   Legends can be styled from a stylesheet: CSS classes on the legends and their parts, `--gridviz-legend-*` CSS variables for the fonts and padding, a `className` option, and `width: 'fill'` to fit the legend to its container.
 -   CSS classes on the other elements too: `gridviz-map`, `gridviz-canvas`, `gridviz-legends`, `gridviz-tooltip` (also on a tooltip element you give), `gridviz-button` with `gridviz-zoom-buttons` / `gridviz-fullscreen-button`, `gridviz-legend-graphic`, `-symbol`, `-symbol-wrapper`, `-bar` and `-triangle` inside the legends.
 -   Interactive legends: hovering a swatch of a color discrete, color category or ternary legend shows only the matching cells on the map (`interactive: false` to turn it off).
+-   New _VennLegend_: a Venn diagram for the colors of two or three overlapping variables, drawn with one style each and blended by multiplication. It is interactive: hovering a part of the diagram shows only the cells of the colors of the circles at this place. A legend can now highlight several styles (`highlightedStyles()`), and gets the styles of its layer (`layerStyles`).
 
 ### Modules
 

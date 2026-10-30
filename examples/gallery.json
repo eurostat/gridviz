@@ -618,6 +618,12 @@
   "description": "The meaning of the orientation of the segments."
  },
  {
+  "path": "legends/vennLegend.html",
+  "category": "Legends",
+  "title": "Venn legend",
+  "description": "A Venn diagram for the colors of three overlapping variables. Hovering a part of it shows the matching cells on the map."
+ },
+ {
   "path": "legends/external_legend.html",
   "category": "Legends",
   "title": "Legend outside the map",

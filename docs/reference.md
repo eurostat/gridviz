@@ -62,6 +62,7 @@
     - [Size legend](#size-legend)
     - [Width legend](#width-legend)
     - [Ternary color legend](#ternary-color-legend)
+    - [Venn legend](#venn-legend)
   - [Leaflet](#leaflet)
   - [Limit panning and zooming](#limit-panning-and-zooming)
   - [Mixed resolution grids](#mixed-resolution-grids)
@@ -742,9 +743,9 @@ The other elements gridviz creates have classes too, so that a page can restyle 
 
 ### Interactive legends
 
-Hovering a swatch of a _ColorDiscreteLegend_, _ColorCategoryLegend_ or _TernaryLegend_ shows only the cells drawn in that colour on the map, and hovering out shows them all again. This works for the styles that draw cells in a colour per class: _ShapeColorSizeStyle_, _CircleColorSizeWebGLStyle_ and _SquareColorCategoryWebGLStyle_. It matches the colour the style draws with against the colour of the swatch, so the two should be the same colour. Set `interactive: false` on a legend to turn it off.
+Hovering a swatch of a _ColorDiscreteLegend_, _ColorCategoryLegend_ or _TernaryLegend_ shows only the cells drawn in that colour on the map, and hovering out shows them all again. With a _VennLegend_, hovering a part of the diagram shows the cells of the colors of the circles at this place. This works for the styles that draw cells in a colour per class: _ShapeColorSizeStyle_, _CircleColorSizeWebGLStyle_ and _SquareColorCategoryWebGLStyle_. It matches the colour the style draws with against the colour of the swatch, so the two should be the same colour. Set `interactive: false` on a legend to turn it off.
 
-A custom style can take part too: skip the cells for which `this.isHighlighted(color)` is false. Custom legends can call `this.bindHover(selection, color)` on each swatch.
+A custom style can take part too: skip the cells for which `this.isHighlighted(color)` is false. Custom legends can call `this.bindHover(selection, color)` on each swatch. A legend which stands for several styles (like the _VennLegend_) overrides `highlightedStyles()` to return them, and calls `this.highlight(colors)` with the colors to show.
 
 ### Color legend
 
@@ -798,6 +799,42 @@ A custom style can take part too: skip the cells for which `this.isHighlighted(c
 ![](img/legends/ternary_legend.png)
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary_age_DE.html)).
+
+### Venn legend
+
+![](img/legends/venn_legend.png)
+
+A legend for the colors of a map which shows two or three variables as overlapping layers, each in its own color, blended by multiplication (see the [circle style based on web GL](#circle-color-size-webgl-style), with a `blendOperation: () => 'multiply'`). It is a Venn diagram: a circle for each variable, in its color, and the overlaps have the colors of the mix of the circles.
+
+```javascript
+// one style for each variable, with its color (see the example)
+styles[0].legends = [
+    new gridviz.VennLegend({
+        title: 'Permanent crops',
+        items: [
+            { label: 'Fruit trees', color: 'rgb(0,255,255)' },
+            { label: 'Olive groves', color: 'rgb(245,210,0)' },
+            { label: 'Vineyards', color: 'rgb(255,20,147)' },
+        ],
+    }),
+]
+```
+
+| Option    | Type                                | Default  | Description                                                                                                                                                       |
+| --------- | ----------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `items`   | array of `{label, color}`           | -        | The two or three variables. The label is written beside the circle (on the left, on the right and below, for the first, second and third one). The color is the one the style which draws the variable uses. Required. |
+| `radius`  | number                              | `45`     | The radius of the circles, in pixels.                                                                                                                             |
+| `opacity` | number                              | `1`      | The opacity of the circles, within [0,1].                                                                                                                         |
+| `styles`  | array of styles                     | the styles of the layer | The styles which are highlighted when the diagram is hovered, which should be the ones which draw the variables.                                                    |
+
+The common options of the legends (`title`, `labelFontSize`, `titleFontSize`, `padding`, `className`, `interactive`...) can be used too.
+
+The legend is [interactive](#interactive-legends), like the other ones. When the pointer is over a part of the diagram, only the cells of the colors of the circles at this place are shown on the map: the cells of one variable on a part of one circle, and the cells of all the variables of the circles which overlap on an overlap (all of them in the center, for three variables). The circles which are not involved fade in the legend. Hovering the label of a variable shows its cells. Set `interactive: false` to turn it off.
+
+For this, the legend highlights all the styles of the layer it is in, not only the one it is added to (the others are hidden for the colors which are not highlighted). Give the `styles` option if some of the styles of the layer should not be affected.
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/legends/vennLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/vennLegend.html)).
+-   See [these multivariate maps](https://eurostat.github.io/gridviz/examples/#Styles/Circle%20color%20size%20WebGL) ([crops](https://eurostat.github.io/gridviz/examples/test/venn/crops/index.html), forests, air pollution, climate, place of birth, residential mobility), which use it with the Eurostat boundaries.
 
 ## Leaflet
 

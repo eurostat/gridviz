@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz Venn legend example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            // Three variables shown as circles of different colors, blended by multiplication: where they overlap, the colors mix.
+            // The Venn legend shows the colors. Hovering a part of it shows only the matching cells on the map.
+
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), { x: 4300000, y: 2700000, z: 4500 }).addZoomButtons()
+
+            //define dataset: the area (km2) of fruit trees (f), olive groves (o) and vineyards (v) in 5 km cells
+            const dataset = new gridviz.CSVGrid(map, '../test/venn/crops/5000.csv', 5000, {
+                preprocess: (c) => {
+                    c.f = +c.f
+                    c.o = +c.o
+                    c.v = +c.v
+                },
+            })
+
+            //the three variables: a name, a color, and the property of the cell
+            const variables = [
+                { label: 'Fruit trees', color: 'rgb(0,255,255)', property: 'f' },
+                { label: 'Olive groves', color: 'rgb(245,210,0)', property: 'o' },
+                { label: 'Vineyards', color: 'rgb(255,20,147)', property: 'v' },
+            ]
+
+            //one style for each variable: a circle of the color of the variable, with an area proportional to the variable
+            const styles = variables.map(
+                (v) =>
+                    new gridviz.CircleColorSizeWebGLStyle({
+                        color: () => v.color,
+                        size: (cell) => 4000 * Math.sqrt(cell[v.property]),
+                        alpha: () => 0.85,
+                        blendOperation: () => 'multiply',
+                    })
+            )
+
+            //the Venn legend, on one of the styles. The cells of the colors of the hovered part of the legend are shown on the map.
+            styles[0].legends = [
+                new gridviz.VennLegend({
+                    title: 'Permanent crops',
+                    items: variables.map((v) => ({ label: v.label, color: v.color })),
+                }),
+            ]
+
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, styles, { minPixelsPerCell: 6 })]
+        </script>
+    </body>
+</html>

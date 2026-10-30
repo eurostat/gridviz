@@ -48,22 +48,20 @@
                 color: #333;
                 margin: 2px 0 2px;
             }
-            #sizes {
+            #legends {
                 display: flex;
+                flex-wrap: wrap;
                 align-items: flex-end;
                 gap: 14px;
                 min-height: 34px;
                 margin-bottom: 6px;
             }
-            #venn circle {
-                mix-blend-mode: multiply;
+            #legends .gridviz-legend--venn {
+                flex-basis: 100%;
             }
-            #venn text {
-                font-size: 13px;
-                fill: #444;
-                paint-order: stroke;
-                stroke: #fffc;
-                stroke-width: 3px;
+            /* the panel lets the mouse through to the map, but the legends are interactive: hovering them shows only the matching cells */
+            #legends {
+                pointer-events: auto;
             }
             #source {
                 position: absolute;
@@ -85,13 +83,12 @@
                 <p>Hot summers, cold winters and heavy rainfall</p>
             </div>
             <div class="label">Circle area: area meeting the condition (km²)</div>
-            <div id="sizes"></div>
-            <div class="label">Colour: climate condition, overlaps are mixed</div>
-            <div id="venn-legend"></div>
-        </div>
+            <div id="legends"></div>
+                    </div>
         <div id="source">Hot summer: warmest quarter &gt; 20 °C. Cold winter: coldest quarter &lt; 0 °C. Rainy: &gt; 1000 mm a year | Data: WorldClim 2.1, 1970-2000 (CC-BY 4.0) | Background: Eurostat/GISCO</div>
 
         <script src="../../../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
         <script>
             // Multivariate map: what is the climate like?
             // Nested circles in each cell: one per climate condition, with an area proportional to the area where it applies.
@@ -128,12 +125,12 @@
                 y: 2650000,
                 z: 4000,
                 //the legends of the styles are shown in the panel
-                legendContainer: document.getElementById('sizes'),
+                legendContainer: document.getElementById('legends'),
                 //the tooltip is as wide as its lines (it is clipped at 20em by default)
                 tooltip: { maxWidth: 'none' },
             }).addZoomButtons()
 
-            //background: land areas, from the Nuts2json countries (cntrg). Kosovo is part of Serbia in them.
+            //background: the land, from the Nuts2json countries (cntrg), without their outline. Kosovo is part of Serbia in them.
             //The countries of the NUTS regions (nutsrg_0) are kept, plus UK and Moldova.
             const COUNTRIES = ('AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD').split(' ')
             const LAND_COLOR = '#e6e6e6'
@@ -141,56 +138,10 @@
                 url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/cntrg.json',
                 preprocess: (f) => COUNTRIES.includes(f.properties.id),
                 fillStyle: () => LAND_COLOR,
-                strokeStyle: () => '#ffffff',
-                lineWidth: () => 1,
+                strokeStyle: () => null,
             })
-            //the layers below the circles. The thin border between Kosovo and Serbia is added when loaded.
-            const background = [land]
-
-            // The border between Kosovo and Serbia, thinner than the national borders.
-            // It is the part of the Kosovo outline which is also on the Serbian outline, in the NUTS countries.
-            fetch('https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/nutsrg_0.json')
-                .then((r) => r.json())
-                .then((countries) => {
-                    const rings = (id) => {
-                        const g = countries.features.find((f) => f.properties.id == id).geometry
-                        return (g.type == 'Polygon' ? [g.coordinates] : g.coordinates).flat(1)
-                    }
-                    const edge = (a, b) => (a[0] < b[0] || (a[0] == b[0] && a[1] < b[1]) ? a + ';' + b : b + ';' + a)
-                    const serbia = new Set()
-                    for (const ring of rings('RS')) for (let i = 1; i < ring.length; i++) serbia.add(edge(ring[i - 1], ring[i]))
-                    //the lines made of consecutive Kosovo outline segments which are also Serbian outline segments
-                    const lines = []
-                    for (const ring of rings('XK')) {
-                        let line = null
-                        for (let i = 1; i < ring.length; i++) {
-                            if (serbia.has(edge(ring[i - 1], ring[i]))) {
-                                if (!line) lines.push((line = [ring[i - 1]]))
-                                line.push(ring[i])
-                            } else line = null
-                        }
-                    }
-                    const geojson = {
-                        type: 'FeatureCollection',
-                        features: [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: lines } }],
-                    }
-                    background.push(
-                        new gridviz.GeoJSONLayer({
-                            url: URL.createObjectURL(new Blob([JSON.stringify(geojson)], { type: 'application/json' })),
-                            strokeStyle: () => '#ffffff',
-                            lineWidth: () => 0.4,
-                        })
-                    )
-                    updateLayers()
-                })
-
-            //the background, and the grid layer when it exists
-            let gridLayer
-            const updateLayers = () => {
-                map.layers = gridLayer ? [...background, gridLayer] : background
-                map.redraw()
-            }
-            updateLayers()
+            //the official boundaries of Eurostat (GISCO), as in the other examples: national and regional, with Kosovo. Above the circles.
+            const boundaries = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
 
             // The dataset: the area of each climate condition (km2) in the cells, for each resolution
             const dataset = new gridviz.MultiResolutionDataset(
@@ -222,7 +173,7 @@
                 return integer.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + (decimals ? '.' + decimals : '')
             }
             const fmt = (v) => spaced(v < 10 ? v.toFixed(1) : Math.round(v))
-            gridLayer = new gridviz.GridLayer(dataset, styles, {
+            const gridLayer = new gridviz.GridLayer(dataset, styles, {
 
                 minPixelsPerCell: 6,
                 //one line per condition, with a badge of its colour. The conditions which have no area in the cell are dimmed.
@@ -234,7 +185,7 @@
                             `<span>${cr.label}: <b>${fmt(c[cr.key])}</b> km²</span></div>`
                     ).join(''),
             })
-            updateLayers()
+            map.layers = [land, gridLayer, boundaries]
 
             // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
             // Always three circles are shown, from the smallest to the biggest: the biggest is the one which fits (a round number), and the two others are smaller.
@@ -261,7 +212,7 @@
             const legendSymbol = (diameter, z) => Math.max(diameter, MIN_DIAMETER_PIX * z)
             const formatValue = spaced
             const sizeLegendOptions = { fillColor: '#777', strokeColor: 'none', strokeWidth: 0.01, padding: '0px' }
-            styles[0].legends = [0, 1, 2].map(
+            const sizeLegends = [0, 1, 2].map(
                 (i) =>
                     new gridviz.SizeLegend({
                         ...sizeLegendOptions,
@@ -270,18 +221,16 @@
                     })
             )
 
-            const R = 45
-            const vennCircles = [
-                [TYPES[0], 165, 55],
-                [TYPES[1], 225, 55],
-                [TYPES[2], 195, 105],
-            ]
-            document.getElementById('venn-legend').innerHTML =
-                `<svg id="venn" width="360" height="165">` +
-                vennCircles.map(([c, x, y]) => `<circle cx="${x}" cy="${y}" r="${R}" fill="rgb(${c.rgb})"/>`).join('') +
-                `<text x="118" y="58" text-anchor="end">Cold winters</text>` +
-                `<text x="276" y="58">Hot summers</text>` +
-                `<text x="195" y="160" text-anchor="middle">Rainy</text></svg>`
+            //the colors of the variables: a Venn diagram, interactive: the cells of the colors of the hovered part are shown on the map
+            const VENN_LABELS = ['Cold winters', 'Hot summers', 'Rainy']
+            const vennLegend = new gridviz.VennLegend({
+                title: 'Colour: climate condition, overlaps are mixed',
+                padding: '0px',
+                titleFontSize: '12px',
+                titleFontWeight: '600',
+                items: TYPES.map((type, i) => ({ label: VENN_LABELS[i], color: 'rgb(' + type.rgb.join(',') + ')' })),
+            })
+            styles[0].legends = [...sizeLegends, vennLegend]
         </script>
     </body>
 </html>
