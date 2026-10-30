@@ -189,6 +189,13 @@
   "group": "Shape/Color/Size"
  },
  {
+  "path": "styles/ternary_age_DE.html",
+  "category": "Styles",
+  "title": "Ternary colours: age groups",
+  "description": "The age structure of the population of Germany, with a ternary legend.",
+  "group": "Shape/Color/Size"
+ },
+ {
   "path": "styles/squarecolorwgl.html",
   "category": "Styles",
   "title": "Square colour, WebGL",
@@ -329,13 +336,6 @@
   "group": "Pillars"
  },
  {
-  "path": "styles/ternary_age_DE.html",
-  "category": "Styles",
-  "title": "Ternary colours: age groups",
-  "description": "The age structure of the population of Germany, with a ternary legend.",
-  "group": "Ternary"
- },
- {
   "path": "styles/text.html",
   "category": "Styles",
   "title": "Text",
@@ -399,11 +399,18 @@
   "group": "Side category"
  },
  {
+  "path": "styles/tanaka.html",
+  "category": "Styles",
+  "title": "Tanaka contours",
+  "description": "Relief with Tanaka contours.",
+  "group": "Tanaka"
+ },
+ {
   "path": "styles/side_contour.html",
   "category": "Styles",
   "title": "Contours",
   "description": "Contour lines drawn with the side Tanaka style.",
-  "group": "Contour"
+  "group": "Tanaka"
  },
  {
   "path": "styles/isofence.html",
@@ -462,13 +469,6 @@
   "group": "Ninja star"
  },
  {
-  "path": "styles/tanaka.html",
-  "category": "Styles",
-  "title": "Tanaka contours",
-  "description": "Relief with Tanaka contours.",
-  "group": "Tanaka"
- },
- {
   "path": "styles/lego.html",
   "category": "Styles",
   "title": "Lego",
@@ -480,7 +480,7 @@
   "category": "Styles",
   "title": "Lego by category",
   "description": "Land cover categories as lego bricks.",
-  "group": "Lego category"
+  "group": "Lego"
  },
  {
   "path": "styles/side_hillshading.html",
@@ -497,25 +497,23 @@
   "group": "Shading ray casting"
  },
  {
-  "path": "styles/interpolator.html",
-  "category": "Styles",
-  "title": "Interpolation",
-  "description": "Interpolated elevation, with hypsometric colours.",
-  "group": "Interpolator"
- },
- {
-  "path": "styles/kernelsmoothing.html",
-  "category": "Styles",
-  "title": "Kernel smoothing",
-  "description": "A smoothed grid, with a choice of style and a slider for the smoothing.",
-  "group": "Kernel smoothing"
- },
- {
   "path": "basics/custom_style.html",
   "category": "Styles",
   "title": "Custom style",
   "description": "A style written from scratch, with its own draw function.",
   "group": "Custom"
+ },
+ {
+  "path": "styles/interpolator.html",
+  "category": "Smoothing and interpolation",
+  "title": "Interpolation",
+  "description": "Interpolated elevation, with hypsometric colours."
+ },
+ {
+  "path": "styles/kernelsmoothing.html",
+  "category": "Smoothing and interpolation",
+  "title": "Kernel smoothing",
+  "description": "A smoothed grid, with a choice of style and a slider for the smoothing."
  },
  {
   "path": "legends/colorLegend.html",
