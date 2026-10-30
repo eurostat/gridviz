@@ -318,7 +318,7 @@
         <main class="wrap">
             <section class="hero">
                 <h1>gridviz examples</h1>
-                <p class="sub">Interactive maps of statistical grids, made with gridviz. Click an example to open it.</p>
+                <p class="sub">Interactive maps of statistical grids, made with gridviz. Click an example to see it beside its code.</p>
                 <div class="actions">
                     <a class="btn primary" href="https://github.com/eurostat/gridviz/blob/master/docs/reference.md" target="_blank" rel="noopener noreferrer">
                         Documentation
@@ -348,6 +348,8 @@
             // Their thumbnails are made by scripts/make-gallery.mjs, in img/previews/.
             const ALL = 'All'
             const STYLES = 'Styles'
+            // an example is opened in the viewer, next to its code
+            const viewerPath = (path) => 'view.html?example=' + encodeURI(path)
             const thumbPath = (path) => 'img/previews/' + path.replace(/\//g, '__').replace(/\.html$/, '.jpg')
 
             const grid = document.getElementById('grid')
@@ -413,9 +415,7 @@
 
                 const link = document.createElement('a')
                 link.className = 'thumb-link'
-                link.href = e.path
-                link.target = '_blank'
-                link.rel = 'noopener noreferrer'
+                link.href = viewerPath(e.path)
                 link.setAttribute('aria-label', e.title)
                 const img = document.createElement('img')
                 img.className = 'thumb'
@@ -431,9 +431,7 @@
                 const h = document.createElement('h3')
                 h.className = 'card-title'
                 const a = document.createElement('a')
-                a.href = e.path
-                a.target = '_blank'
-                a.rel = 'noopener noreferrer'
+                a.href = viewerPath(e.path)
                 a.textContent = e.title
                 h.appendChild(a)
                 const d = document.createElement('p')
