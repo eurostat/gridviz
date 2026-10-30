@@ -230,10 +230,12 @@
             updateLayers()
 
             // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
-            // Three circles are shown: the biggest one which fits (a round number), and two smaller ones.
-            // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones,
-            // which are limited to MAX_DIAMETER_FACTOR times the cell size, and the legend to MAX_LEGEND_DIAMETER_PIX pixels.
+            // Always three circles are shown: the biggest one which fits (a round number), and two smaller ones.
+            // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones.
+            // The biggest is at most MAX_LEGEND_DIAMETER_PIX pixels wide and, so that the three circles can be told apart, at least
+            // MIN_LEGEND_DIAMETER_PIX: it can then be bigger than the biggest circle of the map (MAX_DIAMETER_FACTOR times the cell size).
             const MAX_LEGEND_DIAMETER_PIX = 70
+            const MIN_LEGEND_DIAMETER_PIX = 20
             //the biggest of 1, 2, 5 x 10^n which is not above a value
             const roundBelow = (x) => {
                 const p = 10 ** Math.floor(Math.log10(x))
@@ -241,10 +243,15 @@
             }
             //the values of the three legend circles, for a resolution and a zoom level
             const legendValues = (resolution, z) => {
-                const maxDiameter = Math.min(MAX_LEGEND_DIAMETER_PIX * z, MAX_DIAMETER_FACTOR * resolution)
+                const maxDiameter = Math.min(
+                    MAX_LEGEND_DIAMETER_PIX * z,
+                    Math.max(MAX_DIAMETER_FACTOR * resolution, MIN_LEGEND_DIAMETER_PIX * z)
+                )
                 const biggest = roundBelow((maxDiameter / DIAMETER_PER_SQRT_KM2) ** 2)
                 return [biggest, roundBelow(biggest / 5), roundBelow(biggest / 25)]
             }
+            //the size (in m) of a legend symbol, never smaller than the smallest circle of the map
+            const legendSymbol = (diameter, z) => Math.max(diameter, MIN_DIAMETER_PIX * z)
             const formatValue = (v) => '' + v
             const sizeLegendOptions = { fillColor: '#777', strokeColor: 'none', strokeWidth: 0.01, padding: '0px' }
             styles[0].legends = [0, 1, 2].map(
@@ -252,11 +259,7 @@
                     new gridviz.SizeLegend({
                         ...sizeLegendOptions,
                         label: (viewScale, cells, resolution, z) => formatValue(legendValues(resolution, z)[i]),
-                        //the smaller circles are not shown when they are as small as the smallest circle of the map: they would look the same
-                        size: (viewScale, resolution, z) => {
-                            const diameter = DIAMETER_PER_SQRT_KM2 * Math.sqrt(legendValues(resolution, z)[i])
-                            return i > 0 && diameter <= MIN_DIAMETER_PIX * z ? 0 : Math.max(diameter, MIN_DIAMETER_PIX * z)
-                        },
+                        size: (viewScale, resolution, z) => legendSymbol(DIAMETER_PER_SQRT_KM2 * Math.sqrt(legendValues(resolution, z)[i]), z),
                     })
             )
 
