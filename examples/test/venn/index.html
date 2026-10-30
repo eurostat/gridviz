@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz multivariate map with a Venn diagram legend (issue #146)</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+                font-family: Helvetica, Arial, sans-serif;
+            }
+            #panel {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                pointer-events: none;
+                font-size: 13px;
+                color: #444;
+                background: #fffe;
+                padding: 14px 16px 10px;
+                border-radius: 6px;
+                box-shadow: 0 1px 6px #0003;
+            }
+            #title {
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+            #title h1 {
+                margin: 0;
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 1.15;
+                letter-spacing: -0.01em;
+                color: #222;
+            }
+            #title p {
+                margin: 4px 0 0;
+                font-size: 13px;
+                color: #666;
+            }
+            #legend .label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #333;
+                margin: 2px 0 2px;
+            }
+            #venn circle {
+                mix-blend-mode: multiply;
+            }
+            #venn text {
+                font-size: 13px;
+                fill: #444;
+                paint-order: stroke;
+                stroke: #fffc;
+                stroke-width: 3px;
+            }
+            #source {
+                position: absolute;
+                bottom: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 12px;
+                color: #444;
+                background: #fffc;
+                padding: 2px 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="panel">
+            <div id="title">
+                <h1>Permanent crops in Europe</h1>
+                <p>Fruit trees, olive groves and vineyards</p>
+            </div>
+            <div id="legend"></div>
+        </div>
+        <div id="source">Data: CORINE Land Cover 2018, aggregated from 1 km cells | Background: Eurostat/GISCO</div>
+
+        <script src="../../../dist/gridviz.js"></script>
+        <script>
+            // Multivariate map: where are the permanent crops?
+            // Nested circles in each cell: one per crop, with an area proportional to the area of the crop in the cell.
+            // The circles are blended by multiplication, so their overlaps have the colours of a Venn diagram.
+            // The map is multi-resolution: the areas were summed from 1 km CORINE cells into bigger cells (see prepare.html).
+
+            //the resolutions of the map, in m. One CSV file per resolution, in this folder.
+            const RESOLUTIONS = [1000, 2000, 5000, 10000, 20000, 50000]
+            //the opacity of the circles
+            const OPACITY = 0.85
+            //the circle diameter (in m) per square root of the crop area (in km2). The circle area is then proportional to the crop area, at all resolutions.
+            const DIAMETER_PER_SQRT_KM2 = 4000
+            //the biggest circle diameter, as a factor of the cell size
+            const MAX_DIAMETER_FACTOR = 1.4
+
+            //the crops: CORINE code in the Eurostat tiled grids, label and primary colour
+            const CROPS = [
+                { key: 'f', code: 16, label: 'Fruit trees', rgb: [0, 255, 255] },
+                { key: 'o', code: 17, label: 'Olive groves', rgb: [245, 210, 0] },
+                { key: 'v', code: 15, label: 'Vineyards', rgb: [255, 20, 147] },
+            ]
+
+            //the map
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2650000,
+                z: 4000,
+            }).addZoomButtons()
+
+            //background: land areas, from the Nuts2json countries (cntrg). Kosovo is part of Serbia in them.
+            //The countries of the NUTS regions (nutsrg_0) are kept, plus UK and Moldova.
+            const COUNTRIES = ('AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD').split(' ')
+            const LAND_COLOR = '#e6e6e6'
+            const land = new gridviz.GeoJSONLayer({
+                url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/cntrg.json',
+                preprocess: (f) => COUNTRIES.includes(f.properties.id),
+                fillStyle: () => LAND_COLOR,
+                strokeStyle: () => '#ffffff',
+                lineWidth: () => 1,
+            })
+            //the layers below the circles. The thin border between Kosovo and Serbia is added when loaded.
+            const background = [land]
+
+            // The border between Kosovo and Serbia, thinner than the national borders.
+            // It is the part of the Kosovo outline which is also on the Serbian outline, in the NUTS countries.
+            fetch('https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/nutsrg_0.json')
+                .then((r) => r.json())
+                .then((countries) => {
+                    const rings = (id) => {
+                        const g = countries.features.find((f) => f.properties.id == id).geometry
+                        return (g.type == 'Polygon' ? [g.coordinates] : g.coordinates).flat(1)
+                    }
+                    const edge = (a, b) => (a[0] < b[0] || (a[0] == b[0] && a[1] < b[1]) ? a + ';' + b : b + ';' + a)
+                    const serbia = new Set()
+                    for (const ring of rings('RS')) for (let i = 1; i < ring.length; i++) serbia.add(edge(ring[i - 1], ring[i]))
+                    //the lines made of consecutive Kosovo outline segments which are also Serbian outline segments
+                    const lines = []
+                    for (const ring of rings('XK')) {
+                        let line = null
+                        for (let i = 1; i < ring.length; i++) {
+                            if (serbia.has(edge(ring[i - 1], ring[i]))) {
+                                if (!line) lines.push((line = [ring[i - 1]]))
+                                line.push(ring[i])
+                            } else line = null
+                        }
+                    }
+                    const geojson = {
+                        type: 'FeatureCollection',
+                        features: [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: lines } }],
+                    }
+                    background.push(
+                        new gridviz.GeoJSONLayer({
+                            url: URL.createObjectURL(new Blob([JSON.stringify(geojson)], { type: 'application/json' })),
+                            strokeStyle: () => '#ffffff',
+                            lineWidth: () => 0.4,
+                        })
+                    )
+                    updateLayers()
+                })
+
+            //the background, and the grid layer when it exists
+            let gridLayer
+            const updateLayers = () => {
+                map.layers = gridLayer ? [...background, gridLayer] : background
+                map.redraw()
+            }
+            updateLayers()
+
+            // The dataset: the area of each crop (km2) in the cells, for each resolution
+            const dataset = new gridviz.MultiResolutionDataset(
+                RESOLUTIONS,
+                (r) => new gridviz.CSVGrid(map, r + '.csv', r),
+                {
+                    //the CSV values are text
+                    preprocess: (c) => {
+                        for (const cr of CROPS) c[cr.key] = +c[cr.key]
+                    },
+                }
+            )
+
+            // The styles, one per crop: a circle with an area proportional to the area of the crop, in the colour of the crop.
+            // Multiplied together, the colours of the overlapping circles are those of a Venn diagram.
+            const styles = CROPS.map(
+                (crop) =>
+                    new gridviz.ShapeColorSizeStyle({
+                        color: () => 'rgb(' + crop.rgb.join(',') + ')',
+                        shape: () => 'circle',
+                        size: (c, r, z) =>
+                            c[crop.key] > 0
+                                ? Math.max(Math.min(DIAMETER_PER_SQRT_KM2 * Math.sqrt(c[crop.key]), MAX_DIAMETER_FACTOR * r), 2 * z)
+                                : 0,
+                        alpha: () => OPACITY,
+                        blendOperation: () => 'multiply',
+                    })
+            )
+
+            const fmt = (v) => (v < 10 ? v.toFixed(1) : Math.round(v))
+            gridLayer = new gridviz.GridLayer(dataset, styles, {
+                minPixelsPerCell: 6,
+                cellInfoHTML: (c) => CROPS.map((cr) => cr.label + ': ' + fmt(c[cr.key]) + ' km²').join('<br>'),
+            })
+            updateLayers()
+
+            // Legend: Venn diagram for the colours, circles for the sizes
+            const R = 45
+            const vennCircles = [
+                [CROPS[0], 165, 55],
+                [CROPS[1], 225, 55],
+                [CROPS[2], 195, 105],
+            ]
+            const vennSVG =
+                `<svg id="venn" width="360" height="165">` +
+                vennCircles.map(([c, x, y]) => `<circle cx="${x}" cy="${y}" r="${R}" fill="rgb(${c.rgb})"/>`).join('') +
+                `<text x="118" y="58" text-anchor="end">Fruit trees</text>` +
+                `<text x="276" y="58">Olive groves</text>` +
+                `<text x="195" y="160" text-anchor="middle">Vineyards</text></svg>`
+
+            //the circles are in geographical units: the size legend follows the zoom, and shows the sizes which fit in it
+            const sizeKm2 = [1, 5, 10, 50, 150]
+            const MAX_LEGEND_DIAMETER = 70
+            const sizeSVG = () => {
+                const d = (a) => Math.max((DIAMETER_PER_SQRT_KM2 * Math.sqrt(a)) / map.getZoom(), 2)
+                const shown = sizeKm2.filter((a) => d(a) <= MAX_LEGEND_DIAMETER)
+                if (shown.length == 0) return '<div>(zoom out to see the size scale)</div>'
+                const H = d(shown[shown.length - 1]) + 4
+                let x = 6
+                const items = shown.map((a) => {
+                    const w = Math.max(d(a), 24)
+                    const out =
+                        `<circle cx="${x + w / 2}" cy="${H / 2}" r="${d(a) / 2}" fill="#777" fill-opacity="0.8"/>` +
+                        `<text x="${x + w / 2}" y="${
+                            H + 14
+                        }" text-anchor="middle" style="font-size:12px;fill:#444">${a}</text>`
+                    x += w + 8
+                    return out
+                })
+                return `<svg width="${x}" height="${H + 20}">${items.join('')}</svg>`
+            }
+            const drawLegend = () => {
+                document.getElementById('legend').innerHTML =
+                    `<div class="label">Circle area: area of the crop (km²)</div>` +
+                    sizeSVG() +
+                    `<div class="label">Colour: crop, overlaps are mixed</div>` +
+                    vennSVG
+            }
+            drawLegend()
+            map.geoCanvas.onZoomEndFun = drawLegend
+        </script>
+    </body>
+</html>
