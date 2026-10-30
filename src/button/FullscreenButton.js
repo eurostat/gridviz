@@ -30,11 +30,11 @@ export class FullscreenButton extends Button {
         this.div.node().innerHTML = `
         <svg
             class="gridviz-fullscreen-icon"
-            style="height: 1.2rem; width: 1.2rem; fill:black; margin:0;"
+            style="height: 20px; width: 20px; fill: currentColor; margin:0;"
             focusable="false"
             aria-hidden="true"
         >
-            <svg fill="#000000" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+            <svg fill="currentColor" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
             <title/>
             <g>
             <path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/>
@@ -55,10 +55,10 @@ export class FullscreenButton extends Button {
             this.onClickFunction(e)
         })
         this.div.on('mouseover', (e) => {
-            this.style('background-color', 'lightgrey')
+            this.style('background-color', Button.HOVER_BACKGROUND)
         })
         this.div.on('mouseout', (e) => {
-            this.style('background-color', '#ffffff')
+            this.style('background-color', Button.BACKGROUND)
         })
 
         //set position

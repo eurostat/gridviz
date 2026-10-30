@@ -27,10 +27,10 @@ export class ZoomButtons extends Button {
             this.zoomIn(e)
         })
         this.zoomInBtn.addEventListener('mouseover', () => {
-            this.zoomInBtn.style.backgroundColor = 'lightgrey'
+            this.zoomInBtn.style.backgroundColor = Button.HOVER_BACKGROUND
         })
         this.zoomInBtn.addEventListener('mouseout', () => {
-            this.zoomInBtn.style.backgroundColor = '#ffffff'
+            this.zoomInBtn.style.backgroundColor = Button.BACKGROUND
         })
 
         // Create zoom out button
@@ -38,15 +38,15 @@ export class ZoomButtons extends Button {
         this.zoomOutBtn.id = 'zoom-out'
         this.zoomOutBtn.className = 'gridviz-zoom-button gridviz-zoom-button--out'
         this.zoomOutBtn.title = 'Zoom out'
-        this.zoomOutBtn.textContent = '-'
+        this.zoomOutBtn.textContent = String.fromCharCode(0x2212) // a minus sign, as wide as the plus (not a literal character, which breaks in pages without a charset)
         this.zoomOutBtn.addEventListener('click', (e) => {
             this.zoomOut(e)
         })
         this.zoomOutBtn.addEventListener('mouseover', () => {
-            this.zoomOutBtn.style.backgroundColor = 'lightgrey'
+            this.zoomOutBtn.style.backgroundColor = Button.HOVER_BACKGROUND
         })
         this.zoomOutBtn.addEventListener('mouseout', () => {
-            this.zoomOutBtn.style.backgroundColor = '#ffffff'
+            this.zoomOutBtn.style.backgroundColor = Button.BACKGROUND
         })
 
         // Set common styles for buttons
@@ -56,15 +56,20 @@ export class ZoomButtons extends Button {
             btn.style.justifyContent = 'center'
             btn.style.display = 'flex'
             btn.style.border = 'none'
-            btn.style.color = 'black'
+            btn.style.color = 'var(--gridviz-button-color, #0e47cb)'
+            btn.style.fontFamily = "'Helvetica Neue', Arial, Helvetica, sans-serif"
             btn.style.textAlign = 'center'
             btn.style.textDecoration = 'none'
-            btn.style.padding = '4px'
-            btn.style.fontSize = '24px'
+            btn.style.padding = '0'
+            btn.style.boxSizing = 'border-box'
+            // the size of the button, less its border
+            btn.style.width = 'calc(var(--gridviz-button-size, 38px) - 2px)'
+            btn.style.height = 'calc(var(--gridviz-button-size, 38px) - 2px)'
+            btn.style.fontSize = '22px'
             btn.style.fontWeight = 'bold'
             btn.style.userSelect = 'none'
-            btn.style.backgroundColor = '#ffffff'
-            if (index === 0) btn.style.borderBottom = '1px solid grey' // Zoom in button only
+            btn.style.backgroundColor = Button.BACKGROUND
+            if (index === 0) btn.style.borderBottom = '1px solid #ccc' // Zoom in button only
         })
 
         // Unset parent class height and display for dual buttons

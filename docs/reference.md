@@ -628,6 +628,8 @@ The other elements gridviz creates have classes too, so that a page can restyle 
 -   `gridviz-legends`: the element the legends are in, when gridviz makes it (not when you give a `legendContainer`).
 -   `gridviz-tooltip`: the tooltip, also when you give your own `tooltipElement`.
 -   `gridviz-button` on every button, with `gridviz-zoom-buttons` (and `gridviz-zoom-button--in` / `--out` on the two links inside it) or `gridviz-fullscreen-button` (its icon is `gridviz-fullscreen-icon`). The `class` option adds your own classes.
+-   **Buttons.** The buttons look like the map controls of the statistical atlas: white, with a thin blue border, rounded corners, no shadow and a blue symbol. This is set with CSS variables, with the usual value as fallback, so that a page can change it without `!important`: `--gridviz-button-color` (`#0e47cb`, the symbol), `--gridviz-button-border-color` (`#0e47cb`), `--gridviz-button-background` (`#ffffff`), `--gridviz-button-hover-background` (`#f4f4f4`), `--gridviz-button-radius` (`10px`) and `--gridviz-button-size` (`38px`, the width and height of a button, border included).
+-   **Tooltip and legends.** Their look (the font, the colours, the border, the radius and the shadow) is also the one of the statistical atlas. See the options of the tooltip above, and the CSS variables of the legends.
 
 ### Interactive legends
 

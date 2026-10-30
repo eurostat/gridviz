@@ -230,37 +230,35 @@
             updateLayers()
 
             // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
+            // Three circles are shown: the biggest one which fits (a round number), and two smaller ones.
             // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones,
-            // which are limited to MAX_DIAMETER_FACTOR times the cell size. The values below that limit are shown, then the limit.
-            const SIZE_VALUES_KM2 = [1, 5, 25, 100, 500, 2500]
+            // which are limited to MAX_DIAMETER_FACTOR times the cell size, and the legend to MAX_LEGEND_DIAMETER_PIX pixels.
             const MAX_LEGEND_DIAMETER_PIX = 70
-            //the size (in m) of a legend symbol: 0 to hide it when it would be too big, never smaller than the smallest circle of the map
-            const legendSymbol = (diameter, z) =>
-                diameter / z > MAX_LEGEND_DIAMETER_PIX ? 0 : Math.max(diameter, MIN_DIAMETER_PIX * z)
+            //the biggest of 1, 2, 5 x 10^n which is not above a value
+            const roundBelow = (x) => {
+                const p = 10 ** Math.floor(Math.log10(x))
+                return (x / p >= 5 ? 5 : x / p >= 2 ? 2 : 1) * p
+            }
+            //the values of the three legend circles, for a resolution and a zoom level
+            const legendValues = (resolution, z) => {
+                const maxDiameter = Math.min(MAX_LEGEND_DIAMETER_PIX * z, MAX_DIAMETER_FACTOR * resolution)
+                const biggest = roundBelow((maxDiameter / DIAMETER_PER_SQRT_KM2) ** 2)
+                return [biggest, roundBelow(biggest / 5), roundBelow(biggest / 25)]
+            }
+            const formatValue = (v) => '' + v
             const sizeLegendOptions = { fillColor: '#777', strokeColor: 'none', strokeWidth: 0.01, padding: '0px' }
-            styles[0].legends = [
-                ...SIZE_VALUES_KM2.map(
-                    (a) =>
-                        new gridviz.SizeLegend({
-                            ...sizeLegendOptions,
-                            label: () => a,
-                            //hidden when the circles of this area are limited by the cell size, they are shown by the last legend
-                            size: (viewScale, resolution, z) => {
-                                const d = DIAMETER_PER_SQRT_KM2 * Math.sqrt(a)
-                                return d < MAX_DIAMETER_FACTOR * resolution ? legendSymbol(d, z) : 0
-                            },
-                        })
-                ),
-                //the limit: the circles of that area, and of bigger ones, have the same size
-                new gridviz.SizeLegend({
-                    ...sizeLegendOptions,
-                    label: (viewScale, cells, resolution) => {
-                        const area = ((MAX_DIAMETER_FACTOR * resolution) / DIAMETER_PER_SQRT_KM2) ** 2
-                        return '≥ ' + (area >= 10 ? Math.round(area) : +area.toPrecision(2))
-                    },
-                    size: (viewScale, resolution, z) => legendSymbol(MAX_DIAMETER_FACTOR * resolution, z),
-                }),
-            ]
+            styles[0].legends = [0, 1, 2].map(
+                (i) =>
+                    new gridviz.SizeLegend({
+                        ...sizeLegendOptions,
+                        label: (viewScale, cells, resolution, z) => formatValue(legendValues(resolution, z)[i]),
+                        //the smaller circles are not shown when they are as small as the smallest circle of the map: they would look the same
+                        size: (viewScale, resolution, z) => {
+                            const diameter = DIAMETER_PER_SQRT_KM2 * Math.sqrt(legendValues(resolution, z)[i])
+                            return i > 0 && diameter <= MIN_DIAMETER_PIX * z ? 0 : Math.max(diameter, MIN_DIAMETER_PIX * z)
+                        },
+                    })
+            )
 
             const R = 45
             const vennCircles = [
