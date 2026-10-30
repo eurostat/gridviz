@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Prepare the data of the Venn diagram map (venn.html)</title>
+        <title>Prepare the data of the Venn diagram map (index.html)</title>
         <style>
             body {
                 font-family: Helvetica, Arial, sans-serif;
@@ -11,7 +11,7 @@
         </style>
     </head>
     <body>
-        <h3>Prepare the data of venn.html</h3>
+        <h3>Prepare the data of the crops map</h3>
         <p>
             Loads the 1 km CORINE Land Cover 2018 cells of vineyards, fruit trees and olive groves, sums their area into bigger
             cells, and produces one CSV file per resolution (x, y, area in km² of fruit trees f, olive groves o and vineyards v).
@@ -20,7 +20,7 @@
         <p id="status">Loading...</p>
         <div id="links"></div>
 
-        <script src="../../../dist/gridviz.js"></script>
+        <script src="../../../../dist/gridviz.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.0"></script>
         <script>
             //the resolution of the CORINE dataset used as input, in m
