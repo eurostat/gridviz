@@ -222,7 +222,12 @@
                     })
             )
 
-            const fmt = (v) => Math.round(v).toLocaleString('en')
+            //a number with a space as the thousands separator (a no-break space), in the tooltip and in the legend
+            const spaced = (v) => {
+                const [integer, decimals] = String(v).split('.')
+                return integer.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + (decimals ? '.' + decimals : '')
+            }
+            const fmt = (v) => spaced(Math.round(v))
             gridLayer = new gridviz.GridLayer(dataset, styles, {
                 minPixelsPerCell: 6,
                 //one line per residential mobility, with a badge of its colour. The kinds of change which are not in the cell are dimmed.
@@ -260,7 +265,7 @@
             }
             //the size (in m) of a legend symbol, never smaller than the smallest circle of the map
             const legendSymbol = (diameter, z) => Math.max(diameter, MIN_DIAMETER_PIX * z)
-            const formatValue = (v) => v.toLocaleString('en')
+            const formatValue = spaced
             const sizeLegendOptions = { fillColor: '#777', strokeColor: 'none', strokeWidth: 0.01, padding: '0px' }
             styles[0].legends = [0, 1, 2].map(
                 (i) =>
