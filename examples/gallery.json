@@ -1,0 +1,632 @@
+[
+ {
+  "path": "basics/basic_CSV.html",
+  "category": "Basics",
+  "title": "Basic CSV grid",
+  "description": "The simplest map: a CSV grid file, with a colour for each cell."
+ },
+ {
+  "path": "basics/basic_JS.html",
+  "category": "Basics",
+  "title": "Basic JavaScript grid",
+  "description": "Cells defined directly in JavaScript, drawn with squares and strokes."
+ },
+ {
+  "path": "basics/basic_tiled_CSV.html",
+  "category": "Basics",
+  "title": "Tiled CSV grid",
+  "description": "A large grid loaded tile by tile, only where it is in view."
+ },
+ {
+  "path": "basics/basic_multiscale_CSV.html",
+  "category": "Basics",
+  "title": "Multi-resolution CSV",
+  "description": "Several CSV grids: the resolution changes with the zoom level."
+ },
+ {
+  "path": "basics/basic_multiscale_tiled_CSV.html",
+  "category": "Basics",
+  "title": "Multi-resolution tiled CSV",
+  "description": "Tiled grids at several resolutions, loaded on demand."
+ },
+ {
+  "path": "basics/mixed_resolution.html",
+  "category": "Basics",
+  "title": "Mixed resolutions",
+  "description": "One dataset where each cell has its own resolution."
+ },
+ {
+  "path": "basics/mixed_resolution_BE.html",
+  "category": "Basics",
+  "title": "Mixed resolutions: Belgium",
+  "description": "Cells of different sizes in one dataset, with boundaries, labels and a legend."
+ },
+ {
+  "path": "basics/preprocess.html",
+  "category": "Basics",
+  "title": "Preprocess cells",
+  "description": "A new value computed for each cell on loading: the population change from 2011 to 2021."
+ },
+ {
+  "path": "basics/select.html",
+  "category": "Basics",
+  "title": "Select cells",
+  "description": "Only the cells which match a condition are drawn: here, the water bodies of a land cover grid."
+ },
+ {
+  "path": "basics/select_style.html",
+  "category": "Basics",
+  "title": "Select cells with a style",
+  "description": "Cells selected and coloured by category with a WebGL style."
+ },
+ {
+  "path": "basics/custom_style.html",
+  "category": "Basics",
+  "title": "Custom style",
+  "description": "A style written from scratch, with its own draw function."
+ },
+ {
+  "path": "basics/tooltip.html",
+  "category": "Basics",
+  "title": "Tooltip",
+  "description": "Information about the cell under the mouse."
+ },
+ {
+  "path": "basics/events.html",
+  "category": "Basics",
+  "title": "Events",
+  "description": "Reacting to the events of the map."
+ },
+ {
+  "path": "basics/buttons.html",
+  "category": "Basics",
+  "title": "Zoom buttons",
+  "description": "Zoom buttons added to the map."
+ },
+ {
+  "path": "basics/limits.html",
+  "category": "Basics",
+  "title": "Map limits",
+  "description": "The extent and the zoom levels of the map are limited."
+ },
+ {
+  "path": "basics/viewscale.html",
+  "category": "Basics",
+  "title": "View scale",
+  "description": "Colours computed from the cells in the current view, with several resolutions."
+ },
+ {
+  "path": "basics/viewscale_basic.html",
+  "category": "Basics",
+  "title": "View scale, single resolution",
+  "description": "The colour scale adapts to the values of the cells in the view."
+ },
+ {
+  "path": "basics/stretching.html",
+  "category": "Basics",
+  "title": "Stretching",
+  "description": "Logarithmic stretching of the values, over a background with boundaries and labels."
+ },
+ {
+  "path": "basics/blending_alpha.html",
+  "category": "Basics",
+  "title": "Alpha and blending",
+  "description": "Semi-transparent cells over a WMS background."
+ },
+ {
+  "path": "basics/filter_color.html",
+  "category": "Basics",
+  "title": "Filter colour",
+  "description": "A colour filter applied to the background layers."
+ },
+ {
+  "path": "basics/background.html",
+  "category": "Basics",
+  "title": "Background layer",
+  "description": "A tiled image background under the grid."
+ },
+ {
+  "path": "basics/background_gisco.html",
+  "category": "Basics",
+  "title": "GISCO background",
+  "description": "The Eurostat GISCO tiles as background."
+ },
+ {
+  "path": "basics/background_WMS.html",
+  "category": "Basics",
+  "title": "WMS background",
+  "description": "A background from a WMS service."
+ },
+ {
+  "path": "basics/background_image.html",
+  "category": "Basics",
+  "title": "Image background",
+  "description": "A georeferenced image as background."
+ },
+ {
+  "path": "basics/boundaries.html",
+  "category": "Basics",
+  "title": "Boundaries",
+  "description": "Boundaries from GeoJSON, styled by zoom level and line type."
+ },
+ {
+  "path": "basics/geojson.html",
+  "category": "Basics",
+  "title": "GeoJSON layer",
+  "description": "Points, lines and polygons from a GeoJSON file."
+ },
+ {
+  "path": "basics/points.html",
+  "category": "Basics",
+  "title": "Point layer",
+  "description": "Point locations drawn from a GeoJSON file."
+ },
+ {
+  "path": "basics/labels.html",
+  "category": "Basics",
+  "title": "Labels",
+  "description": "Place names drawn by a label layer."
+ },
+ {
+  "path": "basics/labels_.html",
+  "category": "Basics",
+  "title": "Labels on a background",
+  "description": "Place names over a background, in the ETRS89-LAEA projection."
+ },
+ {
+  "path": "styles/squarecolorwgl.html",
+  "category": "Styles",
+  "title": "Square colour, WebGL",
+  "description": "Colouring of cells with WebGL, for very large grids."
+ },
+ {
+  "path": "styles/squarecolorwgl_dark.html",
+  "category": "Styles",
+  "title": "Square colour, WebGL, dark",
+  "description": "The WebGL colour style on a dark map, with boundaries and labels."
+ },
+ {
+  "path": "styles/squarecolorcatwgl.html",
+  "category": "Styles",
+  "title": "Categories, WebGL",
+  "description": "Cell categories coloured with WebGL: land cover."
+ },
+ {
+  "path": "styles/shapecolorsize_size.html",
+  "category": "Styles",
+  "title": "Shapes sized by value",
+  "description": "The size of the shape of each cell follows its value."
+ },
+ {
+  "path": "styles/shapecolorsize_size_color.html",
+  "category": "Styles",
+  "title": "Shapes sized and coloured",
+  "description": "Shape size and colour: two variables in each cell."
+ },
+ {
+  "path": "styles/shapecolorsize_random.html",
+  "category": "Styles",
+  "title": "Random shapes",
+  "description": "The shapes of the style, with random sizes and colours."
+ },
+ {
+  "path": "styles/composition.html",
+  "category": "Styles",
+  "title": "Composition",
+  "description": "Several values of a cell shown as proportions."
+ },
+ {
+  "path": "styles/composition_types.html",
+  "category": "Styles",
+  "title": "Composition types",
+  "description": "The different ways of showing the composition of a cell."
+ },
+ {
+  "path": "styles/ternary_age_DE.html",
+  "category": "Styles",
+  "title": "Ternary colours: age groups",
+  "description": "The age structure of the population of Germany, with a ternary legend."
+ },
+ {
+  "path": "styles/dotdensity.html",
+  "category": "Styles",
+  "title": "Dot density",
+  "description": "Dots placed randomly in each cell, their number following the value."
+ },
+ {
+  "path": "styles/dotdensity_random.html",
+  "category": "Styles",
+  "title": "Dot density by category",
+  "description": "Dot density with one colour for each category."
+ },
+ {
+  "path": "styles/lego.html",
+  "category": "Styles",
+  "title": "Lego",
+  "description": "Elevation as lego bricks."
+ },
+ {
+  "path": "styles/lego_category.html",
+  "category": "Styles",
+  "title": "Lego by category",
+  "description": "Land cover categories as lego bricks."
+ },
+ {
+  "path": "styles/mosaic.html",
+  "category": "Styles",
+  "title": "Mosaic",
+  "description": "The mosaic style, with one tile per cell."
+ },
+ {
+  "path": "styles/mosaic_full.html",
+  "category": "Styles",
+  "title": "Population mosaic of Europe",
+  "description": "A mosaic map with a title, a source and a legend."
+ },
+ {
+  "path": "styles/pillar.html",
+  "category": "Styles",
+  "title": "Pillars",
+  "description": "The pillar style: each cell as a pillar."
+ },
+ {
+  "path": "styles/pillar_simple.html",
+  "category": "Styles",
+  "title": "Pillars over a basemap",
+  "description": "Pillars over a basemap with boundaries."
+ },
+ {
+  "path": "styles/ninja_star.html",
+  "category": "Styles",
+  "title": "Ninja stars",
+  "description": "Cells drawn as stars."
+ },
+ {
+  "path": "styles/ninja_star_p.html",
+  "category": "Styles",
+  "title": "Ninja stars with age ratio",
+  "description": "Stars whose appearance follows the age ratio of the population."
+ },
+ {
+  "path": "styles/segment_random.html",
+  "category": "Styles",
+  "title": "Random segments",
+  "description": "Segments with random colours, widths and orientations."
+ },
+ {
+  "path": "styles/segment_width.html",
+  "category": "Styles",
+  "title": "Segment width",
+  "description": "Segments with a width from the data."
+ },
+ {
+  "path": "styles/stroke.html",
+  "category": "Styles",
+  "title": "Stroke",
+  "description": "The outline of the cells."
+ },
+ {
+  "path": "styles/stroke_random.html",
+  "category": "Styles",
+  "title": "Random strokes",
+  "description": "Strokes with random colours and widths."
+ },
+ {
+  "path": "styles/text.html",
+  "category": "Styles",
+  "title": "Text",
+  "description": "The value of each cell written as text."
+ },
+ {
+  "path": "styles/text_elevation.html",
+  "category": "Styles",
+  "title": "Text: elevation",
+  "description": "Elevation written in each cell."
+ },
+ {
+  "path": "styles/text_emoji.html",
+  "category": "Styles",
+  "title": "Emoji",
+  "description": "Emojis drawn as text in each cell."
+ },
+ {
+  "path": "styles/image_chernoff.html",
+  "category": "Styles",
+  "title": "Chernoff faces",
+  "description": "A face for each cell, its features following the data."
+ },
+ {
+  "path": "styles/image_kitten.html",
+  "category": "Styles",
+  "title": "Images",
+  "description": "An image drawn in each cell."
+ },
+ {
+  "path": "styles/joyplot.html",
+  "category": "Styles",
+  "title": "Joyplot",
+  "description": "Ridgeline profiles of the values."
+ },
+ {
+  "path": "styles/joyplot_random.html",
+  "category": "Styles",
+  "title": "Joyplot, random colours",
+  "description": "Ridgeline profiles with random colours."
+ },
+ {
+  "path": "styles/joyplot_shading.html",
+  "category": "Styles",
+  "title": "Joyplot over a basemap",
+  "description": "Ridgeline profiles over a basemap."
+ },
+ {
+  "path": "styles/side.html",
+  "category": "Styles",
+  "title": "Side",
+  "description": "The side style: a segment on the side of the cells."
+ },
+ {
+  "path": "styles/side_contour.html",
+  "category": "Styles",
+  "title": "Contours",
+  "description": "Contour lines drawn with the side Tanaka style."
+ },
+ {
+  "path": "styles/side_hillshading.html",
+  "category": "Styles",
+  "title": "Hillshading",
+  "description": "Shaded relief from elevation cells."
+ },
+ {
+  "path": "styles/side_hillshading_old.html",
+  "category": "Styles",
+  "title": "Hillshading, side style",
+  "description": "Shaded relief drawn with the side style."
+ },
+ {
+  "path": "styles/sidecat.html",
+  "category": "Styles",
+  "title": "Side by category",
+  "description": "Land cover categories drawn on the sides of the cells."
+ },
+ {
+  "path": "styles/shading_raycasting.html",
+  "category": "Styles",
+  "title": "Ray casting shadows",
+  "description": "Shadows computed by ray casting over elevation, with controls."
+ },
+ {
+  "path": "styles/tanaka.html",
+  "category": "Styles",
+  "title": "Tanaka contours",
+  "description": "Relief with Tanaka contours."
+ },
+ {
+  "path": "styles/isofence.html",
+  "category": "Styles",
+  "title": "Isofence",
+  "description": "Age groups drawn with the isofence style, with a choice of orientation."
+ },
+ {
+  "path": "styles/interpolator.html",
+  "category": "Styles",
+  "title": "Interpolation",
+  "description": "Interpolated elevation, with hypsometric colours."
+ },
+ {
+  "path": "styles/kernelsmoothing.html",
+  "category": "Styles",
+  "title": "Kernel smoothing",
+  "description": "A smoothed grid, with a choice of style and a slider for the smoothing."
+ },
+ {
+  "path": "styles/time_series.html",
+  "category": "Styles",
+  "title": "Time series",
+  "description": "The evolution of the values of each cell over time."
+ },
+ {
+  "path": "legends/colorLegend.html",
+  "category": "Legends",
+  "title": "Colour legend",
+  "description": "A colour ramp legend linked to a style."
+ },
+ {
+  "path": "legends/colorLegendText.html",
+  "category": "Legends",
+  "title": "Colour legend with text",
+  "description": "A colour ramp with text labels."
+ },
+ {
+  "path": "legends/colorLegendDiverging.html",
+  "category": "Legends",
+  "title": "Diverging colour legend",
+  "description": "A diverging colour ramp, for change values."
+ },
+ {
+  "path": "legends/colorLegendViewScale.html",
+  "category": "Legends",
+  "title": "Colour legend and view scale",
+  "description": "The legend follows the cells in the current view."
+ },
+ {
+  "path": "legends/colorDiscreteLegend.html",
+  "category": "Legends",
+  "title": "Discrete colour legend",
+  "description": "Colour classes and their breaks."
+ },
+ {
+  "path": "legends/colorDiscreteLegendViewScale.html",
+  "category": "Legends",
+  "title": "Discrete colour legend and view scale",
+  "description": "Classes which follow the cells in the current view."
+ },
+ {
+  "path": "legends/colorQuantileLegendViewScale.html",
+  "category": "Legends",
+  "title": "Quantile colour legend",
+  "description": "Colour classes with the same number of cells, computed from the view."
+ },
+ {
+  "path": "legends/colorCategoryLegend.html",
+  "category": "Legends",
+  "title": "Category legend",
+  "description": "A legend for categories."
+ },
+ {
+  "path": "legends/sizeLegend.html",
+  "category": "Legends",
+  "title": "Size legend",
+  "description": "The meaning of the sizes of the shapes."
+ },
+ {
+  "path": "legends/sizeDiscreteLegend.html",
+  "category": "Legends",
+  "title": "Discrete size legend",
+  "description": "Size classes and their breaks."
+ },
+ {
+  "path": "legends/sizeLegendViewScale.html",
+  "category": "Legends",
+  "title": "Size legend and view scale",
+  "description": "The size legend follows the cells in the current view."
+ },
+ {
+  "path": "legends/sizeQuantileLegendViewScale.html",
+  "category": "Legends",
+  "title": "Quantile size legend",
+  "description": "Size classes with the same number of cells, computed from the view."
+ },
+ {
+  "path": "legends/widthLegend.html",
+  "category": "Legends",
+  "title": "Width legend",
+  "description": "The meaning of the widths of the segments."
+ },
+ {
+  "path": "legends/widthDiscreteLegend.html",
+  "category": "Legends",
+  "title": "Discrete width legend",
+  "description": "Width classes and their breaks."
+ },
+ {
+  "path": "legends/widthLegendViewScale.html",
+  "category": "Legends",
+  "title": "Width legend and view scale",
+  "description": "The width legend follows the cells in the current view."
+ },
+ {
+  "path": "legends/widthQuantileLegendViewScale.html",
+  "category": "Legends",
+  "title": "Quantile width legend",
+  "description": "Width classes with the same number of cells, computed from the view."
+ },
+ {
+  "path": "legends/orientationLegend.html",
+  "category": "Legends",
+  "title": "Orientation legend",
+  "description": "The meaning of the orientation of the segments."
+ },
+ {
+  "path": "legends/external_legend.html",
+  "category": "Legends",
+  "title": "Legend outside the map",
+  "description": "A legend drawn in an element of the page, outside the map."
+ },
+ {
+  "path": "demos/EUR_relief.html",
+  "category": "Demos",
+  "title": "Europe: relief",
+  "description": "The relief of Europe at 100 m, with controls for the shading."
+ },
+ {
+  "path": "demos/EUR_bu.html",
+  "category": "Demos",
+  "title": "Europe: built-up",
+  "description": "Built-up areas of Europe."
+ },
+ {
+  "path": "demos/EUR_old.html",
+  "category": "Demos",
+  "title": "Europe: population, earlier version",
+  "description": "The population of Europe, from the earlier version of the demo."
+ },
+ {
+  "path": "demos/DE.html",
+  "category": "Demos",
+  "title": "Germany: Zensus 2011",
+  "description": "The 100 m grids of the German census 2011, with several variables."
+ },
+ {
+  "path": "demos/FR.html",
+  "category": "Demos",
+  "title": "France: Filosofi",
+  "description": "The 200 m grids of INSEE: population, income and housing."
+ },
+ {
+  "path": "demos/FR_pop.html",
+  "category": "Demos",
+  "title": "France: population",
+  "description": "The 200 m grids of INSEE: population."
+ },
+ {
+  "path": "demos/FR_income.html",
+  "category": "Demos",
+  "title": "France: income",
+  "description": "The 200 m grids of INSEE: income."
+ },
+ {
+  "path": "demos/FR_age_ternary.html",
+  "category": "Demos",
+  "title": "France: age groups",
+  "description": "The 200 m grids of INSEE: the age structure as ternary colours."
+ },
+ {
+  "path": "demos/HR.html",
+  "category": "Demos",
+  "title": "Croatia: statistical grids",
+  "description": "The 1 km grids of the Croatian Bureau of Statistics: population, businesses, tourism."
+ },
+ {
+  "path": "demos/NO.html",
+  "category": "Demos",
+  "title": "Norway: population",
+  "description": "The 250 m grids of Statistics Norway: population and its change."
+ },
+ {
+  "path": "test/venn/crops/index.html",
+  "category": "Multivariate",
+  "title": "Permanent crops",
+  "description": "Fruit trees, olive groves and vineyards: nested circles, with a Venn diagram legend."
+ },
+ {
+  "path": "test/venn/forest/index.html",
+  "category": "Multivariate",
+  "title": "Forest types",
+  "description": "Broad-leaved, coniferous and mixed forests: nested circles, with a Venn diagram legend."
+ },
+ {
+  "path": "test/venn/air/index.html",
+  "category": "Multivariate",
+  "title": "Air pollution",
+  "description": "Where fine particles, nitrogen dioxide and ozone are high: nested circles and a Venn diagram."
+ },
+ {
+  "path": "test/venn/climate/index.html",
+  "category": "Multivariate",
+  "title": "Climate",
+  "description": "Hot summers, cold winters and rainy areas of Europe, with a Venn diagram legend."
+ },
+ {
+  "path": "test/venn/birth/index.html",
+  "category": "Multivariate",
+  "title": "Place of birth",
+  "description": "Born in the country, in another EU country or outside the EU, from the Census 2021 grid."
+ },
+ {
+  "path": "test/venn/mobility/index.html",
+  "category": "Multivariate",
+  "title": "Residential mobility",
+  "description": "People who stayed, moved within the country or came from abroad, from the Census 2021 grid."
+ }
+]

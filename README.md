@@ -29,6 +29,7 @@
 
 ## Live Demos
 
+-   [**Examples gallery**](https://eurostat.github.io/gridviz/examples/) - all the examples of the repository, with thumbnails.
 -   [**Europe** - 1km resolution - Census total population](https://ec.europa.eu/assets/estat/E/E4/gisco/website/grid_map/index.html)
 -   [**Europe** - 1km resolution - Census population composition](https://ec.europa.eu/assets/estat/E/E4/gisco/website/census_2021_grid_map/index.html)
 -   [**Europe** - 100m resolution - Accessibility to basic services](https://ec.europa.eu/assets/estat/E/E4/gisco/accessibility_maps/healthcare_education/index.html)

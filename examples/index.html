@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>gridviz examples</title>
+        <style>
+            :root {
+                --card: #ffffff;
+                --text: #0f172a;
+                --muted: #475569;
+                --line: #dbe2ea;
+                --accent: #0a66c2;
+                --accent-dark: #084f96;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+                background: linear-gradient(180deg, #f8fafc 0%, #eef3f9 100%);
+                color: var(--text);
+            }
+
+            .wrap {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 28px 16px 48px;
+            }
+
+            .hero {
+                background: var(--card);
+                border: 1px solid var(--line);
+                border-radius: 16px;
+                padding: 20px;
+                margin-bottom: 18px;
+            }
+
+            h1 {
+                margin: 0;
+                font-size: 30px;
+                line-height: 1.2;
+            }
+
+            .sub {
+                margin: 8px 0 0;
+                color: var(--muted);
+            }
+
+            .actions {
+                margin-top: 12px;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                text-decoration: none;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                padding: 8px 12px;
+                color: var(--text);
+                font-weight: 600;
+                background: #fff;
+            }
+
+            .btn:hover {
+                border-color: var(--accent);
+            }
+
+            .btn.primary {
+                background: var(--accent);
+                color: #fff;
+                border-color: var(--accent);
+            }
+
+            .btn.primary:hover {
+                background: var(--accent-dark);
+                border-color: var(--accent-dark);
+            }
+
+            .layout {
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .sidebar {
+                flex: 0 0 210px;
+                position: sticky;
+                top: 16px;
+            }
+
+            .sidebar-panel {
+                background: var(--card);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                padding: 12px 8px;
+            }
+
+            .sidebar-heading {
+                margin: 0 0 6px;
+                padding: 0 10px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                color: var(--muted);
+            }
+
+            .sidebar-nav {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar-nav a {
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 7px 10px;
+                border-radius: 8px;
+                color: var(--text);
+                text-decoration: none;
+                font-size: 14px;
+            }
+
+            .sidebar-nav a:hover {
+                background: #eef3f9;
+            }
+
+            .sidebar-nav a.active {
+                background: var(--accent);
+                color: #fff;
+            }
+
+            .sidebar-nav .count {
+                opacity: 0.6;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .main {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .search {
+                width: 100%;
+                max-width: 420px;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                padding: 10px 12px;
+                font-size: 14px;
+                color: var(--text);
+                background: #fff;
+            }
+
+            .search:focus {
+                outline: 2px solid rgba(10, 102, 194, 0.2);
+                border-color: var(--accent);
+            }
+
+            .stats {
+                margin: 10px 0 16px;
+                color: var(--muted);
+                font-size: 14px;
+            }
+
+            .grid {
+                display: grid;
+                gap: 14px;
+                grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+            }
+
+            .card {
+                background: var(--card);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                transition:
+                    box-shadow 0.15s,
+                    transform 0.15s;
+            }
+
+            .card:hover {
+                box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+                transform: translateY(-2px);
+            }
+
+            .thumb-link {
+                display: block;
+            }
+
+            .thumb {
+                display: block;
+                width: 100%;
+                aspect-ratio: 16 / 10;
+                object-fit: cover;
+                background: #eef2f7;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .card-body {
+                padding: 10px 12px 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                flex: 1;
+            }
+
+            .card-title {
+                margin: 0;
+                font-size: 15px;
+                line-height: 1.3;
+            }
+
+            .card-title a {
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .card-title a:hover {
+                color: var(--accent);
+            }
+
+            .card-desc {
+                margin: 0;
+                font-size: 13px;
+                line-height: 1.4;
+                color: var(--muted);
+            }
+
+            .card-meta {
+                margin-top: auto;
+                padding-top: 4px;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                font-size: 11px;
+                color: #64748b;
+            }
+
+            .card-meta .path {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .empty {
+                grid-column: 1 / -1;
+                padding: 30px;
+                text-align: center;
+                color: var(--muted);
+            }
+
+            @media (max-width: 760px) {
+                .layout {
+                    flex-direction: column;
+                }
+                .sidebar {
+                    position: static;
+                    flex: none;
+                    width: 100%;
+                }
+                .sidebar-nav {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 4px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="wrap">
+            <section class="hero">
+                <h1>gridviz examples</h1>
+                <p class="sub">Interactive maps of statistical grids, made with gridviz. Click an example to open it.</p>
+                <div class="actions">
+                    <a class="btn primary" href="https://github.com/eurostat/gridviz/blob/master/docs/reference.md" target="_blank" rel="noopener noreferrer">
+                        Documentation
+                    </a>
+                    <a class="btn" href="https://github.com/eurostat/gridviz" target="_blank" rel="noopener noreferrer">Project on GitHub</a>
+                </div>
+            </section>
+
+            <div class="layout">
+                <aside class="sidebar">
+                    <div class="sidebar-panel">
+                        <p class="sidebar-heading">Categories</p>
+                        <ul class="sidebar-nav" id="sidebar-nav"></ul>
+                    </div>
+                </aside>
+
+                <div class="main">
+                    <input class="search" id="search" type="search" placeholder="Search the examples" aria-label="Search the examples" />
+                    <p class="stats" id="stats"></p>
+                    <section class="grid" id="grid"></section>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            // The examples are listed in gallery.json: path, title, description and category.
+            // Their thumbnails are made by scripts/make-gallery.mjs, in img/previews/.
+            const ALL = 'All'
+            const thumbPath = (path) => 'img/previews/' + path.replace(/\//g, '__').replace(/\.html$/, '.jpg')
+
+            const grid = document.getElementById('grid')
+            const stats = document.getElementById('stats')
+            const search = document.getElementById('search')
+            const nav = document.getElementById('sidebar-nav')
+
+            let examples = []
+            let active = decodeURIComponent(location.hash.slice(1)) || ALL
+
+            const renderNav = () => {
+                const categories = [ALL, ...new Set(examples.map((e) => e.category))]
+                if (!categories.includes(active)) active = ALL
+                nav.textContent = ''
+                for (const c of categories) {
+                    const li = document.createElement('li')
+                    const a = document.createElement('a')
+                    a.href = '#' + encodeURIComponent(c)
+                    a.className = c === active ? 'active' : ''
+                    const n = c === ALL ? examples.length : examples.filter((e) => e.category === c).length
+                    a.innerHTML = '<span></span><span class="count">' + n + '</span>'
+                    a.firstChild.textContent = c
+                    a.addEventListener('click', (ev) => {
+                        ev.preventDefault()
+                        active = c
+                        history.replaceState(null, '', c === ALL ? location.pathname : '#' + encodeURIComponent(c))
+                        renderNav()
+                        render()
+                    })
+                    li.appendChild(a)
+                    nav.appendChild(li)
+                }
+            }
+
+            const render = () => {
+                const q = search.value.trim().toLowerCase()
+                const shown = examples.filter(
+                    (e) =>
+                        (active === ALL || e.category === active) &&
+                        (!q || [e.title, e.description, e.path, e.category].some((s) => s.toLowerCase().includes(q)))
+                )
+                stats.textContent = shown.length + ' of ' + examples.length + ' examples'
+                grid.textContent = ''
+                if (!shown.length) {
+                    const p = document.createElement('p')
+                    p.className = 'empty'
+                    p.textContent = 'No example found.'
+                    grid.appendChild(p)
+                    return
+                }
+                for (const e of shown) {
+                    const card = document.createElement('article')
+                    card.className = 'card'
+
+                    const link = document.createElement('a')
+                    link.className = 'thumb-link'
+                    link.href = e.path
+                    link.target = '_blank'
+                    link.rel = 'noopener noreferrer'
+                    link.setAttribute('aria-label', e.title)
+                    const img = document.createElement('img')
+                    img.className = 'thumb'
+                    img.loading = 'lazy'
+                    img.width = 480
+                    img.height = 300
+                    img.alt = e.title
+                    img.src = thumbPath(e.path)
+                    link.appendChild(img)
+
+                    const body = document.createElement('div')
+                    body.className = 'card-body'
+                    const h = document.createElement('h2')
+                    h.className = 'card-title'
+                    const a = document.createElement('a')
+                    a.href = e.path
+                    a.target = '_blank'
+                    a.rel = 'noopener noreferrer'
+                    a.textContent = e.title
+                    h.appendChild(a)
+                    const d = document.createElement('p')
+                    d.className = 'card-desc'
+                    d.textContent = e.description
+                    const meta = document.createElement('div')
+                    meta.className = 'card-meta'
+                    meta.innerHTML = '<span class="path"></span><span></span>'
+                    meta.firstChild.textContent = e.path.replace(/\/index\.html$/, '/')
+                    meta.lastChild.textContent = e.category
+                    body.append(h, d, meta)
+
+                    card.append(link, body)
+                    grid.appendChild(card)
+                }
+            }
+
+            search.addEventListener('input', render)
+            window.addEventListener('hashchange', () => {
+                active = decodeURIComponent(location.hash.slice(1)) || ALL
+                renderNav()
+                render()
+            })
+
+            fetch('gallery.json')
+                .then((r) => r.json())
+                .then((list) => {
+                    examples = list
+                    renderNav()
+                    render()
+                })
+                .catch(() => {
+                    stats.textContent = 'The list of examples could not be loaded (gallery.json). Serve this folder over http.'
+                })
+        </script>
+    </body>
+</html>
