@@ -40,7 +40,7 @@ export class Legend {
         /** @type {string} @deprecated */
         this['box-shadow'] = opts['box-shadow'] || 'none'
         /** @type {string} @deprecated */
-        this['font-family'] = opts['font-family'] || 'Helvetica, Arial, sans-serif'
+        this['font-family'] = opts['font-family'] || "'Helvetica Neue', Arial, Helvetica, sans-serif"
         /** @type {string} @deprecated */
         //this.width = opts.width
         /** @type {string} @deprecated */
@@ -84,11 +84,11 @@ export class Legend {
 
         //title
         this.title = opts.title
-        this.titleFontSize = opts.titleFontSize || '0.8em'
-        this.titleFontWeight = opts.titleFontWeight || 'bold'
+        this.titleFontSize = opts.titleFontSize || '15px'
+        this.titleFontWeight = opts.titleFontWeight || '500'
 
         //label
-        this.labelFontSize = opts.labelFontSize || '0.8em'
+        this.labelFontSize = opts.labelFontSize || '14px'
         this.labelUnitText = opts.labelUnitText || ''
         this.labelFormat = opts.labelFormat
 
@@ -173,6 +173,13 @@ export class Legend {
      * @protected */
     labelFontSizeCSS() {
         return this._css('label-font-size', this.labelFontSize, this._set.labelFontSize)
+    }
+
+    /** The color of the labels (CSS variable --gridviz-legend-label-color), for the style() of a label element, as 'fill' for the text of a svg and 'color' for a html element.
+     * @returns {string}
+     * @protected */
+    labelColorCSS() {
+        return 'var(--gridviz-legend-label-color, #333)'
     }
 
     /**

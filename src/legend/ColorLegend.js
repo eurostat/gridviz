@@ -32,7 +32,9 @@ export class ColorLegend extends Legend {
         this.tickFormat = opts.tickFormat
         this.tickUnit = opts.tickUnit
 
-        this.fontSize = opts.fontSize || '0.8em'
+        /** The font size of the tick labels. By default, the one of the legend labels (labelFontSize).
+         * @type {string|undefined} */
+        this.fontSize = opts.fontSize
         this.invert = opts.invert
 
         // a number of pixels, or 'fill' for the width of the container
@@ -93,7 +95,8 @@ export class ColorLegend extends Legend {
                 .attr('id', 'ticklabel_' + i)
                 .attr('x', w * t)
                 .attr('y', h + this.tickSize + 2)
-                .style('font-size', this.fontSize)
+                .style('font-size', this.fontSize || this.labelFontSizeCSS())
+                .style('fill', this.labelColorCSS())
                 //.style("font-weight", "bold")
                 //.style("font-family", "Arial")
                 .style('text-anchor', i == 0 ? 'start' : i == this.ticks - 1 ? 'end' : 'middle')

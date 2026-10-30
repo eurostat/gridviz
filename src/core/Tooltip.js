@@ -19,19 +19,23 @@ export class Tooltip {
         /** @type {string} */
         this.maxWidth = opts.maxWidth || '20em'
         /** @type {string} */
-        this.fontSize = opts.fontSize || '1.2em'
+        this.fontSize = opts.fontSize || '1rem'
+        /** @type {string} */
+        this.color = opts.color || '#171a22'
+        /** @type {string} */
+        this.lineHeight = opts.lineHeight || '1.5'
         /** @type {string} */
         this.background = opts.background || 'white'
         /** @type {string} */
-        this.padding = opts.padding || '5px'
+        this.padding = opts.padding || '4px'
         /** @type {string} */
-        this.border = opts.border || '0px'
+        this.border = opts.border || '1px solid #d5d5d5'
         /** @type {string} */
-        this['border-radius'] = opts['border-radius'] || '0px'
+        this['border-radius'] = opts['border-radius'] || '6px'
         /** @type {string} */
-        this['box-shadow'] = opts['box-shadow'] || '5px 5px 5px grey'
+        this['box-shadow'] = opts['box-shadow'] || '0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)'
         /** @type {string} */
-        this['font-family'] = opts['font-family'] || 'Helvetica, Arial, sans-serif'
+        this['font-family'] = opts['font-family'] || "'Helvetica Neue', Arial, Helvetica, sans-serif"
 
         /** @type {number} */
         this.transitionDuration = opts.transitionDuration || 100
@@ -59,6 +63,8 @@ export class Tooltip {
         this.tooltip.style('max-width', this.maxWidth)
         this.tooltip.style('overflow', 'hidden')
         this.tooltip.style('font-size', this.fontSize)
+        this.tooltip.style('color', this.color)
+        this.tooltip.style('line-height', this.lineHeight)
         this.tooltip.style('background', this.background)
         this.tooltip.style('padding', this.padding)
         this.tooltip.style('border', this.border)

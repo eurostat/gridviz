@@ -108,22 +108,23 @@ new gridviz.Map(document.getElementById('map'), {
     selectionRectangleWidthPix: (resolution, z) => '1',
     backgroundColor: 'white',
     tooltip: {
-        fontSize: '1.2em',
+        // the default values, which are those of the tooltips of the statistical atlas
+        maxWidth: '20em',
+        fontSize: '1rem',
+        color: '#171a22',
+        lineHeight: '1.5',
+        background: 'white',
+        padding: '4px',
+        border: '1px solid #d5d5d5',
+        'border-radius': '6px',
+        'box-shadow': '0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)',
+        'font-family': "'Helvetica Neue', Arial, Helvetica, sans-serif",
         transitionDuration: 100,
-        maxWidth: '20em'
-        fontSize:'1.2em'
-        background :  'white'
-        padding: '5px'
-        border :'0px'
-        'border-radius' : '0px'
-        'box-shadow' : '5px 5px 5px grey'
-        'font-family' :'Helvetica, Arial, sans-serif'
-        transitionDuration : 100
-        xOffset:  30
-        yOffset:  20
-        yMouseOffset : 0
-        xMouseOffset : 0
-        parentElement : document.body
+        xOffset: 30,
+        yOffset: 20,
+        yMouseOffset: 0,
+        xMouseOffset: 0,
+        parentElement: document.body,
     },
     onZoomStartFun: (event) => {
         console.log('pan/zoom start', event)
@@ -616,7 +617,7 @@ new gridviz.SizeLegend({
 ### Styling legends from a stylesheet
 
 -   **CSS classes.** Every legend has the class `gridviz-legend` and one for its type (`gridviz-legend--discrete`, `--color`, `--category`, `--ternary`, `--size`, `--orientation`). The parts have `gridviz-legend-title`, `-label`, `-swatch`, `-tick` and, for a row of a category, size or orientation legend, `-category`. The drawing of a legend is an `svg` with `gridviz-legend-graphic` (inside a `gridviz-legend-symbol-wrapper` in a category row), the shapes of a size or orientation legend have `gridviz-legend-symbol`, the colour bar's group has `gridviz-legend-bar` and the ternary triangle's `gridviz-legend-triangle`. A swatch being hovered also has `gridviz-legend-swatch--active` (a category row `gridviz-legend-category--active`). Add your own class to a legend with the `className` option, for example to style one legend, like a "not available" entry, differently.
--   **CSS variables.** The font, its sizes and the padding are CSS variables with the usual values as fallback, so a page can change them without `!important`: `--gridviz-legend-font-family`, `--gridviz-legend-title-font-size`, `--gridviz-legend-title-font-weight`, `--gridviz-legend-label-font-size`, `--gridviz-legend-padding`. An option given to the legend (`labelFontSize`, `padding`...) still wins.
+-   **CSS variables.** The font, its sizes and the padding are CSS variables with the usual values as fallback, so a page can change them without `!important`: `--gridviz-legend-font-family`, `--gridviz-legend-title-font-size`, `--gridviz-legend-title-font-weight`, `--gridviz-legend-label-font-size`, `--gridviz-legend-label-color`, `--gridviz-legend-padding`. An option given to the legend (`labelFontSize`, `padding`...) still wins. The default values are those of the legends of the statistical atlas: a title of 15px with a weight of 500, labels of 14px in `#333`, and the font stack of the tooltip.
 -   **Width.** `width: 'fill'` on a _ColorLegend_ or a _ColorDiscreteLegend_ draws it at the width of the element the legends are in (the map's `legendContainer`), less its padding, each time the legend is drawn. A number of pixels is used as before.
 
 ### Styling the rest of the map from a stylesheet

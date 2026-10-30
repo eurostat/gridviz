@@ -69,6 +69,8 @@ export class OrientationLegend extends Legend {
             .style('display', 'inline')
             .style('padding-left', '5px')
             .style('font-size', this.labelFontSizeCSS())
+            .style('fill', this.labelColorCSS())
+            .style('color', this.labelColorCSS())
             .text(this.label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

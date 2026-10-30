@@ -117,7 +117,9 @@ export class ColorCategoryLegend extends Legend {
 
                     .classed('gridviz-legend-label', true)
                     .style('padding-left', '5px')
-                    .style('font-size', this.labelFontSizeCSS()),
+                    .style('font-size', this.labelFontSizeCSS())
+                    .style('fill', this.labelColorCSS())
+                    .style('color', this.labelColorCSS()),
                 cat[1]
             )
         }

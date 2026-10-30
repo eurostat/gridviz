@@ -51,7 +51,7 @@ export class TernaryLegend extends Legend {
         const texts = this.texts || {}
 
         const padding = 2
-        const fontSize = 12
+        const fontSize = 14
         const legend = this
 
         //make svg element
@@ -68,6 +68,7 @@ export class TernaryLegend extends Legend {
             .classed('gridviz-legend-label', true)
             .text(this.topText)
             .attr('font-size', fontSize)
+            .style('fill', this.labelColorCSS())
             .attr('text-anchor', 'middle')
         //left label
         svg.append('text')
@@ -76,6 +77,7 @@ export class TernaryLegend extends Legend {
             .classed('gridviz-legend-label', true)
             .text(this.leftText)
             .attr('font-size', fontSize)
+            .style('fill', this.labelColorCSS())
             .attr('text-anchor', 'start')
         //right label
         svg.append('text')
@@ -84,6 +86,7 @@ export class TernaryLegend extends Legend {
             .classed('gridviz-legend-label', true)
             .text(this.rightText)
             .attr('font-size', fontSize)
+            .style('fill', this.labelColorCSS())
             .attr('text-anchor', 'end')
 
         //triangle group

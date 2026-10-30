@@ -102,6 +102,8 @@ export class ColorDiscreteLegend extends Legend {
                 .attr('x', w * i)
                 .attr('y', this.height + this.tickSize + 2)
                 .style('font-size', this.labelFontSizeCSS())
+                .style('fill', this.labelColorCSS())
+                .style('color', this.labelColorCSS())
                 //.style("font-weight", "bold")
                 //.style("font-family", "Arial")
                 .style('text-anchor', 'middle')
