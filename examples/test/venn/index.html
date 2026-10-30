@@ -42,11 +42,18 @@
                 font-size: 13px;
                 color: #666;
             }
-            #legend .label {
+            #panel .label {
                 font-size: 12px;
                 font-weight: 600;
                 color: #333;
                 margin: 2px 0 2px;
+            }
+            #sizes {
+                display: flex;
+                align-items: flex-end;
+                gap: 14px;
+                min-height: 34px;
+                margin-bottom: 6px;
             }
             #venn circle {
                 mix-blend-mode: multiply;
@@ -77,7 +84,10 @@
                 <h1>Permanent crops in Europe</h1>
                 <p>Fruit trees, olive groves and vineyards</p>
             </div>
-            <div id="legend"></div>
+            <div class="label">Circle area: area of the crop (km²)</div>
+            <div id="sizes"></div>
+            <div class="label">Colour: crop, overlaps are mixed</div>
+            <div id="venn-legend"></div>
         </div>
         <div id="source">Data: CORINE Land Cover 2018, aggregated from 1 km cells | Background: Eurostat/GISCO</div>
 
@@ -96,6 +106,11 @@
             const DIAMETER_PER_SQRT_KM2 = 4000
             //the biggest circle diameter, as a factor of the cell size
             const MAX_DIAMETER_FACTOR = 1.4
+            //the smallest circle diameter, in pixels
+            const MIN_DIAMETER_PIX = 2
+            //the diameter (in m) of the circle of a crop area (in km2), in a cell of a resolution (in m)
+            const circleDiameter = (areaKm2, resolution) =>
+                Math.min(DIAMETER_PER_SQRT_KM2 * Math.sqrt(areaKm2), MAX_DIAMETER_FACTOR * resolution)
 
             //the crops: CORINE code in the Eurostat tiled grids, label and primary colour
             const CROPS = [
@@ -109,6 +124,8 @@
                 x: 4500000,
                 y: 2650000,
                 z: 4000,
+                //the legends of the styles are shown in the panel
+                legendContainer: document.getElementById('sizes'),
             }).addZoomButtons()
 
             //background: land areas, from the Nuts2json countries (cntrg). Kosovo is part of Serbia in them.
@@ -189,10 +206,7 @@
                     new gridviz.ShapeColorSizeStyle({
                         color: () => 'rgb(' + crop.rgb.join(',') + ')',
                         shape: () => 'circle',
-                        size: (c, r, z) =>
-                            c[crop.key] > 0
-                                ? Math.max(Math.min(DIAMETER_PER_SQRT_KM2 * Math.sqrt(c[crop.key]), MAX_DIAMETER_FACTOR * r), 2 * z)
-                                : 0,
+                        size: (c, r, z) => (c[crop.key] > 0 ? Math.max(circleDiameter(c[crop.key], r), MIN_DIAMETER_PIX * z) : 0),
                         alpha: () => OPACITY,
                         blendOperation: () => 'multiply',
                     })
@@ -212,50 +226,51 @@
             })
             updateLayers()
 
-            // Legend: Venn diagram for the colours, circles for the sizes
+            // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
+            // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones,
+            // which are limited to MAX_DIAMETER_FACTOR times the cell size. The values below that limit are shown, then the limit.
+            const SIZE_VALUES_KM2 = [1, 5, 10, 50, 150]
+            const MAX_LEGEND_DIAMETER_PIX = 70
+            //the size (in m) of a legend symbol: 0 to hide it when it would be too big, never smaller than the smallest circle of the map
+            const legendSymbol = (diameter, z) =>
+                diameter / z > MAX_LEGEND_DIAMETER_PIX ? 0 : Math.max(diameter, MIN_DIAMETER_PIX * z)
+            const sizeLegendOptions = { fillColor: '#777', strokeColor: 'none', strokeWidth: 0.01, padding: '0px' }
+            styles[0].legends = [
+                ...SIZE_VALUES_KM2.map(
+                    (a) =>
+                        new gridviz.SizeLegend({
+                            ...sizeLegendOptions,
+                            label: () => a,
+                            //hidden when the circles of this area are limited by the cell size, they are shown by the last legend
+                            size: (viewScale, resolution, z) => {
+                                const d = DIAMETER_PER_SQRT_KM2 * Math.sqrt(a)
+                                return d < MAX_DIAMETER_FACTOR * resolution ? legendSymbol(d, z) : 0
+                            },
+                        })
+                ),
+                //the limit: the circles of that area, and of bigger ones, have the same size
+                new gridviz.SizeLegend({
+                    ...sizeLegendOptions,
+                    label: (viewScale, cells, resolution) => {
+                        const area = ((MAX_DIAMETER_FACTOR * resolution) / DIAMETER_PER_SQRT_KM2) ** 2
+                        return '≥ ' + (area >= 10 ? Math.round(area) : +area.toPrecision(2))
+                    },
+                    size: (viewScale, resolution, z) => legendSymbol(MAX_DIAMETER_FACTOR * resolution, z),
+                }),
+            ]
+
             const R = 45
             const vennCircles = [
                 [CROPS[0], 165, 55],
                 [CROPS[1], 225, 55],
                 [CROPS[2], 195, 105],
             ]
-            const vennSVG =
+            document.getElementById('venn-legend').innerHTML =
                 `<svg id="venn" width="360" height="165">` +
                 vennCircles.map(([c, x, y]) => `<circle cx="${x}" cy="${y}" r="${R}" fill="rgb(${c.rgb})"/>`).join('') +
                 `<text x="118" y="58" text-anchor="end">Fruit trees</text>` +
                 `<text x="276" y="58">Olive groves</text>` +
                 `<text x="195" y="160" text-anchor="middle">Vineyards</text></svg>`
-
-            //the circles are in geographical units: the size legend follows the zoom, and shows the sizes which fit in it
-            const sizeKm2 = [1, 5, 10, 50, 150]
-            const MAX_LEGEND_DIAMETER = 70
-            const sizeSVG = () => {
-                const d = (a) => Math.max((DIAMETER_PER_SQRT_KM2 * Math.sqrt(a)) / map.getZoom(), 2)
-                const shown = sizeKm2.filter((a) => d(a) <= MAX_LEGEND_DIAMETER)
-                if (shown.length == 0) return '<div>(zoom out to see the size scale)</div>'
-                const H = d(shown[shown.length - 1]) + 4
-                let x = 6
-                const items = shown.map((a) => {
-                    const w = Math.max(d(a), 24)
-                    const out =
-                        `<circle cx="${x + w / 2}" cy="${H / 2}" r="${d(a) / 2}" fill="#777" fill-opacity="0.8"/>` +
-                        `<text x="${x + w / 2}" y="${
-                            H + 14
-                        }" text-anchor="middle" style="font-size:12px;fill:#444">${a}</text>`
-                    x += w + 8
-                    return out
-                })
-                return `<svg width="${x}" height="${H + 20}">${items.join('')}</svg>`
-            }
-            const drawLegend = () => {
-                document.getElementById('legend').innerHTML =
-                    `<div class="label">Circle area: area of the crop (km²)</div>` +
-                    sizeSVG() +
-                    `<div class="label">Colour: crop, overlaps are mixed</div>` +
-                    vennSVG
-            }
-            drawLegend()
-            map.geoCanvas.onZoomEndFun = drawLegend
         </script>
     </body>
 </html>
