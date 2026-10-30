@@ -359,15 +359,56 @@
 
             let examples = []
             // the selection: a category and, for the styles, a style (group). In the address: #Styles/Lego
-            const readHash = () => {
-                const [category, group] = decodeURIComponent(location.hash.slice(1)).split('/')
+            const parseHash = (hash) => {
+                const [category, group] = decodeURIComponent(hash.slice(1)).split('/')
                 return { category: category || ALL, group: group || null }
             }
+            const readHash = () => parseHash(location.hash)
             let active = readHash()
+
+            // Where the user was (the selection, the search and the scroll), kept for when they come back from an example
+            // (the button "Examples" of the viewer) so that they find the page as they left it.
+            const STATE_KEY = 'gridviz-examples-gallery-state'
+            history.scrollRestoration = 'manual'
+            window.addEventListener('pagehide', () => {
+                try {
+                    sessionStorage.setItem(STATE_KEY, JSON.stringify({ hash: location.hash, search: search.value, scrollY: window.scrollY }))
+                } catch (e) {
+                    /* the storage may be refused: the page is then simply shown from the top */
+                }
+            })
+            // true when the page is shown again by the back button, or by a link from the viewer
+            const isReturning = () => {
+                const nav = performance.getEntriesByType('navigation')[0]
+                let fromViewer = false
+                try {
+                    fromViewer = new URL(document.referrer).pathname.endsWith('/view.html')
+                } catch (e) {
+                    /* no referrer */
+                }
+                return (nav && nav.type === 'back_forward') || fromViewer
+            }
+            // the scroll to restore, once the examples are shown
+            let scrollToRestore = null
+            const restoreState = () => {
+                if (!isReturning()) return
+                let s = null
+                try {
+                    s = JSON.parse(sessionStorage.getItem(STATE_KEY))
+                } catch (e) {
+                    /* none */
+                }
+                if (!s) return
+                search.value = s.search || ''
+                active = parseHash(s.hash || '')
+                history.replaceState(null, '', hashOf(active))
+                scrollToRestore = s.scrollY || 0
+            }
             const hashOf = (a) =>
                 a.category === ALL ? location.pathname : '#' + encodeURIComponent(a.category) + (a.group ? '/' + encodeURIComponent(a.group) : '')
 
             const select = (category, group) => {
+                scrollToRestore = null
                 active = { category: category, group: group || null }
                 history.replaceState(null, '', hashOf(active))
                 renderNav()
@@ -509,8 +550,12 @@
                 .then((r) => r.json())
                 .then((list) => {
                     examples = list
+                    restoreState()
                     renderNav()
                     render()
+                    // the cards have a fixed height, so the page has its final height as soon as they are there
+                    if (scrollToRestore !== null) window.scrollTo(0, scrollToRestore)
+                    scrollToRestore = null
                 })
                 .catch(() => {
                     stats.textContent = 'The list of examples could not be loaded (gallery.json). Serve this folder over http.'

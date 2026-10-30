@@ -269,7 +269,7 @@
     </head>
     <body>
         <header class="bar">
-            <a href="./" title="All the examples">&larr; Examples</a>
+            <a href="./" id="back" title="All the examples">&larr; Examples</a>
             <div class="title" id="title"></div>
             <a id="open" href="#" title="Open the example alone, without the code" target="_blank" rel="noopener">Open alone &#8599;</a>
             <a id="github" href="#" title="The source of the example on GitHub" target="_blank" rel="noopener">GitHub</a>
@@ -333,6 +333,23 @@
                     $('title').lastChild.textContent = e.description
                 })
                 .catch(() => {})
+
+            // The button to go back to the list of the examples: when the viewer was opened from the list, in this tab, it goes back
+            // in the history, so that the list is as it was left (the same chapter, search and scroll).
+            $('back').addEventListener('click', (e) => {
+                let fromList = false
+                try {
+                    const ref = new URL(document.referrer)
+                    const list = new URL('./', location.href)
+                    fromList = ref.origin === list.origin && (ref.pathname === list.pathname || ref.pathname === list.pathname + 'index.html')
+                } catch (err) {
+                    /* no referrer: the list is opened */
+                }
+                if (fromList && history.length > 1) {
+                    e.preventDefault()
+                    history.back()
+                }
+            })
 
             // the source code
             let page = ''
