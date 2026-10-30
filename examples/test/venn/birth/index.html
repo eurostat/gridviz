@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz multivariate map: place of birth, with a Venn diagram legend (issue #146)</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+                font-family: Helvetica, Arial, sans-serif;
+            }
+            #panel {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                pointer-events: none;
+                font-size: 13px;
+                color: #444;
+                background: #fffe;
+                padding: 14px 16px 10px;
+                border-radius: 6px;
+                box-shadow: 0 1px 6px #0003;
+            }
+            #title {
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+            #title h1 {
+                margin: 0;
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 1.15;
+                letter-spacing: -0.01em;
+                color: #222;
+            }
+            #title p {
+                margin: 4px 0 0;
+                font-size: 13px;
+                color: #666;
+            }
+            #panel .label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #333;
+                margin: 2px 0 2px;
+            }
+            #sizes {
+                display: flex;
+                align-items: flex-end;
+                gap: 14px;
+                min-height: 34px;
+                margin-bottom: 6px;
+            }
+            #venn circle {
+                mix-blend-mode: multiply;
+            }
+            #venn text {
+                font-size: 13px;
+                fill: #444;
+                paint-order: stroke;
+                stroke: #fffc;
+                stroke-width: 3px;
+            }
+            #source {
+                position: absolute;
+                bottom: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 12px;
+                color: #444;
+                background: #fffc;
+                padding: 2px 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="panel">
+            <div id="title">
+                <h1>Where people were born</h1>
+                <p>In the country, in another EU country, or outside the EU</p>
+            </div>
+            <div class="label">Circle area: number of people</div>
+            <div id="sizes"></div>
+            <div class="label">Colour: place of birth, overlaps are mixed</div>
+            <div id="venn-legend"></div>
+        </div>
+        <div id="source">Data: Eurostat Census 2021 grid | Background: Eurostat/GISCO</div>
+
+        <script src="../../../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.0"></script>
+        <script>
+            // Multivariate map: where were the people born?
+            // Nested circles in each cell: one per place of birth, with an area proportional to the number of people.
+            // The circles are blended by multiplication, so their overlaps have the colours of a Venn diagram.
+            // The map is multi-resolution: the Census 2021 grid is available at several resolutions.
+
+            //the resolutions of the map, in m. One CSV file per resolution, in this folder.
+            const RESOLUTIONS = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
+            //the tiled Census 2021 grids, one folder per resolution
+            const CENSUS_URL = 'https://raw.githubusercontent.com/jgaffuri/tiled-census2021/main/pub/v2/parquet/'
+            //the opacity of the circles
+            const OPACITY = 0.85
+            //the circle diameter (in m) per square root of the number of people. The circle area is then proportional to the number of people, at all resolutions.
+            //A cell of 400 inhabitants per km2 gets a circle of the size of the cell.
+            const DIAMETER_PER_SQRT_PERSON = 50
+            //the biggest circle diameter, as a factor of the cell size
+            const MAX_DIAMETER_FACTOR = 1.3
+            //the smallest circle diameter, in pixels
+            const MIN_DIAMETER_PIX = 2
+            //the diameter (in m) of the circle of a number of people, in a cell of a resolution (in m)
+            const circleDiameter = (persons, resolution) =>
+                Math.min(DIAMETER_PER_SQRT_PERSON * Math.sqrt(persons), MAX_DIAMETER_FACTOR * resolution)
+
+            //the places of birth: column of the Census 2021 grid, label and primary colour
+            const TYPES = [
+                { key: 'NAT', label: 'Born in the country', rgb: [0, 200, 235] },
+                { key: 'EU_OTH', label: 'Born in another EU country', rgb: [245, 210, 0] },
+                { key: 'OTH', label: 'Born outside the EU', rgb: [255, 20, 147] },
+            ]
+
+            //the map
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2650000,
+                z: 4000,
+                //the legends of the styles are shown in the panel
+                legendContainer: document.getElementById('sizes'),
+            }).addZoomButtons()
+
+            //background: land areas, from the Nuts2json countries (cntrg). Kosovo is part of Serbia in them.
+            //The countries of the NUTS regions (nutsrg_0) are kept, plus UK and Moldova.
+            const COUNTRIES = ('AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD').split(' ')
+            const LAND_COLOR = '#e6e6e6'
+            const land = new gridviz.GeoJSONLayer({
+                url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/cntrg.json',
+                preprocess: (f) => COUNTRIES.includes(f.properties.id),
+                fillStyle: () => LAND_COLOR,
+                strokeStyle: () => '#ffffff',
+                lineWidth: () => 1,
+            })
+            //the layers below the circles. The thin border between Kosovo and Serbia is added when loaded.
+            const background = [land]
+
+            // The border between Kosovo and Serbia, thinner than the national borders.
+            // It is the part of the Kosovo outline which is also on the Serbian outline, in the NUTS countries.
+            fetch('https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/nutsrg_0.json')
+                .then((r) => r.json())
+                .then((countries) => {
+                    const rings = (id) => {
+                        const g = countries.features.find((f) => f.properties.id == id).geometry
+                        return (g.type == 'Polygon' ? [g.coordinates] : g.coordinates).flat(1)
+                    }
+                    const edge = (a, b) => (a[0] < b[0] || (a[0] == b[0] && a[1] < b[1]) ? a + ';' + b : b + ';' + a)
+                    const serbia = new Set()
+                    for (const ring of rings('RS')) for (let i = 1; i < ring.length; i++) serbia.add(edge(ring[i - 1], ring[i]))
+                    //the lines made of consecutive Kosovo outline segments which are also Serbian outline segments
+                    const lines = []
+                    for (const ring of rings('XK')) {
+                        let line = null
+                        for (let i = 1; i < ring.length; i++) {
+                            if (serbia.has(edge(ring[i - 1], ring[i]))) {
+                                if (!line) lines.push((line = [ring[i - 1]]))
+                                line.push(ring[i])
+                            } else line = null
+                        }
+                    }
+                    const geojson = {
+                        type: 'FeatureCollection',
+                        features: [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: lines } }],
+                    }
+                    background.push(
+                        new gridviz.GeoJSONLayer({
+                            url: URL.createObjectURL(new Blob([JSON.stringify(geojson)], { type: 'application/json' })),
+                            strokeStyle: () => '#ffffff',
+                            lineWidth: () => 0.4,
+                        })
+                    )
+                    updateLayers()
+                })
+
+            //the background, and the grid layer when it exists
+            let gridLayer
+            const updateLayers = () => {
+                map.layers = gridLayer ? [...background, gridLayer] : background
+                map.redraw()
+            }
+            updateLayers()
+
+            // The dataset: the number of people of each place of birth in the cells, for each resolution
+            const dataset = new gridviz.MultiResolutionDataset(
+                RESOLUTIONS,
+                (r) => new gviz_par.TiledParquetGrid(map, CENSUS_URL + r + '/'),
+                {
+                    //the counts of the cells, 0 when not available
+                    preprocess: (c) => {
+                        for (const cr of TYPES) c[cr.key] = Math.max(+c[cr.key] || 0, 0)
+                        return c.NAT + c.EU_OTH + c.OTH > 0
+                    },
+                }
+            )
+
+            // The styles, one per place of birth: a circle with an area proportional to the number of people, in the colour of the place of birth.
+            // Multiplied together, the colours of the overlapping circles are those of a Venn diagram.
+            const styles = TYPES.map(
+                (type) =>
+                    new gridviz.ShapeColorSizeStyle({
+                        color: () => 'rgb(' + type.rgb.join(',') + ')',
+                        shape: () => 'circle',
+                        size: (c, r, z) => {
+                            const d = circleDiameter(c[type.key], r)
+                            //the first type is always visible. The others, which are minorities, are hidden when too small: overlapping dots would turn black.
+                            return type === TYPES[0] ? (c[type.key] > 0 ? Math.max(d, MIN_DIAMETER_PIX * z) : 0) : d >= MIN_DIAMETER_PIX * z ? d : 0
+                        },
+                        alpha: () => OPACITY,
+                        blendOperation: () => 'multiply',
+                    })
+            )
+
+            const fmt = (v) => Math.round(v).toLocaleString('en')
+            gridLayer = new gridviz.GridLayer(dataset, styles, {
+                minPixelsPerCell: 6,
+                //one line per place of birth, with a badge of its colour. The places of birth which are not in the cell are dimmed.
+                cellInfoHTML: (c) =>
+                    TYPES.map(
+                        (cr) =>
+                            `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;${c[cr.key] > 0 ? '' : 'opacity:0.4'}">` +
+                            `<span style="width:12px;height:12px;border-radius:50%;flex:none;background:rgb(${cr.rgb});box-shadow:0 0 0 1px #0003 inset"></span>` +
+                            `<span>${cr.label}: <b>${fmt(c[cr.key])}</b></span></div>`
+                    ).join(''),
+            })
+            updateLayers()
+
+            // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
+            // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones,
+            // which are limited to MAX_DIAMETER_FACTOR times the cell size. The values below that limit are shown, then the limit.
+            const SIZE_VALUES = [10, 100, 1000, 10000, 100000, 1000000]
+            const MAX_LEGEND_DIAMETER_PIX = 70
+            //the size (in m) of a legend symbol: 0 to hide it when it would be too big, never smaller than the smallest circle of the map
+            const legendSymbol = (diameter, z) =>
+                diameter / z > MAX_LEGEND_DIAMETER_PIX ? 0 : Math.max(diameter, MIN_DIAMETER_PIX * z)
+            const sizeLegendOptions = { fillColor: '#777', strokeColor: 'none', strokeWidth: 0.01, padding: '0px' }
+            styles[0].legends = [
+                ...SIZE_VALUES.map(
+                    (a) =>
+                        new gridviz.SizeLegend({
+                            ...sizeLegendOptions,
+                            label: () => a.toLocaleString('en'),
+                            //hidden when the circles of this area are limited by the cell size, they are shown by the last legend
+                            size: (viewScale, resolution, z) => {
+                                const d = DIAMETER_PER_SQRT_PERSON * Math.sqrt(a)
+                                return d < MAX_DIAMETER_FACTOR * resolution ? legendSymbol(d, z) : 0
+                            },
+                        })
+                ),
+                //the limit: the circles of that area, and of bigger ones, have the same size
+                new gridviz.SizeLegend({
+                    ...sizeLegendOptions,
+                    label: (viewScale, cells, resolution) => {
+                        const persons = ((MAX_DIAMETER_FACTOR * resolution) / DIAMETER_PER_SQRT_PERSON) ** 2
+                        return '≥ ' + (+persons.toPrecision(2)).toLocaleString('en')
+                    },
+                    size: (viewScale, resolution, z) => legendSymbol(MAX_DIAMETER_FACTOR * resolution, z),
+                }),
+            ]
+
+            const R = 45
+            const vennCircles = [
+                [TYPES[0], 165, 55],
+                [TYPES[1], 225, 55],
+                [TYPES[2], 195, 105],
+            ]
+            document.getElementById('venn-legend').innerHTML =
+                `<svg id="venn" width="360" height="165">` +
+                vennCircles.map(([c, x, y]) => `<circle cx="${x}" cy="${y}" r="${R}" fill="rgb(${c.rgb})"/>`).join('') +
+                `<text x="118" y="58" text-anchor="end">Country</text>` +
+                `<text x="276" y="58">Other EU</text>` +
+                `<text x="195" y="160" text-anchor="middle">Outside EU</text></svg>`
+        </script>
+    </body>
+</html>

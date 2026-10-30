@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Prepare the data of the forest types Venn diagram map (index.html)</title>
+        <style>
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                margin: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>Prepare the data of the forest types map</h3>
+        <p>
+            Loads the 1 km CORINE Land Cover 2018 cells of broad-leaved, coniferous and mixed forest, sums their area into bigger
+            cells, and produces one CSV file per resolution (x, y, area in km² of broad-leaved forest b, coniferous forest c and mixed forest m).
+            Save the files in this folder, as <code>5000.csv</code>, <code>10000.csv</code>, etc.
+        </p>
+        <p id="status">Loading...</p>
+        <div id="links"></div>
+
+        <script src="../../../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.0"></script>
+        <script>
+            //the resolution of the CORINE dataset used as input, in m
+            const INPUT_RESOLUTION = 1000
+            //the resolutions to produce, in m
+            //(1 and 2 km files would be too big: forests cover a large part of the territory)
+            const RESOLUTIONS = [5000, 10000, 20000, 50000]
+            //the forest types: CORINE code in the Eurostat tiled grids, and column name
+            const CROPS = [
+                { key: 'b', code: 23 }, //broad-leaved forest
+                { key: 'c', code: 24 }, //coniferous forest
+                { key: 'm', code: 25 }, //mixed forest
+            ]
+
+            //the map is only needed by the loader, to redraw: it is not shown
+            const mapDiv = document.createElement('div')
+            mapDiv.style.cssText = 'position:absolute;width:10px;height:10px;visibility:hidden'
+            document.body.appendChild(mapDiv)
+            const map = new gridviz.Map(mapDiv, { x: 0, y: 0, z: 1 })
+            const loader = new gviz_par.TiledParquetGrid(
+                map,
+                'https://raw.githubusercontent.com/eurostat/LCMap/main/pub/clc/v1/2018/' + INPUT_RESOLUTION + '/',
+                //keep only the cells of the three forest types
+                { preprocess: (c) => CROPS.some((crop) => crop.code == c.code) }
+            )
+
+            const wait = (ms) => new Promise((r) => setTimeout(r, ms))
+            const loadAll = async () => {
+                while (!loader.info) await wait(100)
+                const b = loader.info.tilingBounds
+                loader.getData({ xMin: -1e8, xMax: 1e8, yMin: -1e8, yMax: 1e8 })
+                const total = (b.xMax - b.xMin + 1) * (b.yMax - b.yMin + 1)
+                for (;;) {
+                    let done = 0
+                    for (let x = b.xMin; x <= b.xMax; x++)
+                        for (let y = b.yMin; y <= b.yMax; y++) {
+                            const t = loader.cache[x] && loader.cache[x][y]
+                            if (t && t !== 'loading') done++
+                        }
+                    document.getElementById('status').textContent = 'Loading tiles... ' + done + '/' + total
+                    if (done == total) return
+                    await wait(200)
+                }
+            }
+
+            //sum the area of each crop into the cells of a resolution. Each input cell has one class: its area is counted for it.
+            const aggregate = (resolution) => {
+                const km2 = (INPUT_RESOLUTION / 1000) ** 2
+                const cells = new Map()
+                for (const col of Object.values(loader.cache))
+                    for (const tile of Object.values(col)) {
+                        //tiles without any forest do not exist (not loaded)
+                        if (typeof tile === 'string') continue
+                        for (const c of tile.cells) {
+                            const crop = CROPS.find((cr) => cr.code == c.code)
+                            if (!crop) continue
+                            const x = Math.floor(c.x / resolution) * resolution
+                            const y = Math.floor(c.y / resolution) * resolution
+                            const k = x + '_' + y
+                            let a = cells.get(k)
+                            if (!a) cells.set(k, (a = { x: x, y: y, b: 0, c: 0, m: 0 }))
+                            a[crop.key] += km2
+                        }
+                    }
+                //sort, for a stable file
+                return [...cells.values()].sort((a, b) => a.x - b.x || a.y - b.y)
+            }
+
+            const toCSV = (cells) =>
+                'x,y,b,c,m\n' + cells.map((c) => [c.x, c.y, c.b, c.c, c.m].join(',')).join('\n') + '\n'
+
+            //the CSV files, by resolution
+            window.prepared = loadAll().then(() => {
+                const files = {}
+                for (const r of RESOLUTIONS) files[r] = toCSV(aggregate(r))
+                const links = document.getElementById('links')
+                for (const [r, csv] of Object.entries(files)) {
+                    const a = document.createElement('a')
+                    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
+                    a.download = r + '.csv'
+                    a.textContent = r + '.csv (' + Math.round(csv.length / 1024) + ' kB)'
+                    links.appendChild(a)
+                    links.appendChild(document.createElement('br'))
+                }
+                document.getElementById('status').textContent = 'Done. Download the files:'
+                return files
+            })
+        </script>
+    </body>
+</html>
