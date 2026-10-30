@@ -120,6 +120,13 @@
                 { key: 'w', label: 'Rainy (> 1000 mm a year)', rgb: [245, 210, 0] },
             ]
 
+
+            //the number of cells in the view is limited: each cell is up to three circles, drawn on each redraw.
+            //The smallest cell size in pixels follows from the size of the map, so that big screens do not draw more circles than small ones.
+            const MAX_CELLS_IN_VIEW = 30000
+            const minPixelsPerCell = () =>
+                Math.max(6, Math.sqrt((map.geoCanvas.w * map.geoCanvas.h) / MAX_CELLS_IN_VIEW))
+
             //the map
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -215,7 +222,10 @@
 
             const fmt = (v) => (v < 10 ? v.toFixed(1) : Math.round(v))
             gridLayer = new gridviz.GridLayer(dataset, styles, {
-                minPixelsPerCell: 6,
+
+                //the cells are drawn from a size in pixels which limits their number in the view
+
+                minPixelsPerCell: minPixelsPerCell(),
                 //one line per condition, with a badge of its colour. The conditions which have no area in the cell are dimmed.
                 cellInfoHTML: (c) =>
                     TYPES.map(
@@ -226,6 +236,11 @@
                     ).join(''),
             })
             updateLayers()
+            //on resize
+            window.addEventListener('resize', () => {
+                gridLayer.minPixelsPerCell = minPixelsPerCell()
+                map.redraw()
+            })
 
             // Legend: the size legends of gridviz, for the circles of the map, and a Venn diagram for the colours.
             // The legends are updated on each draw, with the resolution and the zoom: the circles have the size of the map ones,
