@@ -128,6 +128,8 @@
                 z: 4000,
                 //the legends of the styles are shown in the panel
                 legendContainer: document.getElementById('sizes'),
+                //the tooltip is as wide as its lines (it is clipped at 20em by default)
+                tooltip: { maxWidth: 'none' },
             }).addZoomButtons()
 
             //background: land areas, from the Nuts2json countries (cntrg). Kosovo is part of Serbia in them.
