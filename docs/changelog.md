@@ -35,6 +35,9 @@
 -   _viewScale_ scales have an _invert(t)_ function, like the ones of _viewScaleColor_, so that a _ColorLegend_ can write its labels from them (#165).
 -   Zooming while the mouse moves no longer makes the map jolt when the zoom ends: the picture shown during the zoom is placed from the views it was taken at and the current one, instead of from a zoom anchor that is supposed to stay put (#161).
 -   Fix: hovering a legend swatch no longer moves that legend above the ones before it (the legends keep their order while one is hovered).
+-   New _CircleColorSizeWebGLStyle_: circles with a color and a size, drawn with webGL. All the circles of the style are drawn at once, and its `blendOperation` (such as `'multiply'`) is applied once for the style: much faster than the circle shape of _ShapeColorSizeStyle_ when there are many circles.
+-   New default look of the tooltip, the legends and the buttons, which is the one of the statistical atlas. Tooltip options `color` and `lineHeight`, and CSS variables `--gridviz-legend-label-color` and `--gridviz-button-*`.
+-   New examples gallery page (`examples/index.html`) listing all the examples by chapter, with a thumbnail for each.
 
 ### Legends
 

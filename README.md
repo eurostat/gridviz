@@ -25,6 +25,7 @@
 [<img src="docs/img/overviews/ov_lego.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#lego-style)
 [<img src="docs/img/overviews/ov_text_elevation.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#text-style)
 [<img src="docs/img/overviews/ov_dotdensity.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
+[<img src="docs/img/overviews/ov_circle_webgl.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)
 [<img src="docs/img/overviews/ov_joyplot.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
 
 ## Live Demos

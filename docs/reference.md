@@ -286,7 +286,7 @@ The gridded data may be pre-processed after loading, and filtered:
 [![shape color size style](img/styles/shapesizecolor_random.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html)
 [![shape color size style](img/styles/shapesizecolor_sc_donut.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html)
 
-This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle, triangle (up, down, left or right) and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, one of the styles based on web GL [here](#square-color-webgl-style) or [here](#square-color-category-webgl-style) should rather be used, for efficiency reasons.
+This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle, triangle (up, down, left or right) and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, one of the styles based on web GL [here](#square-color-webgl-style) or [here](#square-color-category-webgl-style) should rather be used, for efficiency reasons. Likewise, to show many circles, the [circle style based on web GL](#circle-color-size-webgl-style) is much faster.
 
 -   See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_size.html)).
 -   See [this example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_size_color.html)).
@@ -312,7 +312,9 @@ This style displays each cell as a square, with a changing color based on a cate
 
 ### Circle color size WebGL style
 
-This style displays each cell as a circle, with a changing color and size, like the _circle_ shape of the [Shape/Color/Size style](#shapecolorsize-style) but with webGL. All the circles of the style are drawn at once by the GPU, and copied on the map in a single operation. It should be used rather than the Shape/Color/Size style when there are many circles (tens of thousands or more), and with a `blendOperation` such as `'multiply'`, which is then applied once for the style instead of for each circle. It needs webGL 2: without it, the circles are drawn one by one.
+[![circle color size webgl style](img/styles/circlecolorsize_wgl.png)](https://eurostat.github.io/gridviz/examples/styles/circlecolorsize_webgl.html)
+
+This style displays each cell as a circle, with a changing color and size. It does the same as the _circle_ shape of the [Shape/Color/Size style](#shapecolorsize-style), but with webGL: all the circles of the style are drawn at once by the GPU, and copied on the map in a single operation. It should be used rather than the Shape/Color/Size style when there are many circles (tens of thousands or more), for example on a big screen or at detailed resolutions, and when the style has a `blendOperation` such as `'multiply'`: it is then applied once for the style instead of once for each circle. It needs webGL 2. Without it, the circles are drawn one by one, as the Shape/Color/Size style does.
 
 ```javascript
 new gridviz.CircleColorSizeWebGLStyle({
@@ -323,9 +325,26 @@ new gridviz.CircleColorSizeWebGLStyle({
 })
 ```
 
-The circles of one style do not blend with each other: they are drawn first, then blended with what is below. To show several variables with circles which blend, use one style per variable.
+| Option           | Type                                                    | Default                      | Description                                                                                                              |
+| ---------------- | ------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `color`          | string or `function(cell, resolution, z, viewScale)`    | `'#EA6BAC'`                  | The color of the circle of a cell: any CSS color, with its opacity if it has one. A cell without color (or `'none'`) is not drawn. |
+| `size`           | number or `function(cell, resolution, z, viewScale)`    | the resolution of the grid   | The diameter of the circle, in geographical unit (not in pixels). A cell without size (0) is not drawn.                  |
+| `viewScale`      | function                                                | -                            | As for the other styles: a scale computed from the cells in the view, given to `color` and `size`.                       |
+| `filter`         | `function(cell)`                                        | -                            | A cell for which it returns false is not drawn.                                                                          |
+| `offset`         | `function(cell, resolution, z)`                         | no offset                    | Moves the circles, in geographical unit: `{dx, dy}`.                                                                     |
+| `alpha`          | `function(z)`                                           | opaque                       | The opacity of the style, applied once to all its circles.                                                               |
+| `blendOperation` | `function(z)`                                           | `'source-over'`              | How the style is blended with what is below, applied once to all its circles: `'multiply'`, `'screen'`...               |
+| `visible`        | boolean or `function(z)`                                | `true`                       | Whether the style is drawn, at a zoom level.                                                                             |
 
--   See [this multivariate map with nested circles and a Venn diagram legend](https://eurostat.github.io/gridviz/examples/test/venn/birth/index.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/test/venn/birth/index.html)).
+A few things to know:
+
+-   The circles of one style do not blend with each other: they are all drawn first, then blended with what is below. To show several variables with circles which blend, use one style per variable, as in the examples below (nested circles, and a Venn diagram as legend).
+-   The edge of a circle is anti-aliased. A circle with a diameter under a pixel is drawn very faint: give it a minimum size in the `size` function if it should stay visible.
+-   The [interactive legends](#interactive-legends) work with this style: when a legend swatch is hovered, only the circles of that color are drawn.
+-   Legends are added as for the other styles, with `style.legends = [...]`. The styles of this kind on a page share one webGL 2 context, so they do not use up the contexts of the browser.
+
+-   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/circlecolorsize_webgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/circlecolorsize_webgl.html)): the size and the color of the circles follow two variables.
+-   See [this multivariate map with nested circles and a Venn diagram legend](https://eurostat.github.io/gridviz/examples/test/venn/birth/index.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/test/venn/birth/index.html)): one style per place of birth, blended by multiplication. There are [five others](https://eurostat.github.io/gridviz/examples/#Styles/Circle%20color%20size%20WebGL%20style): crops, forests, air pollution, climate and residential mobility.
 
 ### Composition style
 
@@ -633,7 +652,7 @@ The other elements gridviz creates have classes too, so that a page can restyle 
 
 ### Interactive legends
 
-Hovering a swatch of a _ColorDiscreteLegend_, _ColorCategoryLegend_ or _TernaryLegend_ shows only the cells drawn in that colour on the map, and hovering out shows them all again. This works for the styles that draw cells in a colour per class: _ShapeColorSizeStyle_ and _SquareColorCategoryWebGLStyle_. It matches the colour the style draws with against the colour of the swatch, so the two should be the same colour. Set `interactive: false` on a legend to turn it off.
+Hovering a swatch of a _ColorDiscreteLegend_, _ColorCategoryLegend_ or _TernaryLegend_ shows only the cells drawn in that colour on the map, and hovering out shows them all again. This works for the styles that draw cells in a colour per class: _ShapeColorSizeStyle_, _CircleColorSizeWebGLStyle_ and _SquareColorCategoryWebGLStyle_. It matches the colour the style draws with against the colour of the swatch, so the two should be the same colour. Set `interactive: false` on a legend to turn it off.
 
 A custom style can take part too: skip the cells for which `this.isHighlighted(color)` is false. Custom legends can call `this.bindHover(selection, color)` on each swatch.
 

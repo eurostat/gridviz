@@ -60,12 +60,6 @@
   "description": "Cells selected and coloured by category with a WebGL style."
  },
  {
-  "path": "basics/custom_style.html",
-  "category": "Basics",
-  "title": "Custom style",
-  "description": "A style written from scratch, with its own draw function."
- },
- {
   "path": "basics/tooltip.html",
   "category": "Basics",
   "title": "Tooltip",
@@ -174,256 +168,354 @@
   "description": "Place names over a background, in the ETRS89-LAEA projection."
  },
  {
-  "path": "styles/squarecolorwgl.html",
-  "category": "Styles",
-  "title": "Square colour, WebGL",
-  "description": "Colouring of cells with WebGL, for very large grids."
- },
- {
-  "path": "styles/squarecolorwgl_dark.html",
-  "category": "Styles",
-  "title": "Square colour, WebGL, dark",
-  "description": "The WebGL colour style on a dark map, with boundaries and labels."
- },
- {
-  "path": "styles/squarecolorcatwgl.html",
-  "category": "Styles",
-  "title": "Categories, WebGL",
-  "description": "Cell categories coloured with WebGL: land cover."
- },
- {
   "path": "styles/shapecolorsize_size.html",
   "category": "Styles",
   "title": "Shapes sized by value",
-  "description": "The size of the shape of each cell follows its value."
+  "description": "The size of the shape of each cell follows its value.",
+  "group": "Shape/Color/Size style"
  },
  {
   "path": "styles/shapecolorsize_size_color.html",
   "category": "Styles",
   "title": "Shapes sized and coloured",
-  "description": "Shape size and colour: two variables in each cell."
+  "description": "Shape size and colour: two variables in each cell.",
+  "group": "Shape/Color/Size style"
  },
  {
   "path": "styles/shapecolorsize_random.html",
   "category": "Styles",
   "title": "Random shapes",
-  "description": "The shapes of the style, with random sizes and colours."
+  "description": "The shapes of the style, with random sizes and colours.",
+  "group": "Shape/Color/Size style"
+ },
+ {
+  "path": "styles/squarecolorwgl.html",
+  "category": "Styles",
+  "title": "Square colour, WebGL",
+  "description": "Colouring of cells with WebGL, for very large grids.",
+  "group": "Square color WebGL style"
+ },
+ {
+  "path": "styles/squarecolorwgl_dark.html",
+  "category": "Styles",
+  "title": "Square colour, WebGL, dark",
+  "description": "The WebGL colour style on a dark map, with boundaries and labels.",
+  "group": "Square color WebGL style"
+ },
+ {
+  "path": "styles/squarecolorcatwgl.html",
+  "category": "Styles",
+  "title": "Categories, WebGL",
+  "description": "Cell categories coloured with WebGL: land cover.",
+  "group": "Square color category WebGL style"
+ },
+ {
+  "path": "styles/circlecolorsize_webgl.html",
+  "category": "Styles",
+  "group": "Circle color size WebGL style",
+  "title": "Circles sized and coloured, WebGL",
+  "description": "The number of people as the size of the circle and their income as its colour, drawn by the GPU."
+ },
+ {
+  "path": "test/venn/crops/index.html",
+  "category": "Styles",
+  "title": "Permanent crops",
+  "description": "Fruit trees, olive groves and vineyards: nested circles, with a Venn diagram legend.",
+  "group": "Circle color size WebGL style"
+ },
+ {
+  "path": "test/venn/forest/index.html",
+  "category": "Styles",
+  "title": "Forest types",
+  "description": "Broad-leaved, coniferous and mixed forests: nested circles, with a Venn diagram legend.",
+  "group": "Circle color size WebGL style"
+ },
+ {
+  "path": "test/venn/air/index.html",
+  "category": "Styles",
+  "title": "Air pollution",
+  "description": "Where fine particles, nitrogen dioxide and ozone are high: nested circles and a Venn diagram.",
+  "group": "Circle color size WebGL style"
+ },
+ {
+  "path": "test/venn/climate/index.html",
+  "category": "Styles",
+  "title": "Climate",
+  "description": "Hot summers, cold winters and rainy areas of Europe, with a Venn diagram legend.",
+  "group": "Circle color size WebGL style"
+ },
+ {
+  "path": "test/venn/birth/index.html",
+  "category": "Styles",
+  "title": "Place of birth",
+  "description": "Born in the country, in another EU country or outside the EU, from the Census 2021 grid.",
+  "group": "Circle color size WebGL style"
+ },
+ {
+  "path": "test/venn/mobility/index.html",
+  "category": "Styles",
+  "title": "Residential mobility",
+  "description": "People who stayed, moved within the country or came from abroad, from the Census 2021 grid.",
+  "group": "Circle color size WebGL style"
  },
  {
   "path": "styles/composition.html",
   "category": "Styles",
   "title": "Composition",
-  "description": "Several values of a cell shown as proportions."
+  "description": "Several values of a cell shown as proportions.",
+  "group": "Composition style"
  },
  {
   "path": "styles/composition_types.html",
   "category": "Styles",
   "title": "Composition types",
-  "description": "The different ways of showing the composition of a cell."
- },
- {
-  "path": "styles/ternary_age_DE.html",
-  "category": "Styles",
-  "title": "Ternary colours: age groups",
-  "description": "The age structure of the population of Germany, with a ternary legend."
- },
- {
-  "path": "styles/dotdensity.html",
-  "category": "Styles",
-  "title": "Dot density",
-  "description": "Dots placed randomly in each cell, their number following the value."
- },
- {
-  "path": "styles/dotdensity_random.html",
-  "category": "Styles",
-  "title": "Dot density by category",
-  "description": "Dot density with one colour for each category."
- },
- {
-  "path": "styles/lego.html",
-  "category": "Styles",
-  "title": "Lego",
-  "description": "Elevation as lego bricks."
- },
- {
-  "path": "styles/lego_category.html",
-  "category": "Styles",
-  "title": "Lego by category",
-  "description": "Land cover categories as lego bricks."
- },
- {
-  "path": "styles/mosaic.html",
-  "category": "Styles",
-  "title": "Mosaic",
-  "description": "The mosaic style, with one tile per cell."
- },
- {
-  "path": "styles/mosaic_full.html",
-  "category": "Styles",
-  "title": "Population mosaic of Europe",
-  "description": "A mosaic map with a title, a source and a legend."
- },
- {
-  "path": "styles/pillar.html",
-  "category": "Styles",
-  "title": "Pillars",
-  "description": "The pillar style: each cell as a pillar."
- },
- {
-  "path": "styles/pillar_simple.html",
-  "category": "Styles",
-  "title": "Pillars over a basemap",
-  "description": "Pillars over a basemap with boundaries."
- },
- {
-  "path": "styles/ninja_star.html",
-  "category": "Styles",
-  "title": "Ninja stars",
-  "description": "Cells drawn as stars."
- },
- {
-  "path": "styles/ninja_star_p.html",
-  "category": "Styles",
-  "title": "Ninja stars with age ratio",
-  "description": "Stars whose appearance follows the age ratio of the population."
- },
- {
-  "path": "styles/segment_random.html",
-  "category": "Styles",
-  "title": "Random segments",
-  "description": "Segments with random colours, widths and orientations."
+  "description": "The different ways of showing the composition of a cell.",
+  "group": "Composition style"
  },
  {
   "path": "styles/segment_width.html",
   "category": "Styles",
   "title": "Segment width",
-  "description": "Segments with a width from the data."
+  "description": "Segments with a width from the data.",
+  "group": "Segment style"
+ },
+ {
+  "path": "styles/segment_random.html",
+  "category": "Styles",
+  "title": "Random segments",
+  "description": "Segments with random colours, widths and orientations.",
+  "group": "Segment style"
  },
  {
   "path": "styles/stroke.html",
   "category": "Styles",
   "title": "Stroke",
-  "description": "The outline of the cells."
+  "description": "The outline of the cells.",
+  "group": "Stroke style"
  },
  {
   "path": "styles/stroke_random.html",
   "category": "Styles",
   "title": "Random strokes",
-  "description": "Strokes with random colours and widths."
+  "description": "Strokes with random colours and widths.",
+  "group": "Stroke style"
+ },
+ {
+  "path": "styles/dotdensity.html",
+  "category": "Styles",
+  "title": "Dot density",
+  "description": "Dots placed randomly in each cell, their number following the value.",
+  "group": "Dot density style"
+ },
+ {
+  "path": "styles/dotdensity_random.html",
+  "category": "Styles",
+  "title": "Dot density by category",
+  "description": "Dot density with one colour for each category.",
+  "group": "Dot density style"
+ },
+ {
+  "path": "styles/pillar.html",
+  "category": "Styles",
+  "title": "Pillars",
+  "description": "The pillar style: each cell as a pillar.",
+  "group": "Pillars style"
+ },
+ {
+  "path": "styles/pillar_simple.html",
+  "category": "Styles",
+  "title": "Pillars over a basemap",
+  "description": "Pillars over a basemap with boundaries.",
+  "group": "Pillars style"
+ },
+ {
+  "path": "styles/ternary_age_DE.html",
+  "category": "Styles",
+  "title": "Ternary colours: age groups",
+  "description": "The age structure of the population of Germany, with a ternary legend.",
+  "group": "Ternary style"
  },
  {
   "path": "styles/text.html",
   "category": "Styles",
   "title": "Text",
-  "description": "The value of each cell written as text."
+  "description": "The value of each cell written as text.",
+  "group": "Text style"
  },
  {
   "path": "styles/text_elevation.html",
   "category": "Styles",
   "title": "Text: elevation",
-  "description": "Elevation written in each cell."
+  "description": "Elevation written in each cell.",
+  "group": "Text style"
  },
  {
   "path": "styles/text_emoji.html",
   "category": "Styles",
   "title": "Emoji",
-  "description": "Emojis drawn as text in each cell."
+  "description": "Emojis drawn as text in each cell.",
+  "group": "Text style"
  },
  {
   "path": "styles/image_chernoff.html",
   "category": "Styles",
   "title": "Chernoff faces",
-  "description": "A face for each cell, its features following the data."
+  "description": "A face for each cell, its features following the data.",
+  "group": "Image style"
  },
  {
   "path": "styles/image_kitten.html",
   "category": "Styles",
   "title": "Images",
-  "description": "An image drawn in each cell."
- },
- {
-  "path": "styles/joyplot.html",
-  "category": "Styles",
-  "title": "Joyplot",
-  "description": "Ridgeline profiles of the values."
- },
- {
-  "path": "styles/joyplot_random.html",
-  "category": "Styles",
-  "title": "Joyplot, random colours",
-  "description": "Ridgeline profiles with random colours."
- },
- {
-  "path": "styles/joyplot_shading.html",
-  "category": "Styles",
-  "title": "Joyplot over a basemap",
-  "description": "Ridgeline profiles over a basemap."
- },
- {
-  "path": "styles/side.html",
-  "category": "Styles",
-  "title": "Side",
-  "description": "The side style: a segment on the side of the cells."
- },
- {
-  "path": "styles/side_contour.html",
-  "category": "Styles",
-  "title": "Contours",
-  "description": "Contour lines drawn with the side Tanaka style."
- },
- {
-  "path": "styles/side_hillshading.html",
-  "category": "Styles",
-  "title": "Hillshading",
-  "description": "Shaded relief from elevation cells."
- },
- {
-  "path": "styles/side_hillshading_old.html",
-  "category": "Styles",
-  "title": "Hillshading, side style",
-  "description": "Shaded relief drawn with the side style."
- },
- {
-  "path": "styles/sidecat.html",
-  "category": "Styles",
-  "title": "Side by category",
-  "description": "Land cover categories drawn on the sides of the cells."
- },
- {
-  "path": "styles/shading_raycasting.html",
-  "category": "Styles",
-  "title": "Ray casting shadows",
-  "description": "Shadows computed by ray casting over elevation, with controls."
- },
- {
-  "path": "styles/tanaka.html",
-  "category": "Styles",
-  "title": "Tanaka contours",
-  "description": "Relief with Tanaka contours."
- },
- {
-  "path": "styles/isofence.html",
-  "category": "Styles",
-  "title": "Isofence",
-  "description": "Age groups drawn with the isofence style, with a choice of orientation."
- },
- {
-  "path": "styles/interpolator.html",
-  "category": "Styles",
-  "title": "Interpolation",
-  "description": "Interpolated elevation, with hypsometric colours."
- },
- {
-  "path": "styles/kernelsmoothing.html",
-  "category": "Styles",
-  "title": "Kernel smoothing",
-  "description": "A smoothed grid, with a choice of style and a slider for the smoothing."
+  "description": "An image drawn in each cell.",
+  "group": "Image style"
  },
  {
   "path": "styles/time_series.html",
   "category": "Styles",
   "title": "Time series",
-  "description": "The evolution of the values of each cell over time."
+  "description": "The evolution of the values of each cell over time.",
+  "group": "Time series style"
+ },
+ {
+  "path": "styles/side.html",
+  "category": "Styles",
+  "title": "Side",
+  "description": "The side style: a segment on the side of the cells.",
+  "group": "Side style"
+ },
+ {
+  "path": "styles/side_hillshading_old.html",
+  "category": "Styles",
+  "title": "Hillshading, side style",
+  "description": "Shaded relief drawn with the side style.",
+  "group": "Side style"
+ },
+ {
+  "path": "styles/sidecat.html",
+  "category": "Styles",
+  "title": "Side by category",
+  "description": "Land cover categories drawn on the sides of the cells.",
+  "group": "Side category style"
+ },
+ {
+  "path": "styles/side_contour.html",
+  "category": "Styles",
+  "title": "Contours",
+  "description": "Contour lines drawn with the side Tanaka style.",
+  "group": "Contour style"
+ },
+ {
+  "path": "styles/isofence.html",
+  "category": "Styles",
+  "title": "Isofence",
+  "description": "Age groups drawn with the isofence style, with a choice of orientation.",
+  "group": "Isometric fence style"
+ },
+ {
+  "path": "styles/joyplot.html",
+  "category": "Styles",
+  "title": "Joyplot",
+  "description": "Ridgeline profiles of the values.",
+  "group": "JoyPlot style"
+ },
+ {
+  "path": "styles/joyplot_random.html",
+  "category": "Styles",
+  "title": "Joyplot, random colours",
+  "description": "Ridgeline profiles with random colours.",
+  "group": "JoyPlot style"
+ },
+ {
+  "path": "styles/joyplot_shading.html",
+  "category": "Styles",
+  "title": "Joyplot over a basemap",
+  "description": "Ridgeline profiles over a basemap.",
+  "group": "JoyPlot style"
+ },
+ {
+  "path": "styles/mosaic.html",
+  "category": "Styles",
+  "title": "Mosaic",
+  "description": "The mosaic style, with one tile per cell.",
+  "group": "Mosaic style"
+ },
+ {
+  "path": "styles/mosaic_full.html",
+  "category": "Styles",
+  "title": "Population mosaic of Europe",
+  "description": "A mosaic map with a title, a source and a legend.",
+  "group": "Mosaic style"
+ },
+ {
+  "path": "styles/ninja_star.html",
+  "category": "Styles",
+  "title": "Ninja stars",
+  "description": "Cells drawn as stars.",
+  "group": "Ninja star style"
+ },
+ {
+  "path": "styles/ninja_star_p.html",
+  "category": "Styles",
+  "title": "Ninja stars with age ratio",
+  "description": "Stars whose appearance follows the age ratio of the population.",
+  "group": "Ninja star style"
+ },
+ {
+  "path": "styles/tanaka.html",
+  "category": "Styles",
+  "title": "Tanaka contours",
+  "description": "Relief with Tanaka contours.",
+  "group": "Tanaka style"
+ },
+ {
+  "path": "styles/lego.html",
+  "category": "Styles",
+  "title": "Lego",
+  "description": "Elevation as lego bricks.",
+  "group": "Lego style"
+ },
+ {
+  "path": "styles/lego_category.html",
+  "category": "Styles",
+  "title": "Lego by category",
+  "description": "Land cover categories as lego bricks.",
+  "group": "Lego category style"
+ },
+ {
+  "path": "styles/side_hillshading.html",
+  "category": "Styles",
+  "title": "Hillshading",
+  "description": "Shaded relief from elevation cells.",
+  "group": "Shading style"
+ },
+ {
+  "path": "styles/shading_raycasting.html",
+  "category": "Styles",
+  "title": "Ray casting shadows",
+  "description": "Shadows computed by ray casting over elevation, with controls.",
+  "group": "Shading ray casting style"
+ },
+ {
+  "path": "styles/interpolator.html",
+  "category": "Styles",
+  "title": "Interpolation",
+  "description": "Interpolated elevation, with hypsometric colours.",
+  "group": "Interpolator"
+ },
+ {
+  "path": "styles/kernelsmoothing.html",
+  "category": "Styles",
+  "title": "Kernel smoothing",
+  "description": "A smoothed grid, with a choice of style and a slider for the smoothing.",
+  "group": "Kernel smoothing"
+ },
+ {
+  "path": "basics/custom_style.html",
+  "category": "Styles",
+  "title": "Custom style",
+  "description": "A style written from scratch, with its own draw function.",
+  "group": "Custom style"
  },
  {
   "path": "legends/colorLegend.html",
@@ -592,41 +684,5 @@
   "category": "Demos",
   "title": "Norway: population",
   "description": "The 250 m grids of Statistics Norway: population and its change."
- },
- {
-  "path": "test/venn/crops/index.html",
-  "category": "Multivariate",
-  "title": "Permanent crops",
-  "description": "Fruit trees, olive groves and vineyards: nested circles, with a Venn diagram legend."
- },
- {
-  "path": "test/venn/forest/index.html",
-  "category": "Multivariate",
-  "title": "Forest types",
-  "description": "Broad-leaved, coniferous and mixed forests: nested circles, with a Venn diagram legend."
- },
- {
-  "path": "test/venn/air/index.html",
-  "category": "Multivariate",
-  "title": "Air pollution",
-  "description": "Where fine particles, nitrogen dioxide and ozone are high: nested circles and a Venn diagram."
- },
- {
-  "path": "test/venn/climate/index.html",
-  "category": "Multivariate",
-  "title": "Climate",
-  "description": "Hot summers, cold winters and rainy areas of Europe, with a Venn diagram legend."
- },
- {
-  "path": "test/venn/birth/index.html",
-  "category": "Multivariate",
-  "title": "Place of birth",
-  "description": "Born in the country, in another EU country or outside the EU, from the Census 2021 grid."
- },
- {
-  "path": "test/venn/mobility/index.html",
-  "category": "Multivariate",
-  "title": "Residential mobility",
-  "description": "People who stayed, moved within the country or came from abroad, from the Census 2021 grid."
  }
 ]

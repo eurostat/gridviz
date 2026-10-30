@@ -69,11 +69,22 @@ let instances = new Float32Array(FLOATS_PER_CIRCLE * 4096)
  * It is the same as ShapeColorSizeStyle (with the 'circle' shape) in all other aspects.
  * It needs WebGL 2. Without it, the circles are drawn one by one.
  *
+ * @example
+ * new gridviz.CircleColorSizeWebGLStyle({
+ *     color: (cell) => (cell.value > 100 ? 'red' : 'blue'),
+ *     size: (cell, resolution) => resolution * 0.5,
+ *     blendOperation: () => 'multiply',
+ * })
+ *
  * @module style
  * @author Joseph Davies
  */
 export class CircleColorSizeWebGLStyle extends Style {
-    /** @param {object} opts */
+    /**
+     * @param {object} opts The options of the style (see Style for the common ones: filter, offset, alpha, blendOperation, visible, viewScale).
+     * @param {(function(import('../core/Dataset.js').Cell, number, number, object):string) | string} [opts.color] The color of the circle of a cell: a CSS color, or a function of the cell, the resolution, the zoom level and the view scale. A cell without color is not drawn. Default: '#EA6BAC'.
+     * @param {(function(import('../core/Dataset.js').Cell, number, number, object):number) | number} [opts.size] The diameter of the circle of a cell, in geographical unit: a number, or a function of the cell, the resolution, the zoom level and the view scale. A cell without size (0) is not drawn. Default: the resolution.
+     */
     constructor(opts) {
         super(opts)
         opts = opts || {}

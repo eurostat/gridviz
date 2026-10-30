@@ -142,6 +142,45 @@
                 font-variant-numeric: tabular-nums;
             }
 
+            .sidebar-nav .sub {
+                list-style: none;
+                margin: 2px 0 6px 10px;
+                padding: 0 0 0 6px;
+                border-left: 2px solid var(--line);
+            }
+
+            .sidebar-nav .sub a {
+                padding: 4px 8px;
+                font-size: 13px;
+            }
+
+            .group {
+                margin-bottom: 26px;
+            }
+
+            .group-title {
+                margin: 0 0 8px;
+                font-size: 20px;
+                display: flex;
+                align-items: baseline;
+                gap: 8px;
+            }
+
+            .group-title a {
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .group-title a:hover {
+                color: var(--accent);
+            }
+
+            .group-title .count {
+                font-size: 13px;
+                font-weight: 400;
+                color: var(--muted);
+            }
+
             .main {
                 flex: 1;
                 min-width: 0;
@@ -305,9 +344,10 @@
         </main>
 
         <script>
-            // The examples are listed in gallery.json: path, title, description and category.
+            // The examples are listed in gallery.json: path, title, description, category and, for the styles, the style they show (group).
             // Their thumbnails are made by scripts/make-gallery.mjs, in img/previews/.
             const ALL = 'All'
+            const STYLES = 'Styles'
             const thumbPath = (path) => 'img/previews/' + path.replace(/\//g, '__').replace(/\.html$/, '.jpg')
 
             const grid = document.getElementById('grid')
@@ -316,41 +356,111 @@
             const nav = document.getElementById('sidebar-nav')
 
             let examples = []
-            let active = decodeURIComponent(location.hash.slice(1)) || ALL
+            // the selection: a category and, for the styles, a style (group). In the address: #Styles/Lego style
+            const readHash = () => {
+                const [category, group] = decodeURIComponent(location.hash.slice(1)).split('/')
+                return { category: category || ALL, group: group || null }
+            }
+            let active = readHash()
+            const hashOf = (a) =>
+                a.category === ALL ? location.pathname : '#' + encodeURIComponent(a.category) + (a.group ? '/' + encodeURIComponent(a.group) : '')
+
+            const select = (category, group) => {
+                active = { category: category, group: group || null }
+                history.replaceState(null, '', hashOf(active))
+                renderNav()
+                render()
+            }
+
+            const navLink = (label, count, isActive, category, group) => {
+                const li = document.createElement('li')
+                const a = document.createElement('a')
+                a.href = hashOf({ category: category, group: group })
+                a.className = isActive ? 'active' : ''
+                a.innerHTML = '<span></span><span class="count">' + count + '</span>'
+                a.firstChild.textContent = label
+                a.addEventListener('click', (ev) => {
+                    ev.preventDefault()
+                    select(category, group)
+                })
+                li.appendChild(a)
+                return li
+            }
 
             const renderNav = () => {
-                const categories = [ALL, ...new Set(examples.map((e) => e.category))]
-                if (!categories.includes(active)) active = ALL
+                const categories = [...new Set(examples.map((e) => e.category))]
+                if (active.category !== ALL && !categories.includes(active.category)) active = { category: ALL, group: null }
                 nav.textContent = ''
+                nav.appendChild(navLink(ALL, examples.length, active.category === ALL, ALL, null))
                 for (const c of categories) {
-                    const li = document.createElement('li')
-                    const a = document.createElement('a')
-                    a.href = '#' + encodeURIComponent(c)
-                    a.className = c === active ? 'active' : ''
-                    const n = c === ALL ? examples.length : examples.filter((e) => e.category === c).length
-                    a.innerHTML = '<span></span><span class="count">' + n + '</span>'
-                    a.firstChild.textContent = c
-                    a.addEventListener('click', (ev) => {
-                        ev.preventDefault()
-                        active = c
-                        history.replaceState(null, '', c === ALL ? location.pathname : '#' + encodeURIComponent(c))
-                        renderNav()
-                        render()
-                    })
-                    li.appendChild(a)
+                    const inCategory = examples.filter((e) => e.category === c)
+                    const li = navLink(c, inCategory.length, active.category === c && !active.group, c, null)
                     nav.appendChild(li)
+                    // the styles are listed one by one under their chapter, when it is open
+                    if (c === STYLES && active.category === STYLES) {
+                        const sub = document.createElement('ul')
+                        sub.className = 'sub'
+                        for (const g of [...new Set(inCategory.map((e) => e.group))])
+                            sub.appendChild(navLink(g, inCategory.filter((e) => e.group === g).length, active.group === g, STYLES, g))
+                        li.appendChild(sub)
+                    }
                 }
+            }
+
+            const card = (e) => {
+                const card = document.createElement('article')
+                card.className = 'card'
+
+                const link = document.createElement('a')
+                link.className = 'thumb-link'
+                link.href = e.path
+                link.target = '_blank'
+                link.rel = 'noopener noreferrer'
+                link.setAttribute('aria-label', e.title)
+                const img = document.createElement('img')
+                img.className = 'thumb'
+                img.loading = 'lazy'
+                img.width = 480
+                img.height = 300
+                img.alt = e.title
+                img.src = thumbPath(e.path)
+                link.appendChild(img)
+
+                const body = document.createElement('div')
+                body.className = 'card-body'
+                const h = document.createElement('h3')
+                h.className = 'card-title'
+                const a = document.createElement('a')
+                a.href = e.path
+                a.target = '_blank'
+                a.rel = 'noopener noreferrer'
+                a.textContent = e.title
+                h.appendChild(a)
+                const d = document.createElement('p')
+                d.className = 'card-desc'
+                d.textContent = e.description
+                const meta = document.createElement('div')
+                meta.className = 'card-meta'
+                meta.innerHTML = '<span class="path"></span><span></span>'
+                meta.firstChild.textContent = e.path.replace(/\/index\.html$/, '/')
+                meta.lastChild.textContent = e.group || e.category
+                body.append(h, d, meta)
+
+                card.append(link, body)
+                return card
             }
 
             const render = () => {
                 const q = search.value.trim().toLowerCase()
                 const shown = examples.filter(
                     (e) =>
-                        (active === ALL || e.category === active) &&
-                        (!q || [e.title, e.description, e.path, e.category].some((s) => s.toLowerCase().includes(q)))
+                        (active.category === ALL || e.category === active.category) &&
+                        (!active.group || e.group === active.group) &&
+                        (!q || [e.title, e.description, e.path, e.category, e.group || ''].some((s) => s.toLowerCase().includes(q)))
                 )
                 stats.textContent = shown.length + ' of ' + examples.length + ' examples'
                 grid.textContent = ''
+                grid.className = ''
                 if (!shown.length) {
                     const p = document.createElement('p')
                     p.className = 'empty'
@@ -358,53 +468,41 @@
                     grid.appendChild(p)
                     return
                 }
-                for (const e of shown) {
-                    const card = document.createElement('article')
-                    card.className = 'card'
-
-                    const link = document.createElement('a')
-                    link.className = 'thumb-link'
-                    link.href = e.path
-                    link.target = '_blank'
-                    link.rel = 'noopener noreferrer'
-                    link.setAttribute('aria-label', e.title)
-                    const img = document.createElement('img')
-                    img.className = 'thumb'
-                    img.loading = 'lazy'
-                    img.width = 480
-                    img.height = 300
-                    img.alt = e.title
-                    img.src = thumbPath(e.path)
-                    link.appendChild(img)
-
-                    const body = document.createElement('div')
-                    body.className = 'card-body'
-                    const h = document.createElement('h2')
-                    h.className = 'card-title'
+                // the styles chapter: one section for each style
+                const bySection = active.category === STYLES && !active.group
+                if (!bySection) {
+                    grid.className = 'grid'
+                    for (const e of shown) grid.appendChild(card(e))
+                    return
+                }
+                for (const g of [...new Set(shown.map((e) => e.group))]) {
+                    const section = document.createElement('section')
+                    section.className = 'group'
+                    const title = document.createElement('h2')
+                    title.className = 'group-title'
                     const a = document.createElement('a')
-                    a.href = e.path
-                    a.target = '_blank'
-                    a.rel = 'noopener noreferrer'
-                    a.textContent = e.title
-                    h.appendChild(a)
-                    const d = document.createElement('p')
-                    d.className = 'card-desc'
-                    d.textContent = e.description
-                    const meta = document.createElement('div')
-                    meta.className = 'card-meta'
-                    meta.innerHTML = '<span class="path"></span><span></span>'
-                    meta.firstChild.textContent = e.path.replace(/\/index\.html$/, '/')
-                    meta.lastChild.textContent = e.category
-                    body.append(h, d, meta)
-
-                    card.append(link, body)
-                    grid.appendChild(card)
+                    a.href = hashOf({ category: STYLES, group: g })
+                    a.textContent = g
+                    a.addEventListener('click', (ev) => {
+                        ev.preventDefault()
+                        select(STYLES, g)
+                    })
+                    const n = document.createElement('span')
+                    n.className = 'count'
+                    const inGroup = shown.filter((e) => e.group === g)
+                    n.textContent = inGroup.length + (inGroup.length === 1 ? ' example' : ' examples')
+                    title.append(a, n)
+                    const cards = document.createElement('div')
+                    cards.className = 'grid'
+                    for (const e of inGroup) cards.appendChild(card(e))
+                    section.append(title, cards)
+                    grid.appendChild(section)
                 }
             }
 
             search.addEventListener('input', render)
             window.addEventListener('hashchange', () => {
-                active = decodeURIComponent(location.hash.slice(1)) || ALL
+                active = readHash()
                 renderNav()
                 render()
             })

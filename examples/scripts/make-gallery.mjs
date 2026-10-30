@@ -28,6 +28,8 @@ const THUMB = { width: 480, height: 300 }
 // time to let a page load its data and draw, once the network is quiet
 const SETTLE_MS = 3500
 const CONCURRENCY = 4
+// the thumbnails of the legends show the legend alone, captured with this pixel ratio, on this background, and at most this size relative to the thumbnail
+const LEGEND = { pixelRatio: 3, background: '#eef2f7', fill: 0.88, maxZoom: 1.8, margin: 6 }
 
 /** The name of the thumbnail file of an example. */
 export const thumbName = (examplePath) => examplePath.replace(/\//g, '__').replace(/\.html$/, '.jpg')
@@ -79,10 +81,13 @@ const browser = await launch()
 // a page to resize the screenshots and to detect the blank ones
 const toolPage = await browser.newPage()
 
-/** Resizes a PNG screenshot to a JPEG thumbnail. Returns the JPEG and the standard deviation of its grey levels. */
-const makeThumb = (png) =>
+/**
+ * Resizes a PNG screenshot to a JPEG thumbnail. Returns the JPEG and the standard deviation of its grey levels.
+ * With "fit", the screenshot (of a legend, taken with a pixel ratio) is centered on a plain background instead.
+ */
+const makeThumb = (png, fit = null) =>
     toolPage.evaluate(
-        async ({ b64, w, h }) => {
+        async ({ b64, w, h, fit }) => {
             const img = new Image()
             img.src = 'data:image/png;base64,' + b64
             await img.decode()
@@ -91,7 +96,16 @@ const makeThumb = (png) =>
             c.height = h
             const ctx = c.getContext('2d')
             ctx.imageSmoothingQuality = 'high'
-            ctx.drawImage(img, 0, 0, w, h)
+            if (fit) {
+                ctx.fillStyle = fit.background
+                ctx.fillRect(0, 0, w, h)
+                const cssW = img.width / fit.pixelRatio
+                const cssH = img.height / fit.pixelRatio
+                const zoom = Math.min((fit.fill * w) / cssW, (fit.fill * h) / cssH, fit.maxZoom)
+                const dw = cssW * zoom
+                const dh = cssH * zoom
+                ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh)
+            } else ctx.drawImage(img, 0, 0, w, h)
             const d = ctx.getImageData(0, 0, w, h).data
             let s = 0,
                 s2 = 0
@@ -103,16 +117,37 @@ const makeThumb = (png) =>
             }
             return { jpeg: c.toDataURL('image/jpeg', 0.82).split(',')[1], sd: Math.sqrt(s2 / n - (s / n) ** 2) }
         },
-        { b64: png.toString('base64'), w: THUMB.width, h: THUMB.height }
+        { b64: png.toString('base64'), w: THUMB.width, h: THUMB.height, fit }
     )
 
 const problems = []
 let next = 0
+/** The legend of the page alone: hides the map, and returns the screenshot of the legends (and of their container, if any). */
+const captureLegend = async (page) => {
+    const box = await page.evaluate(({ margin, background }) => {
+        const legends = [...document.querySelectorAll('.gridviz-legend')]
+        if (!legends.length) return null
+        document.querySelectorAll('canvas').forEach((c) => (c.style.visibility = 'hidden'))
+        document.documentElement.style.background = document.body.style.background = background
+        // the card of the legends when gridviz makes it, else the legends themselves
+        const card = legends[0].closest('.gridviz-legends')
+        const rects = (card ? [card] : legends).map((e) => e.getBoundingClientRect())
+        const x0 = Math.min(...rects.map((r) => r.left)) - margin
+        const y0 = Math.min(...rects.map((r) => r.top)) - margin
+        const x1 = Math.max(...rects.map((r) => r.right)) + margin
+        const y1 = Math.max(...rects.map((r) => r.bottom)) + margin
+        return { x: Math.max(0, x0), y: Math.max(0, y0), width: x1 - Math.max(0, x0), height: y1 - Math.max(0, y0) }
+    }, LEGEND)
+    return box ? page.screenshot({ clip: box }) : null
+}
+
 const worker = async () => {
     const context = await browser.newContext({ viewport: PAGE })
+    const legendContext = await browser.newContext({ viewport: PAGE, deviceScaleFactor: LEGEND.pixelRatio })
     while (next < todo.length) {
         const e = todo[next++]
-        const page = await context.newPage()
+        const isLegend = e.category === 'Legends'
+        const page = await (isLegend ? legendContext : context).newPage()
         const errors = []
         page.on('pageerror', (err) => errors.push('error: ' + err.message.slice(0, 200)))
         page.on('console', (m) => {
@@ -130,7 +165,12 @@ const worker = async () => {
             await page.goto(base + e.path, { timeout: 30000 })
             await page.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {})
             await page.waitForTimeout(SETTLE_MS)
-            const { jpeg, sd } = await makeThumb(await page.screenshot())
+            let shot
+            if (isLegend) {
+                shot = await captureLegend(page)
+                if (!shot) throw new Error('no legend in the page')
+            } else shot = await page.screenshot()
+            const { jpeg, sd } = await makeThumb(shot, isLegend ? LEGEND : null)
             if (sd < 5) errors.push('the page looks blank')
             fs.writeFileSync(path.join(previewsDir, thumbName(e.path)), Buffer.from(jpeg, 'base64'))
         } catch (err) {
@@ -141,6 +181,7 @@ const worker = async () => {
         if (errors.length) problems.push([e.path, [...new Set(errors)]])
     }
     await context.close()
+    await legendContext.close()
 }
 await Promise.all(Array.from({ length: CONCURRENCY }, worker))
 await browser.close()

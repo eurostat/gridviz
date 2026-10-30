@@ -8,6 +8,9 @@ Here are some examples of the different styles available in gridviz!
 [![](img/overviews/ov_age_balance.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
 [![](img/overviews/ov_popchange.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
 
+[Circle color size WebGL](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)  
+[![](img/overviews/ov_circle_webgl.png)](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)
+
 [Composition](https://eurostat.github.io/gridviz/docs/reference#composition-style)  
 [![](img/overviews/ov_flag.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
 [![](img/overviews/ov_piechart.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)

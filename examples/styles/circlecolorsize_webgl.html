@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz circle color size WebGL example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            // Circles with a size and a color, drawn with WebGL: all the circles of the style are drawn at once by the GPU.
+            // It is much faster than the ShapeColorSizeStyle when there are many circles.
+
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3763437,
+                y: 2891045,
+                z: 50.1,
+                zoomExtent: [7, 2000],
+            }).addZoomButtons()
+
+            //define multi resolution dataset
+            const dataset = new gridviz.MultiResolutionDataset(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' +
+                            resolution +
+                            'm/'
+                    ),
+                {
+                    preprocess: (c) => {
+                        //the monthly income per person
+                        c.revind = Math.round(c.ind_snv / c.ind / 12)
+                    },
+                }
+            )
+
+            //define style: the size of the circle is the number of people, its color is their income
+            const style = new gridviz.CircleColorSizeWebGLStyle({
+                color: (cell) => {
+                    let t = (cell.revind - 1200) / (3700 - 1200)
+                    t = t > 1 ? 1 : t < 0 ? 0 : t
+                    return d3.interpolateSpectral(1 - t)
+                },
+                //the diameter of the circle, in geographical unit
+                size: (cell, resolution, z, viewScale) => 1.41 * viewScale(cell.ind),
+                viewScale: gridviz.viewScale({
+                    valueFunction: (cell) => +cell.ind,
+                    stretching: gridviz.powerScale(0.13),
+                }),
+            })
+
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
+        </script>
+    </body>
+</html>
