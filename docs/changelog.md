@@ -38,6 +38,7 @@
 -   New _CircleColorSizeWebGLStyle_: circles with a color and a size, drawn with webGL. All the circles of the style are drawn at once, and its `blendOperation` (such as `'multiply'`) is applied once for the style: much faster than the circle shape of _ShapeColorSizeStyle_ when there are many circles.
 -   New default look of the tooltip, the legends and the buttons, which is the one of the statistical atlas. Tooltip options `color` and `lineHeight`, and CSS variables `--gridviz-legend-label-color` and `--gridviz-button-*`.
 -   New examples gallery page (`examples/index.html`) listing all the examples by chapter, with a thumbnail for each.
+-   _ShadingStyle_, _ShadingRayStyle_ and _Interpolator_ are now documented in the reference. Fix: the `width` option of _ShadingStyle_ was truncated to a whole number (and the default width was 0 when zoomed in far).
 
 ### Legends
 

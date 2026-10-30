@@ -14,11 +14,23 @@ import { extent } from 'd3-array'
 // style with SquareColorWebGLStyle, improved version !
 
 /**
+ * A style to draw the shadows cast by the relief, for a position of the sun.
+ * For each cell, a ray is cast towards the sun across the elevation grid. The cells in the shadow are drawn as squares of a single color.
+ *
+ * @example
+ * new gridviz.ShadingRayStyle({ elevation: (c) => c.v, sunAzimuth: () => 2.356, sunAltitude: () => 0.2, alpha: () => 0.4 })
+ *
  * @module style
  * @author Julien Gaffuri
  */
 export class ShadingRayStyle extends Style {
-    /** @param {object} opts */
+    /** @param {object} opts The options of the style (see Style for the others: filter, alpha, blendOperation, visible...).
+     * @param {function(import('../core/Dataset.js').Cell):number} opts.elevation The elevation of a cell.
+     * @param {function(number, number, object):number} [opts.sunAzimuth] (resolution, z, viewScale) => the direction of the sun, in radians, clockwise from the north. Default: 2.356 (south-east).
+     * @param {function(number, number, object):number} [opts.sunAltitude] (resolution, z, viewScale) => the height of the sun above the horizon, in radians. Default: 0.2.
+     * @param {function(number, number, object):string} [opts.color] (resolution, z, viewScale) => the color of the shadows. Default: black.
+     * @param {number} [opts.undefinedValue] The elevation to use for the cells without elevation. Default: 0.
+     */
     constructor(opts) {
         super(opts)
         opts = opts || {}

@@ -6,11 +6,24 @@ import { isVisibleAt } from '../core/Drawable.js'
 import { cellsToMatrix } from '../utils/utils.js'
 
 /**
+ * A style which makes a finer grid from a grid, by bilinear interpolation of a value, and draws it with other styles.
+ * It does not draw anything by itself.
+ *
+ * @example
+ * const interpolator = new gridviz.Interpolator({ value: (c) => c.v, targetResolution: (r, z) => r / 5, interpolatedProperty: 'v' })
+ * interpolator.styles.push(someStyle)
+ *
  * @module style
  * @author Julien Gaffuri
  */
 export class Interpolator extends Style {
-    /** @param {object} opts */
+    /** @param {object} opts The options of the style (see Style for the others: filter, visible...).
+     * @param {function(import('../core/Dataset.js').Cell):number} opts.value The value to interpolate.
+     * @param {function(number, number):number} [opts.targetResolution] (resolution, z) => the resolution of the interpolated cells. Make sure that resolution/targetResolution is an integer. Default: resolution / 5.
+     * @param {string} [opts.interpolatedProperty] The property of the interpolated cells which holds the interpolated value. Default: 'value'.
+     * @param {'zero'|'average'} [opts.nodataHandling] What to do with the neighbour cells without value. Default: 'zero'.
+     * @param {Array.<Style>} [opts.styles] The styles which draw the interpolated cells.
+     */
     constructor(opts) {
         super(opts)
         opts = opts || {}

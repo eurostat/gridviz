@@ -35,6 +35,7 @@
     - [Side category style](#side-category-style)
     - [Contour style](#contour-style)
     - [Isometric fence style](#isometric-fence-style)
+    - [Shading style](#shading-style)
   - [Esthetic styles](#esthetic-styles)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
@@ -42,7 +43,9 @@
     - [Tanaka style](#tanaka-style)
     - [Lego style](#lego-style)
     - [Lego category style](#lego-category-style)
+    - [Shading ray casting style](#shading-ray-casting-style)
   - [Kernel smoothing](#kernel-smoothing)
+  - [Interpolation](#interpolation)
   - [Custom styles](#custom-styles)
   - [Background layer](#background-layer)
   - [Foreground information](#foreground-information)
@@ -475,6 +478,35 @@ This style shows the composition of a total quantity into categories as vertical
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/isofence.html)).
 
+### Shading style
+
+[![shading style](img/styles/shading.png)](https://eurostat.github.io/gridviz/examples/styles/side_hillshading.html)
+
+This style shows the relief of an elevation grid as hillshading. It is based on the [side style](#side-style): for each side between two adjacent cells, it draws a segment which is light when the side faces the top left and dark when it faces the bottom right, with an opacity proportional to the elevation difference between the two cells (relative to the biggest difference in the view). Use it over a hypsometric colour style to give an impression of relief.
+
+```javascript
+new gridviz.ShadingStyle({
+    elevation: 'v', // the name of the elevation property of the cells
+    scale: gridviz.exponentialScale(-1), // optional: stretches the elevation differences
+    colorTopLeft: '255,155,155', // 'r,g,b'
+    colorBottomRight: '0,0,100',
+})
+```
+
+| Option             | Type                       | Default           | Description                                                                                                                |
+| ------------------ | -------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `elevation`        | string                     | -                 | The name of the cell property with the elevation. Required. A side next to a cell without elevation (or with a zero one) is not drawn.          |
+| `colorTopLeft`     | string                     | `'255,255,255'`   | The color of the sides which face the top left, as `'r,g,b'`.                                                              |
+| `colorBottomRight` | string                     | `'0,0,0'`         | The color of the sides which face the bottom right, as `'r,g,b'`.                                                          |
+| `revert`           | boolean                    | `false`           | Swaps the two colors, to show depressions as hills.                                                                        |
+| `scale`            | `function(number):number`  | linear            | Stretches the opacity, from a value within [0,1] (the elevation difference relative to the biggest one in the view) to a value within [0,1]. See [stretching](#stretching). |
+| `width`            | number                     | 2 pixels          | The width of the segments, in geographical unit. By default 2 pixels, and at most a third of the resolution.               |
+| `diamond`          | boolean                    | `false`           | Draws the sides as diamonds, as the [side style](#side-style) does.                                                        |
+
+The other options of the [side style](#side-style) and of the styles in general (`filter`, `alpha`, `blendOperation`, `visible`...) can be used too.
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/styles/side_hillshading.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/side_hillshading.html)).
+
 ## Esthetic styles
 
 ### JoyPlot Style
@@ -533,6 +565,34 @@ This style shows the grid cells as lego bricks with changeable colors based on a
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/lego_category.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_category.html)).
 
+### Shading ray casting style
+
+[![shading ray casting style](img/styles/shading_raycasting.png)](https://eurostat.github.io/gridviz/examples/styles/shading_raycasting.html)
+
+This style draws the shadows which the relief casts on the ground, for a given position of the sun. For each cell, a ray is cast towards the sun across the elevation grid: the cell is in the shadow when the relief hides the sun from it. The cells in the shadow are drawn as squares of a single color, usually black with some transparency, above a hypsometric colour style.
+
+```javascript
+const shadows = new gridviz.ShadingRayStyle({
+    elevation: (cell) => cell.v, // the elevation of a cell
+    sunAzimuth: () => 2.356, // radians, clockwise from north: here, the sun is in the south-east
+    sunAltitude: () => 0.2, // radians, above the horizon
+    color: () => 'black', // the color of the shadows
+    alpha: () => 0.4, // as any style: the opacity of the shadows
+})
+```
+
+| Option        | Type                                      | Default           | Description                                                                                                                       |
+| ------------- | ----------------------------------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `elevation`   | `function(cell):number`                   | -                 | The elevation of a cell. Required.                                                                                                |
+| `sunAzimuth`  | `function(resolution, z, viewScale):number` | `() => 2.356`   | The direction of the sun, in radians, clockwise from the north (0 is north, π/2 east, π south). The default is 135°: south-east.  |
+| `sunAltitude` | `function(resolution, z, viewScale):number` | `() => 0.2`     | The height of the sun above the horizon, in radians (0.2 is about 11°). The lower the sun, the longer the shadows.                |
+| `color`       | `function(resolution, z, viewScale):string` | `() => 'black'` | The color of the shadows.                                                                                                         |
+| `undefinedValue` | number                                 | `0`               | The elevation to use for the cells without elevation (such as the sea).                                                           |
+
+The shadows are computed from the cells of the view, each time the map is drawn. Their computation is heavy when there are many cells, so use a rather high `minPixelsPerCell` for the layer (the example uses 2). The styles options (`filter`, `alpha`, `blendOperation`, `visible`...) can be used too, to change them from a user interface for example.
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/styles/shading_raycasting.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shading_raycasting.html)), where the position of the sun can be changed.
+
 ## Kernel smoothing
 
 [![kernel smoothing](img/styles/kernel_smoothing.png)](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html)
@@ -545,6 +605,36 @@ Note that this style is available within the [gridviz-smoothing](https://github.
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/kernelsmoothing.html)).
 
 The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/package/fast-kde) library, which produces smoothing approximation very fast. Note that the approximation degrades significantly for weak smoothing (for low sigma values).
+
+## Interpolation
+
+[![interpolator](img/styles/interpolator.png)](https://eurostat.github.io/gridviz/examples/styles/interpolator.html)
+
+The _Interpolator_ computes new values for the cells in between the cells of a grid, to show a coarse grid as a smooth surface. Like the [kernel smoothing](#kernel-smoothing), it is more a 'filter' than a proper style: it does not draw anything by itself, it makes a finer grid by bilinear interpolation and draws it with the styles it is given.
+
+```javascript
+const interpolator = new gridviz.Interpolator({
+    value: (cell) => cell.v, // the value to interpolate
+    targetResolution: (resolution, z) => resolution / 5, // the resolution of the interpolated cells
+    interpolatedProperty: 'v', // the cells of the interpolated grid have their value under this property
+})
+// the styles which draw the interpolated cells, as the ones of a layer would
+interpolator.styles.push(new gridviz.SquareColorWebGLStyle({ tFun: (cell) => cell.v / 4000 }))
+
+const layer = new gridviz.GridLayer(dataset, [interpolator])
+```
+
+| Option                 | Type                                         | Default                        | Description                                                                                                                                                      |
+| ---------------------- | -------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`                | `function(cell):number`                      | -                              | The value to interpolate. Required.                                                                                                                              |
+| `targetResolution`     | `function(resolution, z):number`             | `(r, z) => r / 5`              | The resolution of the interpolated cells. The ratio between the resolution of the grid and this one is rounded to an integer, so make sure it is one.            |
+| `interpolatedProperty` | string                                       | `'value'`                      | The property of the interpolated cells which holds the interpolated value. The styles read the value from it.                                                    |
+| `nodataHandling`       | `'zero'` or `'average'`                      | `'zero'`                       | What to do with the neighbour cells without value: take zero, or the average of the surrounding cells.                                                           |
+| `styles`               | array of styles                              | `[]`                           | The styles which draw the interpolated cells. They are drawn at the target resolution, with their own `alpha`, `blendOperation` and `visible`.                   |
+
+The cells with a zero value after interpolation are not drawn. Since there are many more interpolated cells than cells, using the WebGL styles to draw them is recommended.
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/styles/interpolator.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/interpolator.html)): an elevation grid shown with hypsometric colors, with a slider for the interpolation.
 
 ## Custom styles
 
