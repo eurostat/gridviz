@@ -347,7 +347,7 @@ A few things to know:
 -   Legends are added as for the other styles, with `style.legends = [...]`. The styles of this kind on a page share one webGL 2 context, so they do not use up the contexts of the browser.
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/circlecolorsize_webgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/circlecolorsize_webgl.html)): the size and the color of the circles follow two variables.
--   See [this multivariate map with nested circles and a Venn diagram legend](https://eurostat.github.io/gridviz/examples/test/venn/birth/index.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/test/venn/birth/index.html)): one style per place of birth, blended by multiplication. There are [five others](https://eurostat.github.io/gridviz/examples/#Styles/Circle%20color%20size%20WebGL%20style): crops, forests, air pollution, climate and residential mobility.
+-   See [this multivariate map with nested circles and a Venn diagram legend](https://eurostat.github.io/gridviz/examples/test/venn/birth/index.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/test/venn/birth/index.html)): one style per place of birth, blended by multiplication. There are [five others](https://eurostat.github.io/gridviz/examples/#Styles/Circle%20color%20size%20WebGL): crops, forests, air pollution, climate and residential mobility.
 
 ### Composition style
 

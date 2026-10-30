@@ -358,7 +358,7 @@
             const nav = document.getElementById('sidebar-nav')
 
             let examples = []
-            // the selection: a category and, for the styles, a style (group). In the address: #Styles/Lego style
+            // the selection: a category and, for the styles, a style (group). In the address: #Styles/Lego
             const readHash = () => {
                 const [category, group] = decodeURIComponent(location.hash.slice(1)).split('/')
                 return { category: category || ALL, group: group || null }
