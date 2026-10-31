@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz cross-section example (prototype)</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            /*
+             * Prototype of a cross-sectional map (https://github.com/eurostat/gridviz/issues/169), in the manner of the Isotype
+             * cross-section maps: the terrain is drawn as a profile for each section (a row of cells), and the land cover is shown by
+             * symbols standing on the profile line: trees, crops, grass, buildings...
+             * The sections are drawn from the north to the south, and each one hides the ones behind it.
+             *
+             * Two pieces are defined here, to be moved to the library if the approach is kept:
+             *  - JoinedTiledGrid: a TiledGrid which adds the values of a second tiled grid with the same tiling (here the land cover
+             *    of Corine Land Cover) to the cells of the first one (here the elevation).
+             *  - CrossSectionStyle: the style.
+             */
+
+            const base = 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/'
+
+            /** A tiled grid whose cells get the properties of the cells of another tiled grid (same tiling), at the same position. */
+            class JoinedTiledGrid extends gridviz.TiledGrid {
+                /** @param {string} url @param {string} joinedUrl URL of the second grid @param {object} opts */
+                constructor(map, url, joinedUrl, opts) {
+                    super(map, url, opts)
+                    this.joinedUrl = joinedUrl
+                }
+                async loadTile(xT, yT, signal) {
+                    const [tile, other] = await Promise.all([
+                        super.loadTile(xT, yT, signal),
+                        fetch(`${this.joinedUrl}${xT}/${yT}.csv`, { signal })
+                            .then((r) => (r.ok ? r.text() : ''))
+                            .catch((e) => {
+                                if (e.name === 'AbortError') throw e
+                                return ''
+                            }),
+                    ])
+                    // index the cells of the second grid by position, then copy their properties
+                    const r = this.info.resolutionGeo
+                    const s = this.info.tileSizeCell
+                    const x0 = this.info.originPoint.x + r * s * xT
+                    const y0 = this.info.originPoint.y + r * s * yT
+                    const index = new Map()
+                    const lines = other.split(/\r?\n/)
+                    const header = lines[0].split(',')
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i]) continue
+                        const values = lines[i].split(',')
+                        const cell = {}
+                        header.forEach((h, k) => (cell[h] = values[k]))
+                        index.set(x0 + cell.x * r + ',' + (y0 + cell.y * r), cell)
+                    }
+                    for (const c of tile.cells) {
+                        const o = index.get(c.x + ',' + c.y)
+                        if (o) for (const k in o) if (k !== 'x' && k !== 'y') c[k] = o[k]
+                    }
+                    return tile
+                }
+            }
+
+            // The symbols. Each one is drawn in a unit box: centred on x = 0, standing on y = 0, about 1 high, y pointing up.
+            const SYMBOLS = {
+                conifer: (ctx) => {
+                    ctx.fillStyle = '#2b8a3e'
+                    for (const [y0, y1, hw] of [[0.1, 0.55, 0.42], [0.35, 0.8, 0.34], [0.6, 1.05, 0.26]]) {
+                        ctx.beginPath()
+                        ctx.moveTo(-hw, y0)
+                        ctx.lineTo(0, y1)
+                        ctx.lineTo(hw, y0)
+                        ctx.fill()
+                    }
+                    ctx.fillRect(-0.05, -0.02, 0.1, 0.18)
+                },
+                broadleaf: (ctx) => {
+                    ctx.strokeStyle = '#2b8a3e'
+                    ctx.lineWidth = 0.08
+                    ctx.beginPath()
+                    ctx.moveTo(0, 0)
+                    ctx.lineTo(0, 0.4)
+                    ctx.stroke()
+                    ctx.fillStyle = '#fff'
+                    ctx.beginPath()
+                    ctx.arc(0, 0.72, 0.3, 0, 2 * Math.PI)
+                    ctx.fill()
+                    ctx.stroke()
+                },
+                crop: (ctx) => {
+                    ctx.strokeStyle = ctx.fillStyle = '#7a2a1e'
+                    ctx.lineWidth = 0.07
+                    ctx.beginPath()
+                    ctx.moveTo(0, 0)
+                    ctx.lineTo(0, 0.3)
+                    ctx.stroke()
+                    ctx.beginPath()
+                    ctx.ellipse(0, 0.65, 0.15, 0.36, 0, 0, 2 * Math.PI)
+                    ctx.fill()
+                },
+                grass: (ctx) => {
+                    ctx.strokeStyle = '#e0bf2a'
+                    ctx.lineWidth = 0.11
+                    ctx.lineCap = 'round'
+                    for (const dx of [-0.34, 0, 0.34]) {
+                        ctx.beginPath()
+                        ctx.moveTo(0, 0)
+                        ctx.quadraticCurveTo(dx * 0.3, 0.3, dx, dx ? 0.5 : 0.62)
+                        ctx.stroke()
+                    }
+                },
+                shrub: (ctx) => {
+                    ctx.strokeStyle = '#6aa84f'
+                    ctx.lineWidth = 0.11
+                    ctx.lineCap = 'round'
+                    for (const dx of [-0.3, 0, 0.3]) {
+                        ctx.beginPath()
+                        ctx.moveTo(0, 0)
+                        ctx.quadraticCurveTo(dx * 0.3, 0.25, dx, dx ? 0.42 : 0.52)
+                        ctx.stroke()
+                    }
+                },
+                town: (ctx) => {
+                    ctx.fillStyle = '#e0262b'
+                    ctx.beginPath()
+                    ctx.moveTo(-0.5, 0)
+                    ctx.quadraticCurveTo(-0.5, 0.4, -0.2, 0.4)
+                    ctx.quadraticCurveTo(0, 0.6, 0.2, 0.4)
+                    ctx.quadraticCurveTo(0.5, 0.4, 0.5, 0)
+                    ctx.fill()
+                },
+                rock: (ctx) => {
+                    ctx.strokeStyle = '#222'
+                    ctx.lineWidth = 0.08
+                    ctx.lineJoin = 'miter'
+                    ctx.beginPath()
+                    ctx.moveTo(-0.45, 0)
+                    ctx.lineTo(-0.25, 0.4)
+                    ctx.lineTo(-0.08, 0.12)
+                    ctx.lineTo(0.12, 0.5)
+                    ctx.lineTo(0.28, 0.15)
+                    ctx.lineTo(0.45, 0.3)
+                    ctx.stroke()
+                },
+            }
+
+            /** A style drawing cross-sections of the terrain: a profile for some of the rows of cells, with symbols for the land cover. */
+            class CrossSectionStyle extends gridviz.Style {
+                constructor(opts = {}) {
+                    super(opts)
+                    /** Elevation of a cell, in geographical unit (before exaggeration). @type {function(cell):number} */
+                    this.elevation = opts.elevation || ((c) => +c.elevation)
+                    /** Vertical exaggeration. The elevation of a section is multiplied by this and by the distance between the sections. */
+                    this.exaggeration = opts.exaggeration || 0.0005
+                    /** Land cover of a cell: a key of `classes`. @type {function(cell):string|undefined} */
+                    this.landCover = opts.landCover || (() => undefined)
+                    /** The land cover classes: the colour of the line, and the name of the symbol (a key of SYMBOLS). */
+                    this.classes = opts.classes || {}
+                    /** Distance between the sections, in pixels. */
+                    this.sectionSpacingPix = opts.sectionSpacingPix || 44
+                    /** Size of the symbols, in pixels, and distance between them. */
+                    this.symbolSizePix = opts.symbolSizePix || 17
+                    this.symbolSpacingPix = opts.symbolSpacingPix || 15
+                    /** Colour under the profile line: it hides the sections behind. */
+                    this.terrainColor = opts.terrainColor || '#e7dfcd'
+                    this.lineWidthPix = opts.lineWidthPix || 1.6
+                }
+
+                draw(cells, geoCanvas, resolution) {
+                    if (this.filter) cells = cells.filter(this.filter)
+                    const ctx = geoCanvas.offscreenCtx
+                    const z = geoCanvas.view.z
+                    const r = resolution
+
+                    // number of rows between two sections
+                    const step = Math.max(1, Math.round((this.sectionSpacingPix * z) / r))
+                    const ex = this.exaggeration * step * r
+
+                    // keep the cells of the rows of the sections, grouped by row
+                    const rows = new Map()
+                    for (const c of cells) {
+                        const iy = Math.round(c.y / r)
+                        if (iy % step !== 0) continue
+                        if (!rows.has(iy)) rows.set(iy, [])
+                        rows.get(iy).push(c)
+                    }
+                    const iys = [...rows.keys()].sort((a, b) => b - a) // north first
+
+                    ctx.lineJoin = 'round'
+                    ctx.lineCap = 'round'
+                    for (const iy of iys) {
+                        const y = iy * r
+                        const row = rows.get(iy).sort((a, b) => a.x - b.x)
+
+                        // split the row into runs of adjacent cells
+                        let run = []
+                        const runs = [run]
+                        for (const c of row) {
+                            if (run.length && c.x - run[run.length - 1].x > r) runs.push((run = []))
+                            run.push(c)
+                        }
+
+                        for (const run of runs) {
+                            // the profile: the elevation at the centre of each cell
+                            const pts = run.map((c) => [c.x + r / 2, y + Math.max(0, this.elevation(c)) * ex])
+                            const xStart = run[0].x
+                            const xEnd = run[run.length - 1].x + r
+                            pts.unshift([xStart, pts[0][1]])
+                            pts.push([xEnd, pts[pts.length - 1][1]])
+
+                            // terrain: it hides what is behind
+                            ctx.beginPath()
+                            ctx.moveTo(xStart, y)
+                            for (const p of pts) ctx.lineTo(p[0], p[1])
+                            ctx.lineTo(xEnd, y)
+                            ctx.closePath()
+                            ctx.fillStyle = this.terrainColor
+                            ctx.fill()
+
+                            // the line, one segment per cell, coloured by the land cover
+                            ctx.lineWidth = this.lineWidthPix * z
+                            run.forEach((c, i) => {
+                                const cl = this.classes[this.landCover(c)]
+                                ctx.strokeStyle = cl ? cl.line : '#3b6fb6'
+                                ctx.beginPath()
+                                ctx.moveTo(pts[i][0], pts[i][1])
+                                ctx.lineTo(pts[i + 1][0], pts[i + 1][1])
+                                ctx.stroke()
+                            })
+
+                            // the symbols, at regular distances along the line
+                            const size = this.symbolSizePix * z
+                            const dx = this.symbolSpacingPix * z
+                            const offset = (((xStart / dx) % 1) + 1) % 1
+                            for (let x = xStart + (1 - offset) * dx; x < xEnd; x += dx) {
+                                const i = Math.min(run.length - 1, Math.floor((x - xStart) / r))
+                                const cl = this.classes[this.landCover(run[i])]
+                                if (!cl || !cl.symbol) continue
+                                // height of the line at x
+                                const f = (x - pts[i + 1][0]) / r
+                                const a = f < 0 ? pts[i] : pts[i + 1]
+                                const b = f < 0 ? pts[i + 1] : pts[Math.min(i + 2, pts.length - 1)]
+                                const t = (x - a[0]) / (b[0] - a[0] || 1)
+                                const h = a[1] + (b[1] - a[1]) * Math.min(1, Math.max(0, t))
+                                ctx.save()
+                                ctx.translate(x, h)
+                                ctx.scale(size, size)
+                                ctx.lineWidth = 0.08
+                                SYMBOLS[cl.symbol](ctx)
+                                ctx.restore()
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Names of the Corine Land Cover codes
+            const clcLabels = {
+                1: 'Continuous urban fabric',
+                2: 'Discontinuous urban fabric',
+                3: 'Industrial or commercial units',
+                4: 'Road and rail networks and associated land',
+                5: 'Port areas',
+                6: 'Airports',
+                7: 'Mineral extraction sites',
+                8: 'Dump sites',
+                9: 'Construction sites',
+                10: 'Green urban areas',
+                11: 'Sport and leisure facilities',
+                12: 'Non-irrigated arable land',
+                13: 'Permanently irrigated land',
+                14: 'Rice fields',
+                15: 'Vineyards',
+                16: 'Fruit trees and berry plantations',
+                17: 'Olive groves',
+                18: 'Pastures',
+                19: 'Annual crops associated with permanent crops',
+                20: 'Complex cultivation patterns',
+                21: 'Land principally occupied by agriculture with significant areas of natural vegetation',
+                22: 'Agro-forestry areas',
+                23: 'Broad-leaved forest',
+                24: 'Coniferous forest',
+                25: 'Mixed forest',
+                26: 'Natural grasslands',
+                27: 'Moors and heathland',
+                28: 'Sclerophyllous vegetation',
+                29: 'Transitional woodland-shrub',
+                30: 'Beaches, dunes, sands',
+                31: 'Bare rocks',
+                32: 'Sparsely vegetated areas',
+                33: 'Burnt areas',
+                34: 'Glaciers and perpetual snow',
+                35: 'Inland marshes',
+                36: 'Peat bogs',
+                37: 'Salt marshes',
+                38: 'Salines',
+                39: 'Intertidal flats',
+                40: 'Water courses',
+                41: 'Water bodies',
+                42: 'Coastal lagoons',
+                43: 'Estuaries',
+                44: 'Sea and ocean',
+                48: 'No data',
+            }
+
+            // Corine Land Cover codes, grouped into classes
+            const classes = {
+                town: { line: '#e0262b', symbol: 'town' },
+                crop: { line: '#7a2a1e', symbol: 'crop' },
+                pasture: { line: '#e0bf2a', symbol: 'grass' },
+                broadleaf: { line: '#2b8a3e', symbol: 'broadleaf' },
+                conifer: { line: '#2b8a3e', symbol: 'conifer' },
+                shrub: { line: '#6aa84f', symbol: 'shrub' },
+                rock: { line: '#222', symbol: 'rock' },
+                ice: { line: '#b7cde6', symbol: undefined },
+                water: { line: '#3b6fb6', symbol: undefined },
+            }
+            const landCover = (c) => {
+                const code = +c.clc
+                if (code >= 1 && code <= 11) return 'town'
+                if (code >= 12 && code <= 17) return 'crop'
+                if (code >= 18 && code <= 22) return 'pasture'
+                if (code === 23 || code === 25) return code === 23 ? 'broadleaf' : 'conifer'
+                if (code === 24) return 'conifer'
+                if (code >= 26 && code <= 29) return 'shrub'
+                if (code >= 30 && code <= 33) return 'rock'
+                if (code === 34) return 'ice'
+                return 'water'
+            }
+
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4080000,
+                y: 2550000,
+                z: 450,
+                backgroundColor: '#fbf9f4',
+                zoomExtent: [100, 3000],
+            }).addZoomButtons()
+
+            //elevation joined with land cover
+            const dataset = new gridviz.MultiResolutionDataset(
+                [1000, 2000, 5000, 10000, 20000],
+                (r) => new JoinedTiledGrid(map, base + 'elevation/' + r + 'm/', base + 'clc/' + r + 'm/')
+            )
+
+            const style = new CrossSectionStyle({ landCover, classes, terrainColor: '#e7dfcd' })
+
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 8,
+                    cellInfoHTML: (c) => 'Elevation: <b>' + c.elevation + '</b> m<br>Land cover: <b>' + (clcLabels[+c.clc] || 'unknown') + '</b>',
+                }),
+            ]
+        </script>
+    </body>
+</html>

@@ -441,6 +441,13 @@
         "group": "JoyPlot"
     },
     {
+        "path": "styles/cross_section.html",
+        "category": "Styles",
+        "title": "Cross-sections of elevation and land cover (prototype)",
+        "description": "Isotype-style cross-sections of the terrain, with symbols for the land cover (trees, crops, grass, buildings). Elevation and Corine Land Cover are joined on the fly.",
+        "group": "JoyPlot"
+    },
+    {
         "path": "styles/mosaic.html",
         "category": "Styles",
         "title": "Mosaic",
