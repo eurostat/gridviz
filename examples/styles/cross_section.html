@@ -76,7 +76,11 @@
             const SYMBOLS = {
                 conifer: (ctx) => {
                     ctx.fillStyle = '#2b8a3e'
-                    for (const [y0, y1, hw] of [[0.1, 0.55, 0.42], [0.35, 0.8, 0.34], [0.6, 1.05, 0.26]]) {
+                    for (const [y0, y1, hw] of [
+                        [0.1, 0.55, 0.42],
+                        [0.35, 0.8, 0.34],
+                        [0.6, 1.05, 0.26],
+                    ]) {
                         ctx.beginPath()
                         ctx.moveTo(-hw, y0)
                         ctx.lineTo(0, y1)
@@ -359,7 +363,12 @@
             map.layers = [
                 new gridviz.GridLayer(dataset, [style], {
                     minPixelsPerCell: 8,
-                    cellInfoHTML: (c) => 'Elevation: <b>' + c.elevation + '</b> m<br>Land cover: <b>' + (clcLabels[+c.clc] || 'unknown') + '</b>',
+                    cellInfoHTML: (c) =>
+                        'Elevation: <b>' +
+                        c.elevation +
+                        '</b> m<br>Land cover: <b>' +
+                        (clcLabels[+c.clc] || 'unknown') +
+                        '</b>',
                 }),
             ]
         </script>
