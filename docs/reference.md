@@ -16,9 +16,11 @@
       - [GeoJSONLayer](#geojsonlayer)
       - [LabelLayer](#labellayer)
   - [Filtering and formatting data](#filtering-and-formatting-data)
+  - [Missing values](#missing-values)
   - [Basic styles](#basic-styles)
     - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Square color WebGL Style](#square-color-webgl-style)
+      - [Stretching in webGL styles](#stretching-in-webgl-styles)
     - [Square color category WebGL style](#square-color-category-webgl-style)
     - [Circle color size WebGL style](#circle-color-size-webgl-style)
     - [Composition style](#composition-style)
@@ -47,6 +49,7 @@
     - [Shading ray casting style](#shading-ray-casting-style)
   - [Kernel smoothing](#kernel-smoothing)
   - [Interpolation](#interpolation)
+    - [Random walk interpolation, for categories](#random-walk-interpolation-for-categories)
   - [Custom styles](#custom-styles)
   - [Background layer](#background-layer)
   - [Foreground information](#foreground-information)
@@ -54,6 +57,7 @@
   - [Tooltip](#tooltip)
   - [Buttons](#buttons)
   - [View scale](#view-scale)
+    - [One view scale for the color and the size](#one-view-scale-for-the-color-and-the-size)
   - [Stretching](#stretching)
   - [Legends](#legends)
     - [Color legend](#color-legend)
@@ -314,6 +318,29 @@ The gridded data may be pre-processed after loading, and filtered:
 -   See [this example for basic filtering/selection](https://eurostat.github.io/gridviz/examples/basics/select.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/select.html)).
 -   See [this example for basic filtering/selection at style level](https://eurostat.github.io/gridviz/examples/basics/select_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/select_style.html)).
 
+## Missing values
+
+Official statistics often have missing values, or values of a lesser quality (estimated, imputed, or modified for statistical secrecy). They should not be mixed up with the real values on the map, and they should not get a color of the color scale. The way to do it is to give them a color of their own, outside of the scale, and to show it in the legend.
+
+-   **Test them before converting.** The values of a CSV file are text. `+''` is `0`, which is a value, and `+':'` is `NaN`: test the text first (`c.value === ''`, `c.flag === 'e'`, `isNaN(+c.value)`...), in the `preprocess` function of the dataset for example, to give the cell a clear marker (`c.value = undefined`, or a `c.missing` property). Do not let a missing value be drawn as a zero.
+-   **With the styles of canvas** (such as `ShapeColorSizeStyle`), the color function returns the color of the missing values: `color: (c) => (c.missing ? '#8f9ba8' : ramp(c.value))`.
+-   **With the styles of webGL** (such as `SquareColorWebGLStyle`), a cell for which `tFun` returns `undefined` is not drawn. Draw the missing values with a second style of the layer, which selects them with its `filter` option.
+-   **In the legend**, add an entry for the color of the missing values, with a `ColorCategoryLegend` of one entry next to the color legend of the scale (`style.legends = [colorLegend, missingLegend]`).
+
+```javascript
+const valueStyle = new gridviz.SquareColorWebGLStyle({
+    tFun: (c) => (c.share === undefined ? undefined : c.share / 0.3), // not drawn when undefined
+    color: (t) => d3.interpolateYlOrRd(t),
+})
+const missingStyle = new gridviz.ShapeColorSizeStyle({
+    color: () => '#8f9ba8',
+    filter: (c) => c.share === undefined, // only the cells without value
+})
+missingStyle.legends = [new gridviz.ColorCategoryLegend({ colorLabel: [['#8f9ba8', 'No value']], shape: 'square' })]
+```
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/basics/missing_values.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/missing_values.html)): the share of households under the poverty line in France, where the imputed values of the statistical secrecy have their own color and legend entry.
+
 ## Basic styles
 
 All the styles are classes of the `gridviz` module, which are given to a [GridLayer](#gridlayer) as a list. Each one of the sections below tells the class of its style, and the options it reads. The options which all the styles share are:
@@ -343,21 +370,74 @@ This style is a generic style which allows to define the **shape**, **color** an
 -   See [this example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_size_color.html)).
 -   See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_random.html)).
 
+Class: `gridviz.ShapeColorSizeStyle`. Options, plus the options common to all the styles:
+
+| Option           | Type                                                 | Default                    | Description                                                                                                                                                                                                       |
+| ---------------- | ---------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `color`          | string or `function(cell, resolution, z, viewScale)` | `'#EA6BAC'`                | The color of the cell: any CSS color. A cell without color (or `'none'`) is not drawn.                                                                                                                            |
+| `size`           | number or `function(cell, resolution, z, viewScale)` | the resolution of the grid | The size of the symbol, in geographical unit (not in pixels). A cell without size (0) is not drawn.                                                                                                               |
+| `shape`          | string or `function(cell, resolution, z, viewScale)` | `'square'`                 | One of `'square'`, `'circle'`, `'diamond'`, `'donut'`, `'triangle_up'`, `'triangle_down'`, `'triangle_left'`, `'triangle_right'`, `'none'`.                                                                        |
+| `donutOuterSize` | number or `function(cell, resolution, z, viewScale)` | the resolution of the grid | For the `'donut'` shape, its outer diameter, in geographical unit. The `size` of a donut is then the part of this diameter it fills: a full disk when it equals the outer diameter, a thin ring when it is small. |
+
+A donut with a smaller outer diameter can be a ring around another symbol: a pie chart of a [composition style](#composition-style), a circle, etc. Draw the two with two styles of the same layer, and choose their sizes so that they fit: the hole of a donut of outer diameter _D_ and size _s_ has a diameter of _D - s_.
+
+-   See [this example of a pie chart with a donut ring](https://eurostat.github.io/gridviz/examples/styles/donut_pie.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/donut_pie.html)): the ring shows a second variable with its color.
+
 ### Square color WebGL Style
 
 [![square color webgl style](img/styles/squarecolorwgl_pop.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html)
 [![square color webgl style](img/styles/squarecolorwgl_dark.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
 
-This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailed resolutions.
+Class: `gridviz.SquareColorWebGLStyle`. Options, plus the options common to all the styles:
+
+| Option       | Type                                       | Default                       | Description                                                                                                                                                                                                                                                    |
+| ------------ | ------------------------------------------ | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tFun`       | `function(cell, resolution, z, viewScale)` | -                             | The position of the cell on the color ramp: a number between 0 (first color) and 1 (last color). Values out of this range are brought back to it. A cell for which it returns `undefined` or `null` is not drawn.                                              |
+| `color`      | `function(t)`                              | -                             | The color ramp: a function from a number between 0 and 1 to a color, such as a [d3 interpolator](https://d3js.org/d3-scale-chromatic) (`d3.interpolateYlOrRd`). It is sampled at 0, 0.2, 0.4, 0.6, 0.8 and 1, and the GPU interpolates between the samples. |
+| `colors`     | array of colors                            | a blue-green-yellow-red ramp | The colors of the ramp, evenly spread on [0,1], when `color` is not given. One color or more: the GPU interpolates linearly between them.                                                                                                                      |
+| `stretching` | `{ fun, alpha }`                           | none                          | A stretching of `t`, computed by the GPU. See [below](#stretching-in-webgl-styles).                                                                                                                                                                            |
+| `opacity`    | `function(resolution, z)`                  | -                             | The opacity of the cells, between 0 and 1. When it is defined, the opacity of the colors of the ramp is ignored.                                                                                                                                               |
+| `size`       | `function(resolution, z)`                  | the resolution plus 0.2 pixel | The size of the squares, in geographical unit. All the squares have the same size. By default, they are a little larger than the cells to avoid thin gaps between them.                                                                                        |
+
+This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailed resolutions. The colors are computed by the GPU, from `t`: the style is fast, and a bit less flexible than a style with a color function, which can return any color for any cell.
+
+A few things to know:
+
+-   The squares are drawn as points while they are small, and as triangles from 24 pixels: a point has a limit of size, which depends on the GPU, and it is not drawn when its center is out of the view, which left gaps in the grid when zoomed in (#86). It makes no difference for the map. The positions of the squares are sent to the GPU relative to the center of the view, because the GPU computes with 32 bits floats: with geographical coordinates, the squares would be misplaced by tens of pixels when zoomed in.
+-   The styles of this kind on a page share one webGL context, which is copied on the map for each style.
+-   The `tFun` function and the `stretching` apply to `t`, not to the values: compute `t` from the value (for example with a `viewScale` which gives the minimum and maximum of the cells in the view), then let `stretching` change its distribution.
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl.html)).
 -   See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl_dark.html)).
+
+#### Stretching in webGL styles
+
+Without stretching, the color ramp is spread linearly on `t`: when a few cells have very high values, most of the cells get the first colors of the ramp. The `stretching` option changes this distribution, with the same functions as the [stretching functions](#stretching) of the other styles, computed by the GPU: `stretching: { fun: 'log', alpha: -7 }`.
+
+| `fun`         | Same as                                      | `alpha`                                                                                                                                         |
+| ------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'pow'`       | [`powerScale(alpha)`](#stretching)           | The exponent: below 1 gives more of the ramp to the low values (0.4 is a good start for a population), above 1 gives more to the high values. No change: 1. |
+| `'powInv'`    | [`powerInverseScale(alpha)`](#stretching)    | The exponent. The mirror image of `'pow'`: `1 - (1 - t)^(1/alpha)`. No change: 1.                                                                |
+| `'exp'`       | [`exponentialScale(alpha)`](#stretching)     | The base. No change: 0.                                                                                                                          |
+| `'log'`       | [`logarithmicScale(alpha)`](#stretching)     | The base: a negative base gives more of the ramp to the low values, which is the usual choice for a population (-7 is a good start). No change: 0. |
+| `'circle'`    | [`circularScale(alpha)`](#stretching)        | The circularity, between 0 (no stretching) and 1 (a quarter of circle).                                                                          |
+| `'circleInv'` | [`circularInverseScale(alpha)`](#stretching) | The circularity, between 0 (no stretching) and 1.                                                                                                |
+
+The stretching can be changed at any time (`style.stretching = { fun: 'pow', alpha: 0.4 }`, then `map.redraw()`), as in [this example](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)), which shows how each function changes the same map. A color legend can write the value of a position `t` of its bar with the `invert` function of the stretching function (`gridviz.logarithmicScale(-7).invert(t)`, in the `textScale` option of the legend).
 
 ### Square color category WebGL style
 
 [![square color webgl category style](img/styles/squarecolorcatwgl_lc.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html)
 
-This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailed resolutions.
+Class: `gridviz.SquareColorCategoryWebGLStyle`. Options, plus the options common to all the styles:
+
+| Option  | Type                                       | Default                       | Description                                                                       |
+| ------- | ------------------------------------------ | ----------------------------- | --------------------------------------------------------------------------------- |
+| `code`  | `function(cell, resolution, z, viewScale)` | -                             | The category of the cell: a key of `color`. A cell without category is not drawn. |
+| `color` | object                                     | -                             | The color of each category: `{ category1: 'red', category2: '#00ff00' }`.         |
+| `size`  | `function(resolution, z)`                  | the resolution plus 0.2 pixel | The size of the squares, in geographical unit. All the squares have the same size. |
+
+This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailed resolutions. As for the [Square color WebGL style](#square-color-webgl-style), the squares are drawn as triangles when they are large, so that there are no gaps in the grid when zoomed in.
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorcatwgl.html)).
 
@@ -500,7 +580,7 @@ This style shows the grid cells as an image. The image and its size can be set a
 
 ### Time series style
 
-Class: `gridviz.TimeSeriesStyle`. Options: `ts`, `noData`, `offsetX`, `width`, `offsetY`, `height`, `anchorModeY`, `lineWidth`, `color`, plus the options common to all the styles.
+Class: `gridviz.TimeSeriesStyle`. Options: `ts`, `noData`, `offsetX`, `width`, `offsetY`, `height`, `anchorModeY`, `lineWidth` (`function(cell, resolution, z, viewScale)`, 1.5 pixel by default), `color`, plus the options common to all the styles.
 
 [![time series style](img/styles/timeseries.png)](https://eurostat.github.io/gridviz/examples/styles/time_series.html)
 
@@ -633,13 +713,26 @@ This style shows the grid cells in a [Tanaka style](https://manifold.net/doc/mfd
 
 ### Lego style
 
-Class: `gridviz.LegoStyle`. It makes a list of styles, one for each color of the bricks: `gridviz.LegoStyle.get(value, breaks, colors, opts)`, where `value` is a function of a cell, `breaks` the class limits and `colors` the color of each class (`opts`: `colDark`, `colBright`).
+Class: `gridviz.LegoStyle`. It makes a list of styles, one for each color of the bricks: `gridviz.LegoStyle.get(value, breaks, colors, opts)`, where `value` is a function of a cell, `breaks` the class limits and `colors` the color of each class (`opts`: `colDark` and `colBright`, the colors of the sides and of the top of the bricks, and `filter`). There is one more color than breaks: with the breaks `[100, 200]`, the colors are those of the values under 100, from 100 to 200, and over 200.
 
 [![lego style](img/styles/lego.png)](https://eurostat.github.io/gridviz/examples/styles/lego.html)
 
 This style shows the grid cells as lego bricks with changeable colors and height based on a quantitative variable.
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego.html)).
+-   See [this example with a stretched color ramp](https://eurostat.github.io/gridviz/examples/styles/lego_stretched.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/lego_stretched.html)).
+
+**Migrating from version 2.** The `tFun` option of version 2, which gave the position of a cell on the color ramp (for example `tFun: (v, r, s, zf) => sExpRev((v - s.min) / (s.max - s.min), -7)`), does not exist anymore: a brick has the color of its class. To get the same colors for the same values, take the classes the stretching would give: `gridviz.stretchedBreaks(min, max, classNumber, stretching)` returns the class limits which a stretching function maps to the limits between the classes of the color ramp. Then take a color for each class.
+
+```javascript
+const classNumber = 8
+// the stretching of version 2, sExpRev(t, -7), is now gridviz.logarithmicScale(-7)
+const breaks = gridviz.stretchedBreaks(0, 1400000, classNumber, gridviz.logarithmicScale(-7))
+const colors = Array.from({ length: classNumber }, (_, i) => d3.interpolateYlOrRd((i + 0.5) / classNumber))
+const styles = gridviz.LegoStyle.get((cell) => +cell.population, breaks, colors)
+```
+
+The breaks are fixed: unlike with `tFun`, the minimum and maximum are not taken from the cells in the view. Give the values of the data (or the ones you want for the whole map) for `min` and `max`.
 
 ### Lego category style
 
@@ -721,6 +814,37 @@ const layer = new gridviz.GridLayer(dataset, [interpolator])
 The cells with a zero value after interpolation are not drawn. Since there are many more interpolated cells than cells, using the WebGL styles to draw them is recommended.
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/interpolator.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/interpolator.html)): an elevation grid shown with hypsometric colors, with a slider for the interpolation.
+
+### Random walk interpolation, for categories
+
+[![random walk interpolator](img/styles/interpolator_randomwalk.png)](https://eurostat.github.io/gridviz/examples/styles/interpolator_randomwalk.html)
+
+A category (a land cover, for example) can not be interpolated like a number: there is nothing between a forest and a field. The _RandomWalkInterpolator_ makes a finer grid from a grid of categories, with the random walk interpolator of [Spatial interpolators in Observable Plot](https://observablehq.com/@observablehq/plot-raster-interpolators) (VISU 2023). It is used as the _Interpolator_ is, and its styles draw the finer grid. Each cell of the finer grid takes the category of the first cell of the original grid which a random walk, starting from it, reaches: the cells of the original grid are points, at their center, and a cell takes most of the time the category of its closest neighbors. The limits between the categories become irregular, with fine details, instead of the squares of the grid.
+
+```javascript
+const interpolator = new gridviz.RandomWalkInterpolator({
+    value: (cell) => cell.clc, // the category of the cell. A cell for which it returns undefined is not interpolated.
+    targetResolution: (resolution, z) => resolution / 5, // the resolution of the finer grid
+    interpolatedProperty: 'clc', // the cells of the finer grid have their category under this property
+})
+// the styles which draw the finer grid
+interpolator.styles.push(new gridviz.SquareColorCategoryWebGLStyle({ code: (cell) => cell.clc, color: colors }))
+
+const layer = new gridviz.GridLayer(dataset, [interpolator])
+```
+
+| Option                 | Type                              | Default                      | Description                                                                                                                                                                                           |
+| ---------------------- | --------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`                | `function(cell)`                  | -                            | The category of the cell, a string or a number. Required.                                                                                                                                             |
+| `targetResolution`     | `function(resolution, z):number`  | `(r, z) => r / 5`            | The resolution of the finer grid. The ratio between the resolution of the grid and this one is rounded to an integer.                                                                                 |
+| `interpolatedProperty` | string                            | `'value'`                    | The property of the cells of the finer grid which holds the category. The styles read the category from it.                                                                                           |
+| `maxSteps`             | `function(factor):number`         | `(f) => 6 * f * f`           | The maximum number of steps of a random walk, from the ratio between the resolutions. A longer walk makes smoother limits, and takes more time. A walk which has not reached a cell takes the category of the cell it is in. |
+| `seed`                 | number                            | `0`                          | A number to change the random walks. Only the cells at the limits between categories change with it, so the effect is small.                                                                         |
+| `styles`               | array of styles                   | `[]`                         | The styles which draw the cells of the finer grid.                                                                                                                                                    |
+
+The random walks start from the position of each cell of the finer grid: the result does not change when the map is panned or drawn again, only with the `seed`. A factor of 4 to 6 gives a good result in a fraction of a second for the cells of a screen: the cost grows with the square of the factor, and with the number of cells.
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/styles/interpolator_randomwalk.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/interpolator_randomwalk.html)): the land cover of Corine Land Cover at 5 km, made finer with the random walk interpolator, with a choice between the cells of the grid and the interpolation, and a slider for the detail of the finer grid.
 
 ## Custom styles
 
@@ -808,6 +932,31 @@ For some predefined style parameters, _viewscale_ parameter allows defining styl
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/basics/viewscale_basic.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_basic.html)).
 -   See [this more advanced example](https://eurostat.github.io/gridviz/examples/basics/viewscale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale.html)) using some predefined function.
+
+### One view scale for the color and the size
+
+A style has one `viewScale`, but it can be an object: a view scale can compute the scale of the color and the scale of the size at once, for a style whose color and size follow two variables. `gridviz.viewScaleCombination` makes it from one view scale for each:
+
+```javascript
+const style = new gridviz.ShapeColorSizeStyle({
+    shape: () => 'circle',
+    size: (c, r, z, viewScale) => viewScale.size(+c.population),
+    color: (c, r, z, viewScale) => viewScale.color(+c.change),
+    viewScale: gridviz.viewScaleCombination({
+        size: gridviz.viewScale({ valueFunction: (c) => +c.population, stretching: gridviz.logarithmicScale(-8) }),
+        color: gridviz.viewScaleColor({ valueFunction: (c) => +c.change, colorScale: d3.interpolateRdBu }),
+    }),
+})
+```
+
+The legends take what they need from this object, so that each variable has its legend:
+
+-   A [color legend](#color-legend) writes its labels with its `textScale` option: `textScale: (t, viewScale) => viewScale?.color?.invert(t)`.
+-   A [size legend](#size-legend) takes the scale of the size with its `viewScaleFun` option: `gridviz.sizeLegendViewScale(value, { viewScaleFun: (viewScale) => viewScale.size })`.
+
+Put them all in the legends of the style: `style.legends = [colorLegend, sizeLegends]`.
+
+-   See [this example](https://eurostat.github.io/gridviz/examples/basics/viewscale_color_size.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_color_size.html)): the size of circles is the population, their color the change of the population, with a legend for each.
 
 ## Stretching
 

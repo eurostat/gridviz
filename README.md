@@ -38,6 +38,7 @@ Browse the [examples gallery](https://eurostat.github.io/gridviz/examples/) to s
 -   [**Germany** - 100m resolution - Zensus 2011](https://eurostat.github.io/gridviz/examples/demos/DE.html)
 -   [**France** - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/demos/FR.html). Focus on [total population](https://eurostat.github.io/gridviz/examples/demos/FR_pop.html) and [income](https://eurostat.github.io/gridviz/examples/demos/FR_income.html).
 -   [**Norway** - 250m resolution - SSB](https://eurostat.github.io/gridviz/examples/demos/NO.html)
+-   [**Norway** - 20 years of population - SSB](https://eurostat.github.io/gridviz/examples/demos/NO_timeseries.html): by year, change between two years, time series, year of the maximum.
 -   [**Croatia** - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/demos/HR.html)
 -   [**Belgium** population](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html), as mixed resolution layer.
 

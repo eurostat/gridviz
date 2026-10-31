@@ -48,6 +48,12 @@
         "description": "A new value computed for each cell on loading: the population change from 2011 to 2021."
     },
     {
+        "path": "basics/missing_values.html",
+        "category": "Basics",
+        "title": "Missing values",
+        "description": "Cells without a value get a colour of their own, and an entry in the legend."
+    },
+    {
         "path": "basics/select.html",
         "category": "Basics",
         "title": "Select cells",
@@ -94,6 +100,12 @@
         "category": "Basics",
         "title": "View scale, single resolution",
         "description": "The colour scale adapts to the values of the cells in the view."
+    },
+    {
+        "path": "basics/viewscale_color_size.html",
+        "category": "Basics",
+        "title": "View scale for the colour and the size",
+        "description": "One view scale combining the scales of the size and of the colour of circles, with a legend for each."
     },
     {
         "path": "basics/stretching.html",
@@ -277,6 +289,13 @@
         "category": "Styles",
         "title": "Composition types",
         "description": "The different ways of showing the composition of a cell.",
+        "group": "Composition"
+    },
+    {
+        "path": "styles/donut_pie.html",
+        "category": "Styles",
+        "title": "Pie charts with a donut ring",
+        "description": "A pie chart inside a donut ring, whose colour shows another variable.",
         "group": "Composition"
     },
     {
@@ -490,6 +509,13 @@
         "group": "Lego"
     },
     {
+        "path": "styles/lego_stretched.html",
+        "category": "Styles",
+        "title": "Lego with a stretched colour ramp",
+        "description": "The breaks of the classes come from a stretching function.",
+        "group": "Lego"
+    },
+    {
         "path": "styles/side_hillshading.html",
         "category": "Styles",
         "title": "Hillshading",
@@ -515,6 +541,12 @@
         "category": "Smoothing and interpolation",
         "title": "Interpolation",
         "description": "Interpolated elevation, with hypsometric colours."
+    },
+    {
+        "path": "styles/interpolator_randomwalk.html",
+        "category": "Smoothing and interpolation",
+        "title": "Random walk interpolation",
+        "description": "A land cover grid made finer with the random walk interpolator, for categories."
     },
     {
         "path": "styles/kernelsmoothing.html",
@@ -695,5 +727,11 @@
         "category": "Demos",
         "title": "Norway: population",
         "description": "The 250 m grids of Statistics Norway: population and its change."
+    },
+    {
+        "path": "demos/NO_timeseries.html",
+        "category": "Demos",
+        "title": "Norway: 20 years of population",
+        "description": "Population by year with a time slider, change between two years, time series, and year of the maximum."
     }
 ]
