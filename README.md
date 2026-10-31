@@ -6,7 +6,7 @@
 [![Mentioned in Awesome Official Statistics ](https://awesome.re/mentioned-badge.svg)](http://www.awesomeofficialstatistics.org)
 
 <p align="center" style="height: 350px;">
-    <img src="docs/img/gif/gridviz-annotated.gif">
+    <img src="docs/img/gif/gridviz-annotated.gif" width="640" alt="Gridviz styles and features: backgrounds, boundaries, labels, tooltips, smoothing, multi-resolution zoom, hillshading, interpolation">
 </p>
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser using a large variety of [cartographic styles and techniques](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md). Unlike traditional raster-based web mapping tools, Gridviz renders everything client-side, on the fly.
