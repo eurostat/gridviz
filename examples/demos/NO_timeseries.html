@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz demo: 20 years of population in Norway</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+                font-family: Arial, sans-serif;
+            }
+            #panel {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 290px;
+                padding: 10px 14px;
+                background: rgba(255, 255, 255, 0.92);
+                border-radius: 6px;
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+                font-size: 14px;
+            }
+            #panel h1 {
+                margin: 0 0 6px 0;
+                font-size: 16px;
+            }
+            #panel fieldset {
+                border: none;
+                margin: 8px 0 0 0;
+                padding: 0;
+            }
+            #panel label {
+                display: block;
+                margin: 3px 0;
+            }
+            #panel input[type='range'] {
+                width: 100%;
+                margin: 2px 0 6px 0;
+            }
+            #panel button {
+                font-size: 13px;
+                padding: 2px 10px;
+                cursor: pointer;
+            }
+            #panel .small {
+                color: #555;
+                font-size: 12px;
+                margin-top: 8px;
+            }
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <div id="panel">
+            <h1>Population of Norway, 2002-2022</h1>
+
+            <fieldset>
+                <label><input type="radio" name="mode" value="pop" checked /> Population in a year</label>
+                <label><input type="radio" name="mode" value="change" /> Change between two years</label>
+                <label><input type="radio" name="mode" value="ts" /> Time series</label>
+                <label><input type="radio" name="mode" value="extremum" /> Year of the maximum or minimum</label>
+            </fieldset>
+
+            <div id="popControls">
+                <div>
+                    Year: <b id="yearText">2022</b> <button id="play" title="Play the years">&#9654; Play</button>
+                </div>
+                <input id="year" type="range" min="2002" max="2022" value="2022" />
+            </div>
+
+            <div id="changeControls" class="hidden">
+                <div>From <b id="fromText">2002</b> to <b id="toText">2022</b></div>
+                <input id="from" type="range" min="2002" max="2021" value="2002" />
+                <input id="to" type="range" min="2003" max="2022" value="2022" />
+            </div>
+
+            <div id="extremumControls" class="hidden">
+                <label><input type="radio" name="extremum" value="max" checked /> Year of the maximum</label>
+                <label><input type="radio" name="extremum" value="min" /> Year of the minimum</label>
+            </div>
+
+            <div class="small">
+                Source:
+                <a href="https://www.ssb.no/natur-og-miljo/areal/artikler/kart-og-geodata-fra-ssb">Statistics Norway</a
+                >, population grids. Hover a cell to see its time series.
+            </div>
+        </div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+        <script>
+            // The grid of 2001 is not in the same position as the following ones (the data of the dataset start in 2001): the years start in 2002,
+            // so that all of them can be compared.
+            const FIRST_YEAR = 2002
+            const LAST_YEAR = 2022
+            const years = Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i)
+            // the columns of the dataset: y2002, y2003...
+            const col = (year) => 'y' + year
+            const ts = years.map(col)
+
+            // the state of the map, changed by the controls
+            const state = { mode: 'pop', year: LAST_YEAR, from: FIRST_YEAR, to: LAST_YEAR, extremum: 'max' }
+
+            // The projection of the labels and boundaries: the grid is in ETRS89 / UTM zone 33N (EPSG:25833)
+            const proj = d3
+                .geoTransverseMercator()
+                .rotate([-15, 0])
+                .reflectY(true)
+                .scale(6378137)
+                .translate([2500000, -27000])
+
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 2179500,
+                y: 6783250,
+                z: 500,
+                zoomExtent: [5, 4000],
+            }).addZoomButtons()
+
+            // The dataset: a population time series per cell, from 2002 to 2022 (columns y2002...y2022), at several resolutions.
+            const dataset = new gridviz.MultiResolutionDataset(
+                [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (r) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-norway/main/out/popTScsv/' + r + 'm/'
+                    ),
+                {
+                    // the year of the maximum and of the minimum of each cell
+                    preprocess: (c) => {
+                        let max = -1,
+                            min = Infinity,
+                            yMax,
+                            yMin
+                        for (const y of years) {
+                            const v = +c[col(y)]
+                            if (v > max) [max, yMax] = [v, y]
+                            if (v < min) [min, yMin] = [v, y]
+                        }
+                        // never inhabited
+                        if (!max) return false
+                        c.maxPop = max
+                        c.maxYear = yMax
+                        c.minYear = yMin
+                    },
+                }
+            )
+
+            // The value of a cell for a year
+            const pop = (c, year) => +c[col(year)]
+
+            // ---------- Population in a year ----------
+            const popStretching = gridviz.logarithmicScale(-7)
+            const popStyle = new gridviz.SquareColorWebGLStyle({
+                // the highest population in the view, for the colors to use all the ramp
+                viewScale: (cells) => d3.max(cells, (c) => pop(c, state.year)),
+                tFun: (c, r, z, max) => {
+                    const v = pop(c, state.year)
+                    return v > 0 ? v / max : undefined
+                },
+                color: d3.interpolateYlOrRd,
+                stretching: { fun: 'log', alpha: -7 },
+            })
+            popStyle.legends = [
+                new gridviz.ColorLegend({
+                    title: 'Population',
+                    colorScale: d3.interpolateYlOrRd,
+                    textScale: (t, max) => (max ? d3.format(',.2~s')(Math.round(max * popStretching.invert(t))) : ''),
+                    ticks: 4,
+                }),
+            ]
+
+            // ---------- Change between two years ----------
+            const changeStretching = gridviz.powerScale(0.5)
+            // the change of the population of a cell between the two years
+            const change = (c) => pop(c, state.to) - pop(c, state.from)
+            const changeStyle = new gridviz.SquareColorWebGLStyle({
+                // the highest change in the view, up or down
+                viewScale: (cells) => d3.max(cells, (c) => Math.abs(change(c))),
+                // 0.5 is no change: a decrease is towards red (0), an increase towards blue (1)
+                tFun: (c, r, z, max) => {
+                    if (!pop(c, state.from) && !pop(c, state.to)) return undefined
+                    return 0.5 + (Math.sign(change(c)) * changeStretching(Math.abs(change(c)) / max)) / 2
+                },
+                color: d3.interpolateRdBu,
+            })
+            changeStyle.legends = [
+                new gridviz.ColorLegend({
+                    title: 'Change of the population',
+                    colorScale: d3.interpolateRdBu,
+                    textScale: (t, max) => {
+                        if (!max || t === 0.5) return 0
+                        const v = Math.round(max * changeStretching.invert(Math.abs(2 * t - 1)))
+                        return t < 0.5 ? -v : v
+                    },
+                    tickFormat: d3.format('+,d'),
+                    ticks: 5,
+                }),
+            ]
+
+            // ---------- Time series ----------
+            const tsStyle = new gridviz.TimeSeriesStyle({
+                ts: ts,
+                color: () => '#222',
+                // the width of the lines follows the last population
+                lineWidth: (c, r, z, max) => (1 + 4 * Math.pow(pop(c, LAST_YEAR) / max, 0.4)) * z,
+                viewScale: (cells) => d3.max(cells, (c) => pop(c, LAST_YEAR)),
+            })
+
+            // ---------- Year of the maximum or minimum ----------
+            const yearOfExtremum = (c) => (state.extremum === 'max' ? c.maxYear : c.minYear)
+            const extremumStyle = new gridviz.SquareColorWebGLStyle({
+                // the places with a few inhabitants are left out: their extremum is meaningless
+                tFun: (c) => (c.maxPop < 5 ? undefined : (yearOfExtremum(c) - FIRST_YEAR) / (LAST_YEAR - FIRST_YEAR)),
+                color: d3.interpolateTurbo,
+            })
+            extremumStyle.legends = [
+                new gridviz.ColorLegend({
+                    title: 'Year',
+                    colorScale: d3.interpolateTurbo,
+                    textScale: (t) => Math.round(FIRST_YEAR + t * (LAST_YEAR - FIRST_YEAR)),
+                    tickFormat: (y) => '' + y,
+                    ticks: 5,
+                }),
+            ]
+
+            // ---------- Tooltip: the time series of the cell ----------
+            const cellInfoHTML = (c) => {
+                const values = years.map((y) => pop(c, y))
+                const max = d3.max(values) || 1
+                const w = 220,
+                    h = 50
+                const points = values
+                    .map(
+                        (v, i) =>
+                            ((i * w) / (values.length - 1)).toFixed(1) + ',' + (h - (v / max) * (h - 4) - 2).toFixed(1)
+                    )
+                    .join(' ')
+                const f = d3.format(',')
+                let html = '<b>' + f(pop(c, state.year)) + '</b> inhabitant(s) in ' + state.year + '<br>'
+                html += 'Between ' + FIRST_YEAR + ' and ' + LAST_YEAR + ': ' + f(d3.min(values)) + ' to ' + f(max)
+                html +=
+                    '<br><svg width="' +
+                    w +
+                    '" height="' +
+                    h +
+                    '"><polyline fill="none" stroke="#222" stroke-width="1.5" points="' +
+                    points +
+                    '" />'
+                // the selected year
+                const x = ((state.year - FIRST_YEAR) * w) / (values.length - 1)
+                html +=
+                    '<line x1="' + x + '" x2="' + x + '" y1="0" y2="' + h + '" stroke="#c00" stroke-width="1" /></svg>'
+                html +=
+                    '<br><span style="color:#555">' +
+                    FIRST_YEAR +
+                    '<span style="float:right">' +
+                    LAST_YEAR +
+                    '</span></span>'
+                return html
+            }
+
+            // ---------- Layers ----------
+            const gridLayers = {
+                pop: new gridviz.GridLayer(dataset, [popStyle], { minPixelsPerCell: 1.5, cellInfoHTML: cellInfoHTML }),
+                change: new gridviz.GridLayer(dataset, [changeStyle], {
+                    minPixelsPerCell: 1.5,
+                    cellInfoHTML: cellInfoHTML,
+                }),
+                ts: new gridviz.GridLayer(dataset, [tsStyle], { minPixelsPerCell: 12, cellInfoHTML: cellInfoHTML }),
+                extremum: new gridviz.GridLayer(dataset, [extremumStyle], {
+                    minPixelsPerCell: 1.5,
+                    cellInfoHTML: cellInfoHTML,
+                }),
+            }
+            const boundaryLayer = new gridviz.GeoJSONLayer(
+                gridviz_eurostat.getEurostatBoundariesLayer({ crs: '4326', proj: proj })
+            )
+            const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('NO', 20, { proj: proj }))
+
+            // ---------- Controls ----------
+            const $ = (id) => document.getElementById(id)
+            const update = () => {
+                // the controls of the mode
+                $('popControls').classList.toggle('hidden', state.mode !== 'pop')
+                $('changeControls').classList.toggle('hidden', state.mode !== 'change')
+                $('extremumControls').classList.toggle('hidden', state.mode !== 'extremum')
+                $('yearText').textContent = state.year
+                $('fromText').textContent = state.from
+                $('toText').textContent = state.to
+                // the layers of the mode
+                const layers = [gridLayers[state.mode], boundaryLayer, labelLayer]
+                if (map.layers[0] !== layers[0]) map.layers = layers
+                map.redraw()
+            }
+
+            for (const radio of document.querySelectorAll('input[name=mode]'))
+                radio.addEventListener('input', () => {
+                    state.mode = radio.value
+                    update()
+                })
+            for (const radio of document.querySelectorAll('input[name=extremum]'))
+                radio.addEventListener('input', () => {
+                    state.extremum = radio.value
+                    update()
+                })
+            $('year').addEventListener('input', () => {
+                state.year = +$('year').value
+                update()
+            })
+            // the two years of the change: the first one is always before the second one
+            $('from').addEventListener('input', () => {
+                state.from = +$('from').value
+                if (state.to <= state.from) state.to = $('to').value = state.from + 1
+                update()
+            })
+            $('to').addEventListener('input', () => {
+                state.to = +$('to').value
+                if (state.from >= state.to) state.from = $('from').value = state.to - 1
+                update()
+            })
+
+            // play the years
+            let timer
+            $('play').addEventListener('click', () => {
+                if (timer) {
+                    clearInterval(timer)
+                    timer = undefined
+                    $('play').innerHTML = '&#9654; Play'
+                    return
+                }
+                $('play').innerHTML = '&#9632; Stop'
+                if (state.year >= LAST_YEAR) state.year = FIRST_YEAR - 1
+                timer = setInterval(() => {
+                    state.year++
+                    $('year').value = state.year
+                    update()
+                    if (state.year >= LAST_YEAR) $('play').click()
+                }, 700)
+            })
+
+            map.layers = [gridLayers.pop, boundaryLayer, labelLayer]
+            update()
+        </script>
+    </body>
+</html>

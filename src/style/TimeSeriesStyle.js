@@ -44,7 +44,7 @@ export class TimeSeriesStyle extends Style {
 
         /** A function returning the width of the line, in geo unit
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
-        this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
+        this.lineWidth = opts.lineWidth || ((c, r, z) => 1.5 * z)
 
         /** A function returning the color of the chart.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
@@ -69,11 +69,18 @@ export class TimeSeriesStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
+        //the number value of a cell for a column of the time series, undefined for no data.
+        //The values of a CSV file are texts: they have to be converted, or "9" is above "10000".
+        const getValue = (c, t) => {
+            const val = c[t]
+            return this.noData(val) ? undefined : +val
+        }
+
         //compute cell amplitude
         const getAmplitude = (c) => {
             let min, max
             for (let t of this.ts) {
-                const val = c[t]
+                const val = getValue(c, t)
                 if (val == undefined) continue
                 if (min == undefined || val < min) min = val
                 if (max == undefined || val > max) max = val
@@ -135,7 +142,7 @@ export class TimeSeriesStyle extends Style {
             } else if (anchY === 'bottom') {
                 //get min
                 for (let t of this.ts) {
-                    const val = +c[t]
+                    const val = getValue(c, t)
                     if (val == undefined) continue
                     if (val0 == undefined || val < val0) val0 = val
                 }
@@ -143,7 +150,7 @@ export class TimeSeriesStyle extends Style {
             } else if (anchY === 'top') {
                 //get max
                 for (let t of this.ts) {
-                    const val = +c[t]
+                    const val = getValue(c, t)
                     if (val == undefined) continue
                     if (val0 == undefined || val > val0) val0 = val
                 }
@@ -152,12 +159,12 @@ export class TimeSeriesStyle extends Style {
                 //get min and max
                 let min, max
                 for (let t of this.ts) {
-                    const val = c[t]
+                    const val = getValue(c, t)
                     if (val == undefined) continue
                     if (min == undefined || val < min) min = val
                     if (max == undefined || val > max) max = val
                 }
-                val0 = (+max + +min) * 0.5
+                val0 = (max + min) * 0.5
                 y0 = resolution / 2
             } else {
                 console.log('Unexpected anchorModeY: ' + anchY)
