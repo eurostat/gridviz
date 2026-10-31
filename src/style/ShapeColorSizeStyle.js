@@ -23,6 +23,13 @@ export class ShapeColorSizeStyle extends Style {
 
         /** @type {(function(import("../core/Dataset.js").Cell,number, number,object):import("../core/Style.js").Shape) | string} */
         this.shape = opts.shape || 'square'
+
+        /**
+         * For the donut shape, the outer diameter of the donut, in geographical unit (the resolution by default, so that the donut fills the cell).
+         * The size of the donut is then the part of this diameter it fills: the donut is a full disk when its size equals its outer diameter, and a thin ring when its size is small.
+         * With a smaller outer diameter, a donut can be a ring around another symbol, a pie chart for example, or a part of a symbol with several rings.
+         * @type {(function(import('../core/Dataset.js').Cell, number, number, object):number) | number | undefined} */
+        this.donutOuterSize = opts.donutOuterSize
     }
 
     /**
@@ -98,10 +105,19 @@ export class ShapeColorSizeStyle extends Style {
                 //draw donut
                 const xc = c.x + r2 + offset.dx,
                     yc = c.y + r2 + offset.dy
+                // outer diameter: the resolution, unless specified
+                const outer =
+                    this.donutOuterSize === undefined
+                        ? resolution
+                        : typeof this.donutOuterSize === 'function'
+                        ? this.donutOuterSize(c, resolution, z, viewScale)
+                        : this.donutOuterSize
+                if (!outer) continue
+                const R = outer * 0.5
                 ctx.beginPath()
                 ctx.moveTo(xc, yc)
-                ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
+                ctx.arc(xc, yc, R, 0, 2 * Math.PI)
+                ctx.arc(xc, yc, Math.max(0, 1 - size / outer) * R, 0, 2 * Math.PI, true)
                 ctx.closePath()
                 ctx.fill()
             } else if (shape === 'diamond') {

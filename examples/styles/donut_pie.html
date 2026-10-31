@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz pie chart with a donut ring example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3763437,
+                y: 2891045,
+                z: 20,
+                zoomExtent: [20, 200],
+            }).addZoomButtons()
+
+            //define dataset: households in France (INSEE Filosofi)
+            const dataset = new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/1000m/',
+                {
+                    preprocess: (c) => {
+                        c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
+                        c.share_pauv = +c.men_pauv / +c.men
+                    },
+                }
+            )
+
+            // The ring: a donut with the outer diameter of the cell, whose colour shows the share of households under the poverty line.
+            // Its size is the part of the outer diameter it fills: 0.2 gives a thin ring, leaving a hole of 80% of the diameter.
+            const ring = new gridviz.ShapeColorSizeStyle({
+                shape: 'donut',
+                donutOuterSize: (c, r) => r,
+                size: (c, r) => 0.2 * r,
+                color: (c) => d3.interpolateYlOrRd(Math.min(1, c.share_pauv / 0.3)),
+            })
+
+            // The pie chart: the size of the households, inside the hole of the ring
+            const pie = new gridviz.CompositionStyle({
+                color: {
+                    men_1ind: '#7570b3', //1 person
+                    men_2_4ind: '#1b9e77', //2 to 4 persons
+                    men_5ind: '#d95f02', //5 persons or more
+                },
+                type: () => 'piechart',
+                size: (c, r) => 0.72 * r,
+                offsetAngle: () => 90,
+            })
+
+            map.layers = [
+                new gridviz.GridLayer(dataset, [ring, pie], {
+                    minPixelsPerCell: 14,
+                    cellInfoHTML: (c) =>
+                        '<b>' +
+                        c.men +
+                        '</b> households, ' +
+                        Math.round(100 * c.share_pauv) +
+                        '% under the poverty line' +
+                        '<br>1 person: ' +
+                        c.men_1ind +
+                        ', 2 to 4 persons: ' +
+                        Math.round(c.men_2_4ind * 10) / 10 +
+                        ', 5 or more: ' +
+                        c.men_5ind,
+                }),
+            ]
+        </script>
+    </body>
+</html>
