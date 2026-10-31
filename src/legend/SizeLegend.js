@@ -26,6 +26,11 @@ export class SizeLegend extends Legend {
          *  @type { function(object, number, number):number } */
         this.size = opts.size || undefined
 
+        /** When the symbol size is not given with `size`, it is the scale returned by this function, from the view scale of the style, applied to the value of the label.
+         * For a style with a view scale for its size and another for its color, combined with viewScaleCombination: `(viewScale) => viewScale.size`
+         *  @type { function(object):function(number):number } */
+        this.viewScaleFun = opts.viewScaleFun || ((viewScale) => viewScale)
+
         //symbol
         /**  @type {(import("../core/Style").Shape)|"line"} */
         this.shape = opts.shape || 'circle'
@@ -57,7 +62,7 @@ export class SizeLegend extends Legend {
         //compute size of symbol, in pix
         let sizePix
         if (this.size) sizePix = this.size(opts.viewScale, opts.resolution, opts.z) / opts.z
-        else sizePix = opts.viewScale(+label) / opts.z
+        else sizePix = this.viewScaleFun(opts.viewScale)(+label) / opts.z
         if (!sizePix) return
 
         //format label, if specified and possible
