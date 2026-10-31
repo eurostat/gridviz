@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz lego example with a stretched color ramp</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4000000,
+                y: 2900000,
+                z: 1000,
+            }).addZoomButtons()
+
+            //define dataset
+            const dataset = new gridviz.CSVGrid(
+                map,
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000
+            )
+
+            // LegoStyle.get classifies the values with breaks, and gives a color to each class.
+            // To stretch the color ramp, as a function of the values would do, compute the breaks from a stretching function:
+            // stretchedBreaks gives the values which the stretching maps to the limits between the classes.
+            const classNumber = 8
+            const breaks = gridviz.stretchedBreaks(0, 1400000, classNumber, gridviz.logarithmicScale(-7))
+            const colors = Array.from({ length: classNumber }, (_, i) => d3.interpolateYlOrRd((i + 0.5) / classNumber))
+
+            const styles = gridviz.LegoStyle.get((cell) => +cell.population, breaks, colors)
+
+            //add layer to map
+            map.layers = [new gridviz.GridLayer(dataset, styles, { minPixelsPerCell: 5 })]
+        </script>
+    </body>
+</html>

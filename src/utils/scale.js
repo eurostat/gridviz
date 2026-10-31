@@ -221,6 +221,26 @@ export const viewScaleCombination = (obj) => {
 
 
 /**
+ * The class limits of a classification in classes of equal width on a stretched scale: the values of the domain which a
+ * stretching function (see stretching.js) maps to 1/n, 2/n... (n-1)/n.
+ * It turns a stretching, which is continuous, into the breaks needed by the styles which classify the values,
+ * for example LegoStyle.get, or the classifiers of this module.
+ *
+ * @param {number} min The lowest value of the domain
+ * @param {number} max The highest value of the domain
+ * @param {number} classNumber The number of classes
+ * @param {function(number):number} stretching A stretching function with its invert function, such as powerScale(0.5) or logarithmicScale(-7). None: the classes have the same width.
+ * @returns {Array.<number>} The classNumber - 1 limits between the classes, in increasing order
+ */
+export function stretchedBreaks(min, max, classNumber, stretching = undefined) {
+    const invert = stretching ? stretching.invert : (t) => t
+    if (!invert) throw new Error('The stretching function has no invert function')
+    const breaks = []
+    for (let i = 1; i < classNumber; i++) breaks.push(min + (max - min) * invert(i / classNumber))
+    return breaks
+}
+
+/**
  * Return a classifier function from break values.
  * The classifier function returns the class id (from 0 to breaks.length) from a value to classifiy.
  * @param {Array.<number>} breaks the breaks

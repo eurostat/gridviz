@@ -34,8 +34,9 @@ export class LegoStyle {
             //"#eee" //whithe
         ]*/
 
-        opts.colorDark = opts.colorDark || '#333'
-        opts.colorBright = opts.colorBright || '#aaa'
+        //the dark and bright colors of the bricks: the sides and the top. colorDark and colorBright are the former names of colDark and colBright.
+        const colDark = opts.colDark || opts.colorDark || '#333'
+        const colBright = opts.colBright || opts.colorBright || '#aaa'
 
         //make classifier
         const classifier = clFun(breaks)
@@ -53,8 +54,8 @@ export class LegoStyle {
         //make tanaka side style
         const tanakaStyle = new SideTanakaStyle({
             classifier: () => classifier2,
-            colorDark : opts.colorDark,
-            colorBright : opts.colorBright,
+            colorDark: colDark,
+            colorBright: colBright,
             diamond: opts.diamond,
         })
 
@@ -69,7 +70,7 @@ export class LegoStyle {
             cellStyle,
             sst,
             tanakaStyle,
-            new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright, filter: opts.filter }),
+            new LegoTopStyle({ colDark: colDark, colBright: colBright, filter: opts.filter }),
         ]
     }
 
