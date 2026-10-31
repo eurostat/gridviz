@@ -2,7 +2,14 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
-import { getSharedWebGLCanvas, getProgram, getBuffer, bufferOwner } from '../utils/webGLUtils.js'
+import {
+    getSharedWebGLCanvas,
+    getProgram,
+    getBuffer,
+    bufferOwner,
+    drawSquaresAsTriangles,
+    pointsToSquares,
+} from '../utils/webGLUtils.js'
 import { color } from 'd3-color'
 
 const VERTEX_SHADER = `
@@ -14,6 +21,19 @@ const VERTEX_SHADER = `
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
           gl_PointSize = sizePix;
+          vi = i;
+        }`
+
+// the same, for the large squares: they are drawn as triangles, whose corners are placed from the centre (see drawSquaresAsTriangles)
+const VERTEX_SHADER_TRIANGLES = `
+        attribute vec2 pos;
+        attribute vec2 corner;
+        uniform float halfSizeGeo;
+        uniform mat3 mat;
+        attribute float i;
+        varying float vi;
+        void main() {
+          gl_Position = vec4(mat * vec3(pos + corner * halfSizeGeo, 1.0), 1.0);
           vi = i;
         }`
 
@@ -31,6 +51,7 @@ const FRAGMENT_SHADER = `
 // names of the buffers this style fills in the shared context (getBuffer)
 const POSITION_BUFFER = 'SquareColorCategoryWebGLStyle.pos'
 const INDEX_BUFFER = 'SquareColorCategoryWebGLStyle.i'
+const CORNER_BUFFER = 'SquareColorCategoryWebGLStyle.corner'
 
 /**
  * Style based on webGL
@@ -79,8 +100,10 @@ export class SquareColorCategoryWebGLStyle extends Style {
         this.gl = undefined
         this.program = undefined
         this.lutTexture = undefined
-        /** Number of points in the shared buffers, for drawArrays */
+        /** Number of cells in the shared buffers, for drawArrays */
         this.pointsNb = 0
+        /** Whether the squares of the shared buffers are drawn as triangles (large squares) or points @private */
+        this.asTriangles = false
 
         this.x = undefined
         this.y = undefined
@@ -94,17 +117,19 @@ export class SquareColorCategoryWebGLStyle extends Style {
      * Binds this style's program, colour lookup texture and uniforms in the shared WebGL
      * context (getSharedWebGLCanvas): compiled once per context, so a new style instance
      * (e.g. a setting change rebuilding the style) costs no new context or program.
+     * @param {boolean} asTriangles Whether the squares are large, and drawn as triangles instead of points (see drawSquaresAsTriangles).
      * @returns {boolean} true when the context is new to this style (its data must be re-uploaded)
      */
-    init(w, h) {
+    init(w, h, asTriangles = false) {
         this.cvWGL = getSharedWebGLCanvas(w, h)
         const gl = this.cvWGL.gl
         const contextChanged = this.gl !== gl
         if (contextChanged) {
             this.gl = gl
-            this.program = getProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER)
             this.lutTexture = undefined
         }
+        //programs are compiled once per context: choosing one each time costs nothing
+        this.program = getProgram(gl, asTriangles ? VERTEX_SHADER_TRIANGLES : VERTEX_SHADER, FRAGMENT_SHADER)
         gl.useProgram(this.program)
         this.bindColors()
         return contextChanged
@@ -143,10 +168,12 @@ export class SquareColorCategoryWebGLStyle extends Style {
      * Fills the shared position and colour index buffers with the cells to draw.
      * @returns {number} the number of points uploaded (cells without a category are left out)
      */
-    bindVertices(cells, resolution, z, viewScale) {
+    bindVertices(cells, resolution, z, viewScale, view, asTriangles = false) {
         const gl = this.cvWGL.gl
-        //add vertice and fragment data
+        //add vertice and fragment data. The positions are relative to the center of the view, see GeoCanvas.getWebGLTransformCentered
         const r2 = resolution / 2
+        const vx = view.x,
+            vy = view.y
         let c,
             nb = cells.length
         const verticesBuffer = new Float32Array(2 * nb)
@@ -167,16 +194,26 @@ export class SquareColorCategoryWebGLStyle extends Style {
                 continue
             }
             if (shown && !shown[+i_]) continue
-            verticesBuffer[2 * n] = c.x + r2
-            verticesBuffer[2 * n + 1] = c.y + r2
+            verticesBuffer[2 * n] = c.x + r2 - vx
+            verticesBuffer[2 * n + 1] = c.y + r2 - vy
             iBuffer[n] = +i_
             n++
         }
 
+        let positions = verticesBuffer.subarray(0, 2 * n)
+        let indices = iBuffer.subarray(0, n)
+        if (asTriangles) {
+            //six vertices for each square
+            const sq = pointsToSquares(positions, n, [indices])
+            positions = sq.positions
+            indices = sq.values[0]
+            gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, CORNER_BUFFER))
+            gl.bufferData(gl.ARRAY_BUFFER, sq.corners, gl.DYNAMIC_DRAW)
+        }
         gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, POSITION_BUFFER))
-        gl.bufferData(gl.ARRAY_BUFFER, verticesBuffer.subarray(0, 2 * n), gl.DYNAMIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.DYNAMIC_DRAW)
         gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, INDEX_BUFFER))
-        gl.bufferData(gl.ARRAY_BUFFER, iBuffer.subarray(0, n), gl.DYNAMIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, indices, gl.DYNAMIC_DRAW)
         bufferOwner(gl, POSITION_BUFFER, this)
         return n
     }
@@ -192,6 +229,12 @@ export class SquareColorCategoryWebGLStyle extends Style {
         gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, INDEX_BUFFER))
         gl.vertexAttribPointer(i, 1, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(i)
+        if (this.asTriangles) {
+            const corner = gl.getAttribLocation(this.program, 'corner')
+            gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, CORNER_BUFFER))
+            gl.vertexAttribPointer(corner, 2, gl.FLOAT, false, 0, 0)
+            gl.enableVertexAttribArray(corner)
+        }
     }
 
     // check if the vertices have to be bound again
@@ -220,14 +263,19 @@ export class SquareColorCategoryWebGLStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        //bind this style's program in the shared WebGL context
-        const contextChanged = this.init(geoCanvas.w, geoCanvas.h)
+        //size of the squares
+        const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
+        const sizePix = sizeGeo / z
+
+        //bind this style's program in the shared WebGL context. Large squares are drawn as triangles, small ones as points.
+        const asTriangles = drawSquaresAsTriangles(getSharedWebGLCanvas(geoCanvas.w, geoCanvas.h).gl, sizePix)
+        const contextChanged = this.init(geoCanvas.w, geoCanvas.h, asTriangles)
         const gl = this.cvWGL.gl
         const canvas = this.cvWGL.canvas
 
-        //bind sizePix
-        const sizePix = this.size ? this.size(resolution, z) / z : resolution / z + 0.2
-        gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
+        //bind the size
+        if (asTriangles) gl.uniform1f(gl.getUniformLocation(this.program, 'halfSizeGeo'), sizeGeo / 2)
+        else gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
 
         // mapContentChanged() is a cheap proxy for "did the content change", based on view
         // x/y/z and cell count alone. The upload is also needed when the shared buffers
@@ -236,16 +284,18 @@ export class SquareColorCategoryWebGLStyle extends Style {
         const highlightKey = this.highlightColors ? this.highlightColors.join('|') : ''
         const highlightChanged = highlightKey !== this.highlightKey
         this.highlightKey = highlightKey
-        const contentChanged = this.mapContentChanged(geoCanvas.view, cells.length) || highlightChanged
+        const shapeChanged = asTriangles !== this.asTriangles
+        this.asTriangles = asTriangles
+        const contentChanged = this.mapContentChanged(geoCanvas.view, cells.length) || highlightChanged || shapeChanged
         if (contentChanged || contextChanged || bufferOwner(gl, POSITION_BUFFER) !== this)
-            this.pointsNb = this.bindVertices(cells, resolution, z, viewScale)
+            this.pointsNb = this.bindVertices(cells, resolution, z, viewScale, geoCanvas.view, asTriangles)
         this.bindAttributes()
 
         //transformation
         gl.uniformMatrix3fv(
             gl.getUniformLocation(this.program, 'mat'),
             false,
-            new Float32Array(geoCanvas.getWebGLTransform())
+            new Float32Array(geoCanvas.getWebGLTransformCentered())
         )
 
         // Clear the color buffer bit
@@ -254,7 +304,8 @@ export class SquareColorCategoryWebGLStyle extends Style {
 
         // only the points actually uploaded: cells without a category are left out, and
         // drawing past the end of the buffer is a WebGL error that draws nothing at all
-        gl.drawArrays(gl.POINTS, 0, this.pointsNb)
+        if (asTriangles) gl.drawArrays(gl.TRIANGLES, 0, 6 * this.pointsNb)
+        else gl.drawArrays(gl.POINTS, 0, this.pointsNb)
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()

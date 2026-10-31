@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { getProgram, getBuffer } from './webGLUtils.js'
+import { getProgram, getBuffer, drawSquaresAsTriangles, pointsToSquares } from './webGLUtils.js'
 import { color } from 'd3-color'
 
 const VERTEX_SHADER = `
@@ -15,6 +15,22 @@ const VERTEX_SHADER = `
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
           gl_PointSize = sizePix;
+          vt = t;
+        }
+      `
+
+// the same, for the large squares: they are drawn as triangles, whose corners are placed from the centre (see drawSquaresAsTriangles)
+const VERTEX_SHADER_TRIANGLES = `
+        attribute vec2 pos;
+        attribute vec2 corner;
+        uniform float halfSizeGeo;
+        uniform mat3 mat;
+
+        attribute float t;
+        varying float vt;
+
+        void main() {
+          gl_Position = vec4(mat * vec3(pos + corner * halfSizeGeo, 1.0), 1.0);
           vt = t;
         }
       `
@@ -38,10 +54,15 @@ export class WebGLSquareColoringAdvanced {
      * @param {{fun:string,alpha:number}} stretching
      * @param {number} sizePix
      * @param {number|undefined} globalOpacity
+     * @param {number|undefined} sizeGeo The size of the squares, in geographical unit. Needed to draw the large squares (see drawSquaresAsTriangles).
      */
-    constructor(gl, colors, stretching, sizePix = 10, globalOpacity = undefined) {
+    constructor(gl, colors, stretching, sizePix = 10, globalOpacity = undefined, sizeGeo = undefined) {
         /** @type {WebGLRenderingContext} */
         this.gl = gl
+
+        /** Large squares are drawn as triangles: a point is limited in size by the GPU, and dropped when its centre is out of the view.
+         * @type {boolean} */
+        this.asTriangles = sizeGeo !== undefined && drawSquaresAsTriangles(gl, sizePix)
         //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         //gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -154,14 +175,14 @@ export class WebGLSquareColoringAdvanced {
 
         // compiled once per context and fragment source (colours, stretching), then reused
         /** @type {WebGLProgram} */
-        this.program = getProgram(gl, VERTEX_SHADER, fshString)
+        this.program = getProgram(gl, this.asTriangles ? VERTEX_SHADER_TRIANGLES : VERTEX_SHADER, fshString)
         gl.useProgram(this.program)
 
         //set uniforms
 
-        //sizePix
-        //TODO: bug here. Seems to be limited to some threshold value (around 250).
-        gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
+        //size of the squares
+        if (this.asTriangles) gl.uniform1f(gl.getUniformLocation(this.program, 'halfSizeGeo'), sizeGeo / 2)
+        else gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
 
         //stretching alpha factor
         gl.uniform1f(gl.getUniformLocation(this.program, 'alpha'), stretching ? 1.0 * stretching.alpha : 0.0)
@@ -186,9 +207,25 @@ export class WebGLSquareColoringAdvanced {
 
         gl.useProgram(program)
 
+        //squares as triangles, when they are large: six vertices for each one
+        let n = verticesBuffer.length / 2
+        let vertices = new Float32Array(verticesBuffer)
+        let tValues = new Float32Array(tBuffer)
+        if (this.asTriangles) {
+            const sq = pointsToSquares(verticesBuffer, n, [tBuffer])
+            vertices = sq.positions
+            tValues = sq.values[0]
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, 'WebGLSquareColoringAdvanced.corner'))
+            gl.bufferData(gl.ARRAY_BUFFER, sq.corners, gl.DYNAMIC_DRAW)
+            const corner = gl.getAttribLocation(program, 'corner')
+            gl.vertexAttribPointer(corner, 2, gl.FLOAT, false, 0, 0)
+            gl.enableVertexAttribArray(corner)
+        }
+
         //vertice data, in a buffer reused from draw to draw
         gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, 'WebGLSquareColoringAdvanced.pos'))
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.DYNAMIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW)
         const position = gl.getAttribLocation(program, 'pos')
         gl.vertexAttribPointer(
             position,
@@ -202,7 +239,7 @@ export class WebGLSquareColoringAdvanced {
 
         //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, getBuffer(gl, 'WebGLSquareColoringAdvanced.t'))
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tBuffer), gl.DYNAMIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, tValues, gl.DYNAMIC_DRAW)
         const t = gl.getAttribLocation(program, 't')
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0)
         gl.enableVertexAttribArray(t)
@@ -218,6 +255,7 @@ export class WebGLSquareColoringAdvanced {
         // Set the view port
         //gl.viewport(0, 0, cg.w, cg.h);
 
-        gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
+        if (this.asTriangles) gl.drawArrays(gl.TRIANGLES, 0, 6 * n)
+        else gl.drawArrays(gl.POINTS, 0, n)
     }
 }

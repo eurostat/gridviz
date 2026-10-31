@@ -93,13 +93,16 @@ export class SquareColorWebGLStyle extends Style {
         }
 
         //add vertice and fragment data
+        //(the positions are relative to the center of the view, see GeoCanvas.getWebGLTransformCentered)
         const r2 = resolution / 2
+        const vx = geoCanvas.view.x
+        const vy = geoCanvas.view.y
         const verticesBuffer = []
         const tBuffer = []
         for (let cell of cells) {
             const t = this.tFun(cell, resolution, z, viewScale)
             if (t == null || t == undefined) continue
-            verticesBuffer.push(cell.x + r2, cell.y + r2)
+            verticesBuffer.push(cell.x + r2 - vx, cell.y + r2 - vy)
             tBuffer.push(t > 1 ? 1 : t < 0 ? 0 : t)
         }
 
@@ -110,10 +113,10 @@ export class SquareColorWebGLStyle extends Style {
         const op = this.opacity ? this.opacity(resolution, z) : undefined
 
         //
-        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / z, op)
+        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / z, op, sizeGeo)
 
         //draw
-        wgp.draw(verticesBuffer, tBuffer, geoCanvas.getWebGLTransform())
+        wgp.draw(verticesBuffer, tBuffer, geoCanvas.getWebGLTransformCentered())
 
         // draw in canvas geo
         // NOTE: drawing each tile this way is very inefficient. WebGL is best used with fewer, heavier/larger draw calls.

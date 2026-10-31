@@ -343,6 +343,21 @@ export class GeoCanvas {
         return [kx, 0.0, 0.0, 0.0, ky, 0.0, -kx * this.view.x, -ky * this.view.y, 1.0]
     }
 
+    /**
+     * Get the transformation matrix to webGL screen coordinates, for positions given relative to the center of the view
+     * (x - view.x, y - view.y).
+     *
+     * The GPU computes with 32 bits floats, which have 7 digits: with the geographical coordinates of a map (millions of
+     * meters), the translation of getWebGLTransform() loses the position of the squares when zoomed in, by tens of pixels
+     * (the squares are not where the cells are). Positions relative to the center of the view are small numbers: no loss.
+     * The relative positions are computed in JavaScript, with 64 bits floats.
+     */
+    getWebGLTransformCentered() {
+        const kx = 2.0 / (this.w * this.view.z)
+        const ky = 2.0 / (this.h * this.view.z)
+        return [kx, 0.0, 0.0, 0.0, ky, 0.0, 0.0, 0.0, 1.0]
+    }
+
     /** The function specifying how to draw the map. */
     redraw() {
         throw new Error('Method redraw not implemented.')

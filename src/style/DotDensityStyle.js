@@ -74,6 +74,10 @@ export class DotDensityStyle extends Style {
 
             const r2 = resolution / 2
 
+            //the positions are relative to the center of the view, see GeoCanvas.getWebGLTransformCentered
+            const vx = geoCanvas.view.x
+            const vy = geoCanvas.view.y
+
             for (let cell of cells) {
                 //get color
                 const col = this.color(cell, resolution, z, viewScale)
@@ -86,8 +90,8 @@ export class DotDensityStyle extends Style {
                 const offset = this.offset(cell, resolution, z)
 
                 //cell center
-                const cx = cell.x + offset.dx + r2
-                const cy = cell.y + offset.dy + r2
+                const cx = cell.x + offset.dx + r2 - vx
+                const cy = cell.y + offset.dy + r2 - vy
 
                 //convert color
                 const cc = color(col)
@@ -99,7 +103,7 @@ export class DotDensityStyle extends Style {
             }
 
             //draw
-            prog.draw(geoCanvas.getWebGLTransform())
+            prog.draw(geoCanvas.getWebGLTransformCentered())
 
             //draw in canvas geo
             geoCanvas.initCanvasTransform()

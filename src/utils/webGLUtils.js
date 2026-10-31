@@ -176,3 +176,55 @@ export function checkWebGLSupport() {
         return false
     }
 }
+
+/**
+ * From this size, in pixels, the squares of the WebGL styles are drawn as triangles instead of points.
+ *
+ * A point (gl_PointSize) is limited by the GPU (gl.ALIASED_POINT_SIZE_RANGE, a few hundred pixels on some GPUs), and it is
+ * dropped as soon as its centre is out of the view, even when the square is still partly in it. Both leave gaps in the grid
+ * when the cells are large, that is when the map is zoomed in. Triangles have neither limit. There are few cells in the view
+ * then, so their higher cost doesn't matter, and points stay faster for the small cells.
+ */
+export const MIN_SQUARE_SIZE_AS_TRIANGLES = 24
+
+/**
+ * Tells if squares of this size (in pixels) must be drawn as triangles rather than points.
+ *
+ * @param {WebGLRenderingContext} gl
+ * @param {number} sizePix
+ * @returns {boolean}
+ */
+export function drawSquaresAsTriangles(gl, sizePix) {
+    const range = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)
+    const max = range ? range[1] : 1
+    return sizePix > Math.min(max, MIN_SQUARE_SIZE_AS_TRIANGLES)
+}
+
+// the corners of a square, in units of its half size, as two triangles
+const SQUARE_CORNERS = [-1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1]
+
+/**
+ * Turns points into squares made of two triangles each (6 vertices), to be drawn with gl.TRIANGLES.
+ * The vertex shader places the corners with `pos + corner * halfSize`.
+ *
+ * @param {ArrayLike<number>} positions The x,y of the n points (2*n numbers).
+ * @param {number} n The number of points.
+ * @param {Array.<ArrayLike<number>>} values Some values for each point (n numbers each), repeated for the 6 vertices of its square.
+ * @returns {{positions:Float32Array, corners:Float32Array, values:Array.<Float32Array>}}
+ */
+export function pointsToSquares(positions, n, values = []) {
+    const pos = new Float32Array(12 * n)
+    const corners = new Float32Array(12 * n)
+    const vals = values.map(() => new Float32Array(6 * n))
+    for (let i = 0; i < n; i++) {
+        for (let k = 0; k < 6; k++) {
+            const o = 12 * i + 2 * k
+            pos[o] = positions[2 * i]
+            pos[o + 1] = positions[2 * i + 1]
+            corners[o] = SQUARE_CORNERS[2 * k]
+            corners[o + 1] = SQUARE_CORNERS[2 * k + 1]
+            for (let v = 0; v < values.length; v++) vals[v][6 * i + k] = values[v][i]
+        }
+    }
+    return { positions: pos, corners: corners, values: vals }
+}
