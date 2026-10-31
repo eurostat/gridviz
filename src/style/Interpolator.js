@@ -99,10 +99,22 @@ export class Interpolator extends Style {
             }
         }
 
-        //draw smoothed cells from styles
+        //draw the interpolated cells with the styles
+        this.drawStyles(cells, geoCanvas, targetResolution)
+    }
+
+    /**
+     * Draws cells with the styles of the interpolator: the interpolated cells.
+     *
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {number} resolution The resolution of the cells
+     * @protected
+     */
+    drawStyles(cells, geoCanvas, resolution) {
+        const z = geoCanvas.view.z
         const ctx = geoCanvas.offscreenCtx
         for (let s of this.styles) {
-
             //check if style is visible
             if (!isVisibleAt(s, z)) continue
 
@@ -118,7 +130,7 @@ export class Interpolator extends Style {
             geoCanvas.setCanvasTransform()
 
             //draw with style
-            s.draw(cells, geoCanvas, targetResolution)
+            s.draw(cells, geoCanvas, resolution)
 
             //draw style filter
             if (s.filterColor) s.drawFilter(geoCanvas)
@@ -126,7 +138,6 @@ export class Interpolator extends Style {
             //restore ctx
             if (s.alpha || s.blendOperation) ctx.restore()
         }
-
     }
 }
 

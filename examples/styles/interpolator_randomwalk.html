@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz random walk interpolator example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+            #form {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 6px;
+                font-family: sans-serif;
+                font-size: 14px;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            }
+            #form label {
+                display: block;
+                margin: 2px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="form">
+            <label><input type="radio" name="mode" value="cells" /> The cells of the grid (5 km)</label>
+            <label><input type="radio" name="mode" value="randomwalk" checked /> Random walk interpolation</label>
+            <label
+                >Detail: <span id="detailText"></span>
+                <input id="detail" type="range" min="1" max="10" value="5" style="display: block; width: 100%"
+            /></label>
+        </div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3900000,
+                y: 2500000,
+                z: 120,
+                zoomExtent: [20, 1000],
+            }).addZoomButtons()
+
+            //define dataset: Corine Land Cover, at 5 km. The category of a cell is its code.
+            const dataset = new gridviz.MultiResolutionDataset(
+                [5000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' +
+                            resolution +
+                            'm/'
+                    )
+            )
+
+            // the color of each land cover code
+            const clcColors = {
+                1: '#e6004d',
+                2: '#ff0000',
+                3: '#cc4df2',
+                4: '#cc0000',
+                5: '#e6cccc',
+                6: '#e6cce6',
+                7: '#a600cc',
+                8: '#a64d00',
+                9: '#ff4dff',
+                10: '#ffa6ff',
+                11: '#ffe6ff',
+                12: '#ffffa8',
+                13: '#ffff00',
+                14: '#e6e600',
+                15: '#e68000',
+                16: '#f2a64d',
+                17: '#e6a600',
+                18: '#e6e64d',
+                19: '#ffe6a6',
+                20: '#ffe64d',
+                21: '#e6cc4d',
+                22: '#f2cca6',
+                23: '#80ff00',
+                24: '#00a600',
+                25: '#4dff00',
+                26: '#ccf24d',
+                27: '#a6ff80',
+                28: '#a6e64d',
+                29: '#a6f200',
+                30: '#e6e6e6',
+                31: '#cccccc',
+                32: '#ccffcc',
+                33: '#000000',
+                34: '#a6e6cc',
+                35: '#a6a6ff',
+                36: '#4d4dff',
+                37: '#ccccff',
+                38: '#e6e6ff',
+                39: '#a6a6e6',
+                40: '#00ccf2',
+                41: '#80f2e6',
+                42: '#00ffa6',
+                43: '#a6ffe6',
+                44: '#e6f2ff',
+                48: 'gray',
+            }
+
+            // the style which draws the cells of the grid as they are
+            const cellsStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                code: (c) => c.clc,
+                color: clcColors,
+            })
+
+            // The random walk interpolator makes a finer grid, which has a category (a land cover) for each cell: a categorical value can not be
+            // interpolated like a number, so each fine cell gets the category of the first cell of the grid which a random walk reaches.
+            // The styles of the interpolator draw the cells of the finer grid.
+            // The number of cells of the finer grid in a cell of the grid, in each direction: the detail
+            let detail = 5
+
+            const interpolator = new gridviz.RandomWalkInterpolator({
+                value: (c) => c.clc,
+                targetResolution: (r, z) => r / detail,
+                interpolatedProperty: 'clc',
+                styles: [
+                    new gridviz.SquareColorCategoryWebGLStyle({
+                        code: (c) => c.clc,
+                        color: clcColors,
+                    }),
+                ],
+            })
+
+            map.layers = [
+                new gridviz.GridLayer(dataset, [cellsStyle, interpolator], {
+                    minPixelsPerCell: 5,
+                }),
+            ]
+
+            // choose what is shown
+            const update = () => {
+                const mode = document.querySelector('input[name=mode]:checked').value
+                cellsStyle.visible = () => mode === 'cells'
+                interpolator.visible = () => mode === 'randomwalk'
+                detail = +document.getElementById('detail').value
+                document.getElementById('detailText').textContent =
+                    detail === 1 ? 'the cells of the grid' : 'cells of ' + +(5 / detail).toFixed(2) + ' km'
+                // the detail changes nothing for the cells of the grid
+                document.getElementById('detail').disabled = mode === 'cells'
+                map.redraw()
+            }
+            document.getElementById('form').addEventListener('input', update)
+            update()
+        </script>
+    </body>
+</html>

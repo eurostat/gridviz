@@ -38,6 +38,7 @@ export { TimeSeriesStyle } from './style/TimeSeriesStyle.js'
 export { IsoFenceStyle } from './style/IsoFenceStyle.js'
 export { ImageStyle } from './style/ImageStyle.js'
 export { Interpolator } from './style/Interpolator.js'
+export { RandomWalkInterpolator } from './style/RandomWalkInterpolator.js'
 
 // export additional layers
 export { GridLayer } from './layer/GridLayer.js'
