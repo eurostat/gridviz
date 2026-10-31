@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz missing values example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3763437,
+                y: 2891045,
+                z: 60,
+                zoomExtent: [20, 400],
+            }).addZoomButtons()
+
+            //define dataset: households in France (INSEE Filosofi). Some values are imputed, because of the statistical secrecy.
+            const dataset = new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/1000m/',
+                {
+                    preprocess: (c) => {
+                        // The values of a CSV file are text. An empty text gives 0 with +, which is a value, not a missing one:
+                        // missing values have to be tested before. Here the share of households under the poverty line is
+                        // missing when the column is empty, when there are no households, or when the value is imputed.
+                        const missing =
+                            c.men_pauv === '' || c.men_pauv === undefined || !(+c.men > 0) || +c.imputed === 1
+                        c.share = missing ? undefined : +c.men_pauv / +c.men
+                    },
+                }
+            )
+
+            // The cells with a value: a colour ramp. With a WebGL style, a cell for which tFun returns undefined is not drawn.
+            const valueStyle = new gridviz.SquareColorWebGLStyle({
+                tFun: (c) => (c.share === undefined ? undefined : c.share / 0.3),
+                color: (t) => d3.interpolateYlOrRd(t),
+            })
+            valueStyle.legends = [
+                new gridviz.ColorLegend({
+                    title: 'Households under the poverty line (%)',
+                    colorScale: (t) => d3.interpolateYlOrRd(t),
+                    textScale: (t) => Math.round(t * 30),
+                    ticks: 4,
+                }),
+            ]
+
+            // The cells without value, in a colour which is not in the ramp. Another style draws them: filter selects them.
+            const missingColor = '#8f9ba8'
+            const missingStyle = new gridviz.ShapeColorSizeStyle({
+                color: () => missingColor,
+                filter: (c) => c.share === undefined,
+            })
+            missingStyle.legends = [
+                new gridviz.ColorCategoryLegend({
+                    colorLabel: [[missingColor, 'No value (imputed, statistical secrecy)']],
+                    shape: 'square',
+                }),
+            ]
+
+            map.layers = [
+                new gridviz.GridLayer(dataset, [valueStyle, missingStyle], {
+                    minPixelsPerCell: 6,
+                    cellInfoHTML: (c) =>
+                        c.share === undefined
+                            ? '<b>' + c.men + '</b> households, no value for the poverty (imputed)'
+                            : '<b>' +
+                              c.men +
+                              '</b> households, ' +
+                              Math.round(100 * c.share) +
+                              '% under the poverty line',
+                }),
+            ]
+        </script>
+    </body>
+</html>
