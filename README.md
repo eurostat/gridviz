@@ -1,6 +1,6 @@
 # Gridviz
 
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/gridviz)
+![minified size](https://img.shields.io/github/size/eurostat/gridviz/dist/gridviz.min.js?label=minified%20size)
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 [![Mentioned in Awesome Official Statistics ](https://awesome.re/mentioned-badge.svg)](http://www.awesomeofficialstatistics.org)
@@ -13,20 +13,20 @@
 
 ## Styles
 
-[Visit the style gallery](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md) to see the different customisable styles available for visualizing gridded data with gridviz.
+Browse the [examples gallery](https://eurostat.github.io/gridviz/examples/) to see the different customisable styles available for visualizing gridded data with gridviz, with live examples and their source code.
 
-[<img src="docs/img/overviews/ov_accessibility.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[<img src="docs/img/overviews/ov_side_cat.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
-[<img src="docs/img/overviews/ov_age_balance.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[<img src="docs/img/overviews/ov_dark.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
-[<img src="docs/img/overviews/ov_kersmoo.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
-[<img src="docs/img/overviews/ov_tanaka_dark.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
-[<img src="docs/img/overviews/ov_joyplot_shade.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
-[<img src="docs/img/overviews/ov_lego.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#lego-style)
-[<img src="docs/img/overviews/ov_text_elevation.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#text-style)
-[<img src="docs/img/overviews/ov_dotdensity.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
-[<img src="docs/img/overviews/ov_circle_webgl.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)
-[<img src="docs/img/overviews/ov_joyplot.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
+[<img src="docs/img/overviews/ov_accessibility.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[<img src="docs/img/overviews/ov_side_cat.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
+[<img src="docs/img/overviews/ov_age_balance.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[<img src="docs/img/overviews/ov_dark.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
+[<img src="docs/img/overviews/ov_kersmoo.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
+[<img src="docs/img/overviews/ov_tanaka_dark.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
+[<img src="docs/img/overviews/ov_joyplot_shade.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
+[<img src="docs/img/overviews/ov_lego.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#lego-style)
+[<img src="docs/img/overviews/ov_text_elevation.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#text-style)
+[<img src="docs/img/overviews/ov_dotdensity.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
+[<img src="docs/img/overviews/ov_circle_webgl.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#circle-color-size-webgl-style)
+[<img src="docs/img/overviews/ov_joyplot.png" width="60" height="60">](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
 
 ## Live Demos
 
