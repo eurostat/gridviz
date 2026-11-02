@@ -2,6 +2,17 @@
 
 ## Version 3
 
+### Version 3.1.1 (since 3.1.0)
+
+-   Fixes: the flickering and missing selection rectangle of the hovered cell, also after a scroll or a pan (#174); the legends with the styles which did not give them the cells (_CompositionStyle_, _TimeSeriesStyle_...); the default ticks of _ColorLegend_; _TimeSeriesStyle_ values compared as texts; the gaps and the shifted squares of the webGL styles when zoomed in (#86); the width of _ShadingStyle_.
+-   New: _CircleColorSizeWebGLStyle_, _RandomWalkInterpolator_, _stretchedBreaks_, _VennLegend_, the _donutOuterSize_ and _viewScaleFun_ options, and a new default look of the tooltip, the legends and the buttons.
+-   Faster _LabelLayer_ (a redraw with the names of Europe: 106 ms to 11 ms).
+-   Examples and tests: a gallery page of the examples, six demos ported from gridviz 2.1.17 to version 3, new examples, and browser tests with real data (`npm run test:browser`).
+-   Documentation: the reference is complete (datasets, styles, legends with a subchapter for each class, layers, tooltip, buttons).
+-   `jsdoc` is no longer installed with gridviz (7 direct dependencies, no vulnerability).
+
+The details are in the sections below.
+
 ### General
 
 -   _gviz_ module bject replaced with _gridviz_
