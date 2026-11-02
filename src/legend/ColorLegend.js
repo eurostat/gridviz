@@ -26,9 +26,18 @@ export class ColorLegend extends Legend {
 
         this.margin = opts.margin || 5
 
+        // a number of pixels, or 'fill' for the width of the container
+        this.width = opts.width === 'fill' ? 300 : opts.width || 300
+        this.height = opts.height || 15
+
         //replace with labels ?
         this.tickSize = opts.tickSize || 6
-        this.ticks = opts.ticks || Math.floor(this.width / 50)
+        /** The number of ticks. By default one for each 50 pixels of the width the legend is drawn at, at least 2.
+         * @type {number} */
+        this.ticks = opts.ticks || Math.max(2, Math.floor(this.width / 50))
+        /** The default number of ticks, when no number is given: it follows the width the legend is drawn at (@see update)
+         * @private */
+        this._defaultTicks = opts.ticks ? undefined : this.ticks
         this.tickFormat = opts.tickFormat
         this.tickUnit = opts.tickUnit
 
@@ -37,10 +46,17 @@ export class ColorLegend extends Legend {
         this.fontSize = opts.fontSize
         this.invert = opts.invert
 
-        // a number of pixels, or 'fill' for the width of the container
-        this.width = opts.width === 'fill' ? 300 : opts.width || 300
-        this.height = opts.height || 15
         this.setType('color')
+    }
+
+    /**
+     * The number of ticks of the bar, for a width of it: the one given, or one for each 50 pixels (at least two: the two ends).
+     * @param {number} width The width the bar is drawn at, in pixels.
+     * @returns {number}
+     */
+    tickCount(width) {
+        if (this._defaultTicks !== undefined && this.ticks === this._defaultTicks) return Math.max(2, Math.floor(width / 50))
+        return Math.max(2, this.ticks)
     }
 
     /**
@@ -54,6 +70,9 @@ export class ColorLegend extends Legend {
         this.makeTitle()
 
         const width = this.availableWidth(this.width)
+        // without a given number of ticks: one for each 50 pixels of the width the legend is drawn at (the one of its container
+        // with width:'fill'). At least two: the two ends.
+        const nbTicks = this.tickCount(width)
         const svgW = width + 2 * this.margin
         const svgH = this.height + this.margin + this.tickSize + 10
         const svg = this.div.append('svg').classed('gridviz-legend-graphic', true).attr('width', svgW).attr('height', svgH)
@@ -77,8 +96,8 @@ export class ColorLegend extends Legend {
                 .style('fill', this.colorScale(t, opts.viewScale))
         }
 
-        for (let i = 0; i < this.ticks; i++) {
-            let t = i / (this.ticks - 1)
+        for (let i = 0; i < nbTicks; i++) {
+            let t = i / (nbTicks - 1)
 
             //tick line
             g.append('line')
@@ -99,7 +118,7 @@ export class ColorLegend extends Legend {
                 .style('fill', this.labelColorCSS())
                 //.style("font-weight", "bold")
                 //.style("font-family", "Arial")
-                .style('text-anchor', i == 0 ? 'start' : i == this.ticks - 1 ? 'end' : 'middle')
+                .style('text-anchor', i == 0 ? 'start' : i == nbTicks - 1 ? 'end' : 'middle')
                 .style('alignment-baseline', 'top')
                 .style('dominant-baseline', 'hanging')
                 .style('pointer-events', 'none')
@@ -110,8 +129,8 @@ export class ColorLegend extends Legend {
 
         //label text format
         const f = this.tickFormat && this.tickFormat != 'text' ? this.tickFormat : (v) => v
-        for (let i = 0; i < this.ticks; i++) {
-            let t = i / (this.ticks - 1)
+        for (let i = 0; i < nbTicks; i++) {
+            let t = i / (nbTicks - 1)
 
             const v = this.textScale(t, opts.viewScale)
             const text = (v ? f(v) : '0') + (this.tickUnit ? this.tickUnit : '')

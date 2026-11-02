@@ -107,6 +107,6 @@ export class SideCategoryStyle extends SideStyle {
         }
 
         //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale, cells: cells })
     }
 }

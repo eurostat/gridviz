@@ -312,7 +312,7 @@ export class SquareColorCategoryWebGLStyle extends Style {
         geoCanvas.offscreenCtx.drawImage(canvas, 0, 0)
 
         //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale, cells: cells })
     }
 }
 

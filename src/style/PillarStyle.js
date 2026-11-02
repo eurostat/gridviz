@@ -202,6 +202,6 @@ export class PillarStyle extends Style {
         ctx.lineCap = 'butt'
 
         //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale, cells: cells })
     }
 }

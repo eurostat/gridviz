@@ -60,6 +60,8 @@ export class ShadingRayStyle extends Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
         if (cells.length == 0) return;
+        //the cells of the grid, for the legends: the cells below are the ones of the shading
+        const gridCells = cells
 
         //
         const z = geoCanvas.view.z
@@ -136,7 +138,7 @@ export class ShadingRayStyle extends Style {
         //if (s.filterColor) s.drawFilter(geoCanvas)
 
         //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale, cells: gridCells })
     }
 }
 

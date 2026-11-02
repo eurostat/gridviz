@@ -88,7 +88,7 @@ export class TextStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale, cells: cells })
     }
 
     /**
