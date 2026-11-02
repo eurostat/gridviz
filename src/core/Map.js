@@ -12,6 +12,14 @@ import { FullscreenButton } from '../button/FullscreenButton.js'
 import { select } from 'd3-selection'
 
 /**
+ * Tells a cell from another across redraws, which can make the cells again: by position and resolution.
+ * @param {{cell:{x:any,y:any},resolution:number}} focus
+ * @returns {string} */
+function cellKey(focus) {
+    return focus.cell.x + ',' + focus.cell.y + ',' + focus.resolution
+}
+
+/**
  * A gridviz application.
  *
  * @module core
@@ -122,7 +130,49 @@ export class Map {
         this._focusFrame = null
         /** @private */
         this._focusEvent = null
+        /** The last mouse event over the canvas, null when the mouse is out of it (see redrawNow)
+         * @private
+         * @type {MouseEvent|null} */
+        this._lastMouseEvent = null
+        /** True while the mouse is on a cell, which shows its rectangle and tooltip: the map gives them back after a redraw
+         * @private */
+        this._hovering = false
+        /** The cell the hover is on (see cellKey), to tell after a redraw if the mouse is still on the same one
+         * @private
+         * @type {string|null} */
+        this._hoverKey = null
+        /** @private */
+        this._refocusing = false
+        /** The layer and the dataset of the cell which is hovered (see _hoverKey): another layer, or dataset, at the same place is
+         * another cell, whose info is not the one of the tooltip (a time slider which changes the data for example)
+         * @private
+         * @type {{layer:*, dataset:*}|null} */
+        this._hoverSource = null
+        /** The cell whose info was asked for after a redraw, so that it is not asked again at each redraw
+         * @private
+         * @type {string|null} */
+        this._triedKey = null
+        /** @private
+         * @type {{layer:*, dataset:*}|null} */
+        this._triedSource = null
+        /** The last position of the mouse in the page. The canvas does not get the mouse events while the map is dragged or
+         * scrolled (the zoom of the canvas takes them), so this one is listened to in the window: the map shows the hover again
+         * where the mouse is when a redraw ends the pan or the zoom.
+         * @private
+         * @type {{clientX:number, clientY:number}|null} */
+        this._pointer = null
+        this._pointerHandler = (e) => {
+            this._pointer = { clientX: e.clientX, clientY: e.clientY }
+        }
+        // the mouse left the page
+        this._pointerLeaveHandler = (e) => {
+            if (!e.relatedTarget) this._pointer = null
+        }
+        for (const type of ['mousemove', 'mousedown', 'wheel'])
+            window.addEventListener(type, this._pointerHandler, { capture: true, passive: true })
+        window.addEventListener('mouseout', this._pointerLeaveHandler, { capture: true, passive: true })
         const scheduleFocus = (e) => {
+            this._lastMouseEvent = e
             this._focusEvent = e
             if (this._focusFrame) return
             this._focusFrame = requestAnimationFrame(() => {
@@ -138,6 +188,12 @@ export class Map {
             if (this._focusFrame) cancelAnimationFrame(this._focusFrame)
             this._focusFrame = null
             this._focusEvent = null
+            this._lastMouseEvent = null
+            this._hovering = false
+            this._hoverKey = null
+            this._hoverSource = null
+            this._triedKey = null
+            this._triedSource = null
             this.tooltip.hide()
         }
         this.geoCanvas.canvas.addEventListener('mouseover', this.mouseOverHandler)
@@ -150,6 +206,11 @@ export class Map {
         // add extra logic to onZoomStartFun
         this.geoCanvas.onZoomStartFun = (e) => {
             if (opts.onZoomStartFun) opts.onZoomStartFun(e)
+            this._hovering = false
+            this._hoverKey = null
+            this._hoverSource = null
+            this._triedKey = null
+            this._triedSource = null
             this.tooltip.hide()
         }
 
@@ -294,6 +355,23 @@ export class Map {
         // the canvas holds no focus rectangle any more
         this._focusedCell = undefined
 
+        // The mouse is on a cell: show its rectangle and its tooltip, in this very draw. The redraw cleared the rectangle,
+        // which would stay away until the next mouse move: a flicker when the hover redraws the map (#174), or when the
+        // map is scrolled or panned with the mouse over it. The cellInfoHTML of the layers is not called again for the cell
+        // which is hovered already: it can ask for a redraw (to show the cells around the one hovered for example), which
+        // would redraw for ever.
+        if (!this._refocusing && !this.geoCanvas._isZooming) {
+            const e = this.pointerEvent() || (this._hovering ? this._lastMouseEvent : null)
+            if (e) {
+                this._refocusing = true
+                try {
+                    this.refocusCell(e)
+                } finally {
+                    this._refocusing = false
+                }
+            }
+        }
+
         // the legends are in the container now
         if (this.onLegendUpdate && this.legend) this.onLegendUpdate(this.legend.node())
 
@@ -309,22 +387,89 @@ export class Map {
         return this.geoCanvas.updateExtentGeo(marginPx)
     }
 
-    /** @param {MouseEvent} e */
-    focusCell(e) {
-        // Don’t process hover events during active zoom
-        if (this.geoCanvas._isZooming) return;
-
-        //compute mouse geo position
-        const mousePositionGeo = {
+    /**
+     * The geographical position of a mouse event, with the offset of the tooltip.
+     * @param {MouseEvent} e
+     * @returns {{x:number,y:number}}
+     * @private */
+    mousePositionGeo(e) {
+        return {
             x: this.geoCanvas.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
             y: this.geoCanvas.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
         }
-        /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
-        const focus = this.getCellFocusInfo(mousePositionGeo)
+    }
+
+    /**
+     * The mouse event of the position of the mouse, when it is over the map: in the canvas, and not under something else of the
+     * page (a panel, a button...). Null when the position of the mouse is not known, or not over the map.
+     * @returns {{offsetX:number, offsetY:number, clientX:number, clientY:number}|null}
+     * @private */
+    pointerEvent() {
+        const p = this._pointer
+        if (!p) return null
+        const canvas = this.geoCanvas.canvas
+        const r = canvas.getBoundingClientRect()
+        if (p.clientX < r.left || p.clientX >= r.right || p.clientY < r.top || p.clientY >= r.bottom) return null
+        // (the root of the canvas is the document, or a shadow root when the map is in one)
+        const root = canvas.getRootNode ? canvas.getRootNode() : document
+        const top = (root.elementFromPoint ? root : document).elementFromPoint(p.clientX, p.clientY)
+        if (top !== canvas) return null
+        return { offsetX: p.clientX - r.left, offsetY: p.clientY - r.top, clientX: p.clientX, clientY: p.clientY }
+    }
+
+    /**
+     * Shows again the hover of the mouse position after a redraw cleared it. When the mouse is still on the cell it was on,
+     * its rectangle is drawn without asking its info again: the tooltip has it already, and cellInfoHTML is not called.
+     * The info of another cell is asked for once.
+     * @param {{offsetX:number, offsetY:number, clientX:number, clientY:number}} e
+     * @private */
+    refocusCell(e) {
+        if (this.geoCanvas._isZooming) return
+        const same = this.getCellFocusInfo(this.mousePositionGeo(e), false)
+        if (!same) {
+            // no cell here: nothing to show. Clear the hover which was, if any.
+            this._triedKey = null
+            this._triedSource = null
+            if (this._hovering) this.focusCell(e)
+            return
+        }
+        const key = cellKey(same)
+        const source = { layer: same.layer, dataset: same.dataset }
+        const sameSource = (o) => o && o.layer === source.layer && o.dataset === source.dataset
+        if (key === this._hoverKey && sameSource(this._hoverSource)) this.focusCell(e, same)
+        else if (!(key === this._triedKey && sameSource(this._triedSource))) {
+            // another cell (the map moved, or the cells did, or the data): its info, once. When it has none the cell is not
+            // hovered, and not asked again at the next redraw (until the mouse moves, the hover is ended by a pan, a zoom,
+            // or the data changes).
+            this.focusCell(e)
+            this._triedKey = key
+            this._triedSource = source
+        }
+    }
+
+    /**
+     * @param {MouseEvent} e
+     * @param {{cell:import('./Dataset.js').Cell,html?:string,resolution:number}} [known] The cell under the mouse, when already found.
+     * @returns {void} */
+    focusCell(e, known) {
+        // Don’t process hover events during active zoom
+        if (this.geoCanvas._isZooming) return;
+
+        // the mouse moved (or a redraw gave its cell, `known`): the info of the cells is asked again
+        if (!known && !this._refocusing) {
+            this._triedKey = null
+            this._triedSource = null
+        }
+
+        /** @type {{cell:import('./Dataset.js').Cell,html?:string,resolution:number} | undefined} */
+        const focus = known || this.getCellFocusInfo(this.mousePositionGeo(e))
 
         // Same cell as the one already highlighted (or still no cell): the canvas is right
         // as it is, only the tooltip follows the mouse. Saves a full-canvas copy per move.
         const focusedCell = focus ? focus.cell : null
+        this._hovering = !!focus
+        this._hoverKey = focus ? cellKey(focus) : null
+        this._hoverSource = focus ? { layer: focus.layer, dataset: focus.dataset } : null
         if (focusedCell === this._focusedCell) {
             if (focus) {
                 this.tooltip.setPosition(e)
@@ -342,7 +487,7 @@ export class Map {
             this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0);
 
             if (focus) {
-                this.tooltip.html(focus.html);
+                if (focus.html !== undefined) this.tooltip.html(focus.html);
                 this.tooltip.setPosition(e);
                 this.tooltip.show();
 
@@ -376,7 +521,7 @@ export class Map {
 
         if (focus) {
             this.geoCanvas.canvas.style.cursor = 'pointer';
-            this.tooltip.html(focus.html)
+            if (focus.html !== undefined) this.tooltip.html(focus.html)
             this.tooltip.setPosition(e)
             this.tooltip.show()
 
@@ -420,10 +565,11 @@ export class Map {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      *
      * @param {{x:number,y:number}} posGeo
-     * @returns {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined}
+     * @param {boolean} [withHtml] False to find the cell without calling the cellInfoHTML of its layer: no html then.
+     * @returns {{cell:import('./Dataset.js').Cell,html?:string,resolution:number} | undefined}
      * @protected
      */
-    getCellFocusInfo(posGeo) {
+    getCellFocusInfo(posGeo, withHtml = true) {
 
         // go through the layers, starting from top one
         const z = this.geoCanvas.view.z
@@ -455,14 +601,14 @@ export class Map {
             //rare case for a dataset with mixed resolutions
             if (dsc.mixedResolution) {
                 const r = +dsc.mixedResolution(cell)
-                const html = layer.cellInfoHTML(cell, r)
-                if (!html) return undefined
-                return { cell: cell, html: html, resolution: r }
+                const html = withHtml ? layer.cellInfoHTML(cell, r) : undefined
+                if (withHtml && !html) return undefined
+                return { cell: cell, html: html, resolution: r, layer: layer, dataset: dsc }
             }
 
-            const html = layer.cellInfoHTML(cell, dsc.getResolution())
-            if (!html) return undefined
-            return { cell: cell, html: html, resolution: dsc.getResolution() }
+            const html = withHtml ? layer.cellInfoHTML(cell, dsc.getResolution()) : undefined
+            if (withHtml && !html) return undefined
+            return { cell: cell, html: html, resolution: dsc.getResolution(), layer: layer, dataset: dsc }
         }
     }
 
@@ -650,7 +796,10 @@ export class Map {
         if (this._resizeObserver) this._resizeObserver.disconnect()
         this._resizeObserver = null
 
-        // remove event listeners, from the canvas they were added to
+        // remove event listeners, from the window and from the canvas they were added to
+        for (const type of ['mousemove', 'mousedown', 'wheel'])
+            window.removeEventListener(type, this._pointerHandler, { capture: true })
+        window.removeEventListener('mouseout', this._pointerLeaveHandler, { capture: true })
         this.geoCanvas.canvas.removeEventListener('mouseover', this.mouseOverHandler)
         this.geoCanvas.canvas.removeEventListener('mousemove', this.mouseMoveHandler)
         this.geoCanvas.canvas.removeEventListener('mouseout', this.mouseOutHandler)
