@@ -165,6 +165,35 @@ const openExample = async (example, needMap = true) => {
                 })
                 return () => map.layers.forEach((l, i) => (l.cellInfoHTML = saved[i]))
             },
+            // the hover code of the issue #174, on the data layer of the example: a stroke layer below (its cellInfoHTML is
+            // 'none') shows the cell hovered, with a filter which the cellInfoHTML of the data layer sets for each cell, and
+            // asks for a redraw
+            issue174: () => {
+                const dataLayer = [...map.layers].reverse().find((l) => l.getDataset && typeof l.cellInfoHTML === 'function')
+                const strokeStyle = new gridviz.StrokeStyle({
+                    strokeWidth: (c, r, z) => 4 * z,
+                    strokeColor: () => 'white',
+                    blendOperation: () => 'difference',
+                    filter: () => false,
+                })
+                const strokeLayer = new gridviz.GridLayer(dataLayer.dataset, [strokeStyle])
+                strokeLayer.cellInfoHTML = 'none'
+                const saved = map.layers
+                map.layers = [...saved.slice(0, saved.indexOf(dataLayer)), strokeLayer, ...saved.slice(saved.indexOf(dataLayer))]
+                const original = dataLayer.cellInfoHTML
+                dataLayer.cellInfoHTML = (cell, r) => {
+                    const html = original(cell, r)
+                    if (html) {
+                        strokeStyle.filter = (c) => c.x === cell.x && c.y === cell.y
+                        map.redraw()
+                    }
+                    return html
+                }
+                return () => {
+                    dataLayer.cellInfoHTML = original
+                    map.layers = saved
+                }
+            },
             // a redraw on each mouse move
             move: () => {
                 const f = () => map.redraw()
@@ -295,7 +324,7 @@ for (const example of hoverExamples) {
     const baseline = await hover(page, 'none')
     console.log(`   no hook     ${baseline.onCells} positions on a cell, ${baseline.frames} frames, missing ${baseline.missingPct}%`)
     if (baseline.onCells < 5 || baseline.frames < 50) fail('too few cells under the pointer to test (' + baseline.onCells + ')')
-    for (const hook of ['info', 'move']) {
+    for (const hook of ['info', 'move', 'issue174']) {
         const r = await hover(page, hook)
         console.log(`   ${hook.padEnd(11)} ${r.onCells} positions on a cell, ${r.frames} frames, missing ${r.missingPct}%, redraws at rest ${r.resting}`)
         if (r.missingPct > baseline.missingPct + maxMissingOverBaseline)
@@ -303,7 +332,7 @@ for (const example of hoverExamples) {
         if (r.resting > maxRestingRedraws) fail(`${hook}: ${r.resting} redraws in 1 s with the pointer at rest (a loop?)`)
     }
     for (const kind of ['scroll', 'pan'])
-        for (const hook of ['none', 'info']) {
+        for (const hook of ['none', 'info', 'issue174']) {
             const r = await gesture(page, kind, hook)
             if (r.skipped) {
                 console.log(`   ${kind} (${hook}): skipped, ${r.skipped}`)
