@@ -110,14 +110,17 @@ export class LabelLayer extends Layer {
         geoCanvas.initCanvasTransform()
 
         //draw labels, one by one
+        //The font, the colors... are not set again when they do not change from a label to the next one: the browser parses
+        //them at each assignment, which is slow.
+        let font
         for (const lb of this.labels) {
+            //check label within the view, to be drawn. First: there are many labels (180000 for Europe), a few are in the view.
+            if (!geoCanvas.toDraw(lb)) continue
+
             //get label style
             const st = this.style(lb, z)
             if (!st) continue
-            ctx.font = st
-
-            //check label within the view, to be drawn
-            if (!geoCanvas.toDraw(lb)) continue
+            if (st !== font) ctx.font = font = st
 
             //position
             const xP = geoCanvas.geoToPixX(lb.x) + this.offsetPix[0]
