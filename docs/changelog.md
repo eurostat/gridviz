@@ -51,10 +51,18 @@
 -   The reference now names the dataset classes (_JSGrid_, _CSVGrid_, _TiledGrid_, _MultiResolutionDataset_), and gives the class and the options of each style, the options common to all the styles, the options of _GridLayer_, of the tooltip and of the buttons. `examples/README.md` explains the examples gallery.
 -   `jsdoc` is now a development dependency: it was a dependency, so it was installed with gridviz, with its own dependencies (which have known vulnerabilities). A user of gridviz now installs only the d3 modules it uses (7 direct dependencies), and `npm audit --omit=dev` finds no vulnerability.
 -   The _VennLegend_ has an accessible name (`role="img"` and an `aria-label`).
+-   Fix (#174): the rectangle of the selection of the hovered cell flickered since 3.1.0, when something redraws the map while the mouse is on the cell (an application which shows the cells around the hovered one from the `cellInfoHTML` of a layer, a layer which keeps loading...): the redraw, which is asynchronous since 3.1.0, cleared the rectangle, which was only drawn again at the next mouse move. The map now shows the hover again at the end of each redraw, for the cell which is under the mouse. The `cellInfoHTML` of the layers is called once for a cell, not at each redraw.
+-   The hover follows the mouse after a scroll (zoom with the wheel) or a pan (drag) too: the rectangle, the tooltip and the cursor of the cell under the mouse are back when the gesture is over, instead of at the next mouse move. The position of the mouse is followed in the window, as the canvas does not get the mouse events while the map is dragged or scrolled. Nothing is shown when the mouse is over something else than the map (a panel...).
+-   Faster _LabelLayer_: it set the font of every label of its file, 180000 for the names of Europe, before checking if the label is in the view (36 are, zoomed in): about 100 ms at each redraw, which made a map which redraws often (on hover for example) laggy. It looks if the label is in the view first, and sets the font only when it changes. A redraw of a map with the names of Europe goes from about 106 ms to 11 ms.
+-   Browser tests with real data (`npm run test:browser`): the hover, the scroll and the pan on examples of the gallery, in Chrome, with the redraw patterns of an application; `-- --all` also loads the 114 examples of the gallery and reports their errors. `playwright-core` is a development dependency.
+-   The demos `DE`, `EUR_bu`, `FR`, `FR_pop`, `HR` and `NO` of the examples used gridviz 2.1.17 from a CDN: they are ported to version 3 (the local build, `gridviz-eurostat` 2.2.2 and `gridviz-smoothing` 3.0.3). They also declare their charset: the accents of the texts were broken.
 
 ### Legends
 
 -   Many changes in legends.
+-   Fix: every style gives the cells of the view to its legends (only _ShapeColorSizeStyle_, _SegmentStyle_ and _CircleColorSizeWebGLStyle_ did), so that a legend made from the cells, like the ones of _sizeLegendViewScale_, works with any style. It threw "values is not iterable" and stopped the drawing of the map with _CompositionStyle_, _TimeSeriesStyle_...
+-   Fix: a _ColorLegend_ without the `ticks` option has one tick for each 50 pixels of its width (at least 2). The default was `NaN`: no tick was drawn.
+-   The legends chapter of the reference has a subchapter for each legend class, with its options, and the options common to all the legends.
 -   Creation of examples for all use cases.
 -   Segment width legend was merged with size legend. Set shape property to "line".
 -   New `labelsAsHTML` legend option (title and category labels as HTML, off by default) and `onLegendUpdate` map callback (called with the legend container after each draw).

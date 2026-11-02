@@ -60,14 +60,14 @@
     - [One view scale for the color and the size](#one-view-scale-for-the-color-and-the-size)
   - [Stretching](#stretching)
   - [Legends](#legends)
-    - [Color legend](#color-legend)
-    - [Color discrete legend](#color-discrete-legend)
-    - [Color category legend](#color-category-legend)
-    - [Orientation legend](#orientation-legend)
-    - [Size legend](#size-legend)
-    - [Width legend](#width-legend)
-    - [Ternary color legend](#ternary-color-legend)
-    - [Venn legend](#venn-legend)
+    - [Options common to all the legends](#options-common-to-all-the-legends)
+    - [ColorLegend](#colorlegend)
+    - [ColorDiscreteLegend](#colordiscretelegend)
+    - [ColorCategoryLegend](#colorcategorylegend)
+    - [OrientationLegend](#orientationlegend)
+    - [SizeLegend](#sizelegend)
+    - [TernaryLegend](#ternarylegend)
+    - [VennLegend](#vennlegend)
   - [Leaflet](#leaflet)
   - [Limit panning and zooming](#limit-panning-and-zooming)
   - [Mixed resolution grids](#mixed-resolution-grids)
@@ -951,8 +951,8 @@ const style = new gridviz.ShapeColorSizeStyle({
 
 The legends take what they need from this object, so that each variable has its legend:
 
--   A [color legend](#color-legend) writes its labels with its `textScale` option: `textScale: (t, viewScale) => viewScale?.color?.invert(t)`.
--   A [size legend](#size-legend) takes the scale of the size with its `viewScaleFun` option: `gridviz.sizeLegendViewScale(value, { viewScaleFun: (viewScale) => viewScale.size })`.
+-   A [color legend](#colorlegend) writes its labels with its `textScale` option: `textScale: (t, viewScale) => viewScale?.color?.invert(t)`.
+-   A [size legend](#sizelegend) takes the scale of the size with its `viewScaleFun` option: `gridviz.sizeLegendViewScale(value, { viewScaleFun: (viewScale) => viewScale.size })`.
 
 Put them all in the legends of the style: `style.legends = [colorLegend, sizeLegends]`.
 
@@ -1023,62 +1023,148 @@ Hovering a swatch of a _ColorDiscreteLegend_, _ColorCategoryLegend_ or _TernaryL
 
 A custom style can take part too: skip the cells for which `this.isHighlighted(color)` is false. Custom legends can call `this.bindHover(selection, color)` on each swatch. A legend which stands for several styles (like the _VennLegend_) overrides `highlightedStyles()` to return them, and calls `this.highlight(colors)` with the colors to show.
 
-### Color legend
+### Options common to all the legends
+
+These options can be given to any legend, besides its own ones. The legends can also be customised afterwards with the `style()` function (see above).
+
+| Option                          | Type                                | Default                                       | Description                                                                                                                                      |
+| ------------------------------- | ----------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `title`                         | string                              | -                                             | The title of the legend.                                                                                                                         |
+| `titleFontSize`, `titleFontWeight` | string                         | `'15px'`, `'500'`                              | The font of the title.                                                                                                                           |
+| `labelFontSize`                 | string                              | `'14px'`                                      | The font size of the labels.                                                                                                                     |
+| `labelUnitText`                 | string                              | `''`                                          | A unit written after the labels.                                                                                                                 |
+| `labelFormat`                   | `function(number):string`           | -                                             | Formats the labels which are numbers.                                                                                                            |
+| `labelsAsHTML`                  | boolean                             | `false`                                       | See [legend options for hosts](#legend-options-for-hosts).                                                                                       |
+| `interactive`                   | boolean                             | `true`                                        | Set to `false` to turn off the [interaction with the map](#interactive-legends).                                                                |
+| `className`                     | string                              | -                                             | CSS classes added to the legend, separated by spaces. See [styling legends from a stylesheet](#styling-legends-from-a-stylesheet).               |
+| `id`                            | string                              | -                                             | The id of the legend element, or of an existing element of the page to draw the legend in.                                                       |
+| `padding`, `font-family`, `background`, `border`, `border-radius`, `box-shadow` | string | `'5px'`, the font of the tooltip, `'none'`, `'0px'`, `'none'`, `'none'` | The look of the legend element. Prefer the CSS variables and classes above.                                          |
+
+### ColorLegend
+
+Class: `gridviz.ColorLegend`. A color bar, for a continuous color ramp.
 
 ![](img/legends/color_legend.png)
+
+| Option       | Type                                                | Default           | Description                                                                                                                                              |
+| ------------ | --------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `colorScale` | `function(t, viewScale)`                            | -                 | The color for a value `t` of [0,1], the same function as the one of the style. It can use the [view scale](#view-scale). Required.                       |
+| `textScale`  | `function(t, viewScale)`                            | `(t) => t`        | The value written for a `t` of [0,1].                                                                                                                    |
+| `ticks`      | number                                              | one for each 50 pixels of the width, at least 2 | The number of ticks.                                                                                                                  |
+| `tickSize`   | number                                              | `6`               | The length of the ticks, in pixels.                                                                                                                      |
+| `tickFormat`, `tickUnit` | `function(number):string`, string           | -                 | The format of the numbers of the ticks, and a unit written after them.                                                                                   |
+| `fontSize`   | string                                              | `labelFontSize`   | The font size of the labels of the ticks.                                                                                                                |
+| `invert`     | boolean                                             | `false`           | Draws the ramp from the last color to the first one.                                                                                                     |
+| `width`      | number or `'fill'`                                  | `300`             | The width of the bar, in pixels, or `'fill'` for the width of the element the legends are in.                                                            |
+| `height`     | number                                              | `15`              | The height of the bar, in pixels.                                                                                                                        |
+| `margin`     | number                                              | `5`               | The margin on each side of the bar, in pixels.                                                                                                           |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegend.html)).
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendViewScale.html)) for a view scale based style.
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendText.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendText.html)) for a legend with static text.
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendDiverging.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendDiverging.html)) for a legend with diverging color ramp.
 
-### Color discrete legend
+### ColorDiscreteLegend
+
+Class: `gridviz.ColorDiscreteLegend`. A bar of colored classes, with the limits of the classes. [Interactive](#interactive-legends): hovering a class shows its cells.
 
 ![](img/legends/color_discrete_legend.png)
+
+| Option      | Type                                  | Default | Description                                                                                                                        |
+| ----------- | ------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `colors`    | `function(viewScale):string[]`        | -       | The colors of the classes. A function, which can use the [view scale](#view-scale) (for classes from quantiles for example). Required. |
+| `breaks`    | `function(viewScale):number[]`        | -       | The limits of the classes, one more than the colors. Required.                                                                     |
+| `tickSize`  | number                                | `3`     | The length of the ticks, in pixels.                                                                                                |
+| `invert`    | boolean                               | `false` | Writes the labels from the last class to the first one.                                                                            |
+| `width`     | number or `'fill'`                    | `300`   | The width of the bar, in pixels, or `'fill'` for the width of the element the legends are in.                                      |
+| `height`    | number                                | `15`    | The height of the bar, in pixels.                                                                                                  |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegend.html)).
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegendViewScale.html)) for a view scale based style.
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorQuantileLegendViewScale.html)) for a quantile view scale based style.
 
-### Color category legend
+### ColorCategoryLegend
+
+Class: `gridviz.ColorCategoryLegend`. A list of colored symbols with a label, for categories. [Interactive](#interactive-legends): hovering a category shows its cells.
 
 ![](img/legends/color_category_legend.png)
 
+| Option        | Type                         | Default            | Description                                                                              |
+| ------------- | ---------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
+| `colorLabel`  | array of `[color, label]`    | `[['gray', '-']]`  | The categories, in display order: the color and the label of each one.                   |
+| `shape`       | `'circle'` or `'square'`     | `'circle'`         | The shape of the symbols.                                                                |
+| `dimension`   | `{r}` or `{w, h}`            | `{r: 8}`           | The size of the symbols, in pixels: the radius of a circle, the width and height (`20` and `15` by default) of a square. |
+| `strokeColor` | string                       | `'gray'`           | The color of the outline of the symbols.                                                 |
+| `strokeWidth` | number                       | `1`                | The width of the outline of the symbols, in pixels.                                      |
+
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorCategoryLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorCategoryLegend.html)).
 
-### Orientation legend
+### OrientationLegend
 
-Class: `gridviz.OrientationLegend`.
+Class: `gridviz.OrientationLegend`. A segment at an angle, with a label, for the orientation of a [segment style](#segment-style). `gridviz.orientationLegend(orientations, labels, opts)` makes one legend for each orientation, and returns them in an array.
 
 ![](img/legends/segment_orientation_legend.png)
 
+| Option        | Type                                       | Default                            | Description                                                                        |
+| ------------- | ------------------------------------------ | ---------------------------------- | ---------------------------------------------------------------------------------- |
+| `orientation` | number                                     | `0`                                | The angle of the segment, in degrees.                                              |
+| `label`       | string                                     | `'-'`                              | The label written beside the segment.                                              |
+| `color`       | `function(resolution, z, viewScale)`       | gray                               | The color of the segment.                                                          |
+| `width`       | `function(resolution, z, viewScale)`       | `3 * z`                            | The width of the segment, in geographical unit: the same function as the style.   |
+| `length`      | `function(resolution, z, viewScale)`       | the resolution of the grid         | The length of the segment, in geographical unit: the same function as the style.  |
+
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/orientationLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/orientationLegend.html)).
 
-### Size legend
+### SizeLegend
+
+Class: `gridviz.SizeLegend`. One symbol of a size, with its label, for proportional symbols. A legend of several sizes is a list of them, which the functions below make. `shape: 'line'` draws a segment, to show a width (see the [segment style](#segment-style)).
 
 ![](img/legends/size_legend.png)
+
+| Option          | Type                                                    | Default                    | Description                                                                                                                                                       |
+| --------------- | ------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label`         | `function(viewScale, cells, resolution, z)`             | -                          | The label of the symbol: a number or a text. Required.                                                                                                            |
+| `size`          | `function(viewScale, resolution, z)`                    | -                          | The size of the symbol, in geographical unit. Without it, `viewScaleFun` gives the size from the label.                                                           |
+| `viewScaleFun`  | `function(viewScale):function(number):number`           | the view scale itself      | The scale which gives the size of the symbol from its label. With a style which combines a color and a size view scale: `(viewScale) => viewScale.size`. See [view scale](#one-view-scale-for-the-color-and-the-size). |
+| `shape`         | a shape, or `'line'`                                    | `'circle'`                 | The shape of the symbol.                                                                                                                                          |
+| `fillColor`     | string                                                  | `'none'`                   | The fill color of the symbol.                                                                                                                                     |
+| `strokeColor`, `strokeWidth` | string, number                           | `'gray'`, `1`              | The outline of the symbol.                                                                                                                                        |
+| `color`, `length` | string, `function(resolution, z, viewScale)`        | `'gray'`, the resolution   | For `shape: 'line'`: the color and the length of the segment.                                                                                                     |
+
+Functions which make a list of size legends:
+
+-   `gridviz.sizeLegend(values, size, opts)`: one legend for each value, with the size `size(value)`.
+-   `gridviz.sizeLegendViewScale(value, opts)`: for a style with a view scale. `value(cell)` is the value of a cell, and there is one legend for each fraction `k` (`[0.9, 0.5, 0.2, 0.05]` by default) of the largest value of the cells in the view, with a round number as label.
+-   `gridviz.sizeDiscreteLegend(breaks, sizes, opts)`: one legend for each class of a discrete style, from the largest. The `labelFormat` and `labelText` options write the labels of the classes.
+-   `gridviz.sizeDiscreteViewScaleLegend(classNumber, opts)`: the same, with the limits and the sizes of `classNumber` classes taken from the view scale.
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeLegend.html)).
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeDiscreteLegend.html)) for a discrete style.
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeLegendViewScale.html)) for a view scale based style.
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/sizeQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/sizeQuantileLegendViewScale.html)) for a quantile view scale based style.
+-   See [this example](https://eurostat.github.io/gridviz/examples/legends/widthLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthLegend.html)) for the width of segments (`shape: 'line'`), and the ones for [a discrete style](https://eurostat.github.io/gridviz/examples/legends/widthDiscreteLegend.html), [a view scale based style](https://eurostat.github.io/gridviz/examples/legends/widthLegendViewScale.html) and [a quantile view scale based style](https://eurostat.github.io/gridviz/examples/legends/widthQuantileLegendViewScale.html).
 
-### Width legend
+### TernaryLegend
 
-![](img/legends/segment_width_legend.png)
-
--   See [this example](https://eurostat.github.io/gridviz/examples/legends/widthLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthLegend.html)).
--   See [this example](https://eurostat.github.io/gridviz/examples/legends/widthDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthDiscreteLegend.html)) for a discrete style.
--   See [this example](https://eurostat.github.io/gridviz/examples/legends/widthLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthLegendViewScale.html)) for a view scale based style.
--   See [this example](https://eurostat.github.io/gridviz/examples/legends/widthQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/widthQuantileLegendViewScale.html)) for a quantile view scale based style.
-
-### Ternary color legend
+Class: `gridviz.TernaryLegend`. A triangle of the colors of a [ternary style](#ternary-style). [Interactive](#interactive-legends): hovering a part of the triangle shows its cells.
 
 ![](img/legends/ternary_legend.png)
 
+| Option              | Type                         | Default                                | Description                                                                                                         |
+| ------------------- | ---------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `classifier`        | a ternary classifier         | -                                      | The classifier of the ternary style, which gives the colors. Required.                                              |
+| `topText`, `leftText`, `rightText` | string       | `'Category 1'`, `'Category 0'`, `'Category 2'` | The names of the three categories, at the corners of the triangle.                                      |
+| `texts`             | object                       | -                                      | The text shown in the tooltip for each part of the triangle: keys `0`, `1`, `2`, `m12`, `m02`, `m01` and `center`. |
+| `tooltip`           | the tooltip of the map       | -                                      | Where the `texts` are shown: `map.tooltip`.                                                                        |
+| `selectionColor`    | string                       | `'red'`                                | The color of the outline of the part hovered.                                                                       |
+| `centerCoefficient` | number                       | the one of the classifier              | The size of the central part.                                                                                       |
+| `width`             | number                       | `150`                                  | The width of the triangle, in pixels.                                                                               |
+
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary_age_DE.html)).
 
-### Venn legend
+### VennLegend
+
+Class: `gridviz.VennLegend`.
 
 ![](img/legends/venn_legend.png)
 
