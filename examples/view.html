@@ -297,13 +297,13 @@
                         <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
                         <span class="window-title" id="filename"></span>
                         <div class="tabs" id="tabs">
-                            <button type="button" data-view="page" aria-pressed="true" title="The whole page">
+                            <button type="button" data-view="page" aria-pressed="false" title="The whole page">
                                 Page
                             </button>
                             <button
                                 type="button"
                                 data-view="script"
-                                aria-pressed="false"
+                                aria-pressed="true"
                                 title="Only the JavaScript of the page"
                             >
                                 Script
@@ -377,7 +377,7 @@
             // the source code
             let page = ''
             let script = ''
-            let view = 'page'
+            let view = 'script' // the JavaScript of the page first, the whole page when it has none
 
             async function load() {
                 try {
@@ -389,7 +389,10 @@
                     script = [...doc.querySelectorAll('script:not([src])')]
                         .map((s) => dedent(s.textContent.replace(/^\n+|\s+$/g, '')))
                         .join('\n\n')
-                    if (!script) $('tabs').style.display = 'none'
+                    if (!script) {
+                        $('tabs').style.display = 'none'
+                        view = 'page'
+                    }
                     show()
                 } catch (e) {
                     $('source').className = 'error'
