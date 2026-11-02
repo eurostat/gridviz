@@ -42,6 +42,7 @@
         "doc": "jsdoc -c docs/jsdoc/jsdoc.conf.json",
         "build-prod": "webpack --config webpack.config.prod.cjs",
         "test": "node --test \"test/*.test.js\"",
+        "test:browser": "node test/browser/run.mjs",
         "format": "prettier --write ."
     },
     "files": [
@@ -62,6 +63,7 @@
         "babel-loader": "^8.1.0",
         "jsdoc": "^4.0.4",
         "jshint": "^2.12.0",
+        "playwright-core": "^1.64.1",
         "prettier": "^2.8.8",
         "webpack": "^5.96.1",
         "webpack-cli": "^5.1.4",
