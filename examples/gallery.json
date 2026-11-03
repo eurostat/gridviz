@@ -299,6 +299,13 @@
         "group": "Composition"
     },
     {
+        "path": "styles/circle_ring.html",
+        "category": "Styles",
+        "title": "Proportional circles with a ring showing a share",
+        "description": "A circle sized by the number of households, with a ring of constant thickness around it, as complete as the share of households of one person.",
+        "group": "Composition"
+    },
+    {
         "path": "styles/segment_width.html",
         "category": "Styles",
         "title": "Segment width",

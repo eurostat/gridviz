@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz proportional circle with a ring showing a share example</title>
+        <style>
+            html,
+            body {
+                height: 100%; /* Ensure the parent elements have a height so that the map can take up 100% correctly */
+                margin: 0; /* Remove default margins to prevent scrolling */
+                overflow: hidden; /* Prevent potential scrollbars */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+        <div
+            id="settings"
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+                font-family: Arial, Helvetica, sans-serif;
+            "
+        >
+            Thickness of the ring, in cells: <b id="ringValue">0.15</b><br />
+            <input type="range" id="ring" min="0.05" max="0.3" step="0.01" value="0.15" style="width: 250px" /><br />
+            Households of the largest circle: <b id="maxValue">10000</b><br />
+            <input type="range" id="max" min="2000" max="20000" step="500" value="10000" style="width: 250px" />
+        </div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
+            //define map with initial view
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3763437,
+                y: 2891045,
+                z: 20,
+                zoomExtent: [20, 200],
+            }).addZoomButtons()
+
+            //define dataset: households in France (INSEE Filosofi)
+            const dataset = new gridviz.TiledGrid(
+                map,
+                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/1000m/',
+                {
+                    preprocess: (c) => {
+                        c.men = +c.men
+                        c.men_1ind = +c.men_1ind
+                        c.share_1ind = c.men_1ind / c.men
+                    },
+                }
+            )
+
+            // The diameter of the circle: its area is proportional to the number of households.
+            // The ring goes around the circle, so the largest circle leaves room for it in the cell.
+            const circleSize = (c, r) => (1 - 2 * settings.ring) * r * Math.sqrt(Math.min(1, c.men / settings.max))
+
+            // The circle
+            const circle = new gridviz.ShapeColorSizeStyle({
+                shape: 'circle',
+                size: circleSize,
+                color: 'darkcyan',
+            })
+
+            // The ring: an arc around the circle, always of the same thickness.
+            // Its completeness is the share of households of one person: all the way around for 100%.
+            // It starts at the top and runs clockwise. A pale track shows the full ring.
+            class RingStyle extends gridviz.Style {
+                draw(cells, geoCanvas, resolution) {
+                    const ctx = geoCanvas.offscreenCtx
+                    const thickness = settings.ring * resolution
+                    ctx.lineWidth = thickness
+                    for (const c of cells) {
+                        //the radius of the middle of the ring: the circle, and half of the thickness
+                        const radius = circleSize(c, resolution) / 2 + thickness / 2
+                        const xc = c.x + resolution / 2
+                        const yc = c.y + resolution / 2
+
+                        ctx.strokeStyle = '#0000000f'
+                        ctx.beginPath()
+                        ctx.arc(xc, yc, radius, 0, 2 * Math.PI)
+                        ctx.stroke()
+
+                        ctx.strokeStyle = '#d95f02'
+                        ctx.beginPath()
+                        ctx.arc(xc, yc, radius, Math.PI / 2, Math.PI / 2 - 2 * Math.PI * c.share_1ind, true)
+                        ctx.stroke()
+                    }
+                }
+            }
+            const ring = new RingStyle()
+
+            map.layers = [
+                new gridviz.GridLayer(dataset, [circle, ring], {
+                    minPixelsPerCell: 14,
+                    cellInfoHTML: (c) =>
+                        '<b>' +
+                        c.men.toLocaleString() +
+                        '</b> households<br>' +
+                        Math.round(100 * c.share_1ind) +
+                        '% of them have one person',
+                }),
+            ]
+        </script>
+    </body>
+</html>
