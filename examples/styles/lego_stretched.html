@@ -15,12 +15,43 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div
+            id="settings"
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+                font-family: Arial, Helvetica, sans-serif;
+            "
+        >
+            Number of classes: <b id="classesValue">8</b><br />
+            <input type="range" id="classes" min="3" max="12" step="1" value="8" style="width: 250px" /><br />
+            Stretching of the classes: logarithmic base (0: none): <b id="baseValue">-7</b><br />
+            <input type="range" id="base" min="-30" max="0" step="1" value="-7" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4000000,
@@ -38,19 +69,27 @@
             // LegoStyle.get classifies the values with breaks, and gives a color to each class.
             // To stretch the color ramp, as a function of the values would do, compute the breaks from a stretching function:
             // stretchedBreaks gives the values which the stretching maps to the limits between the classes.
-            const classNumber = 8
-            const breaks = gridviz.stretchedBreaks(0, 1400000, classNumber, gridviz.logarithmicScale(-7))
-            const colors = Array.from({ length: classNumber }, (_, i) => d3.interpolateYlOrRd((i + 0.5) / classNumber))
-
-            const styles = gridviz.LegoStyle.get((cell) => +cell.population, breaks, colors)
+            const makeStyles = () => {
+                const classNumber = settings.classes
+                const breaks = gridviz.stretchedBreaks(0, 1400000, classNumber, gridviz.logarithmicScale(settings.base))
+                const colors = Array.from({ length: classNumber }, (_, i) =>
+                    d3.interpolateYlOrRd((i + 0.5) / classNumber)
+                )
+                return gridviz.LegoStyle.get((cell) => +cell.population, breaks, colors)
+            }
 
             //add layer to map
-            map.layers = [
-                new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 5,
-                    cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
-                }),
-            ]
+            const layer = new gridviz.GridLayer(dataset, makeStyles(), {
+                minPixelsPerCell: 5,
+                cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+            })
+            map.layers = [layer]
+
+            //the sliders change the classes: the layer gets new styles
+            onSettingsChange = () => {
+                layer.styles = makeStyles()
+                map.redraw()
+            }
         </script>
     </body>
 </html>

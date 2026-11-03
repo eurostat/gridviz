@@ -1,10 +1,39 @@
 <div id="map" style="height: 100%; width: 100%"></div>
+<div
+    id="settings"
+    style="
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        background: #ffffffcc;
+        line-height: 1.6;
+        box-shadow: 5px 5px 5px grey;
+        font-family: Arial, Helvetica, sans-serif;
+    "
+>
+    Stretching: logarithmic base (0: none): <b id="baseValue">-7</b><br />
+    <input type="range" id="base" min="-30" max="0" step="1" value="-7" style="width: 250px" />
+</div>
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
+    //the settings of the sliders. The style reads them when it draws.
+    const settings = {}
+    let onSettingsChange = () => map.redraw()
+    for (const input of document.querySelectorAll('#settings input')) {
+        settings[input.id] = +input.value
+        input.addEventListener('input', () => {
+            settings[input.id] = +input.value
+            document.getElementById(input.id + 'Value').textContent = input.value
+            onSettingsChange()
+        })
+    }
+
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), {
         x: 4500000,
@@ -22,7 +51,7 @@
     //define color style
 
     //define stretching function: to stetch the color scale so that higher population cells are better differenciated
-    const scale = gridviz.logarithmicScale(-7)
+    const scale = (t) => gridviz.logarithmicScale(settings.base)(t)
 
     const style = new gridviz.ShapeColorSizeStyle({
         //compute [min,max] population within the map view

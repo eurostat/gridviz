@@ -15,12 +15,41 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div
+            id="settings"
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+                font-family: Arial, Helvetica, sans-serif;
+            "
+        >
+            Thickness of the ring, in cells: <b id="ringValue">0.2</b><br />
+            <input type="range" id="ring" min="0.05" max="0.5" step="0.05" value="0.2" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 3763437,
@@ -46,7 +75,7 @@
             const ring = new gridviz.ShapeColorSizeStyle({
                 shape: 'donut',
                 donutOuterSize: (c, r) => r,
-                size: (c, r) => 0.2 * r,
+                size: (c, r) => settings.ring * r,
                 color: (c) => d3.interpolateYlOrRd(Math.min(1, c.share_pauv / 0.3)),
             })
 
@@ -58,7 +87,8 @@
                     men_5ind: '#d95f02', //5 persons or more
                 },
                 type: () => 'piechart',
-                size: (c, r) => 0.72 * r,
+                //the pie fills the hole of the ring
+                size: (c, r) => 0.9 * (1 - settings.ring) * r,
                 offsetAngle: () => 90,
             })
 

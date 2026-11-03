@@ -15,8 +15,21 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
-        <div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
-            Size stretching (exponent): <b id="exponentValue">0.26</b><br />
+        <div
+            id="settings"
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+                font-family: Arial, Helvetica, sans-serif;
+            "
+        >
+            Size stretching, exponent (1: none): <b id="exponentValue">0.26</b><br />
             <input type="range" id="exponent" min="0.05" max="1" step="0.01" value="0.26" style="width: 250px" />
         </div>
 
@@ -97,7 +110,7 @@
                 style.viewScale = gridviz.viewScale({
                     valueFunction: (cell) => +cell.ind,
                     stretching: gridviz.powerScale(settings.exponent),
-                            range: [0, 1],
+                    range: [0, 1],
                 })
                 map.redraw()
             }

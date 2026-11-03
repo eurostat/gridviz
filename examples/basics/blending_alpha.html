@@ -1,7 +1,20 @@
 <div id="map" style="height: 100%; width: 100%"></div>
-<div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
-    Opacity: <b id="alphaValue">0.75</b><br />
-    <input type="range" id="alpha" min="0" max="1" step="0.05" value="0.75" style="width: 250px" />
+<div
+    id="settings"
+    style="
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        background: #ffffffcc;
+        line-height: 1.6;
+        box-shadow: 5px 5px 5px grey;
+        font-family: Arial, Helvetica, sans-serif;
+    "
+>
+    Opacity: <b id="alphaValue">1</b><br />
+    <input type="range" id="alpha" min="0" max="1" step="0.05" value="1" style="width: 250px" />
 </div>
 
 <script src="../../dist/gridviz.js"></script>
@@ -45,7 +58,7 @@
     //define style
     const style = new gridviz.ShapeColorSizeStyle({
         color: colorFunction,
-        alpha: (z) => (z < 70 ? settings.alpha : 1.0),
+        alpha: (z) => settings.alpha,
         blendOperation: (z) => 'multiply',
     })
 

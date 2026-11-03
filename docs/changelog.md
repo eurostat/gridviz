@@ -5,7 +5,7 @@
 ### Next version
 
 -   Fix: on a touch screen, pressing a zoom button lit both buttons (the tap highlight of the browser on the container, and the hover color which stayed on the last button touched). Only the button pressed is lit now, and the zoom buttons are 48 pixels wide on a touch screen (unless the page sets `--gridviz-button-size`).
--   Examples: the tooltips of about 60 examples were the list of the names of the columns of the data (`CNTR_ID: DE`, `TOT_P_2011`, `ind_snv`...). They now write the values for a reader (country names, labels, units). About 17 examples have sliders to play with the settings of their style (dot size, height, exponent of the stretching, opacity...).
+-   Examples: the tooltips of about 60 examples were the list of the names of the columns of the data (`CNTR_ID: DE`, `TOT_P_2011`, `ind_snv`...). They now write the values for a reader (country names, labels, units). About 26 examples have sliders to play with the settings of their style (dot size, height, exponent of the stretching, opacity...).
 -   Documentation: audit of the reference. The options of the map (`legendContainer` was documented as `legendDivId`, `transparentBackground` as `transparentbackground`, the default selection color, and the missing `x`, `y`, `z`, `zoomExtent`, `centerExtent`, `digForTooltip`, `defaultGlobalCompositeOperation`, `w`, `h`), of the layers (`BackgroundLayer`, `GeoJSONLayer` and `LabelLayer` options), the view scale functions and the classifiers, the default parent of the tooltip (the map container), a broken link and the table of contents. The tutorial, which was a list of notes, is a tutorial.
 
 ### Version 3.1.1 (since 3.1.0)

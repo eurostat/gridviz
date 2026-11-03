@@ -15,6 +15,27 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div
+            id="settings"
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+                font-family: Arial, Helvetica, sans-serif;
+            "
+        >
+            Dots per inhabitant, relative: <b id="dotsValue">2</b><br />
+            <input type="range" id="dots" min="0.5" max="6" step="0.5" value="2" style="width: 250px" /><br />
+            Size of the dots: <b id="dotSizeValue">1.6</b><br />
+            <input type="range" id="dotSize" min="0.5" max="4" step="0.1" value="1.6" style="width: 250px" /><br />
+            Spread of the dots, in cells: <b id="spreadValue">0.25</b><br />
+            <input type="range" id="spread" min="0.05" max="0.6" step="0.05" value="0.25" style="width: 250px" />
+        </div>
         <style>
             @font-face {
                 font-family: mf;
@@ -29,6 +50,18 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4000000,
@@ -54,10 +87,10 @@
             //define style
             const style = new gridviz.DotDensityStyle({
                 //viewScale: (cells) => d3.max(cells, cell => cell.TOT_P_2021),
-                dotNumber: (c, r, z, max) => (c.TOT_P_2021 / z) * 2, //10000 * c.TOT_P_2021 / z,
-                dotSize: (r, z) => 1.6 * z,
+                dotNumber: (c, r, z, max) => (c.TOT_P_2021 / z) * settings.dots, //10000 * c.TOT_P_2021 / z,
+                dotSize: (r, z) => settings.dotSize * z,
                 color: () => d3.schemeCategory10[Math.floor(10 * Math.random())],
-                sigma: (r, z) => 0.25 * r,
+                sigma: (r, z) => settings.spread * r,
             })
 
             //define grid layer
