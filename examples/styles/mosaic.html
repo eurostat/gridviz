@@ -15,9 +15,27 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
+            Mosaic effect: <b id="mosaicValue">0.15</b><br />
+            <input type="range" id="mosaic" min="0" max="0.5" step="0.01" value="0.15" style="width: 250px" /><br />
+            Shadow: <b id="shadowValue">0.2</b><br />
+            <input type="range" id="shadow" min="0" max="0.5" step="0.01" value="0.2" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -47,7 +65,17 @@
             const style = new gridviz.MosaicStyle({ color: colorFunction })
 
             //add layer to map
-            map.layers = [new gridviz.GridLayer(dataset, [style])]
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+                }),
+            ]
+
+            onSettingsChange = () => {
+                style.mosaicFactor = settings.mosaic
+                style.shadowFactor = settings.shadow
+                map.redraw()
+            }
         </script>
     </body>
 </html>

@@ -49,5 +49,10 @@
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            minPixelsPerCell: 6,
+            cellInfoHTML: (c) => '<b>' + (+c.TOT_P_2021).toLocaleString() + '</b> inhabitants (2021)',
+        }),
+    ]
 </script>

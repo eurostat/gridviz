@@ -34,6 +34,26 @@
         }),
     })
 
+    //country names
+    // prettier-ignore
+    const countries = {
+        AL: 'Albania', AT: 'Austria', BA: 'Bosnia and Herzegovina', BE: 'Belgium', BG: 'Bulgaria',
+        CH: 'Switzerland', CY: 'Cyprus', CZ: 'Czechia', DE: 'Germany', DK: 'Denmark', EE: 'Estonia',
+        EL: 'Greece', ES: 'Spain', FI: 'Finland', FR: 'France', HR: 'Croatia', HU: 'Hungary',
+        IE: 'Ireland', IS: 'Iceland', IT: 'Italy', LI: 'Liechtenstein', LT: 'Lithuania',
+        LU: 'Luxembourg', LV: 'Latvia', ME: 'Montenegro', MK: 'North Macedonia', MT: 'Malta',
+        NL: 'Netherlands', NO: 'Norway', PL: 'Poland', PT: 'Portugal', RO: 'Romania', RS: 'Serbia',
+        SE: 'Sweden', SI: 'Slovenia', SK: 'Slovakia', UK: 'United Kingdom', XK: 'Kosovo',
+    }
+
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) =>
+                '<b>' +
+                (countries[c.CNTR_ID] || c.CNTR_ID) +
+                '</b><br>2021 population: ' +
+                (+c.TOT_P_2021).toLocaleString(),
+        }),
+    ]
 </script>

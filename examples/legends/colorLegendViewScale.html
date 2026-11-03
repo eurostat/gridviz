@@ -47,5 +47,9 @@
     style.legends = [legend]
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) => '<b>' + (+c.TOT_P_2021).toLocaleString() + '</b> inhabitants (2021)',
+        }),
+    ]
 </script>

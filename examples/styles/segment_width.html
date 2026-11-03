@@ -15,9 +15,25 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
+            Width: <b id="widthValue">1</b><br />
+            <input type="range" id="width" min="0.3" max="2" step="0.1" value="1" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -47,7 +63,7 @@
                     minSizePix: 1,
                     maxSizeFactor: 1.4141 / 2,
                 }),
-                width: (cell, resolution, z, viewScale) => viewScale(+cell.TOT_P_2021),
+                width: (cell, resolution, z, viewScale) => settings.width * viewScale(+cell.TOT_P_2021),
                 length: (cell, resolution) => resolution * 1.4142,
                 orientation: () => 45,
             })

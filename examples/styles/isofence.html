@@ -26,16 +26,7 @@
                 style="width: 250px"
             /><br />
             Height<br />
-            <input
-                type="range"
-                min="0"
-                max="5"
-                step="0.05"
-                value="1.5"
-                class="slider"
-                id="exa"
-                style="width: 250px"
-            />
+            <input type="range" min="0" max="5" step="0.05" value="1.5" class="slider" id="exa" style="width: 250px" />
         </div>
         <div id="map" style="height: 100%; width: 100%"></div>
 
@@ -87,6 +78,15 @@
             map.layers = [
                 new gridviz.GridLayer(dataset, [style], {
                     minPixelsPerCell: 15,
+                    cellInfoHTML: (c) =>
+                        '<b>' +
+                        (+c.ind).toLocaleString() +
+                        '</b> inhabitants<br>Under 25: ' +
+                        c.ind_0_24.toLocaleString() +
+                        '<br>25 to 64: ' +
+                        c.ind_25_64.toLocaleString() +
+                        '<br>65 and over: ' +
+                        c.ind_65p.toLocaleString(),
                 }),
             ]
 

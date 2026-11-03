@@ -24,8 +24,7 @@
                     'm/',
                 {
                     preprocess: (c) => {
-                        for (ex of ['UK', 'RS', 'BA', 'IM', 'ME', 'AL', 'MK'])
-                            if (c.CNTR_ID.includes(ex)) return false
+                        for (ex of ['UK', 'RS', 'BA', 'IM', 'ME', 'AL', 'MK']) if (c.CNTR_ID.includes(ex)) return false
                         if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
                         else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
                         else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
@@ -77,5 +76,13 @@
     style.legends = [legend]
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) =>
+                '<b>' +
+                (c.change > 0 ? '+' : '') +
+                c.change.toLocaleString() +
+                '</b> inhabitants<br>between 2011 and 2021',
+        }),
+    ]
 </script>

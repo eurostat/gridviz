@@ -44,7 +44,9 @@
     })
 
     //make layer
-    const layer = new gridviz.GridLayer(dataset, [style])
+    const layer = new gridviz.GridLayer(dataset, [style], {
+        cellInfoHTML: (c) => 'Value: <b>' + c.value + '</b>',
+    })
 
     //add layer to map
     map.layers = [layer]

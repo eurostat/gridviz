@@ -1,7 +1,23 @@
 <div id="map" style="height: 100%; width: 100%"></div>
+<div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
+    Opacity: <b id="alphaValue">0.75</b><br />
+    <input type="range" id="alpha" min="0" max="1" step="0.05" value="0.75" style="width: 250px" />
+</div>
 
 <script src="../../dist/gridviz.js"></script>
 <script>
+    //the settings of the sliders. The style reads them when it draws.
+    const settings = {}
+    let onSettingsChange = () => map.redraw()
+    for (const input of document.querySelectorAll('#settings input')) {
+        settings[input.id] = +input.value
+        input.addEventListener('input', () => {
+            settings[input.id] = +input.value
+            document.getElementById(input.id + 'Value').textContent = input.value
+            onSettingsChange()
+        })
+    }
+
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), {
         x: 4300000,
@@ -29,7 +45,7 @@
     //define style
     const style = new gridviz.ShapeColorSizeStyle({
         color: colorFunction,
-        alpha: (z) => (z < 70 ? 0.75 : 1.0),
+        alpha: (z) => (z < 70 ? settings.alpha : 1.0),
         blendOperation: (z) => 'multiply',
     })
 
@@ -39,5 +55,10 @@
     })
 
     //add layer to map
-    map.layers = [backgroundLayer, new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        backgroundLayer,
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+        }),
+    ]
 </script>

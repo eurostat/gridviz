@@ -20,9 +20,27 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
+            Height: <b id="heightValue">1</b><br />
+            <input type="range" id="height" min="0.2" max="2" step="0.1" value="1" style="width: 250px" /><br />
+            Line width: <b id="lineValue">0.1</b><br />
+            <input type="range" id="line" min="0" max="0.4" step="0.02" value="0.1" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4000000,
@@ -45,21 +63,38 @@
 
             //define style
             const style = new gridviz.JoyPlotStyle({
-                height: (c, r, z, scale) => scale(c.TOT_P_2021),
+                height: (c, r, z, scale) => settings.height * scale(c.TOT_P_2021),
                 viewScale: gridviz.viewScale({
                     valueFunction: (c) => +c.TOT_P_2021,
                     maxSizeFactor: 5,
                     stretching: gridviz.powerScale(0.4),
                 }),
                 lineColor: () => 'white',
-                lineWidth: (y, ys, r, z) => 0.1 * r,
+                lineWidth: (y, ys, r, z) => settings.line * r,
                 fillColor: () => 'black',
             })
+
+            //country names
+            // prettier-ignore
+            const countries = {
+                AL: 'Albania', AT: 'Austria', BA: 'Bosnia and Herzegovina', BE: 'Belgium', BG: 'Bulgaria',
+                CH: 'Switzerland', CY: 'Cyprus', CZ: 'Czechia', DE: 'Germany', DK: 'Denmark', EE: 'Estonia',
+                EL: 'Greece', ES: 'Spain', FI: 'Finland', FR: 'France', HR: 'Croatia', HU: 'Hungary',
+                IE: 'Ireland', IS: 'Iceland', IT: 'Italy', LI: 'Liechtenstein', LT: 'Lithuania',
+                LU: 'Luxembourg', LV: 'Latvia', ME: 'Montenegro', MK: 'North Macedonia', MT: 'Malta',
+                NL: 'Netherlands', NO: 'Norway', PL: 'Poland', PT: 'Portugal', RO: 'Romania', RS: 'Serbia',
+                SE: 'Sweden', SI: 'Slovenia', SK: 'Slovakia', UK: 'United Kingdom', XK: 'Kosovo',
+            }
 
             //add layer to map
             map.layers = [
                 new gridviz.GridLayer(dataset, [style], {
                     //minPixelsPerCell: 6
+                    cellInfoHTML: (c) =>
+                        '<b>' +
+                        (countries[c.CNTR_ID] || c.CNTR_ID) +
+                        '</b><br>2021 population: ' +
+                        (+c.TOT_P_2021).toLocaleString(),
                 }),
             ]
         </script>

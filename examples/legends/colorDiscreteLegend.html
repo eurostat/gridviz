@@ -44,12 +44,16 @@
         width: 520,
         colors: () => classifier.colors,
         breaks: () => classifier.breaks,
-        labelFormat: (text,i) => text+ (i==7?" hab.":"")
+        labelFormat: (text, i) => text + (i == 7 ? ' hab.' : ''),
     })
 
     //link legend to style
     style.legends = [legend]
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+        }),
+    ]
 </script>

@@ -44,5 +44,13 @@
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) =>
+                '<b>' +
+                (c.change > 0 ? '+' : '') +
+                c.change.toLocaleString() +
+                '</b> inhabitants<br>between 2011 and 2021',
+        }),
+    ]
 </script>

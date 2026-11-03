@@ -36,10 +36,13 @@
             return [min, max]
         },
         //map population figure from [min,max] interval to [0,1], apply the stretching function and return the corresponding color
-        color: (cell, resolution, z, [min, max]) =>
-            d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
+        color: (cell, resolution, z, [min, max]) => d3.interpolateYlOrRd(scale((+cell.population - min) / (max - min))),
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+        }),
+    ]
 </script>

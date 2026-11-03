@@ -79,7 +79,20 @@
             })
 
             //add layer to map
-            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 4 })]
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 4,
+                    cellInfoHTML: (c) =>
+                        '<b>' +
+                        c.TOT.toLocaleString() +
+                        '</b> inhabitants (2011 census)<br>Under 18: ' +
+                        c.yo.toLocaleString() +
+                        '<br>18 to 64: ' +
+                        c.mi.toLocaleString() +
+                        '<br>65 and over: ' +
+                        c.ol.toLocaleString(),
+                }),
+            ]
 
             //legend
             style.legends = [

@@ -15,10 +15,26 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
+            Line width: <b id="widthValue">1</b><br />
+            <input type="range" id="width" min="0.2" max="3" step="0.1" value="1" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -42,13 +58,40 @@
             const style = new gridviz.TimeSeriesStyle({
                 ts: ['TOT_P_2006', 'TOT_P_2011', 'TOT_P_2018', 'TOT_P_2021'],
                 lineWidth: (cell, resolution, z, max) => {
-                    return z * (1 + 7 * (cell.TOT_P_2021 / max))
+                    return settings.width * z * (1 + 7 * (cell.TOT_P_2021 / max))
                 },
                 viewScale: (cells) => d3.max(cells, (cell) => +cell.TOT_P_2021),
             })
 
+            //country names
+            // prettier-ignore
+            const countries = {
+                AL: 'Albania', AT: 'Austria', BA: 'Bosnia and Herzegovina', BE: 'Belgium', BG: 'Bulgaria',
+                CH: 'Switzerland', CY: 'Cyprus', CZ: 'Czechia', DE: 'Germany', DK: 'Denmark', EE: 'Estonia',
+                EL: 'Greece', ES: 'Spain', FI: 'Finland', FR: 'France', HR: 'Croatia', HU: 'Hungary',
+                IE: 'Ireland', IS: 'Iceland', IT: 'Italy', LI: 'Liechtenstein', LT: 'Lithuania',
+                LU: 'Luxembourg', LV: 'Latvia', ME: 'Montenegro', MK: 'North Macedonia', MT: 'Malta',
+                NL: 'Netherlands', NO: 'Norway', PL: 'Poland', PT: 'Portugal', RO: 'Romania', RS: 'Serbia',
+                SE: 'Sweden', SI: 'Slovenia', SK: 'Slovakia', UK: 'United Kingdom', XK: 'Kosovo',
+            }
+
             //add layer to map
-            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 10 })]
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 10,
+                    cellInfoHTML: (c) =>
+                        '<b>' +
+                        (countries[c.CNTR_ID] || c.CNTR_ID) +
+                        '</b><br>Population:<br>2006: ' +
+                        (+c.TOT_P_2006).toLocaleString() +
+                        '<br>2011: ' +
+                        (+c.TOT_P_2011).toLocaleString() +
+                        '<br>2018: ' +
+                        (+c.TOT_P_2018).toLocaleString() +
+                        '<br>2021: ' +
+                        (+c.TOT_P_2021).toLocaleString(),
+                }),
+            ]
         </script>
     </body>
 </html>

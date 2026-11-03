@@ -35,14 +35,7 @@
             //define style
             const style = new gridviz.SegmentStyle({
                 //random color
-                color: () =>
-                    'rgb(' +
-                    255 * Math.random() +
-                    ',' +
-                    255 * Math.random() +
-                    ',' +
-                    255 * Math.random() +
-                    ')',
+                color: () => 'rgb(' + 255 * Math.random() + ',' + 255 * Math.random() + ',' + 255 * Math.random() + ')',
                 //random width, whithin [r*0.1, r*0.5]
                 width: (cell, resolution) => resolution * (0.1 + 0.5 * Math.random()),
                 //random length, whithin [r*0.5, r*1.5]
@@ -52,7 +45,12 @@
             })
 
             //add layer to map
-            map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 10 })]
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    minPixelsPerCell: 10,
+                    cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+                }),
+            ]
         </script>
     </body>
 </html>

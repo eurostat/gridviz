@@ -38,7 +38,9 @@
     })
 
     //define layer
-    const gridLayer = new gridviz.GridLayer(dataset, [colorStyle, strokeStyle])
+    const gridLayer = new gridviz.GridLayer(dataset, [colorStyle, strokeStyle], {
+        cellInfoHTML: (c) => 'Value: <b>' + c.value + '</b><br>Type: ' + c.type,
+    })
 
     //add layer to map
     map.layers = [gridLayer]

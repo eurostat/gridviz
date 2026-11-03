@@ -15,9 +15,27 @@
     </head>
     <body>
         <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="settings" style="position: absolute; left: 20px; top: 20px; padding: 10px; border-radius: 5px; background: #ffffffcc; line-height: 1.6; box-shadow: 5px 5px 5px grey; font-family: Arial, Helvetica, sans-serif">
+            Exponent of the width: <b id="exponentValue">0.6</b><br />
+            <input type="range" id="exponent" min="0.1" max="1" step="0.05" value="0.6" style="width: 250px" /><br />
+            Width: <b id="widthValue">1</b><br />
+            <input type="range" id="width" min="0.2" max="3" step="0.1" value="1" style="width: 250px" />
+        </div>
 
         <script src="../../dist/gridviz.js"></script>
         <script>
+            //the settings of the sliders. The style reads them when it draws.
+            const settings = {}
+            let onSettingsChange = () => map.redraw()
+            for (const input of document.querySelectorAll('#settings input')) {
+                settings[input.id] = +input.value
+                input.addEventListener('input', () => {
+                    settings[input.id] = +input.value
+                    document.getElementById(input.id + 'Value').textContent = input.value
+                    onSettingsChange()
+                })
+            }
+
             //define map with initial view
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 4500000,
@@ -35,7 +53,7 @@
 
             //define style
             const sideValue = (side) => (+side.c2?.population || 0) - (+side.c1?.population || 0)
-            const scale = gridviz.powerScale(0.6)
+            const scale = (t) => gridviz.powerScale(settings.exponent)(t)
             const style = new gridviz.SideStyle({
                 color: (side) => {
                     //color is either black or white depending on the value difference and the segment orientation
@@ -47,13 +65,17 @@
                 width: (side, resolution, z) => {
                     //the larger the difference, the wider the segment
                     const t = Math.abs(sideValue(side)) / 80000
-                    return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * scale(t)
+                    return 200 + settings.width * resolution * (side.or === 'v' ? 0.05 : 0.1) * scale(t)
                 },
                 length: (side, resolution) => resolution * 0.9,
             })
 
             //add layer to map
-            map.layers = [new gridviz.GridLayer(dataset, [style])]
+            map.layers = [
+                new gridviz.GridLayer(dataset, [style], {
+                    cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+                }),
+            ]
         </script>
     </body>
 </html>

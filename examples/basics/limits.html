@@ -22,5 +22,9 @@
         else if (cell.population > 6000) return '#fec44f'
         else return '#ffffd4'
     }
-    map.layers = [new gridviz.GridLayer(dataset, [new gridviz.ShapeColorSizeStyle({ color: colorFunction })])]
+    map.layers = [
+        new gridviz.GridLayer(dataset, [new gridviz.ShapeColorSizeStyle({ color: colorFunction })], {
+            cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+        }),
+    ]
 </script>
