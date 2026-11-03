@@ -64,7 +64,7 @@ import { Map, SquareColorWebGLStyle } from 'gridviz'
 
 ### Basic example
 
-Here’s a basic example that loads a CSV file of a European population grid (5km resolution):
+Here’s a basic example that loads a CSV file of a European population grid (10 km resolution):
 
 ```javascript
 //define map with initial view
@@ -90,15 +90,19 @@ const colorFunction = (cell) => {
 //define style
 const style = new gridviz.ShapeColorSizeStyle({ color: colorFunction })
 
-//add layer to map
-map.layers = [new gridviz.GridLayer(dataset, [style])]
+//add layer to map. The tooltip of a cell is written by cellInfoHTML: without it, it lists the names of the columns of the data.
+map.layers = [
+    new gridviz.GridLayer(dataset, [style], {
+        cellInfoHTML: (c) => '<b>' + (+c.population).toLocaleString() + '</b> inhabitants (2018)',
+    }),
+]
 ```
 
 See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference)** for more information.
 
 ### standalone
 
-```javascript
+```html
 <script src="https://unpkg.com/gridviz/dist/gridviz.min.js"></script>
 ```
 

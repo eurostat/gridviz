@@ -1,4 +1,6 @@
-# Gridviz API reference
+# Gridviz API reference, version 2
+
+> This is the reference of gridviz **version 2**, kept for the applications which still use it. For version 3, see the [reference](reference.md) and the [changelog](changelog.md) for the migration.
 
 ## Table of contents
 

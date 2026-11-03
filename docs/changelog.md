@@ -2,6 +2,12 @@
 
 ## Version 3
 
+### Next version
+
+-   Fix: on a touch screen, pressing a zoom button lit both buttons (the tap highlight of the browser on the container, and the hover color which stayed on the last button touched). Only the button pressed is lit now, and the zoom buttons are 48 pixels wide on a touch screen (unless the page sets `--gridviz-button-size`).
+-   Examples: the tooltips of about 60 examples were the list of the names of the columns of the data (`CNTR_ID: DE`, `TOT_P_2011`, `ind_snv`...). They now write the values for a reader (country names, labels, units). About 17 examples have sliders to play with the settings of their style (dot size, height, exponent of the stretching, opacity...).
+-   Documentation: audit of the reference. The options of the map (`legendContainer` was documented as `legendDivId`, `transparentBackground` as `transparentbackground`, the default selection color, and the missing `x`, `y`, `z`, `zoomExtent`, `centerExtent`, `digForTooltip`, `defaultGlobalCompositeOperation`, `w`, `h`), of the layers (`BackgroundLayer`, `GeoJSONLayer` and `LabelLayer` options), the view scale functions and the classifiers, the default parent of the tooltip (the map container), a broken link and the table of contents. The tutorial, which was a list of notes, is a tutorial.
+
 ### Version 3.1.1 (since 3.1.0)
 
 -   Fixes: the flickering and missing selection rectangle of the hovered cell, also after a scroll or a pan (#174); the legends with the styles which did not give them the cells (_CompositionStyle_, _TimeSeriesStyle_...); the default ticks of _ColorLegend_; _TimeSeriesStyle_ values compared as texts; the gaps and the shifted squares of the webGL styles when zoomed in (#86); the width of _ShadingStyle_.
@@ -15,29 +21,29 @@ The details are in the sections below.
 
 ### General
 
--   _gviz_ module bject replaced with _gridviz_
+-   _gviz_ module object replaced with _gridviz_
 -   _core_ folder includes high level classes.
 -   _App_ class renamed _Map_
 -   New _map.setView(x,y,z)_ method to set map view (position x,y and zoom z)
 -   _getGeoCenter_, _setGeoCenter_ methods replaced with _getView_ and _setView_ methods.
 -   Removal of _map.addLayerXXX_ methods. Layers can now be created individually and then linked to a map with _map.layers_ property.
--   Style parameters are now based on cell directly, not the value of a predefined column/prperty.
+-   Style parameters are now based on cell directly, not the value of a predefined column/property.
 -   Creation of the _viewScale_ attribute at style level to compute view level data to be used to draw the cells individually.
 -   _zExtent_ property renamed _zoomExtent_
 -   _pixNb_ property renamed _minPixelsPerCell_
--   _canvas_ property renamed _geocanva_
+-   _canvas_ property renamed _geocanvas_
 -   Notion of "zoom factor" removed to keep only "zoom". _zf_ parameters renamed simply _z_.
 -   _Enveloppe_ type duplicate removed.
 -   New simpler way to create multiresolution datasets.
 -   _DatasetComponent_ class renamed into _Dataset_. And former _Dataset_ class into _MultiResolutionDataset_.
 -   Revamping of _TiledGrid_ class. _GridTile_ class removed.
--   Layers grouping: No more distinction beteen grid layers, background layers and other layers. One stack of layers par map, whatever the type, order and number.
+-   Layers grouping: No more distinction between grid layers, background layers and other layers. One stack of layers per map, whatever the type, order and number.
 -   New abstract class _Drawable_, which groups common elements of _Layer_ and _Style_ classes.
 -   Change of signature for the _draw_ method of _Style_ class. It is now: _draw(cells, canvas, resolution)_. It should be reflected on all custom styles.
 -   New abstract class _Layer_. The former _Layer_ class was renamed _GridLayer_.
 -   _filterColor_ property now available for layers.
--   A new property is available on Style to allow filtering cells at this level and avoid drawing unecessary cells.
--   _visible_ property added on _Style_ and _Layer_, and is now a function of zoom _z_. Removal of _maxzoom_ and _minzoom_ properrties.
+-   A new property is available on Style to allow filtering cells at this level and avoid drawing unnecessary cells.
+-   _visible_ property added on _Style_ and _Layer_, and is now a function of zoom _z_. Removal of _maxzoom_ and _minzoom_ properties.
 -   Map properties _showBgLayers_, _showLabels_ and _showBoundaries_ removed. Use the new generic _visible_ property instead.
 -   _LineLayer_ class was renamed _GeoJSONLayer_ to prepare support for new geometry types.
 -   Stretching function structure change and renaming. See examples.

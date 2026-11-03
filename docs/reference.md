@@ -2,76 +2,82 @@
 
 ## Table of contents
 
-- [Gridviz API reference](#gridviz-api-reference)
-  - [Table of contents](#table-of-contents)
-  - [Concepts](#concepts)
-  - [Defining the map](#defining-the-map)
-  - [Adding data](#adding-data)
-    - [Dataset classes](#dataset-classes)
-    - [Layers](#layers)
-      - [GridLayer](#gridlayer)
-      - [BackgroundLayer](#backgroundlayer)
-      - [BackgroundLayerImage](#backgroundlayerimage)
-      - [BackgroundLayerWMS](#backgroundlayerwms)
-      - [GeoJSONLayer](#geojsonlayer)
-      - [LabelLayer](#labellayer)
-  - [Filtering and formatting data](#filtering-and-formatting-data)
-  - [Missing values](#missing-values)
-  - [Basic styles](#basic-styles)
-    - [Shape/Color/Size Style](#shapecolorsize-style)
-    - [Square color WebGL Style](#square-color-webgl-style)
-      - [Stretching in webGL styles](#stretching-in-webgl-styles)
-    - [Square color category WebGL style](#square-color-category-webgl-style)
-    - [Circle color size WebGL style](#circle-color-size-webgl-style)
-    - [Composition style](#composition-style)
-    - [Segment style](#segment-style)
-    - [Stroke style](#stroke-style)
-  - [Advanced styles](#advanced-styles)
-    - [Dot density style](#dot-density-style)
-    - [Pillars style](#pillars-style)
-    - [Ternary style](#ternary-style)
-    - [Text style](#text-style)
-    - [Image style](#image-style)
-    - [Time series style](#time-series-style)
-  - [Side styles](#side-styles)
-    - [Side style](#side-style)
-    - [Side category style](#side-category-style)
-    - [Contour style](#contour-style)
-    - [Isometric fence style](#isometric-fence-style)
-    - [Shading style](#shading-style)
-  - [Esthetic styles](#esthetic-styles)
-    - [JoyPlot Style](#joyplot-style)
-    - [Mosaic style](#mosaic-style)
-    - [Ninja star style](#ninja-star-style)
-    - [Tanaka style](#tanaka-style)
-    - [Lego style](#lego-style)
-    - [Lego category style](#lego-category-style)
-    - [Shading ray casting style](#shading-ray-casting-style)
-  - [Kernel smoothing](#kernel-smoothing)
-  - [Interpolation](#interpolation)
-    - [Random walk interpolation, for categories](#random-walk-interpolation-for-categories)
-  - [Custom styles](#custom-styles)
-  - [Background layer](#background-layer)
-  - [Foreground information](#foreground-information)
-  - [Transparency](#transparency)
-  - [Tooltip](#tooltip)
-  - [Buttons](#buttons)
-  - [View scale](#view-scale)
-    - [One view scale for the color and the size](#one-view-scale-for-the-color-and-the-size)
-  - [Stretching](#stretching)
-  - [Legends](#legends)
-    - [Options common to all the legends](#options-common-to-all-the-legends)
-    - [ColorLegend](#colorlegend)
-    - [ColorDiscreteLegend](#colordiscretelegend)
-    - [ColorCategoryLegend](#colorcategorylegend)
-    - [OrientationLegend](#orientationlegend)
-    - [SizeLegend](#sizelegend)
-    - [TernaryLegend](#ternarylegend)
-    - [VennLegend](#vennlegend)
-  - [Leaflet](#leaflet)
-  - [Limit panning and zooming](#limit-panning-and-zooming)
-  - [Mixed resolution grids](#mixed-resolution-grids)
-  - [Alright?](#alright)
+-   [Gridviz API reference](#gridviz-api-reference)
+    -   [Table of contents](#table-of-contents)
+    -   [Concepts](#concepts)
+    -   [Defining the map](#defining-the-map)
+    -   [Adding data](#adding-data)
+        -   [Dataset classes](#dataset-classes)
+        -   [Layers](#layers)
+            -   [GridLayer](#gridlayer)
+            -   [BackgroundLayer](#backgroundlayer)
+            -   [BackgroundLayerImage](#backgroundlayerimage)
+            -   [BackgroundLayerWMS](#backgroundlayerwms)
+            -   [GeoJSONLayer](#geojsonlayer)
+            -   [LabelLayer](#labellayer)
+    -   [Filtering and formatting data](#filtering-and-formatting-data)
+    -   [Missing values](#missing-values)
+    -   [Basic styles](#basic-styles)
+        -   [Shape/Color/Size Style](#shapecolorsize-style)
+        -   [Square color WebGL Style](#square-color-webgl-style)
+            -   [Stretching in webGL styles](#stretching-in-webgl-styles)
+        -   [Square color category WebGL style](#square-color-category-webgl-style)
+        -   [Circle color size WebGL style](#circle-color-size-webgl-style)
+        -   [Composition style](#composition-style)
+        -   [Segment style](#segment-style)
+        -   [Stroke style](#stroke-style)
+    -   [Advanced styles](#advanced-styles)
+        -   [Dot density style](#dot-density-style)
+        -   [Pillars style](#pillars-style)
+        -   [Ternary style](#ternary-style)
+        -   [Text style](#text-style)
+        -   [Image style](#image-style)
+        -   [Time series style](#time-series-style)
+    -   [Side styles](#side-styles)
+        -   [Side style](#side-style)
+        -   [Side category style](#side-category-style)
+        -   [Contour style](#contour-style)
+        -   [Isometric fence style](#isometric-fence-style)
+        -   [Shading style](#shading-style)
+    -   [Esthetic styles](#esthetic-styles)
+        -   [JoyPlot Style](#joyplot-style)
+        -   [Mosaic style](#mosaic-style)
+        -   [Ninja star style](#ninja-star-style)
+        -   [Tanaka style](#tanaka-style)
+        -   [Lego style](#lego-style)
+        -   [Lego category style](#lego-category-style)
+        -   [Shading ray casting style](#shading-ray-casting-style)
+    -   [Kernel smoothing](#kernel-smoothing)
+    -   [Interpolation](#interpolation)
+        -   [Random walk interpolation, for categories](#random-walk-interpolation-for-categories)
+    -   [Custom styles](#custom-styles)
+    -   [Background layer](#background-layer)
+    -   [Foreground information](#foreground-information)
+    -   [Transparency](#transparency)
+    -   [Tooltip](#tooltip)
+    -   [Buttons](#buttons)
+    -   [View scale](#view-scale)
+        -   [View scale functions](#view-scale-functions)
+        -   [Classifiers](#classifiers)
+        -   [One view scale for the color and the size](#one-view-scale-for-the-color-and-the-size)
+    -   [Stretching](#stretching)
+    -   [Legends](#legends)
+        -   [Legend options for hosts](#legend-options-for-hosts)
+        -   [Styling legends from a stylesheet](#styling-legends-from-a-stylesheet)
+        -   [Styling the rest of the map from a stylesheet](#styling-the-rest-of-the-map-from-a-stylesheet)
+        -   [Interactive legends](#interactive-legends)
+        -   [Options common to all the legends](#options-common-to-all-the-legends)
+        -   [ColorLegend](#colorlegend)
+        -   [ColorDiscreteLegend](#colordiscretelegend)
+        -   [ColorCategoryLegend](#colorcategorylegend)
+        -   [OrientationLegend](#orientationlegend)
+        -   [SizeLegend](#sizelegend)
+        -   [TernaryLegend](#ternarylegend)
+        -   [VennLegend](#vennlegend)
+    -   [Leaflet](#leaflet)
+    -   [Limit panning and zooming](#limit-panning-and-zooming)
+    -   [Mixed resolution grids](#mixed-resolution-grids)
+    -   [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -114,7 +120,7 @@ new gridviz.Map(document.getElementById('map'), {
     z: 1000,
     legendContainer: document.getElementById('myLegendDiv'), // if you want your legend in an external container
     selectionRectangleColor: 'red', // cell hover
-    selectionRectangleWidthPix: (resolution, z) => '1',
+    selectionRectangleWidthPix: (resolution, z) => 1,
     backgroundColor: 'white',
     tooltip: {
         // the default values, which are those of the tooltips of the statistical atlas
@@ -133,7 +139,7 @@ new gridviz.Map(document.getElementById('map'), {
         yOffset: 20,
         yMouseOffset: 0,
         xMouseOffset: 0,
-        parentElement: document.body,
+        parentElement: document.getElementById('map'),
     },
     onZoomStartFun: (event) => {
         console.log('pan/zoom start', event)
@@ -147,19 +153,27 @@ new gridviz.Map(document.getElementById('map'), {
 })
 ```
 
-| Property                              | Type     | Default      | Description                                                                                                                                                         |
-| ------------------------------------- | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _opts_.**legendDivId**                | string   | 'gvizLegend' | The identifier of the element upon which the legend will be appended.                                                                                               |
-| _opts_.**selectionRectangleColor**    | string   | 'red'        | The colour of the outline when a cell is highlighted.                                                                                                               |
-| _opts_.**selectionRectangleWidthPix** | Function | (r,z) => 4   | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _z_ is the zoom level.  |
-| _opts_.**transparentbackground**      | boolean  | false        | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
-| _opts_.**backgroundColor**            | string   | 'white'      | The background color of the canvas when transparentBackground is set to false.                                                                                      |
-| _opts_.**disableZoom**                | Boolean  | false        | Disables d3 pan and zoom when set to true.                                                                                                                          |
-| _opts_.**onZoomStartFun**             | Function | null         | Event handler for when a pan/zoom event is initiated.                                                                                                               |
-| _opts_.**onZoomFun**                  | Function | null         | Event handler for when a pan/zoom event is occurring.                                                                                                               |
-| _opts_.**onZoomEndFun**               | Function | null         | Event handler for when a pan/zoom event has finished.                                                                                                               |
-| _opts_.**tooltip**                    | Object   | undefined    | See [tooltip](#tooltip)                                                                                                                                             |
-| _opts_.**asyncRedraw**                | boolean  | true         | When true, _redraw()_ draws once, at the next animation frame, however many times it is called before then. Set it to false for _redraw()_ to draw at once.          |
+| Property                                   | Type                     | Default                   | Description                                                                                                                                                                                                             |
+| ------------------------------------------ | ------------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _opts_.**x**, _opts_.**y**, _opts_.**z**   | number                   | -                         | The initial view: the position of the center of the map, in the coordinate system of the grids, and the zoom level, in ground units per pixel (see [concepts](#concepts)). Also set with _map.setView(x, y, z)_.        |
+| _opts_.**layers**                          | Layer[]                  | `[]`                      | The layers of the map, from the bottom to the top. Also set with _map.layers_.                                                                                                                                          |
+| _opts_.**legendContainer**                 | HTMLElement              | a new element in the map  | The element in which the legends are put. By default the map makes one. See [legend options for hosts](#legend-options-for-hosts).                                                                                      |
+| _opts_.**onLegendUpdate**                  | `function(HTMLElement)`  | undefined                 | Called with the legend container each time the map has drawn and its legends are in the container, to adjust them.                                                                                                      |
+| _opts_.**selectionRectangleColor**         | string                   | `'#FF6347'`               | The colour of the outline when a cell is highlighted.                                                                                                                                                                   |
+| _opts_.**selectionRectangleWidthPix**      | Function                 | `(r,z) => 4`              | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _z_ is the zoom level.                                                      |
+| _opts_.**transparentBackground**           | boolean                  | false                     | Whether the background is left transparent (_context.clearRect_) instead of being filled with _backgroundColor_ (_context.fillRect_). For a map over another map.                                                       |
+| _opts_.**backgroundColor**                 | string                   | `'white'`                 | The background color of the canvas when _transparentBackground_ is false.                                                                                                                                               |
+| _opts_.**defaultGlobalCompositeOperation** | string                   | the one of the canvas     | The blend operation of the layers and styles which do not set their own (see [transparency](#transparency)).                                                                                                            |
+| _opts_.**disableZoom**                     | boolean                  | false                     | Disables d3 pan and zoom when set to true.                                                                                                                                                                              |
+| _opts_.**zoomExtent**                      | [number, number]         | `[0, Infinity]`           | The smallest and the largest zoom level the user can reach (see [limits](#limit-panning-and-zooming)).                                                                                                                  |
+| _opts_.**centerExtent**                    | [xMin, yMin, xMax, yMax] | none                      | The limits of the position of the center of the map (see [limits](#limit-panning-and-zooming)).                                                                                                                         |
+| _opts_.**onZoomStartFun**                  | Function                 | null                      | Event handler for when a pan/zoom event is initiated.                                                                                                                                                                   |
+| _opts_.**onZoomFun**                       | Function                 | null                      | Event handler for when a pan/zoom event is occurring.                                                                                                                                                                   |
+| _opts_.**onZoomEndFun**                    | Function                 | null                      | Event handler for when a pan/zoom event has finished.                                                                                                                                                                   |
+| _opts_.**tooltip**                         | Object                   | undefined                 | See [tooltip](#tooltip)                                                                                                                                                                                                 |
+| _opts_.**digForTooltip**                   | boolean                  | false                     | When true, the tooltip is the one of the first layer from the top where a cell is found under the pointer. Otherwise it is the one of the first layer from the top with a `cellInfoHTML`, even if it has no cell there. |
+| _opts_.**asyncRedraw**                     | boolean                  | true                      | When true, _redraw()_ draws once, at the next animation frame, however many times it is called before then. Set it to false for _redraw()_ to draw at once.                                                             |
+| _opts_.**w**, _opts_.**h**                 | number                   | the size of the container | The size of the canvas, in pixels.                                                                                                                                                                                      |
 
 The map is redrawn with _map.redraw()_. By default it draws once at the next animation frame, however many times it is called before then; with _asyncRedraw_ set to false it draws at once. _map.redrawNow()_ draws at once in either case, and is the one to use before reading the canvas (to export an image, for example). _map.destroy()_ removes the map's event listeners and stops observing its container.
 
@@ -187,23 +201,28 @@ For better efficiency, it is recommended to use multi-resolution tiled parquet d
 
 ### Dataset classes
 
-| Class                    | Constructor                                                                      | Data                                                                                                                         |
-| ------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `JSGrid`                 | `new gridviz.JSGrid(resolution, cells, opts)`                                    | The cells, as an array of JavaScript objects with a `x` and a `y` property.                                                  |
-| `CSVGrid`                | `new gridviz.CSVGrid(map, url, resolution, opts)`                                | A CSV file with a `x` and a `y` column, and the values of the cells. Options: `preprocess`, `delimiter`.                      |
-| `TiledGrid`              | `new gridviz.TiledGrid(map, url, opts)`                                          | A folder of CSV tiles, in the [tiled grid format](tiledformat.md). Options: `preprocess`, `onlyDrawWhenAllTilesReady`.      |
-| `MultiResolutionDataset` | `new gridviz.MultiResolutionDataset(resolutions, datasets, opts)`                | Several datasets, one for each resolution: `datasets` is an array of datasets, or a function which makes the dataset of a resolution. Option: `preprocess`. |
+| Class                    | Constructor                                                       | Data                                                                                                                                                        |
+| ------------------------ | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `JSGrid`                 | `new gridviz.JSGrid(resolution, cells, opts)`                     | The cells, as an array of JavaScript objects with a `x` and a `y` property. Option: `mixedResolution`.                                                      |
+| `CSVGrid`                | `new gridviz.CSVGrid(map, url, resolution, opts)`                 | A CSV file with a `x` and a `y` column, and the values of the cells. Options: `preprocess`, `delimiter`.                                                    |
+| `TiledGrid`              | `new gridviz.TiledGrid(map, url, opts)`                           | A folder of CSV tiles, in the [tiled grid format](tiledformat.md). Options: `preprocess`, `onlyDrawWhenAllTilesReady`.                                      |
+| `MultiResolutionDataset` | `new gridviz.MultiResolutionDataset(resolutions, datasets, opts)` | Several datasets, one for each resolution: `datasets` is an array of datasets, or a function which makes the dataset of a resolution. Option: `preprocess`. |
 
 ```javascript
-const dataset = new gridviz.MultiResolutionDataset([1000, 2000, 5000], (resolution) => new gridviz.CSVGrid(map, resolution + 'm.csv', resolution), {
-    preprocess: (cell) => {
-        cell.population = +cell.population // the values of a CSV file are text
-        if (cell.population == 0) return false // a cell for which it returns false is not kept
-    },
-})
+const dataset = new gridviz.MultiResolutionDataset(
+    [1000, 2000, 5000],
+    (resolution) => new gridviz.CSVGrid(map, resolution + 'm.csv', resolution),
+    {
+        preprocess: (cell) => {
+            cell.population = +cell.population // the values of a CSV file are text
+            if (cell.population == 0) return false // a cell for which it returns false is not kept
+        },
+    }
+)
 ```
 
 -   The `x` and `y` of a cell are in the coordinate system of the map, and the resolution is a distance in its unit.
+-   `mixedResolution` is a function of a cell which returns its own resolution, for a grid whose cells do not all have the same size (see [mixed resolution grids](#mixed-resolution-grids)). It is an option of every dataset class.
 -   `preprocess` is called once for each cell, when it is loaded. It can change the cell (to convert or compute values), and it removes the cell by returning `false`.
 -   A layer with a multi-resolution dataset shows the finest resolution whose cells are at least `minPixelsPerCell` pixels wide at the current zoom (see [GridLayer](#gridlayer)).
 -   A tile which could not be loaded is not asked for again at each redraw: never when it does not exist (404), and again after `TiledGrid.retryFailedAfterMs` milliseconds (30000 by default) for any other failure. With `onlyDrawWhenAllTilesReady: true`, the map is drawn only when all the tiles of the view are there.
@@ -211,12 +230,13 @@ const dataset = new gridviz.MultiResolutionDataset([1000, 2000, 5000], (resoluti
 
 ### Layers
 
-There are a few different types of layers that can be added to a gridviz map:
-Once you have constructed them, simply add them to the map like so:
+There are a few different types of layers that can be added to a gridviz map. Once you have constructed them, simply add them to the map like so:
 
 ```javascript
 map.layers = [yourLayer] // they will be drawn in order
 ```
+
+All the layers (and all the styles) have the options `visible` (a boolean or a `function(z)`), `alpha` and `blendOperation` (functions of the zoom level, see [transparency](#transparency)), and `filterColor` (a `function(z)` which returns a CSS color put over everything drawn so far, once the layer is drawn: to fade a background for example; `filterBlendOperation` is its blend operation).
 
 #### GridLayer
 
@@ -226,13 +246,13 @@ new gridviz.GridLayer(dataset, [style], {
 })
 ```
 
-| Option             | Type                                      | Default                           | Description                                                                                                                                    |
-| ------------------ | ----------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `minPixelsPerCell` | number                                    | `3`                               | With a multi-resolution dataset, the smallest size on the screen, in pixels, of the cells of the resolution shown. A higher value draws fewer, bigger cells. |
-| `cellInfoHTML`     | `function(cell):string` or `'none'`       | the list of the cell properties   | The text of the [tooltip](#tooltip) of a cell, as HTML. `'none'` for no tooltip.                                                               |
-| `visible`          | boolean or `function(z)`                  | `true`                            | Whether the layer is drawn, according to the zoom level.                                                                                       |
-| `alpha`            | `function(z)`                             | opaque                            | The opacity of the layer.                                                                                                                      |
-| `blendOperation`   | `function(z)`                             | `'source-over'`                   | How the layer is blended with the layers below it. See [transparency](#transparency).                                                          |
+| Option             | Type                                | Default                         | Description                                                                                                                                                  |
+| ------------------ | ----------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `minPixelsPerCell` | number                              | `3`                             | With a multi-resolution dataset, the smallest size on the screen, in pixels, of the cells of the resolution shown. A higher value draws fewer, bigger cells. |
+| `cellInfoHTML`     | `function(cell):string` or `'none'` | the list of the cell properties | The text of the [tooltip](#tooltip) of a cell, as HTML. `'none'` for no tooltip.                                                                             |
+| `visible`          | boolean or `function(z)`            | `true`                          | Whether the layer is drawn, according to the zoom level.                                                                                                     |
+| `alpha`            | `function(z)`                       | opaque                          | The opacity of the layer.                                                                                                                                    |
+| `blendOperation`   | `function(z)`                       | `'source-over'`                 | How the layer is blended with the layers below it. See [transparency](#transparency).                                                                        |
 
 #### BackgroundLayer
 
@@ -244,6 +264,18 @@ const backgroundLayer = new gridviz.BackgroundLayer({
     filterColor: (z) => '#ffffff77',
 })
 ```
+
+A background of tiles in the "slippy map" scheme: `x`, `y` and the zoom level of a tile are put in its URL.
+
+| Option                  | Type                       | Default           | Description                                                                                                                   |
+| ----------------------- | -------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `url`                   | string                     | -                 | The base URL of the tiles: a tile is at `url + z + '/' + x + '/' + y + '.png'`.                                               |
+| `urlFun`                | `function(x, y, z):string` | the pattern above | The URL of a tile, for a server which does not follow it.                                                                     |
+| `resolutions`           | number[]                   | -                 | The ground resolution of each zoom level, from the most zoomed out to the most zoomed in. Usually divided by 2 at each level. |
+| `origin`                | [number, number]           | `[0, 0]`          | The geographical position of the top left corner of the tile grid.                                                            |
+| `nbPix`                 | number                     | `256`             | The size of a tile, in pixels.                                                                                                |
+| `z0`                    | number                     | `0`               | The code of the most zoomed out level, when it is not 0.                                                                      |
+| `pixelationCoefficient` | number                     | `1`               | Chooses the zoom level to show. Reduce it if the background is too pixelated, increase it if too many images are downloaded.  |
 
 #### BackgroundLayerImage
 
@@ -282,10 +314,21 @@ const geojsonLayer = new gridviz.GeoJSONLayer({
     fillStyle: (f, z) => 'red',
 })
 ```
+
+| Option                     | Type                            | Default           | Description                                                                                   |
+| -------------------------- | ------------------------------- | ----------------- | --------------------------------------------------------------------------------------------- |
+| `url`                      | string                          | -                 | The URL of the GeoJSON file.                                                                  |
+| `preprocess`               | `function(feature):boolean`     | none              | Called once for each feature when loaded. A feature for which it returns `false` is not kept. |
+| `shape`                    | `function(feature, z):string`   | `'circle'`        | The shape of a point: `'circle'`, `'square'` or `'none'`.                                     |
+| `size`                     | `function(feature, z):number`   | `10`              | The size of a point, in pixels.                                                               |
+| `strokeStyle` (or `color`) | `function(feature, z):string`   | `'gray'`          | The color of the lines and of the outline of the points.                                      |
+| `lineWidth` (or `width`)   | `function(feature, z):number`   | `2`               | The width of the lines and of the outline of the points, in pixels.                           |
+| `lineDash`                 | `function(feature, z):number[]` | none (plain line) | The dash pattern of the lines, as for the canvas `setLineDash`: `[5, 3]` for example.         |
+| `fillStyle`                | `function(feature, z):string`   | `'black'`         | The fill color of the points.                                                                 |
+
 -   See [this example](https://eurostat.github.io/gridviz/examples/basics/geojson.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/geojson.html)).
 -   See [this other example for points only](https://eurostat.github.io/gridviz/examples/basics/points.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/points.html)).
 -   See [this other example for lines only](https://eurostat.github.io/gridviz/examples/basics/boundaries.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/boundaries.html)).
-
 
 #### LabelLayer
 
@@ -309,6 +352,18 @@ const labelLayer = new gridviz.LabelLayer({
     textAlign: 'center', //Where the text is drawn from the label position: 'start' (default), 'end', 'left', 'right' or 'center'.
 })
 ```
+
+| Option       | Type                        | Default                  | Description                                                                                 |
+| ------------ | --------------------------- | ------------------------ | ------------------------------------------------------------------------------------------- |
+| `url`        | string                      | -                        | The URL of the CSV file of the labels.                                                      |
+| `preprocess` | `function(label)`           | none                     | Called once for each label, to give it its `x` and `y` in the coordinate system of the map. |
+| `style`      | `function(label, z):string` | `'1.2em Arial'`          | The CSS font of the label. A label for which it returns nothing is not drawn.               |
+| `color`      | `function(label, z):string` | black, white with `dark` | The color of the text.                                                                      |
+| `dark`       | boolean                     | `false`                  | For a dark map: white text with a black halo, unless `color` and `haloColor` are given.     |
+| `haloColor`  | `function(label, z):string` | white, black with `dark` | The color of the halo around the text.                                                      |
+| `haloWidth`  | `function(label, z):number` | `2.5`                    | The width of the halo, in pixels.                                                           |
+| `textAlign`  | string                      | `'start'`                | Where the text is drawn from the position of the label.                                     |
+| `offsetPix`  | [number, number]            | `[5, 5]`                 | The offset of the text from the position of the label, in pixels.                           |
 
 ## Filtering and formatting data
 
@@ -345,15 +400,15 @@ missingStyle.legends = [new gridviz.ColorCategoryLegend({ colorLabel: [['#8f9ba8
 
 All the styles are classes of the `gridviz` module, which are given to a [GridLayer](#gridlayer) as a list. Each one of the sections below tells the class of its style, and the options it reads. The options which all the styles share are:
 
-| Option                                   | Type                                          | Default            | Description                                                                                                                                 |
-| ---------------------------------------- | --------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `visible`                                | boolean or `function(z)`                      | `true`             | Whether the style is drawn, according to the zoom level `z`.                                                                                |
-| `alpha`                                  | `function(z)`                                 | opaque             | The opacity of the style.                                                                                                                   |
-| `blendOperation`                         | `function(z)`                                 | `'source-over'`    | How the style is blended with what is below: any [canvas composite operation](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation), such as `'multiply'`. |
-| `filter`                                 | `function(cell):boolean`                      | all the cells      | The cells for which it returns false are not drawn.                                                                                         |
-| `offset`                                 | `function(cell, resolution, z)`               | no offset          | Moves the symbols, in geographical unit: returns `{dx, dy}`.                                                                                |
-| `viewScale`                              | function                                      | -                  | A scale computed from the cells in the view, given to the other functions of the style. See [view scale](#view-scale).                     |
-| `filterColor`, `filterBlendOperation`    | `function(z)`                                 | -                  | A color drawn over the style (with this blend operation), for example to fade it.                                                           |
+| Option                                | Type                            | Default         | Description                                                                                                                                                                                        |
+| ------------------------------------- | ------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `visible`                             | boolean or `function(z)`        | `true`          | Whether the style is drawn, according to the zoom level `z`.                                                                                                                                       |
+| `alpha`                               | `function(z)`                   | opaque          | The opacity of the style.                                                                                                                                                                          |
+| `blendOperation`                      | `function(z)`                   | `'source-over'` | How the style is blended with what is below: any [canvas composite operation](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation), such as `'multiply'`. |
+| `filter`                              | `function(cell):boolean`        | all the cells   | The cells for which it returns false are not drawn.                                                                                                                                                |
+| `offset`                              | `function(cell, resolution, z)` | no offset       | Moves the symbols, in geographical unit: returns `{dx, dy}`.                                                                                                                                       |
+| `viewScale`                           | function                        | -               | A scale computed from the cells in the view, given to the other functions of the style. See [view scale](#view-scale).                                                                             |
+| `filterColor`, `filterBlendOperation` | `function(z)`                   | -               | A color drawn over the style (with this blend operation), for example to fade it.                                                                                                                  |
 
 The legends of a style are set after its creation: `style.legends = [legend1, legend2]`. See [legends](#legends).
 
@@ -376,7 +431,7 @@ Class: `gridviz.ShapeColorSizeStyle`. Options, plus the options common to all th
 | ---------------- | ---------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `color`          | string or `function(cell, resolution, z, viewScale)` | `'#EA6BAC'`                | The color of the cell: any CSS color. A cell without color (or `'none'`) is not drawn.                                                                                                                            |
 | `size`           | number or `function(cell, resolution, z, viewScale)` | the resolution of the grid | The size of the symbol, in geographical unit (not in pixels). A cell without size (0) is not drawn.                                                                                                               |
-| `shape`          | string or `function(cell, resolution, z, viewScale)` | `'square'`                 | One of `'square'`, `'circle'`, `'diamond'`, `'donut'`, `'triangle_up'`, `'triangle_down'`, `'triangle_left'`, `'triangle_right'`, `'none'`.                                                                        |
+| `shape`          | string or `function(cell, resolution, z, viewScale)` | `'square'`                 | One of `'square'`, `'circle'`, `'diamond'`, `'donut'`, `'triangle_up'`, `'triangle_down'`, `'triangle_left'`, `'triangle_right'`, `'none'`.                                                                       |
 | `donutOuterSize` | number or `function(cell, resolution, z, viewScale)` | the resolution of the grid | For the `'donut'` shape, its outer diameter, in geographical unit. The `size` of a donut is then the part of this diameter it fills: a full disk when it equals the outer diameter, a thin ring when it is small. |
 
 A donut with a smaller outer diameter can be a ring around another symbol: a pie chart of a [composition style](#composition-style), a circle, etc. Draw the two with two styles of the same layer, and choose their sizes so that they fit: the hole of a donut of outer diameter _D_ and size _s_ has a diameter of _D - s_.
@@ -390,14 +445,14 @@ A donut with a smaller outer diameter can be a ring around another symbol: a pie
 
 Class: `gridviz.SquareColorWebGLStyle`. Options, plus the options common to all the styles:
 
-| Option       | Type                                       | Default                       | Description                                                                                                                                                                                                                                                    |
-| ------------ | ------------------------------------------ | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tFun`       | `function(cell, resolution, z, viewScale)` | -                             | The position of the cell on the color ramp: a number between 0 (first color) and 1 (last color). Values out of this range are brought back to it. A cell for which it returns `undefined` or `null` is not drawn.                                              |
+| Option       | Type                                       | Default                       | Description                                                                                                                                                                                                                                                 |
+| ------------ | ------------------------------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tFun`       | `function(cell, resolution, z, viewScale)` | -                             | The position of the cell on the color ramp: a number between 0 (first color) and 1 (last color). Values out of this range are brought back to it. A cell for which it returns `undefined` or `null` is not drawn.                                           |
 | `color`      | `function(t)`                              | -                             | The color ramp: a function from a number between 0 and 1 to a color, such as a [d3 interpolator](https://d3js.org/d3-scale-chromatic) (`d3.interpolateYlOrRd`). It is sampled at 0, 0.2, 0.4, 0.6, 0.8 and 1, and the GPU interpolates between the samples. |
-| `colors`     | array of colors                            | a blue-green-yellow-red ramp | The colors of the ramp, evenly spread on [0,1], when `color` is not given. One color or more: the GPU interpolates linearly between them.                                                                                                                      |
-| `stretching` | `{ fun, alpha }`                           | none                          | A stretching of `t`, computed by the GPU. See [below](#stretching-in-webgl-styles).                                                                                                                                                                            |
-| `opacity`    | `function(resolution, z)`                  | -                             | The opacity of the cells, between 0 and 1. When it is defined, the opacity of the colors of the ramp is ignored.                                                                                                                                               |
-| `size`       | `function(resolution, z)`                  | the resolution plus 0.2 pixel | The size of the squares, in geographical unit. All the squares have the same size. By default, they are a little larger than the cells to avoid thin gaps between them.                                                                                        |
+| `colors`     | array of colors                            | a blue-green-yellow-red ramp  | The colors of the ramp, evenly spread on [0,1], when `color` is not given. One color or more: the GPU interpolates linearly between them.                                                                                                                   |
+| `stretching` | `{ fun, alpha }`                           | none                          | A stretching of `t`, computed by the GPU. See [below](#stretching-in-webgl-styles).                                                                                                                                                                         |
+| `opacity`    | `function(resolution, z)`                  | -                             | The opacity of the cells, between 0 and 1. When it is defined, the opacity of the colors of the ramp is ignored.                                                                                                                                            |
+| `size`       | `function(resolution, z)`                  | the resolution plus 0.2 pixel | The size of the squares, in geographical unit. All the squares have the same size. By default, they are a little larger than the cells to avoid thin gaps between them.                                                                                     |
 
 This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailed resolutions. The colors are computed by the GPU, from `t`: the style is fast, and a bit less flexible than a style with a color function, which can return any color for any cell.
 
@@ -414,14 +469,14 @@ A few things to know:
 
 Without stretching, the color ramp is spread linearly on `t`: when a few cells have very high values, most of the cells get the first colors of the ramp. The `stretching` option changes this distribution, with the same functions as the [stretching functions](#stretching) of the other styles, computed by the GPU: `stretching: { fun: 'log', alpha: -7 }`.
 
-| `fun`         | Same as                                      | `alpha`                                                                                                                                         |
-| ------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fun`         | Same as                                      | `alpha`                                                                                                                                                     |
+| ------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `'pow'`       | [`powerScale(alpha)`](#stretching)           | The exponent: below 1 gives more of the ramp to the low values (0.4 is a good start for a population), above 1 gives more to the high values. No change: 1. |
-| `'powInv'`    | [`powerInverseScale(alpha)`](#stretching)    | The exponent. The mirror image of `'pow'`: `1 - (1 - t)^(1/alpha)`. No change: 1.                                                                |
-| `'exp'`       | [`exponentialScale(alpha)`](#stretching)     | The base. No change: 0.                                                                                                                          |
-| `'log'`       | [`logarithmicScale(alpha)`](#stretching)     | The base: a negative base gives more of the ramp to the low values, which is the usual choice for a population (-7 is a good start). No change: 0. |
-| `'circle'`    | [`circularScale(alpha)`](#stretching)        | The circularity, between 0 (no stretching) and 1 (a quarter of circle).                                                                          |
-| `'circleInv'` | [`circularInverseScale(alpha)`](#stretching) | The circularity, between 0 (no stretching) and 1.                                                                                                |
+| `'powInv'`    | [`powerInverseScale(alpha)`](#stretching)    | The exponent. The mirror image of `'pow'`: `1 - (1 - t)^(1/alpha)`. No change: 1.                                                                           |
+| `'exp'`       | [`exponentialScale(alpha)`](#stretching)     | The base. No change: 0.                                                                                                                                     |
+| `'log'`       | [`logarithmicScale(alpha)`](#stretching)     | The base: a negative base gives more of the ramp to the low values, which is the usual choice for a population (-7 is a good start). No change: 0.          |
+| `'circle'`    | [`circularScale(alpha)`](#stretching)        | The circularity, between 0 (no stretching) and 1 (a quarter of circle).                                                                                     |
+| `'circleInv'` | [`circularInverseScale(alpha)`](#stretching) | The circularity, between 0 (no stretching) and 1.                                                                                                           |
 
 The stretching can be changed at any time (`style.stretching = { fun: 'pow', alpha: 0.4 }`, then `map.redraw()`), as in [this example](https://eurostat.github.io/gridviz/examples/basics/stretching.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/stretching.html)), which shows how each function changes the same map. A color legend can write the value of a position `t` of its bar with the `invert` function of the stretching function (`gridviz.logarithmicScale(-7).invert(t)`, in the `textScale` option of the legend).
 
@@ -431,10 +486,10 @@ The stretching can be changed at any time (`style.stretching = { fun: 'pow', alp
 
 Class: `gridviz.SquareColorCategoryWebGLStyle`. Options, plus the options common to all the styles:
 
-| Option  | Type                                       | Default                       | Description                                                                       |
-| ------- | ------------------------------------------ | ----------------------------- | --------------------------------------------------------------------------------- |
-| `code`  | `function(cell, resolution, z, viewScale)` | -                             | The category of the cell: a key of `color`. A cell without category is not drawn. |
-| `color` | object                                     | -                             | The color of each category: `{ category1: 'red', category2: '#00ff00' }`.         |
+| Option  | Type                                       | Default                       | Description                                                                        |
+| ------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------------------------------------- |
+| `code`  | `function(cell, resolution, z, viewScale)` | -                             | The category of the cell: a key of `color`. A cell without category is not drawn.  |
+| `color` | object                                     | -                             | The color of each category: `{ category1: 'red', category2: '#00ff00' }`.          |
 | `size`  | `function(resolution, z)`                  | the resolution plus 0.2 pixel | The size of the squares, in geographical unit. All the squares have the same size. |
 
 This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailed resolutions. As for the [Square color WebGL style](#square-color-webgl-style), the squares are drawn as triangles when they are large, so that there are no gaps in the grid when zoomed in.
@@ -456,16 +511,16 @@ new gridviz.CircleColorSizeWebGLStyle({
 })
 ```
 
-| Option           | Type                                                    | Default                      | Description                                                                                                              |
-| ---------------- | ------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `color`          | string or `function(cell, resolution, z, viewScale)`    | `'#EA6BAC'`                  | The color of the circle of a cell: any CSS color, with its opacity if it has one. A cell without color (or `'none'`) is not drawn. |
-| `size`           | number or `function(cell, resolution, z, viewScale)`    | the resolution of the grid   | The diameter of the circle, in geographical unit (not in pixels). A cell without size (0) is not drawn.                  |
-| `viewScale`      | function                                                | -                            | As for the other styles: a scale computed from the cells in the view, given to `color` and `size`.                       |
-| `filter`         | `function(cell)`                                        | -                            | A cell for which it returns false is not drawn.                                                                          |
-| `offset`         | `function(cell, resolution, z)`                         | no offset                    | Moves the circles, in geographical unit: `{dx, dy}`.                                                                     |
-| `alpha`          | `function(z)`                                           | opaque                       | The opacity of the style, applied once to all its circles.                                                               |
-| `blendOperation` | `function(z)`                                           | `'source-over'`              | How the style is blended with what is below, applied once to all its circles: `'multiply'`, `'screen'`...               |
-| `visible`        | boolean or `function(z)`                                | `true`                       | Whether the style is drawn, at a zoom level.                                                                             |
+| Option           | Type                                                 | Default                    | Description                                                                                                                        |
+| ---------------- | ---------------------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `color`          | string or `function(cell, resolution, z, viewScale)` | `'#EA6BAC'`                | The color of the circle of a cell: any CSS color, with its opacity if it has one. A cell without color (or `'none'`) is not drawn. |
+| `size`           | number or `function(cell, resolution, z, viewScale)` | the resolution of the grid | The diameter of the circle, in geographical unit (not in pixels). A cell without size (0) is not drawn.                            |
+| `viewScale`      | function                                             | -                          | As for the other styles: a scale computed from the cells in the view, given to `color` and `size`.                                 |
+| `filter`         | `function(cell)`                                     | -                          | A cell for which it returns false is not drawn.                                                                                    |
+| `offset`         | `function(cell, resolution, z)`                      | no offset                  | Moves the circles, in geographical unit: `{dx, dy}`.                                                                               |
+| `alpha`          | `function(z)`                                        | opaque                     | The opacity of the style, applied once to all its circles.                                                                         |
+| `blendOperation` | `function(z)`                                        | `'source-over'`            | How the style is blended with what is below, applied once to all its circles: `'multiply'`, `'screen'`...                          |
+| `visible`        | boolean or `function(z)`                             | `true`                     | Whether the style is drawn, at a zoom level.                                                                                       |
 
 A few things to know:
 
@@ -543,7 +598,7 @@ This style shows the grid cells as 3D pillars or, with changeable height, width 
 
 ### Ternary style
 
-There is no style of its own: the cells are drawn with a [Shape/Color/Size style](#shapecolorsize-style) whose color comes from a ternary classifier, and the `gridviz.TernaryLegend` shows the colors (see [the ternary color legend](#ternary-color-legend)).
+There is no style of its own: the cells are drawn with a [Shape/Color/Size style](#shapecolorsize-style) whose color comes from a ternary classifier, and the `gridviz.TernaryLegend` shows the colors (see [TernaryLegend](#ternarylegend)).
 
 [![ternary map style](img/styles/ternary.png)](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html)
 
@@ -647,15 +702,15 @@ new gridviz.ShadingStyle({
 })
 ```
 
-| Option             | Type                       | Default           | Description                                                                                                                |
-| ------------------ | -------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `elevation`        | string                     | -                 | The name of the cell property with the elevation. Required. A side next to a cell without elevation (or with a zero one) is not drawn.          |
-| `colorTopLeft`     | string                     | `'255,255,255'`   | The color of the sides which face the top left, as `'r,g,b'`.                                                              |
-| `colorBottomRight` | string                     | `'0,0,0'`         | The color of the sides which face the bottom right, as `'r,g,b'`.                                                          |
-| `revert`           | boolean                    | `false`           | Swaps the two colors, to show depressions as hills.                                                                        |
-| `scale`            | `function(number):number`  | linear            | Stretches the opacity, from a value within [0,1] (the elevation difference relative to the biggest one in the view) to a value within [0,1]. See [stretching](#stretching). |
-| `width`            | number                     | 2 pixels          | The width of the segments, in geographical unit. By default 2 pixels, and at most a third of the resolution.               |
-| `diamond`          | boolean                    | `false`           | Draws the sides as diamonds, as the [side style](#side-style) does.                                                        |
+| Option             | Type                      | Default         | Description                                                                                                                                                                 |
+| ------------------ | ------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `elevation`        | string                    | -               | The name of the cell property with the elevation. Required. A side next to a cell without elevation (or with a zero one) is not drawn.                                      |
+| `colorTopLeft`     | string                    | `'255,255,255'` | The color of the sides which face the top left, as `'r,g,b'`.                                                                                                               |
+| `colorBottomRight` | string                    | `'0,0,0'`       | The color of the sides which face the bottom right, as `'r,g,b'`.                                                                                                           |
+| `revert`           | boolean                   | `false`         | Swaps the two colors, to show depressions as hills.                                                                                                                         |
+| `scale`            | `function(number):number` | linear          | Stretches the opacity, from a value within [0,1] (the elevation difference relative to the biggest one in the view) to a value within [0,1]. See [stretching](#stretching). |
+| `width`            | number                    | 2 pixels        | The width of the segments, in geographical unit. By default 2 pixels, and at most a third of the resolution.                                                                |
+| `diamond`          | boolean                   | `false`         | Draws the sides as diamonds, as the [side style](#side-style) does.                                                                                                         |
 
 The other options of the [side style](#side-style) and of the styles in general (`filter`, `alpha`, `blendOperation`, `visible`...) can be used too.
 
@@ -760,13 +815,13 @@ const shadows = new gridviz.ShadingRayStyle({
 })
 ```
 
-| Option        | Type                                      | Default           | Description                                                                                                                       |
-| ------------- | ----------------------------------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `elevation`   | `function(cell):number`                   | -                 | The elevation of a cell. Required.                                                                                                |
-| `sunAzimuth`  | `function(resolution, z, viewScale):number` | `() => 2.356`   | The direction of the sun, in radians, clockwise from the north (0 is north, π/2 east, π south). The default is 135°: south-east.  |
-| `sunAltitude` | `function(resolution, z, viewScale):number` | `() => 0.2`     | The height of the sun above the horizon, in radians (0.2 is about 11°). The lower the sun, the longer the shadows.                |
-| `color`       | `function(resolution, z, viewScale):string` | `() => 'black'` | The color of the shadows.                                                                                                         |
-| `undefinedValue` | number                                 | `0`               | The elevation to use for the cells without elevation (such as the sea).                                                           |
+| Option           | Type                                        | Default         | Description                                                                                                                      |
+| ---------------- | ------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `elevation`      | `function(cell):number`                     | -               | The elevation of a cell. Required.                                                                                               |
+| `sunAzimuth`     | `function(resolution, z, viewScale):number` | `() => 2.356`   | The direction of the sun, in radians, clockwise from the north (0 is north, π/2 east, π south). The default is 135°: south-east. |
+| `sunAltitude`    | `function(resolution, z, viewScale):number` | `() => 0.2`     | The height of the sun above the horizon, in radians (0.2 is about 11°). The lower the sun, the longer the shadows.               |
+| `color`          | `function(resolution, z, viewScale):string` | `() => 'black'` | The color of the shadows.                                                                                                        |
+| `undefinedValue` | number                                      | `0`             | The elevation to use for the cells without elevation (such as the sea).                                                          |
 
 The shadows are computed from the cells of the view, each time the map is drawn. Their computation is heavy when there are many cells, so use a rather high `minPixelsPerCell` for the layer (the example uses 2). The styles options (`filter`, `alpha`, `blendOperation`, `visible`...) can be used too, to change them from a user interface for example.
 
@@ -803,13 +858,13 @@ interpolator.styles.push(new gridviz.SquareColorWebGLStyle({ tFun: (cell) => cel
 const layer = new gridviz.GridLayer(dataset, [interpolator])
 ```
 
-| Option                 | Type                                         | Default                        | Description                                                                                                                                                      |
-| ---------------------- | -------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `value`                | `function(cell):number`                      | -                              | The value to interpolate. Required.                                                                                                                              |
-| `targetResolution`     | `function(resolution, z):number`             | `(r, z) => r / 5`              | The resolution of the interpolated cells. The ratio between the resolution of the grid and this one is rounded to an integer, so make sure it is one.            |
-| `interpolatedProperty` | string                                       | `'value'`                      | The property of the interpolated cells which holds the interpolated value. The styles read the value from it.                                                    |
-| `nodataHandling`       | `'zero'` or `'average'`                      | `'zero'`                       | What to do with the neighbour cells without value: take zero, or the average of the surrounding cells.                                                           |
-| `styles`               | array of styles                              | `[]`                           | The styles which draw the interpolated cells. They are drawn at the target resolution, with their own `alpha`, `blendOperation` and `visible`.                   |
+| Option                 | Type                             | Default           | Description                                                                                                                                           |
+| ---------------------- | -------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`                | `function(cell):number`          | -                 | The value to interpolate. Required.                                                                                                                   |
+| `targetResolution`     | `function(resolution, z):number` | `(r, z) => r / 5` | The resolution of the interpolated cells. The ratio between the resolution of the grid and this one is rounded to an integer, so make sure it is one. |
+| `interpolatedProperty` | string                           | `'value'`         | The property of the interpolated cells which holds the interpolated value. The styles read the value from it.                                         |
+| `nodataHandling`       | `'zero'` or `'average'`          | `'zero'`          | What to do with the neighbour cells without value: take zero, or the average of the surrounding cells.                                                |
+| `styles`               | array of styles                  | `[]`              | The styles which draw the interpolated cells. They are drawn at the target resolution, with their own `alpha`, `blendOperation` and `visible`.        |
 
 The cells with a zero value after interpolation are not drawn. Since there are many more interpolated cells than cells, using the WebGL styles to draw them is recommended.
 
@@ -833,14 +888,14 @@ interpolator.styles.push(new gridviz.SquareColorCategoryWebGLStyle({ code: (cell
 const layer = new gridviz.GridLayer(dataset, [interpolator])
 ```
 
-| Option                 | Type                              | Default                      | Description                                                                                                                                                                                           |
-| ---------------------- | --------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `value`                | `function(cell)`                  | -                            | The category of the cell, a string or a number. Required.                                                                                                                                             |
-| `targetResolution`     | `function(resolution, z):number`  | `(r, z) => r / 5`            | The resolution of the finer grid. The ratio between the resolution of the grid and this one is rounded to an integer.                                                                                 |
-| `interpolatedProperty` | string                            | `'value'`                    | The property of the cells of the finer grid which holds the category. The styles read the category from it.                                                                                           |
-| `maxSteps`             | `function(factor):number`         | `(f) => 6 * f * f`           | The maximum number of steps of a random walk, from the ratio between the resolutions. A longer walk makes smoother limits, and takes more time. A walk which has not reached a cell takes the category of the cell it is in. |
-| `seed`                 | number                            | `0`                          | A number to change the random walks. Only the cells at the limits between categories change with it, so the effect is small.                                                                         |
-| `styles`               | array of styles                   | `[]`                         | The styles which draw the cells of the finer grid.                                                                                                                                                    |
+| Option                 | Type                             | Default            | Description                                                                                                                                                                                                                  |
+| ---------------------- | -------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`                | `function(cell)`                 | -                  | The category of the cell, a string or a number. Required.                                                                                                                                                                    |
+| `targetResolution`     | `function(resolution, z):number` | `(r, z) => r / 5`  | The resolution of the finer grid. The ratio between the resolution of the grid and this one is rounded to an integer.                                                                                                        |
+| `interpolatedProperty` | string                           | `'value'`          | The property of the cells of the finer grid which holds the category. The styles read the category from it.                                                                                                                  |
+| `maxSteps`             | `function(factor):number`        | `(f) => 6 * f * f` | The maximum number of steps of a random walk, from the ratio between the resolutions. A longer walk makes smoother limits, and takes more time. A walk which has not reached a cell takes the category of the cell it is in. |
+| `seed`                 | number                           | `0`                | A number to change the random walks. Only the cells at the limits between categories change with it, so the effect is small.                                                                                                 |
+| `styles`               | array of styles                  | `[]`               | The styles which draw the cells of the finer grid.                                                                                                                                                                           |
 
 The random walks start from the position of each cell of the finer grid: the result does not change when the map is panned or drawn again, only with the `seed`. A factor of 4 to 6 gives a good result in a fraction of a second for the cells of a screen: the cost grows with the square of the factor, and with the number of cells.
 
@@ -887,7 +942,7 @@ To handle layer and style transparency, blending modes and alpha values may be d
 
 ## Tooltip
 
-A tooltip shows information about the grid cell under the mouse pointer. By default, it lists the properties of the cell.
+A tooltip shows information about the grid cell under the mouse pointer. By default, it lists the properties of the cell with the names of the columns of the data (`TOT_P_2021`, `CNTR_ID`...). That is fine to explore a dataset, but a map for other people should give a `cellInfoHTML` which writes the values for a reader: a label and a unit ("2021 population: 13,007"), a name instead of a code ("Germany" instead of `DE`), and a number formatted with `toLocaleString()`.
 
 -   The text is the `cellInfoHTML` option of the [GridLayer](#gridlayer): a function of the cell which returns HTML, or `'none'` for no tooltip. See [this example](https://eurostat.github.io/gridviz/examples/basics/tooltip.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/tooltip.html)).
 -   The tooltip itself is set with the `tooltip` option of the map:
@@ -898,17 +953,17 @@ new gridviz.Map(document.getElementById('map'), {
 })
 ```
 
-| Option                           | Default                                                                  | Description                                                                                                                    |
-| -------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `maxWidth`                       | `'20em'`                                                                 | The widest the tooltip can be. What does not fit is clipped: use `'none'` for a tooltip with long lines.                       |
-| `fontSize`, `font-family`        | `'1rem'`, `'Helvetica Neue', Arial, Helvetica, sans-serif`               | The text.                                                                                                                      |
-| `color`, `lineHeight`            | `'#171a22'`, `'1.5'`                                                     | The color of the text and the height of its lines.                                                                             |
-| `background`, `padding`          | `'white'`, `'4px'`                                                       | The inside of the tooltip.                                                                                                     |
-| `border`, `border-radius`        | `'1px solid #d5d5d5'`, `'6px'`                                           | Its outline.                                                                                                                   |
-| `box-shadow`                     | `'0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)'`     | Its shadow.                                                                                                                    |
-| `xOffset`, `yOffset`             | `30`, `20`                                                               | Its distance from the pointer, in pixels. `xMouseOffset` and `yMouseOffset` shift the point where the mouse is taken, for example so that the cursor does not cover the cell which is highlighted (default 0).      |
-| `transitionDuration`             | `100`                                                                    | The duration of its fade in and out, in milliseconds.                                                                          |
-| `parentElement`, `tooltipElement` | the page body, a new element                                            | Where the tooltip is added, and an element of the page to use as the tooltip instead of a new one.                              |
+| Option                            | Default                                                             | Description                                                                                                                                                                                                    |
+| --------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `maxWidth`                        | `'20em'`                                                            | The widest the tooltip can be. What does not fit is clipped: use `'none'` for a tooltip with long lines.                                                                                                       |
+| `fontSize`, `font-family`         | `'1rem'`, `'Helvetica Neue', Arial, Helvetica, sans-serif`          | The text.                                                                                                                                                                                                      |
+| `color`, `lineHeight`             | `'#171a22'`, `'1.5'`                                                | The color of the text and the height of its lines.                                                                                                                                                             |
+| `background`, `padding`           | `'white'`, `'4px'`                                                  | The inside of the tooltip.                                                                                                                                                                                     |
+| `border`, `border-radius`         | `'1px solid #d5d5d5'`, `'6px'`                                      | Its outline.                                                                                                                                                                                                   |
+| `box-shadow`                      | `'0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)'` | Its shadow.                                                                                                                                                                                                    |
+| `xOffset`, `yOffset`              | `30`, `20`                                                          | Its distance from the pointer, in pixels. `xMouseOffset` and `yMouseOffset` shift the point where the mouse is taken, for example so that the cursor does not cover the cell which is highlighted (default 0). |
+| `transitionDuration`              | `100`                                                               | The duration of its fade in and out, in milliseconds.                                                                                                                                                          |
+| `parentElement`, `tooltipElement` | the map container, a new element                                    | Where the tooltip is added, and an element of the page to use as the tooltip instead of a new one.                                                                                                             |
 
 The defaults are the look of the tooltips of the statistical atlas. The tooltip has the class `gridviz-tooltip`, so that a stylesheet can restyle it (the inline styles need `!important` to be overridden).
 
@@ -917,12 +972,15 @@ The defaults are the look of the tooltips of the statistical atlas. The tooltip 
 The map has a zoom button and a full screen button, added with two methods which can be chained:
 
 ```javascript
-const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 }).addZoomButtons().addFullscreenButton()
+const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
+    .addZoomButtons()
+    .addFullscreenButton()
 ```
 
 -   `addZoomButtons({ id, class, x, y, onZoom, delta })`: the two buttons "+" and "−". `delta` is the change of zoom at each click (0.2 by default), and `onZoom` a function called after it. By default the buttons are 10 pixels from the right and from the top.
 -   `addFullscreenButton({ id, class, x, y })`: by default 10 pixels from the right and 90 pixels from the top.
 -   `x` and `y` are the distances, in pixels, of the button from the left and from the top of the map. `class` adds your own CSS classes.
+-   On a touch screen, the zoom buttons are bigger (48 pixels), unless the page sets `--gridviz-button-size` itself, and only the button which is pressed is lit, not both. The hover color is for the mouse.
 
 See [this example](https://eurostat.github.io/gridviz/examples/basics/buttons.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/buttons.html)). The look of the buttons is the one of the map controls of the statistical atlas, and can be changed with CSS variables: see [styling the rest of the map](#styling-the-rest-of-the-map-from-a-stylesheet).
 
@@ -932,6 +990,30 @@ For some predefined style parameters, _viewscale_ parameter allows defining styl
 
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/basics/viewscale_basic.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale_basic.html)).
 -   See [this more advanced example](https://eurostat.github.io/gridviz/examples/basics/viewscale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/viewscale.html)) using some predefined function.
+
+### View scale functions
+
+Gridviz makes the usual view scales. Each one takes an object of options and returns a function of the cells in the view (a `viewScale` for a style). The `valueFunction` option, which gives the value of a cell, is required.
+
+| Function                             | Gives                                                                                                                                                            | Other options                                                                             |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `gridviz.viewScale`                  | A size, continuous from the minimum to the maximum value of the cells in the view (or in classes with `classNumber`). Has an `invert` function, for the legends. | `minValue`, `minSizePix`, `maxSizeFactor`, `range`, `domain`, `stretching`, `classNumber` |
+| `gridviz.viewScaleQuantile`          | A size per class of equal number of cells (quantiles).                                                                                                           | `classNumber`, `minSizePix`, `maxSizeFactor`                                              |
+| `gridviz.viewScaleColor`             | A color, continuous (from a `colorScale`) or in classes (from the `colors`).                                                                                     | `colorScale`, `colors`, `stretching`                                                      |
+| `gridviz.viewScaleColorQuantile`     | A color per class of equal number of cells.                                                                                                                      | `classNumber`, `colors`, `colorScale`                                                     |
+| `gridviz.viewScaleQuantileClassifer` | The class (quantile) of a value: a number. (The name is spelled like this in the code.)                                                                          | `classNumber`                                                                             |
+| `gridviz.viewScaleCombination`       | Several view scales in one object, see below.                                                                                                                    | an object of view scales                                                                  |
+
+See [this example](https://eurostat.github.io/gridviz/examples/legends/colorQuantileLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorQuantileLegendViewScale.html)) for quantiles.
+
+### Classifiers
+
+A few functions help to classify values, outside of a view scale:
+
+-   `gridviz.classifier(breaks)` returns a function which gives the class (from 0 to `breaks.length`) of a value, and `gridviz.classifierMinMax(min, max, classNumber)` the same for classes of equal width.
+-   `gridviz.colorClassifier(breaks, colors)` gives the color of the class of a value (one color more than breaks). `gridviz.discreteColors(colorScale, n)` makes the `n` colors of a color scale, to use as `colors`.
+-   `gridviz.stretchedBreaks(min, max, classNumber, stretching)` makes the breaks of classes of equal width on a stretched scale.
+-   `gridviz.ternaryClassifier(properties, totalFunction, opts)` and `gridviz.ternaryColorClassifier(properties, totalFunction, colors, opts)` classify a cell by the share of three properties (and give the color of its class), for a [ternary style](#ternary-style). Options: `center`, `centerCoefficient` (the central class), `withMixedClasses`, `colorInterpolation`, `mixedColors`, `centerColor`, `defaultColor`.
 
 ### One view scale for the color and the size
 
@@ -960,16 +1042,16 @@ Put them all in the legends of the style: `style.legends = [colorLegend, sizeLeg
 
 ## Stretching
 
-Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continuous mapping from a statistical variable to a visual variable (color, size, etc.). The statistical distribution can be stretched with one of the _stretching functions_ listed below can be used. These are continuous bijective functions defined from _[0,1]_ to _[0,1]_ intervals. They have different properties and should be chosen according to the data distribution. The amplitude of the stretching can be adjusted with a parameter.
+Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continuous mapping from a statistical variable to a visual variable (color, size, etc.). The statistical distribution can be stretched with one of the _stretching functions_ listed below. These are continuous bijective functions defined from _[0,1]_ to _[0,1]_ intervals. They have different properties and should be chosen according to the data distribution. The amplitude of the stretching can be adjusted with a parameter.
 
 | Stretching function      | Description                 | Stretching parameter                                       |
 | ------------------------ | --------------------------- | ---------------------------------------------------------- |
 | **powerScale**           | Polynomial function         | Power exponent, from 0 to Infinity. No change: 1           |
 | **powerInverseScale**    | Polynomial inverse function | Power exponent, from 0 to Infinity. No change: 1           |
-| **logarithmicScale**     | Exponential function        | Logarithmic base, from -Infinity to Infinity. No change: 0 |
-| **exponentialScale**     | Exponential                 | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **logarithmicScale**     | Logarithmic function        | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **exponentialScale**     | Exponential function        | Exponential base, from -Infinity to Infinity. No change: 0 |
 | **circularScale**        | Circular                    | 0: no stretching. 1: perfect circle section                |
-| **circularInverseScale** | Circular                    | 0: no stretching. 1: perfect circle section                |
+| **circularInverseScale** | Circular inverse            | 0: no stretching. 1: perfect circle section                |
 
 For more information on these functions and an overview of how they differ, see:
 
@@ -1027,18 +1109,18 @@ A custom style can take part too: skip the cells for which `this.isHighlighted(c
 
 These options can be given to any legend, besides its own ones. The legends can also be customised afterwards with the `style()` function (see above).
 
-| Option                          | Type                                | Default                                       | Description                                                                                                                                      |
-| ------------------------------- | ----------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `title`                         | string                              | -                                             | The title of the legend.                                                                                                                         |
-| `titleFontSize`, `titleFontWeight` | string                         | `'15px'`, `'500'`                              | The font of the title.                                                                                                                           |
-| `labelFontSize`                 | string                              | `'14px'`                                      | The font size of the labels.                                                                                                                     |
-| `labelUnitText`                 | string                              | `''`                                          | A unit written after the labels.                                                                                                                 |
-| `labelFormat`                   | `function(number):string`           | -                                             | Formats the labels which are numbers.                                                                                                            |
-| `labelsAsHTML`                  | boolean                             | `false`                                       | See [legend options for hosts](#legend-options-for-hosts).                                                                                       |
-| `interactive`                   | boolean                             | `true`                                        | Set to `false` to turn off the [interaction with the map](#interactive-legends).                                                                |
-| `className`                     | string                              | -                                             | CSS classes added to the legend, separated by spaces. See [styling legends from a stylesheet](#styling-legends-from-a-stylesheet).               |
-| `id`                            | string                              | -                                             | The id of the legend element, or of an existing element of the page to draw the legend in.                                                       |
-| `padding`, `font-family`, `background`, `border`, `border-radius`, `box-shadow` | string | `'5px'`, the font of the tooltip, `'none'`, `'0px'`, `'none'`, `'none'` | The look of the legend element. Prefer the CSS variables and classes above.                                          |
+| Option                                                                          | Type                      | Default                                                                 | Description                                                                                                                        |
+| ------------------------------------------------------------------------------- | ------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `title`                                                                         | string                    | -                                                                       | The title of the legend.                                                                                                           |
+| `titleFontSize`, `titleFontWeight`                                              | string                    | `'15px'`, `'500'`                                                       | The font of the title.                                                                                                             |
+| `labelFontSize`                                                                 | string                    | `'14px'`                                                                | The font size of the labels.                                                                                                       |
+| `labelUnitText`                                                                 | string                    | `''`                                                                    | A unit written after the labels.                                                                                                   |
+| `labelFormat`                                                                   | `function(number):string` | -                                                                       | Formats the labels which are numbers.                                                                                              |
+| `labelsAsHTML`                                                                  | boolean                   | `false`                                                                 | See [legend options for hosts](#legend-options-for-hosts).                                                                         |
+| `interactive`                                                                   | boolean                   | `true`                                                                  | Set to `false` to turn off the [interaction with the map](#interactive-legends).                                                   |
+| `className`                                                                     | string                    | -                                                                       | CSS classes added to the legend, separated by spaces. See [styling legends from a stylesheet](#styling-legends-from-a-stylesheet). |
+| `id`                                                                            | string                    | -                                                                       | The id of the legend element, or of an existing element of the page to draw the legend in.                                         |
+| `padding`, `font-family`, `background`, `border`, `border-radius`, `box-shadow` | string                    | `'5px'`, the font of the tooltip, `'none'`, `'0px'`, `'none'`, `'none'` | The look of the legend element. Prefer the CSS variables and classes above.                                                        |
 
 ### ColorLegend
 
@@ -1046,18 +1128,18 @@ Class: `gridviz.ColorLegend`. A color bar, for a continuous color ramp.
 
 ![](img/legends/color_legend.png)
 
-| Option       | Type                                                | Default           | Description                                                                                                                                              |
-| ------------ | --------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `colorScale` | `function(t, viewScale)`                            | -                 | The color for a value `t` of [0,1], the same function as the one of the style. It can use the [view scale](#view-scale). Required.                       |
-| `textScale`  | `function(t, viewScale)`                            | `(t) => t`        | The value written for a `t` of [0,1].                                                                                                                    |
-| `ticks`      | number                                              | one for each 50 pixels of the width, at least 2 | The number of ticks.                                                                                                                  |
-| `tickSize`   | number                                              | `6`               | The length of the ticks, in pixels.                                                                                                                      |
-| `tickFormat`, `tickUnit` | `function(number):string`, string           | -                 | The format of the numbers of the ticks, and a unit written after them.                                                                                   |
-| `fontSize`   | string                                              | `labelFontSize`   | The font size of the labels of the ticks.                                                                                                                |
-| `invert`     | boolean                                             | `false`           | Draws the ramp from the last color to the first one.                                                                                                     |
-| `width`      | number or `'fill'`                                  | `300`             | The width of the bar, in pixels, or `'fill'` for the width of the element the legends are in.                                                            |
-| `height`     | number                                              | `15`              | The height of the bar, in pixels.                                                                                                                        |
-| `margin`     | number                                              | `5`               | The margin on each side of the bar, in pixels.                                                                                                           |
+| Option                   | Type                              | Default                                         | Description                                                                                                                        |
+| ------------------------ | --------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `colorScale`             | `function(t, viewScale)`          | -                                               | The color for a value `t` of [0,1], the same function as the one of the style. It can use the [view scale](#view-scale). Required. |
+| `textScale`              | `function(t, viewScale)`          | `(t) => t`                                      | The value written for a `t` of [0,1].                                                                                              |
+| `ticks`                  | number                            | one for each 50 pixels of the width, at least 2 | The number of ticks.                                                                                                               |
+| `tickSize`               | number                            | `6`                                             | The length of the ticks, in pixels.                                                                                                |
+| `tickFormat`, `tickUnit` | `function(number):string`, string | -                                               | The format of the numbers of the ticks, and a unit written after them.                                                             |
+| `fontSize`               | string                            | `labelFontSize`                                 | The font size of the labels of the ticks.                                                                                          |
+| `invert`                 | boolean                           | `false`                                         | Draws the ramp from the last color to the first one.                                                                               |
+| `width`                  | number or `'fill'`                | `300`                                           | The width of the bar, in pixels, or `'fill'` for the width of the element the legends are in.                                      |
+| `height`                 | number                            | `15`                                            | The height of the bar, in pixels.                                                                                                  |
+| `margin`                 | number                            | `5`                                             | The margin on each side of the bar, in pixels.                                                                                     |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegend.html)).
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorLegendViewScale.html)) for a view scale based style.
@@ -1070,14 +1152,14 @@ Class: `gridviz.ColorDiscreteLegend`. A bar of colored classes, with the limits 
 
 ![](img/legends/color_discrete_legend.png)
 
-| Option      | Type                                  | Default | Description                                                                                                                        |
-| ----------- | ------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `colors`    | `function(viewScale):string[]`        | -       | The colors of the classes. A function, which can use the [view scale](#view-scale) (for classes from quantiles for example). Required. |
-| `breaks`    | `function(viewScale):number[]`        | -       | The limits of the classes, one more than the colors. Required.                                                                     |
-| `tickSize`  | number                                | `3`     | The length of the ticks, in pixels.                                                                                                |
-| `invert`    | boolean                               | `false` | Writes the labels from the last class to the first one.                                                                            |
-| `width`     | number or `'fill'`                    | `300`   | The width of the bar, in pixels, or `'fill'` for the width of the element the legends are in.                                      |
-| `height`    | number                                | `15`    | The height of the bar, in pixels.                                                                                                  |
+| Option     | Type                           | Default | Description                                                                                                                            |
+| ---------- | ------------------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `colors`   | `function(viewScale):string[]` | -       | The colors of the classes. A function, which can use the [view scale](#view-scale) (for classes from quantiles for example). Required. |
+| `breaks`   | `function(viewScale):number[]` | -       | The limits of the classes, one more than the colors. Required.                                                                         |
+| `tickSize` | number                         | `3`     | The length of the ticks, in pixels.                                                                                                    |
+| `invert`   | boolean                        | `false` | Writes the labels from the last class to the first one.                                                                                |
+| `width`    | number or `'fill'`             | `300`   | The width of the bar, in pixels, or `'fill'` for the width of the element the legends are in.                                          |
+| `height`   | number                         | `15`    | The height of the bar, in pixels.                                                                                                      |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegend.html)).
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorDiscreteLegendViewScale.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorDiscreteLegendViewScale.html)) for a view scale based style.
@@ -1089,13 +1171,13 @@ Class: `gridviz.ColorCategoryLegend`. A list of colored symbols with a label, fo
 
 ![](img/legends/color_category_legend.png)
 
-| Option        | Type                         | Default            | Description                                                                              |
-| ------------- | ---------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
-| `colorLabel`  | array of `[color, label]`    | `[['gray', '-']]`  | The categories, in display order: the color and the label of each one.                   |
-| `shape`       | `'circle'` or `'square'`     | `'circle'`         | The shape of the symbols.                                                                |
-| `dimension`   | `{r}` or `{w, h}`            | `{r: 8}`           | The size of the symbols, in pixels: the radius of a circle, the width and height (`20` and `15` by default) of a square. |
-| `strokeColor` | string                       | `'gray'`           | The color of the outline of the symbols.                                                 |
-| `strokeWidth` | number                       | `1`                | The width of the outline of the symbols, in pixels.                                      |
+| Option        | Type                      | Default           | Description                                                                                                              |
+| ------------- | ------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `colorLabel`  | array of `[color, label]` | `[['gray', '-']]` | The categories, in display order: the color and the label of each one.                                                   |
+| `shape`       | `'circle'` or `'square'`  | `'circle'`        | The shape of the symbols.                                                                                                |
+| `dimension`   | `{r}` or `{w, h}`         | `{r: 8}`          | The size of the symbols, in pixels: the radius of a circle, the width and height (`20` and `15` by default) of a square. |
+| `strokeColor` | string                    | `'gray'`          | The color of the outline of the symbols.                                                                                 |
+| `strokeWidth` | number                    | `1`               | The width of the outline of the symbols, in pixels.                                                                      |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/colorCategoryLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/colorCategoryLegend.html)).
 
@@ -1105,13 +1187,13 @@ Class: `gridviz.OrientationLegend`. A segment at an angle, with a label, for the
 
 ![](img/legends/segment_orientation_legend.png)
 
-| Option        | Type                                       | Default                            | Description                                                                        |
-| ------------- | ------------------------------------------ | ---------------------------------- | ---------------------------------------------------------------------------------- |
-| `orientation` | number                                     | `0`                                | The angle of the segment, in degrees.                                              |
-| `label`       | string                                     | `'-'`                              | The label written beside the segment.                                              |
-| `color`       | `function(resolution, z, viewScale)`       | gray                               | The color of the segment.                                                          |
-| `width`       | `function(resolution, z, viewScale)`       | `3 * z`                            | The width of the segment, in geographical unit: the same function as the style.   |
-| `length`      | `function(resolution, z, viewScale)`       | the resolution of the grid         | The length of the segment, in geographical unit: the same function as the style.  |
+| Option        | Type                                 | Default                    | Description                                                                      |
+| ------------- | ------------------------------------ | -------------------------- | -------------------------------------------------------------------------------- |
+| `orientation` | number                               | `0`                        | The angle of the segment, in degrees.                                            |
+| `label`       | string                               | `'-'`                      | The label written beside the segment.                                            |
+| `color`       | `function(resolution, z, viewScale)` | gray                       | The color of the segment.                                                        |
+| `width`       | `function(resolution, z, viewScale)` | `3 * z`                    | The width of the segment, in geographical unit: the same function as the style.  |
+| `length`      | `function(resolution, z, viewScale)` | the resolution of the grid | The length of the segment, in geographical unit: the same function as the style. |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/legends/orientationLegend.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/legends/orientationLegend.html)).
 
@@ -1121,15 +1203,15 @@ Class: `gridviz.SizeLegend`. One symbol of a size, with its label, for proportio
 
 ![](img/legends/size_legend.png)
 
-| Option          | Type                                                    | Default                    | Description                                                                                                                                                       |
-| --------------- | ------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `label`         | `function(viewScale, cells, resolution, z)`             | -                          | The label of the symbol: a number or a text. Required.                                                                                                            |
-| `size`          | `function(viewScale, resolution, z)`                    | -                          | The size of the symbol, in geographical unit. Without it, `viewScaleFun` gives the size from the label.                                                           |
-| `viewScaleFun`  | `function(viewScale):function(number):number`           | the view scale itself      | The scale which gives the size of the symbol from its label. With a style which combines a color and a size view scale: `(viewScale) => viewScale.size`. See [view scale](#one-view-scale-for-the-color-and-the-size). |
-| `shape`         | a shape, or `'line'`                                    | `'circle'`                 | The shape of the symbol.                                                                                                                                          |
-| `fillColor`     | string                                                  | `'none'`                   | The fill color of the symbol.                                                                                                                                     |
-| `strokeColor`, `strokeWidth` | string, number                           | `'gray'`, `1`              | The outline of the symbol.                                                                                                                                        |
-| `color`, `length` | string, `function(resolution, z, viewScale)`        | `'gray'`, the resolution   | For `shape: 'line'`: the color and the length of the segment.                                                                                                     |
+| Option                       | Type                                          | Default                  | Description                                                                                                                                                                                                            |
+| ---------------------------- | --------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label`                      | `function(viewScale, cells, resolution, z)`   | -                        | The label of the symbol: a number or a text. Required.                                                                                                                                                                 |
+| `size`                       | `function(viewScale, resolution, z)`          | -                        | The size of the symbol, in geographical unit. Without it, `viewScaleFun` gives the size from the label.                                                                                                                |
+| `viewScaleFun`               | `function(viewScale):function(number):number` | the view scale itself    | The scale which gives the size of the symbol from its label. With a style which combines a color and a size view scale: `(viewScale) => viewScale.size`. See [view scale](#one-view-scale-for-the-color-and-the-size). |
+| `shape`                      | a shape, or `'line'`                          | `'circle'`               | The shape of the symbol.                                                                                                                                                                                               |
+| `fillColor`                  | string                                        | `'none'`                 | The fill color of the symbol.                                                                                                                                                                                          |
+| `strokeColor`, `strokeWidth` | string, number                                | `'gray'`, `1`            | The outline of the symbol.                                                                                                                                                                                             |
+| `color`, `length`            | string, `function(resolution, z, viewScale)`  | `'gray'`, the resolution | For `shape: 'line'`: the color and the length of the segment.                                                                                                                                                          |
 
 Functions which make a list of size legends:
 
@@ -1150,15 +1232,15 @@ Class: `gridviz.TernaryLegend`. A triangle of the colors of a [ternary style](#t
 
 ![](img/legends/ternary_legend.png)
 
-| Option              | Type                         | Default                                | Description                                                                                                         |
-| ------------------- | ---------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `classifier`        | a ternary classifier         | -                                      | The classifier of the ternary style, which gives the colors. Required.                                              |
-| `topText`, `leftText`, `rightText` | string       | `'Category 1'`, `'Category 0'`, `'Category 2'` | The names of the three categories, at the corners of the triangle.                                      |
-| `texts`             | object                       | -                                      | The text shown in the tooltip for each part of the triangle: keys `0`, `1`, `2`, `m12`, `m02`, `m01` and `center`. |
-| `tooltip`           | the tooltip of the map       | -                                      | Where the `texts` are shown: `map.tooltip`.                                                                        |
-| `selectionColor`    | string                       | `'red'`                                | The color of the outline of the part hovered.                                                                       |
-| `centerCoefficient` | number                       | the one of the classifier              | The size of the central part.                                                                                       |
-| `width`             | number                       | `150`                                  | The width of the triangle, in pixels.                                                                               |
+| Option                             | Type                   | Default                                        | Description                                                                                                        |
+| ---------------------------------- | ---------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `classifier`                       | a ternary classifier   | -                                              | The classifier of the ternary style, which gives the colors. Required.                                             |
+| `topText`, `leftText`, `rightText` | string                 | `'Category 1'`, `'Category 0'`, `'Category 2'` | The names of the three categories, at the corners of the triangle.                                                 |
+| `texts`                            | object                 | -                                              | The text shown in the tooltip for each part of the triangle: keys `0`, `1`, `2`, `m12`, `m02`, `m01` and `center`. |
+| `tooltip`                          | the tooltip of the map | -                                              | Where the `texts` are shown: `map.tooltip`.                                                                        |
+| `selectionColor`                   | string                 | `'red'`                                        | The color of the outline of the part hovered.                                                                      |
+| `centerCoefficient`                | number                 | the one of the classifier                      | The size of the central part.                                                                                      |
+| `width`                            | number                 | `150`                                          | The width of the triangle, in pixels.                                                                              |
 
 -   See [this example](https://eurostat.github.io/gridviz/examples/styles/ternary_age_DE.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ternary_age_DE.html)).
 
@@ -1184,12 +1266,12 @@ styles[0].legends = [
 ]
 ```
 
-| Option    | Type                                | Default  | Description                                                                                                                                                       |
-| --------- | ----------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `items`   | array of `{label, color}`           | -        | The two or three variables. The label is written beside the circle (on the left, on the right and below, for the first, second and third one). The color is the one the style which draws the variable uses. Required. |
-| `radius`  | number                              | `45`     | The radius of the circles, in pixels.                                                                                                                             |
-| `opacity` | number                              | `1`      | The opacity of the circles, within [0,1].                                                                                                                         |
-| `styles`  | array of styles                     | the styles of the layer | The styles which are highlighted when the diagram is hovered, which should be the ones which draw the variables.                                                    |
+| Option    | Type                      | Default                 | Description                                                                                                                                                                                                            |
+| --------- | ------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `items`   | array of `{label, color}` | -                       | The two or three variables. The label is written beside the circle (on the left, on the right and below, for the first, second and third one). The color is the one the style which draws the variable uses. Required. |
+| `radius`  | number                    | `45`                    | The radius of the circles, in pixels.                                                                                                                                                                                  |
+| `opacity` | number                    | `1`                     | The opacity of the circles, within [0,1].                                                                                                                                                                              |
+| `styles`  | array of styles           | the styles of the layer | The styles which are highlighted when the diagram is hovered, which should be the ones which draw the variables.                                                                                                       |
 
 The common options of the legends (`title`, `labelFontSize`, `titleFontSize`, `padding`, `className`, `interactive`...) can be used too.
 
