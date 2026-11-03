@@ -26,12 +26,7 @@ export class ZoomButtons extends Button {
         this.zoomInBtn.addEventListener('click', (e) => {
             this.zoomIn(e)
         })
-        this.zoomInBtn.addEventListener('mouseover', () => {
-            this.zoomInBtn.style.backgroundColor = Button.HOVER_BACKGROUND
-        })
-        this.zoomInBtn.addEventListener('mouseout', () => {
-            this.zoomInBtn.style.backgroundColor = Button.BACKGROUND
-        })
+        this.feedback(this.zoomInBtn)
 
         // Create zoom out button
         this.zoomOutBtn = document.createElement('a')
@@ -42,12 +37,7 @@ export class ZoomButtons extends Button {
         this.zoomOutBtn.addEventListener('click', (e) => {
             this.zoomOut(e)
         })
-        this.zoomOutBtn.addEventListener('mouseover', () => {
-            this.zoomOutBtn.style.backgroundColor = Button.HOVER_BACKGROUND
-        })
-        this.zoomOutBtn.addEventListener('mouseout', () => {
-            this.zoomOutBtn.style.backgroundColor = Button.BACKGROUND
-        })
+        this.feedback(this.zoomOutBtn)
 
         // Set common styles for buttons
         const buttons = [this.zoomInBtn, this.zoomOutBtn]
@@ -72,6 +62,18 @@ export class ZoomButtons extends Button {
             if (index === 0) btn.style.borderBottom = '1px solid #ccc' // Zoom in button only
         })
 
+        // On a touch screen, the buttons are bigger, unless the page chose a size. The tap must not highlight the container.
+        this.style('-webkit-tap-highlight-color', 'transparent')
+        buttons.forEach((btn) => {
+            btn.style.webkitTapHighlightColor = 'transparent'
+            btn.style.touchAction = 'manipulation'
+        })
+        if (
+            window.matchMedia?.('(pointer: coarse)').matches &&
+            !getComputedStyle(this.parentNode).getPropertyValue('--gridviz-button-size')
+        )
+            this.style('--gridviz-button-size', '48px')
+
         // Unset parent class height and display for dual buttons
         this.style('height', 'unset')
         this.style('display', 'unset')
@@ -91,6 +93,21 @@ export class ZoomButtons extends Button {
         // Append buttons to the container
         this.div.node().appendChild(this.zoomInBtn)
         this.div.node().appendChild(this.zoomOutBtn)
+    }
+
+    /**
+     * The feedback of a button: lit when the mouse is over it, and when it is pressed. It is for this button only, not for the whole container.
+     * The hover is for the mouse only: on a touch screen, it would stay on the last button touched.
+     * @param {HTMLElement} btn
+     */
+    feedback(btn) {
+        const set = (v) => () => (btn.style.backgroundColor = v)
+        btn.addEventListener('pointerenter', (e) => {
+            if (e.pointerType === 'mouse') set(Button.HOVER_BACKGROUND)()
+        })
+        btn.addEventListener('pointerdown', set(Button.HOVER_BACKGROUND))
+        for (const type of ['pointerup', 'pointerleave', 'pointercancel'])
+            btn.addEventListener(type, set(Button.BACKGROUND))
     }
 
     /* Zoom in */
