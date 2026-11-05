@@ -47,6 +47,7 @@
         "test": "node --test \"test/*.test.js\"",
         "test:browser": "node test/browser/run.mjs",
         "test:gpu": "node test/browser/gpu.mjs",
+        "test:csv-worker": "node test/browser/csv-worker.mjs",
         "test:compat": "node test/browser/compat.mjs",
         "audit": "npm audit",
         "prepublishOnly": "npm audit && npm test",
