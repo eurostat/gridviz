@@ -123,6 +123,10 @@ In order to visualize large grids efficiently, you can produce tiled grids in a 
 | _status_       | Since 2020                                                                                                                                                                            |
 | _license_      | [EUPL 1.2](LICENSE)                                                                                                                                                                   |
 
+### Tests
+
+`npm test` runs the unit tests. These run in Chrome: `npm run test:browser` (hover, with real data), `npm run test:gpu` (the GPU renderer against the map's own drawing), `npm run test:csv-worker`, `npm run test:fullscreen`. Before a release, `npm run test:compat` compares every example of the gallery with the published version, at rest and after a drag, the wheel and a zoom button, and `npm run build` makes both bundles.
+
 ### Support and contribution
 
 Feel free to [ask support](https://github.com/eurostat/gridviz/issues/new), fork the project or simply star it (it's always a pleasure).

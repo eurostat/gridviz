@@ -1287,7 +1287,7 @@ For this, the legend highlights all the styles of the layer it is in, not only t
 
 ## Leaflet
 
-Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
+Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz). For a large grid that has to keep up with the basemap while the map moves, see [drawing grid layers on the GPU](#drawing-grid-layers-on-the-gpu).
 
 ## A map inside another map
 
