@@ -37,11 +37,17 @@ const LOAD_EVERY_MS = 100
 const RAMP_STEPS = 1024
 // Number of cells whose result stands for the view when deciding whether its tiles have to be coloured again
 const SAMPLE_CELLS = 200
+// During a movement a view scale is worked out from at most this many cells of the view: the classes come out much the same, in a fraction of the time. A redraw at the end of
+// the movement works them out from all the cells.
+const MAX_CELLS_FOR_SCALE = 10000
+// How many cells are made between two looks at the clock, when building a tile
+const CELLS_BETWEEN_CHECKS = 256
 
 const CELL_VS = `#version 300 es
 precision highp float;
 layout(location = 0) in vec3 a_cell;   // x, y of the centre (m, from the tile's origin); size (m): 0 for the size of the style, negative for a circle
 layout(location = 1) in vec4 a_color;
+layout(location = 2) in float a_shape; // see SHAPES; for a donut, the fractional part gives the hole. 0 where the attribute is not there.
 uniform vec2 u_offset;    // the tile's origin in CSS pixels of the canvas
 uniform vec2 u_scale;     // CSS pixels per metre
 uniform vec2 u_viewport;
@@ -50,7 +56,9 @@ uniform float u_minHalf;  // half a device pixel in CSS pixels: a cell never van
 uniform float u_circleScale; // see _setCellUniforms
 out vec4 v_color;
 out vec2 v_px;            // from the centre (CSS pixels)
-out float v_radius;       // of a circle (CSS pixels), or 0
+out float v_radius;       // of a shape other than a square (CSS pixels), or 0
+flat out int v_shape;
+flat out float v_hole;    // of a donut, as a part of its radius
 void main() {
     // two triangles
     int v = gl_VertexID;
@@ -63,6 +71,8 @@ void main() {
     vec2 px = u_offset + a_cell.xy * u_scale + corner * reach;
     v_px = corner * reach;
     v_radius = circle ? half_.x : 0.0;
+    v_shape = int(floor(a_shape));
+    v_hole = fract(a_shape) / 0.99;
     v_color = a_color;
     gl_Position = vec4(px.x / u_viewport.x * 2.0 - 1.0, 1.0 - px.y / u_viewport.y * 2.0, 0.0, 1.0);
 }`
@@ -72,11 +82,32 @@ precision highp float;
 in vec4 v_color;
 in vec2 v_px;
 in float v_radius;
+flat in int v_shape;
+flat in float v_hole;
 uniform float u_alpha;
 out vec4 fragColor;
 void main() {
     float a = v_color.a * u_alpha;
-    if (v_radius > 0.0) a *= clamp(v_radius - length(v_px) + 0.5, 0.0, 1.0);
+    if (v_radius > 0.0) {
+        float r = v_radius;
+        vec2 p = v_px;
+        if (v_shape == 0) {
+            a *= clamp(r - length(p) + 0.5, 0.0, 1.0);
+        } else if (v_shape == 1) {
+            // diamond
+            a *= clamp(0.5 - (abs(p.x) + abs(p.y) - r) / 1.41421356, 0.0, 1.0);
+        } else if (v_shape == 2) {
+            // donut
+            float l = length(p);
+            a *= clamp(r - l + 0.5, 0.0, 1.0) * clamp(l - r * v_hole + 0.5, 0.0, 1.0);
+        } else {
+            // a triangle: the one pointing up, turned (y goes down on the screen)
+            if (v_shape == 4) p = vec2(p.x, -p.y);
+            else if (v_shape == 5) p = vec2(p.y, p.x);
+            else if (v_shape == 6) p = vec2(p.y, -p.x);
+            a *= clamp(0.5 - max(p.y - r, (2.0 * abs(p.x) - p.y - r) / 2.23606798), 0.0, 1.0);
+        }
+    }
     if (a <= 0.0) discard;
     fragColor = vec4(v_color.rgb * a, a);
 }`
@@ -107,6 +138,9 @@ const BACKDROP_REACH = 4
 // How far a circle grows with the map during a zoom in, until the layer is redrawn
 const MAX_CIRCLE_GROWTH = 2
 
+// The shapes of ShapeColorSizeStyle other than the square, as the shaders know them
+const SHAPES = { circle: 0, diamond: 1, donut: 2, triangle_up: 3, triangle_down: 4, triangle_left: 5, triangle_right: 6 }
+
 // What the stretching of the continuous colour styles does, as in the shaders of these styles
 function stretch(t, s) {
     if (!s) return t
@@ -135,6 +169,15 @@ function stretch(t, s) {
         default:
             return t
     }
+}
+
+// At most MAX_CELLS_FOR_SCALE cells, evenly over the list
+function sampleOf(cells) {
+    if (cells.length <= MAX_CELLS_FOR_SCALE) return cells
+    const step = cells.length / MAX_CELLS_FOR_SCALE
+    const sample = []
+    for (let i = 0; i < cells.length; i += step) sample.push(cells[Math.floor(i)])
+    return sample
 }
 
 /**
@@ -174,7 +217,7 @@ function stretch(t, s) {
 
 /**
  * Draws the grid layers of gridviz maps on the GPU: fast enough for each frame of a movement. Opt-in: see attach().
- * Works for the styles SquareColorCategoryWebGLStyle, SquareColorWebGLStyle and ShapeColorSizeStyle (squares and circles), on tiled and non tiled datasets. Other styles, and
+ * Works for the styles SquareColorCategoryWebGLStyle, SquareColorWebGLStyle and ShapeColorSizeStyle (all its shapes), on tiled and non tiled datasets. Other styles, and
  * those with a filterColor, go on being drawn by the map, on its canvas.
  *
  * @module core
@@ -189,6 +232,7 @@ export class GPUGridRenderer {
         this._budget = opts.gpuBudgetBytes || DEFAULT_GPU_BUDGET_BYTES
         this._layers = new Map() // gridviz map -> { items, pending, only }
         this._batches = new WeakMap() // style -> dataset -> tile key -> batch
+        this._jobs = new WeakMap() // the tile keys -> tile key -> what is being built
         this._allBatches = new Set()
         this._gpuBytes = 0
         this._frame = 0
@@ -438,6 +482,7 @@ export class GPUGridRenderer {
 
     _forgetBatches() {
         this._batches = new WeakMap()
+        this._jobs = new WeakMap()
         this._allBatches.clear()
         this._gpuBytes = 0
     }
@@ -528,10 +573,24 @@ export class GPUGridRenderer {
             if (!s) return false
             const sh = typeof shape === 'function' ? shape(c, r, z, viewScale) : shape
             if (sh === 'none') return false
-            // the other shapes are drawn by the map
-            if (sh !== 'square' && sh !== 'circle') throw new UnsupportedShape()
             out.rgba = this._parseColor(col)
-            out.size = sh === 'circle' ? -s : s
+            out.shape = 0
+            if (sh === 'square') {
+                out.size = s
+                return true
+            }
+            const id = SHAPES[sh]
+            // any other shape is drawn by the map
+            if (id === undefined) throw new UnsupportedShape()
+            out.shape = id
+            out.size = -s
+            if (sh === 'donut') {
+                // its size is the part of the outer diameter it fills
+                const outer = style.donutOuterSize === undefined ? r : typeof style.donutOuterSize === 'function' ? style.donutOuterSize(c, r, z, viewScale) : style.donutOuterSize
+                if (!outer) return false
+                out.size = -outer
+                out.shape = id + Math.max(0, 1 - s / outer) * 0.99
+            }
             return true
         }
     }
@@ -555,24 +614,49 @@ export class GPUGridRenderer {
         return lut
     }
 
-    _build(item, key, tile, byTile, old) {
-        const gl = this.gl
-        const cells = tile.cells
+    // The tile's cells on the GPU, a part of them on each frame until the deadline: a tile of a dense grid takes tens of milliseconds, too long for a frame of a movement.
+    // Null when it is not finished: it goes on from there on the next call. Until then what the tile showed before stays.
+    _build(item, key, tile, byTile, old, deadline = Infinity) {
+        let jobs = this._jobs.get(byTile)
+        if (!jobs) this._jobs.set(byTile, (jobs = new Map()))
+        let job = jobs.get(key)
+        if (!job || job.tile !== tile || job.key !== item.key) {
+            const cells = tile.cells
+            const buffer = new ArrayBuffer(cells.length * BYTES_PER_CELL)
+            job = {
+                tile,
+                key: item.key,
+                read: this._cellReader(item),
+                buffer,
+                floats: new Float32Array(buffer),
+                bytes: new Uint8Array(buffer),
+                ox: +cells[0].x,
+                oy: +cells[0].y,
+                i: 0,
+                n: 0,
+                circles: false,
+                shapes: null,
+            }
+            jobs.set(key, job)
+        }
         const { style, resolution: r, z } = item
-        const read = this._cellReader(item)
-        const buffer = new ArrayBuffer(cells.length * BYTES_PER_CELL)
-        const floats = new Float32Array(buffer)
-        const bytes = new Uint8Array(buffer)
+        const { read, floats, bytes, ox, oy, buffer } = job
+        const cells = tile.cells
         const r2 = r / 2
-        const ox = +cells[0].x
-        const oy = +cells[0].y
-        const out = { rgba: null, size: 0 }
+        const out = { rgba: null, size: 0, shape: 0 }
         const filter = style.filter
         const hasOffset = style instanceof ShapeColorSizeStyle && style.offset
-        let n = 0
-        let circles = false
-        for (let i = 0; i < cells.length; i++) {
-            const c = cells[i]
+        let n = job.n
+        let circles = job.circles
+        let i = job.i
+        while (i < cells.length) {
+            if (i % CELLS_BETWEEN_CHECKS === 0 && performance.now() >= deadline) {
+                job.i = i
+                job.n = n
+                job.circles = circles
+                return null
+            }
+            const c = cells[i++]
             if (filter && !filter(c)) continue
             if (!read(c, out)) continue
             let x = +c.x + r2 - ox
@@ -587,6 +671,11 @@ export class GPUGridRenderer {
             floats[at + 1] = y
             floats[at + 2] = out.size
             if (out.size < 0) circles = true
+            // only for a tile that has shapes other than squares and circles: the others need no more memory
+            if (out.shape) {
+                if (!job.shapes) job.shapes = new Float32Array(cells.length)
+                job.shapes[n] = out.shape
+            }
             const b = at * 4 + 12
             bytes[b] = out.rgba[0]
             bytes[b + 1] = out.rgba[1]
@@ -594,6 +683,8 @@ export class GPUGridRenderer {
             bytes[b + 3] = out.rgba[3]
             n++
         }
+        jobs.delete(key)
+        const gl = this.gl
         let batch = old
         if (!batch) {
             const vao = gl.createVertexArray()
@@ -607,14 +698,28 @@ export class GPUGridRenderer {
             gl.vertexAttribPointer(1, 4, gl.UNSIGNED_BYTE, true, BYTES_PER_CELL, 12)
             gl.vertexAttribDivisor(1, 1)
             gl.bindVertexArray(null)
-            batch = { vao, vbo, byTile, bytes: 0 }
+            batch = { vao, vbo, vboShapes: null, byTile, bytes: 0 }
             this._allBatches.add(batch)
         }
         gl.bindBuffer(gl.ARRAY_BUFFER, batch.vbo)
         gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(buffer, 0, n * BYTES_PER_CELL), gl.STATIC_DRAW)
+        const shapes = job.shapes
+        gl.bindVertexArray(batch.vao)
+        if (shapes) {
+            if (!batch.vboShapes) batch.vboShapes = gl.createBuffer()
+            gl.bindBuffer(gl.ARRAY_BUFFER, batch.vboShapes)
+            gl.bufferData(gl.ARRAY_BUFFER, shapes.subarray(0, n), gl.STATIC_DRAW)
+            gl.enableVertexAttribArray(2)
+            gl.vertexAttribPointer(2, 1, gl.FLOAT, false, 4, 0)
+            gl.vertexAttribDivisor(2, 1)
+        } else {
+            gl.disableVertexAttribArray(2)
+        }
+        gl.bindVertexArray(null)
         gl.bindBuffer(gl.ARRAY_BUFFER, null)
-        this._gpuBytes += n * BYTES_PER_CELL - batch.bytes
-        batch.bytes = n * BYTES_PER_CELL
+        const used = n * BYTES_PER_CELL + (shapes ? n * 4 : 0)
+        this._gpuBytes += used - batch.bytes
+        batch.bytes = used
         batch.count = n
         batch.ox = ox
         batch.oy = oy
@@ -631,6 +736,7 @@ export class GPUGridRenderer {
         const gl = this.gl
         gl.deleteVertexArray(batch.vao)
         gl.deleteBuffer(batch.vbo)
+        if (batch.vboShapes) gl.deleteBuffer(batch.vboShapes)
         this._gpuBytes -= batch.bytes
         this._allBatches.delete(batch)
         if (batch.byTile.get(batch.tileKey) === batch) batch.byTile.delete(batch.tileKey)
@@ -779,7 +885,7 @@ export class GPUGridRenderer {
             dataset.updateViewCache(viewExt)
             const cells = dataset.getViewCache() || []
             if (cells.length) {
-                item.scaleCells = style.filter ? cells.filter(style.filter) : cells
+                item.scaleCells = sampleOf(style.filter ? cells.filter(style.filter) : cells)
                 item.viewScale = style.viewScale(item.scaleCells, item.resolution, view.z)
                 item.needsScale = false
             }
@@ -793,7 +899,9 @@ export class GPUGridRenderer {
                 const fresh = batch && batch.tile === tile && batch.key === item.key
                 if (!fresh && performance.now() < deadline) {
                     try {
-                        batch = this._build(item, key, tile, byTile, batch)
+                        const built = this._build(item, key, tile, byTile, batch, deadline)
+                        if (built) batch = built
+                        else complete = false
                     } catch (error) {
                         if (!(error instanceof UnsupportedShape)) throw error
                         // this style goes back to the map, for good
@@ -915,7 +1023,7 @@ export class GPUGridRenderer {
                 item.dataset.updateViewCache(ext)
                 const cells = item.dataset.getViewCache() || []
                 if (!cells.length) return
-                item.viewScale = style.viewScale(style.filter ? cells.filter(style.filter) : cells, item.resolution, view.z)
+                item.viewScale = style.viewScale(sampleOf(style.filter ? cells.filter(style.filter) : cells), item.resolution, view.z)
             }
             for (const [key, tile, batch] of missing) this._build(item, key, tile, byTile, batch)
             if (item.needsScale && main.viewScale && main.scaleCells) main.viewScale = style.viewScale(main.scaleCells, main.resolution, main.z)

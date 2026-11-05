@@ -40,6 +40,7 @@
         "start": "webpack --config webpack.config.dev.cjs",
         "server": "webpack serve -c webpack.config.dev.cjs",
         "doc": "jsdoc -c docs/jsdoc/jsdoc.conf.json",
+        "build-worker": "node scripts/build-worker.cjs",
         "build-prod": "webpack --config webpack.config.prod.cjs",
         "build-dev": "webpack --config webpack.config.dev.cjs --no-watch",
         "build": "npm run build-prod && npm run build-dev",
