@@ -10,6 +10,7 @@ import { isVisibleAt } from '../core/Drawable.js'
 
 // external
 import { json, csv } from 'd3-fetch'
+import { fetchCSVCells } from './csvTiles.js'
 
 // The tiles that are loaded are kept, so that going back to a place needs no new request. They are kept as lists of cell objects, which
 // take a lot of memory (the education grid of the Statistical Atlas reached 1.5 GB after some minutes of panning and zooming), so the
@@ -32,11 +33,18 @@ export class TiledGrid extends Dataset {
     /**
      * @param {import("../core/Map.js").Map} map The map.
      * @param {string} url The URL of the dataset.
-     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean), onlyDrawWhenAllTilesReady:boolean}} opts
+     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean), onlyDrawWhenAllTilesReady:boolean, worker?:boolean}} opts
      */
     constructor(map, url, opts = {}) {
         super(map, url, 0, opts)
         this.onlyDrawWhenAllTilesReady = opts.onlyDrawWhenAllTilesReady || false
+
+        /**
+         * True to fetch and parse the tiles in a web worker, so that a map being panned does not stand still while a tile is read. The cells are the same.
+         * The requests do not go through a wrapper of window.fetch: see TiledGrid.onTileRequest.
+         * @type {boolean} */
+        this.worker = opts.worker || false
+
         /**
          * The grid info object, from the info.json file.
          *  @type {GridInfo | undefined}
@@ -245,7 +253,18 @@ export class TiledGrid extends Dataset {
      */
     async loadTile(xT, yT, signal) {
         try {
-            const data = await csv(`${this.url}${xT}/${yT}.csv`, { signal })
+            const url = `${this.url}${xT}/${yT}.csv`
+            let data
+            if (this.worker) {
+                const done = TiledGrid.onTileRequest ? TiledGrid.onTileRequest(this, xT, yT) : undefined
+                try {
+                    data = await fetchCSVCells(url, signal)
+                } finally {
+                    if (done) done()
+                }
+            } else {
+                data = await csv(url, { signal })
+            }
 
             const cells = this.preprocess ? data.filter((cell) => this.preprocess(cell) !== false) : data
 
@@ -391,6 +410,13 @@ TiledGrid.maxCachedCells = 1500000
  * @type {number}
  */
 TiledGrid.retryFailedAfterMs = 30000
+
+/**
+ * Called when a tile is asked of a worker (the worker option), with the dataset and the tile; may return a function called when it has come in. A page counting what is loading
+ * by wrapping window.fetch does not see these requests.
+ * @type {(function(TiledGrid, number, number):(function():void)|undefined)|undefined}
+ */
+TiledGrid.onTileRequest = undefined
 
 function getGridTile(cells, xT, yT, gridInfo) {
     const tile = {}

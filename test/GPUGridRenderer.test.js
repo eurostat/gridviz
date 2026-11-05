@@ -4,6 +4,7 @@ import { Map as GridvizMap } from '../src/core/Map.js'
 import { GridLayer } from '../src/layer/GridLayer.js'
 import { GPUGridRenderer } from '../src/core/GPUGridRenderer.js'
 import { viewScaleQuantile } from '../src/utils/scale.js'
+import { ShapeColorSizeStyle } from '../src/style/ShapeColorSizeStyle.js'
 
 const makeGeoCanvas = () => ({
     view: { x: 0, y: 0, z: 1 },
@@ -170,4 +171,82 @@ test('attach and detach set and clear the map, and do nothing where there is no 
     renderer.attach(map)
     assert.equal(map.gpuRenderer, null)
     assert.equal(renderer.canvas.style.display, 'none')
+})
+
+// the calls a build makes to the GPU, none of which matter here
+const fakeGL = () =>
+    new Proxy(
+        { ARRAY_BUFFER: 1, FLOAT: 2, UNSIGNED_BYTE: 3, STATIC_DRAW: 4 },
+        { get: (target, name) => (name in target ? target[name] : () => ({})) }
+    )
+
+const cellsOfTile = (n) => Array.from({ length: n }, (_, i) => ({ x: i * 100, y: 0, v: i }))
+
+const shapeStyle = () => Object.assign(Object.create(ShapeColorSizeStyle.prototype), { color: 'red', size: 100, shape: 'square', offset: () => ({ dx: 0, dy: 0 }) })
+
+test('a tile is built a little at a time, goes on where it stopped, and gives the same as all at once', () => {
+    const renderer = makeRenderer({})
+    Object.assign(renderer, { gl: fakeGL(), _jobs: new WeakMap(), _allBatches: new Set(), _gpuBytes: 0, _colors: new Map() })
+    renderer._parseColor = () => [255, 0, 0, 255]
+    const tile = { cells: cellsOfTile(1000) }
+    const item = { style: shapeStyle(), resolution: 100, z: 10, key: 'k' }
+    const byTile = new Map()
+    let read = 0
+    const reader = renderer._cellReader.bind(renderer)
+    renderer._cellReader = (it) => {
+        const r = reader(it)
+        return (c, out) => (read++, r(c, out))
+    }
+
+    // the deadline is already over: nothing is done, and nothing is lost
+    assert.equal(renderer._build(item, 'a', tile, byTile, undefined, 0), null)
+    assert.equal(read, 0)
+    assert.equal(byTile.size, 0)
+
+    // a part of it: the clock runs out after the first check, the next stop being 256 cells on
+    const now = performance.now
+    let calls = 0
+    performance.now = () => (calls++ === 0 ? -1 : Infinity)
+    assert.equal(renderer._build(item, 'a', tile, byTile, undefined, 0), null)
+    performance.now = now
+    assert.equal(read, 256)
+
+    // the rest, without starting again
+    const batch = renderer._build(item, 'a', tile, byTile, undefined)
+    assert.equal(read, 1000)
+    assert.equal(batch.count, 1000)
+    assert.equal(byTile.get('a'), batch)
+
+    const whole = renderer._build(item, 'b', tile, byTile, undefined)
+    assert.equal(whole.count, batch.count)
+})
+
+test('a build in progress starts again if the tile or the colours have changed', () => {
+    const renderer = makeRenderer({})
+    Object.assign(renderer, { gl: fakeGL(), _jobs: new WeakMap(), _allBatches: new Set(), _gpuBytes: 0, _colors: new Map() })
+    renderer._parseColor = () => [255, 0, 0, 255]
+    const tile = { cells: cellsOfTile(600) }
+    const byTile = new Map()
+    const item = { style: shapeStyle(), resolution: 100, z: 10, key: 'k1' }
+    const now = performance.now
+    let calls = 0
+    performance.now = () => (calls++ === 0 ? -1 : Infinity)
+    assert.equal(renderer._build(item, 'a', tile, byTile, undefined, 0), null)
+    performance.now = now
+    const batch = renderer._build({ ...item, key: 'k2' }, 'a', tile, byTile, undefined)
+    assert.equal(batch.count, 600)
+    assert.equal(batch.key, 'k2')
+})
+
+test('no stand-in for a dataset whose resolution is not known yet, and otherwise a coarser one', () => {
+    const renderer = makeRenderer({})
+    const datasets = [{ name: 100 }, { name: 1000 }, { name: 10000 }, { name: 100000 }]
+    const gridLayer = { dataset: { datasets, resolutions: [100, 1000, 10000, 100000] } }
+    const style = {}
+    // the info.json has not come in: before this, the finest resolution was asked for, all over the map
+    assert.equal(renderer._backdropOf({ style, gridLayer, dataset: datasets[2], resolution: 0, key: 'k' }), null)
+    assert.equal(renderer._backdropOf({ style, gridLayer, dataset: datasets[2], resolution: undefined, key: 'k' }), null)
+    const stand = renderer._backdropOf({ style, gridLayer, dataset: datasets[0], resolution: 100, key: 'k' })
+    assert.equal(stand.dataset, datasets[1])
+    assert.ok(stand.resolution >= 8 * 100)
 })

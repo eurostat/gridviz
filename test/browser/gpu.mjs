@@ -34,6 +34,14 @@ const cases = {
     'colour classes (SquareColorCategoryWebGLStyle)': `new gridviz.SquareColorCategoryWebGLStyle({ code: (c) => (c.v > 60 ? 'a' : c.v > 30 ? 'b' : 'c'), color: { a: '#d7301f', b: '#fdbb84', c: '#fee8c8' } })`,
     'continuous colour (SquareColorWebGLStyle)': `new gridviz.SquareColorWebGLStyle({ tFun: (c) => c.v / 100, colors: ['#fff7ec', '#fc8d59', '#7f0000'] })`,
     'squares (ShapeColorSizeStyle)': `new gridviz.ShapeColorSizeStyle({ color: (c) => (c.v > 50 ? '#2b8cbe' : '#a6bddb') })`,
+    'diamonds': `new gridviz.ShapeColorSizeStyle({ color: '#6a51a3', shape: 'diamond', size: (c, r) => r * 0.9 })`,
+    'donuts': `new gridviz.ShapeColorSizeStyle({ color: '#d94801', shape: 'donut', size: (c, r) => r * 0.5 })`,
+    'triangles up': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_up', size: (c, r) => r * 0.9 })`,
+    'triangles down': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_down', size: (c, r) => r * 0.9 })`,
+    'triangles left': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_left', size: (c, r) => r * 0.9 })`,
+    'triangles right': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_right', size: (c, r) => r * 0.9 })`,
+    'outlines of squares (StrokeStyle)': `new gridviz.StrokeStyle({ strokeColor: () => '#666', strokeWidth: (c, r, z) => z * 1.5 })`,
+    'outlines of circles (StrokeStyle)': `new gridviz.StrokeStyle({ strokeColor: () => '#c51b8a', shape: () => 'circle', size: (c, r) => r * 0.8, strokeWidth: (c, r, z) => z * 2 })`,
     'circles with a view scale (ShapeColorSizeStyle)': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: () => 'circle', viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => c.v, classNumber: 4, minSizePix: 3, maxSizeFactor: 0.9 }), size: (c, r, z, s) => s(c.v) })`,
 }
 
@@ -82,8 +90,11 @@ for (const [name, style] of Object.entries(cases)) {
             if (own[i + 3] > 10) drawn++
             inkOwn += own[i + 3]
             inkGpu += gpu[i + 3]
-            if (Math.max(Math.abs(own[i] - gpu[i]), Math.abs(own[i + 1] - gpu[i + 1]), Math.abs(own[i + 2] - gpu[i + 2]), Math.abs(own[i + 3] - gpu[i + 3])) > 16) different++
-            if (Math.max(Math.abs(own[i] - gpu[i]), Math.abs(own[i + 1] - gpu[i + 1]), Math.abs(own[i + 2] - gpu[i + 2]), Math.abs(own[i + 3] - gpu[i + 3])) > 128) far++
+            // the colours as they will look, weighted by their opacity: the colour of a pixel that can hardly be seen does not matter
+            let d = Math.abs(own[i + 3] - gpu[i + 3])
+            for (let k = 0; k < 3; k++) d = Math.max(d, Math.abs((own[i + k] * own[i + 3]) / 255 - (gpu[i + k] * gpu[i + 3]) / 255))
+            if (d > 16) different++
+            if (d > 128) far++
         }
         const out = { drawnPercent: (100 * drawn) / (w * h), differentPercent: (100 * different) / (w * h), farPercent: (100 * far) / (w * h), ink: inkGpu / inkOwn, onOwn }
 
@@ -98,8 +109,8 @@ for (const [name, style] of Object.entries(cases)) {
         renderer.canvas.remove()
         return out
     }, style)
-    // the edges of small circles differ, as they do between two ways a browser draws a canvas: what counts is the amount of ink, and how few pixels are far off
-    const ok = !result.noWebGL && !result.error && result.drawnPercent > 5 && result.differentPercent < 8 && result.farPercent < 1 && Math.abs(result.ink - 1) < 0.05 && result.onOwn === 0 && result.changedAfterDetachPercent < 0.1
+    // the edges of small shapes differ, as they do between two ways a browser draws a canvas (a donut has twice as many edges): what counts is the amount of ink, and how few pixels are far off
+    const ok = !result.noWebGL && !result.error && result.drawnPercent > 5 && result.differentPercent < (name === 'donuts' ? 15 : 8) && result.farPercent < 1 && Math.abs(result.ink - 1) < 0.05 && result.onOwn === 0 && result.changedAfterDetachPercent < 0.1
     console.log((ok ? 'ok    ' : 'FAIL  ') + name + '  ' + JSON.stringify(result))
     if (!ok) failed++
 }

@@ -227,6 +227,7 @@ const dataset = new gridviz.MultiResolutionDataset(
 -   `mixedResolution` is a function of a cell which returns its own resolution, for a grid whose cells do not all have the same size (see [mixed resolution grids](#mixed-resolution-grids)). It is an option of every dataset class.
 -   `preprocess` is called once for each cell, when it is loaded. It can change the cell (to convert or compute values), and it removes the cell by returning `false`.
 -   A layer with a multi-resolution dataset shows the finest resolution whose cells are at least `minPixelsPerCell` pixels wide at the current zoom (see [GridLayer](#gridlayer)).
+-   With the option `worker: true`, `TiledGrid` fetches and parses its CSV tiles in a web worker, so that a map being panned does not stand still while a tile is read. The cells are the same as without it. It falls back on the main thread where workers cannot run. Its requests do not go through a wrapper of `window.fetch`: `TiledGrid.onTileRequest = (dataset, xT, yT) => done` tells of them, and `done` (optional) is called when the tile has come in.
 -   A tile which could not be loaded is not asked for again at each redraw: never when it does not exist (404), and again after `TiledGrid.retryFailedAfterMs` milliseconds (30000 by default) for any other failure. With `onlyDrawWhenAllTilesReady: true`, the map is drawn only when all the tiles of the view are there.
 -   Parquet tiles are supported by the [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/), with `TiledParquetGrid`.
 
@@ -1309,7 +1310,7 @@ When something else moves the map (a Leaflet map, for example), these are for yo
 
 See [this example](https://eurostat.github.io/gridviz/examples/basics/leaflet_gpu.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/leaflet_gpu.html)): a grid inside a Leaflet map. Flick the map to see the grid keep up with the basemap.
 
-**What it draws.** `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (squares and circles). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer: they get none of the benefit. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing and the map draws by itself.
+**What it draws.** `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (all its shapes), and `StrokeStyle` (squares and circles). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer: they get none of the benefit. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing and the map draws by itself.
 
 **What it costs.** Tiles take GPU memory (up to 256 MB by default, see `gpuBudgetBytes` below) and the page has one more canvas. During a movement, colour classes and circle sizes are not worked out again: that happens when the map stops, so they can change at that moment. You also have to tell the renderer where the view is, on each frame, as shown here.
 
@@ -1336,7 +1337,7 @@ renderer.redraw()
 renderer.detach(map)
 ```
 
-In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`. Since 3.4.0, `attach` shows it.
+In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`, and a layer drawn before its info.json has come in can ask for every tile of the finest resolution: use 3.4.0 or later.
 
 Other options of the host: `canDraw()` to leave out a draw of a movement, `getGlide()` for what is left of a glide in pixels, to load tiles ahead of it, and `onContextRestored(gl)`. The second parameter of the constructor can set `gpuBudgetBytes`, how much of the GPU's memory the tiles can take (256 MB by default). `renderer.drawsAll(map)` tells if everything on the map is drawn on the GPU, and `renderer.snapshot()` gives the picture on a canvas of its own, for an export to an image.
 

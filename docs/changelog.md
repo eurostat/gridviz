@@ -4,6 +4,11 @@
 
 ### Version 3.4.0 (since 3.3.0)
 
+-   Faster _GPUGridRenderer_ during a movement: tiles are built a little on each frame, view scales are worked out from a sample, and a frame only draws when a tile is finished. A resolution a zoom only passes through gets no tile requests. On a slowed laptop profile, in the most demanding test of a layer of circles: 38 to 63 frames per second.
+-   _GPUGridRenderer_ also draws all the shapes of _ShapeColorSizeStyle_, and the outlines of _StrokeStyle_ (squares and circles).
+-   Fix: _GPUGridRenderer_ could ask for every tile of the finest resolution when a layer was drawn before its info.json had come in, about 37,000 requests on a map of Europe (since 3.3.0). And _attach()_ now shows its canvas, which had to be done by hand in 3.3.0.
+-   New, opt-in: the _worker_ option of _TiledGrid_ fetches and parses CSV tiles in a web worker, with _TiledGrid.onTileRequest_ for a page counting what is loading. The cells are the same as without it.
+-   `dist/gridviz.js`, which most examples load, is built again: it was still version 3.1.1. `npm run build` now makes both bundles. New tests: `npm run test:csv-worker`.
 -   New, opt-in: the _viewExtent_ option of _Map_, with _setViewExtent()_ and _getViewExtent()_, limits what can be seen: the borders of the view stay inside. _centerExtent_ keeps its meaning. See the reference, [Limit panning and zooming](reference.md#limit-panning-and-zooming).
 -   Fix: _zoomExtent_ and _centerExtent_ are now applied by the zoom behaviour of d3 rather than to the view afterwards. A drag past a limit no longer detaches the map from the pointer (dragging back moved the map at once), and a wheel event at the zoom limit no longer redraws the map.
 -   Fix: the zoom buttons ignored _zoomExtent_. They now stop at the limit, so a page which counts on them to go further has to widen its _zoomExtent_.
