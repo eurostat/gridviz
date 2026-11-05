@@ -1302,9 +1302,13 @@ When something else moves the map (a Leaflet map, for example), these are for yo
 
 ### Drawing grid layers on the GPU
 
-A map redraws a layer by running each style's code on every cell in view, which is too slow to do on each frame of a movement. With a `GPUGridRenderer`, each tile goes to the GPU once, when it comes in, and a draw only sets where the tiles are on the screen. It is opt-in: without it, a map draws as it always has.
+**Why use it.** Normally a map redraws a layer by running each style's code on every cell in view. On a dense grid that takes tens of milliseconds, and hundreds on a laptop, which is too slow to do on each frame of a movement. So when another map moves yours, your grid can only be redrawn now and then: during a flick or a rapid zoom it falls behind the basemap, or its canvas runs out at the edge of the view and leaves a blank strip until the map stops. With a `GPUGridRenderer`, each tile goes to the GPU once, when it comes in, and a draw only sets where the tiles are on the screen. That is cheap enough to do during the movement, so the grid fills the view and keeps up.
 
-It draws `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (squares and circles). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing.
+**When to use it.** When your map is inside another map (a Leaflet map, for example) and has a large or dense grid that people pan and zoom. You do not need it for a map that moves on its own, a small grid, or a map that rarely moves. It is opt-in: without it, a map draws as it always has.
+
+**What it draws.** `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (squares and circles). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer: they get none of the benefit. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing and the map draws by itself.
+
+**What it costs.** Tiles take GPU memory (up to 256 MB by default, see `gpuBudgetBytes` below) and the page has one more canvas. During a movement, colour classes and circle sizes are not worked out again: that happens when the map stops, so they can change at that moment. You also have to tell the renderer where the view is, on each frame, as shown here.
 
 ```javascript
 const renderer = new gridviz.GPUGridRenderer({
