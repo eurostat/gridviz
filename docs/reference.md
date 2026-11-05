@@ -1336,7 +1336,7 @@ renderer.redraw()
 renderer.detach(map)
 ```
 
-In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`. Since 3.3.1, `attach` shows it.
+In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`. Since 3.4.0, `attach` shows it.
 
 Other options of the host: `canDraw()` to leave out a draw of a movement, `getGlide()` for what is left of a glide in pixels, to load tiles ahead of it, and `onContextRestored(gl)`. The second parameter of the constructor can set `gpuBudgetBytes`, how much of the GPU's memory the tiles can take (256 MB by default). `renderer.drawsAll(map)` tells if everything on the map is drawn on the GPU, and `renderer.snapshot()` gives the picture on a canvas of its own, for an export to an image.
 

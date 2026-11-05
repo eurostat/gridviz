@@ -15,15 +15,19 @@ python -m http.server 8080     # then open http://localhost:8080/examples/
 
 ## The chapters
 
--   **Basics**: how to do things: data, background, labels, tooltip, events...
+-   **Getting started**: the first maps: a grid from a file or from JavaScript, tiled, at several resolutions.
+-   **Data**: what to do with the cells: mixed resolutions, a computed value, missing values, a selection.
 -   **Styles**: one subchapter for each style class of gridviz, with its examples. An example is in the subchapter of the style it shows (for example, an example of emoji is in "Text", since it uses `TextStyle`).
 -   **Smoothing and interpolation**: the filters of the grid, which are not styles.
+-   **Colours and scales**: the colours and how they are worked out: view scales, stretching, transparency, filters.
 -   **Legends**: examples of the legends. The thumbnail shows the legend only. The example of the ternary legend is with the style it uses, in Styles.
+-   **Background and other layers**: what goes with the grid: backgrounds, boundaries, GeoJSON, points, labels.
+-   **Interaction and embedding**: the tooltip, the events, the buttons, the limits of the map, a map inside another map.
 -   **Demos**: maps of whole countries, with a user interface.
 
 ## Adding an example
 
-1. Write the page in the folder of its chapter (`basics/`, `styles/`, `legends/`, `demos/`). It should work on its own, and use `../../dist/gridviz.js`. A `<title>` is optional (many short examples have none): the gallery and the viewer use the title of `gallery.json`.
+1. Write the page in the folder of its kind (`styles/`, `legends/`, `demos/`, and `basics/` for all the rest). The folders do not follow the chapters: the addresses of the examples are linked from outside, so they stay as they are. It should work on its own, and use `../../dist/gridviz.js`. A `<title>` is optional (many short examples have none): the gallery and the viewer use the title of `gallery.json`.
 2. Add it to `gallery.json`, in the order it should be shown:
 
     ```json
@@ -36,7 +40,7 @@ python -m http.server 8080     # then open http://localhost:8080/examples/
     }
     ```
 
-    - `category`: `Basics`, `Styles`, `Smoothing and interpolation`, `Legends` or `Demos`.
+    - `category`: `Getting started`, `Data`, `Styles`, `Smoothing and interpolation`, `Colours and scales`, `Legends`, `Background and other layers`, `Interaction and embedding` or `Demos`. The chapters are shown in the order they first appear in the file, so keep the examples of a chapter together.
     - `group`: only for the `Styles`: the style the example shows, as in the reference (`Text`, `Shape/Color/Size`...). A style class of gridviz has one subchapter, so look for the class the example uses. Do not use a name for something which is not a style.
     - `title` and `description`: short, in the text of the card.
 

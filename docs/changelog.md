@@ -2,15 +2,13 @@
 
 ## Version 3
 
-### Version 3.4.0 (since 3.3.1)
+### Version 3.4.0 (since 3.3.0)
 
 -   New, opt-in: the _viewExtent_ option of _Map_, with _setViewExtent()_ and _getViewExtent()_, limits what can be seen: the borders of the view stay inside. _centerExtent_ keeps its meaning. See the reference, [Limit panning and zooming](reference.md#limit-panning-and-zooming).
 -   Fix: _zoomExtent_ and _centerExtent_ are now applied by the zoom behaviour of d3 rather than to the view afterwards. A drag past a limit no longer detaches the map from the pointer (dragging back moved the map at once), and a wheel event at the zoom limit no longer redraws the map.
 -   Fix: the zoom buttons ignored _zoomExtent_. They now stop at the limit, so a page which counts on them to go further has to widen its _zoomExtent_.
-
-### Version 3.3.1 (since 3.3.0)
-
 -   Fix: _GPUGridRenderer_ left its canvas hidden, so a host had to show it itself or see no grid. _attach()_ now shows it, and _detach()_ of the last map hides it.
+-   Fix: the fullscreen button left the canvas at its old size, with the black backdrop of the browser around it. The map now follows the size of its container. After fullscreen was left with the Esc key, the next click of the button did nothing but raise an error: it now opens it again.
 -   `dist/gridviz.js`, which most examples load, is built again: it was still version 3.1.1. `npm run build` now makes both bundles.
 
 ### Version 3.3.0 (since 3.2.0)

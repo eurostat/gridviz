@@ -50,6 +50,14 @@ export class FullscreenButton extends Button {
         this.defaultHeight = this.map.h
         this.defaultWidth = this.map.w
 
+        // the state comes from the browser: fullscreen can also be left with the Esc key, or refused
+        const onFullscreenChange = () => {
+            const element = document.fullscreenElement || document.webkitFullscreenElement
+            this.isFullscreen = element === this.map.container
+        }
+        this.map.container.addEventListener('fullscreenchange', onFullscreenChange)
+        this.map.container.addEventListener('webkitfullscreenchange', onFullscreenChange)
+
         // event handler
         this.div.on('click', (e) => {
             this.onClickFunction(e)
@@ -75,24 +83,9 @@ export class FullscreenButton extends Button {
     }
 
     onClickFunction(e) {
-        if (this.isFullscreen) {
-            this.closeFullscreen(this.map.container)
-            //resize canvas to default
-            this.map.h = this.defaultHeight
-            this.map.w = this.defaultWidth
-            this.map.geoCanvas.h = this.defaultHeight
-            this.map.geoCanvas.w = this.defaultWidth
-            this.map.geoCanvas.canvas.setAttribute('width', '' + this.defaultWidth)
-            this.map.geoCanvas.canvas.setAttribute('height', '' + this.defaultHeight)
-            this.map.redraw()
-            this.isFullscreen = false
-        } else {
-            this.openFullscreen(this.map.container)
-            //resize canvas to fullscreen
-            this.map.h = window.screen.height
-            this.map.w = window.screen.width
-            this.isFullscreen = true
-        }
+        // the size of the map follows the size of its container (see the resize observer of the map)
+        if (this.isFullscreen) this.closeFullscreen(this.map.container)
+        else this.openFullscreen(this.map.container)
     }
 
     /* Open fullscreen */

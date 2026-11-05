@@ -1,189 +1,69 @@
 [
     {
         "path": "basics/basic_CSV.html",
-        "category": "Basics",
+        "category": "Getting started",
         "title": "Basic CSV grid",
         "description": "The simplest map: a CSV grid file, with a colour for each cell."
     },
     {
         "path": "basics/basic_JS.html",
-        "category": "Basics",
+        "category": "Getting started",
         "title": "Basic JavaScript grid",
         "description": "Cells defined directly in JavaScript, drawn with squares and strokes."
     },
     {
         "path": "basics/basic_tiled_CSV.html",
-        "category": "Basics",
+        "category": "Getting started",
         "title": "Tiled CSV grid",
         "description": "A large grid loaded tile by tile, only where it is in view."
     },
     {
         "path": "basics/basic_multiscale_CSV.html",
-        "category": "Basics",
+        "category": "Getting started",
         "title": "Multi-resolution CSV",
         "description": "Several CSV grids: the resolution changes with the zoom level."
     },
     {
         "path": "basics/basic_multiscale_tiled_CSV.html",
-        "category": "Basics",
+        "category": "Getting started",
         "title": "Multi-resolution tiled CSV",
         "description": "Tiled grids at several resolutions, loaded on demand."
     },
     {
         "path": "basics/mixed_resolution.html",
-        "category": "Basics",
+        "category": "Data",
         "title": "Mixed resolutions",
         "description": "One dataset where each cell has its own resolution."
     },
     {
         "path": "basics/mixed_resolution_BE.html",
-        "category": "Basics",
+        "category": "Data",
         "title": "Mixed resolutions: Belgium",
         "description": "Cells of different sizes in one dataset, with boundaries, labels and a legend."
     },
     {
         "path": "basics/preprocess.html",
-        "category": "Basics",
+        "category": "Data",
         "title": "Preprocess cells",
         "description": "A new value computed for each cell on loading: the population change from 2011 to 2021."
     },
     {
         "path": "basics/missing_values.html",
-        "category": "Basics",
+        "category": "Data",
         "title": "Missing values",
         "description": "Cells without a value get a colour of their own, and an entry in the legend."
     },
     {
         "path": "basics/select.html",
-        "category": "Basics",
+        "category": "Data",
         "title": "Select cells",
         "description": "Only the cells which match a condition are drawn: here, the water bodies of a land cover grid."
     },
     {
         "path": "basics/select_style.html",
-        "category": "Basics",
+        "category": "Data",
         "title": "Select cells with a style",
         "description": "Cells selected and coloured by category with a WebGL style."
-    },
-    {
-        "path": "basics/tooltip.html",
-        "category": "Basics",
-        "title": "Tooltip",
-        "description": "Information about the cell under the mouse."
-    },
-    {
-        "path": "basics/events.html",
-        "category": "Basics",
-        "title": "Events",
-        "description": "Reacting to the events of the map."
-    },
-    {
-        "path": "basics/buttons.html",
-        "category": "Basics",
-        "title": "Zoom buttons",
-        "description": "Zoom buttons added to the map."
-    },
-    {
-        "path": "basics/limits.html",
-        "category": "Basics",
-        "title": "Map limits",
-        "description": "The extent and the zoom levels of the map are limited."
-    },
-    {
-        "path": "basics/leaflet_gpu.html",
-        "category": "Basics",
-        "title": "Inside a Leaflet map, on the GPU",
-        "description": "A grid inside a Leaflet map, drawn on the GPU: flick the map, and the grid keeps up with the basemap."
-    },
-    {
-        "path": "basics/viewscale.html",
-        "category": "Basics",
-        "title": "View scale",
-        "description": "Colours computed from the cells in the current view, with several resolutions."
-    },
-    {
-        "path": "basics/viewscale_basic.html",
-        "category": "Basics",
-        "title": "View scale, single resolution",
-        "description": "The colour scale adapts to the values of the cells in the view."
-    },
-    {
-        "path": "basics/viewscale_color_size.html",
-        "category": "Basics",
-        "title": "View scale for the colour and the size",
-        "description": "One view scale combining the scales of the size and of the colour of circles, with a legend for each."
-    },
-    {
-        "path": "basics/stretching.html",
-        "category": "Basics",
-        "title": "Stretching",
-        "description": "Logarithmic stretching of the values, over a background with boundaries and labels."
-    },
-    {
-        "path": "basics/blending_alpha.html",
-        "category": "Basics",
-        "title": "Alpha and blending",
-        "description": "Semi-transparent cells over a WMS background."
-    },
-    {
-        "path": "basics/filter_color.html",
-        "category": "Basics",
-        "title": "Filter colour",
-        "description": "A colour filter applied to the background layers."
-    },
-    {
-        "path": "basics/background.html",
-        "category": "Basics",
-        "title": "Background layer",
-        "description": "A tiled image background under the grid."
-    },
-    {
-        "path": "basics/background_gisco.html",
-        "category": "Basics",
-        "title": "GISCO background",
-        "description": "The Eurostat GISCO tiles as background."
-    },
-    {
-        "path": "basics/background_WMS.html",
-        "category": "Basics",
-        "title": "WMS background",
-        "description": "A background from a WMS service."
-    },
-    {
-        "path": "basics/background_image.html",
-        "category": "Basics",
-        "title": "Image background",
-        "description": "A georeferenced image as background."
-    },
-    {
-        "path": "basics/boundaries.html",
-        "category": "Basics",
-        "title": "Boundaries",
-        "description": "Boundaries from GeoJSON, styled by zoom level and line type."
-    },
-    {
-        "path": "basics/geojson.html",
-        "category": "Basics",
-        "title": "GeoJSON layer",
-        "description": "Points, lines and polygons from a GeoJSON file."
-    },
-    {
-        "path": "basics/points.html",
-        "category": "Basics",
-        "title": "Point layer",
-        "description": "Point locations drawn from a GeoJSON file."
-    },
-    {
-        "path": "basics/labels.html",
-        "category": "Basics",
-        "title": "Labels",
-        "description": "Place names drawn by a label layer."
-    },
-    {
-        "path": "basics/labels_.html",
-        "category": "Basics",
-        "title": "Labels on a background",
-        "description": "Place names over a background, in the ETRS89-LAEA projection."
     },
     {
         "path": "styles/shapecolorsize_size.html",
@@ -568,6 +448,42 @@
         "description": "A smoothed grid, with a choice of style and a slider for the smoothing."
     },
     {
+        "path": "basics/viewscale_basic.html",
+        "category": "Colours and scales",
+        "title": "View scale, single resolution",
+        "description": "The colour scale adapts to the values of the cells in the view."
+    },
+    {
+        "path": "basics/viewscale.html",
+        "category": "Colours and scales",
+        "title": "View scale",
+        "description": "Colours computed from the cells in the current view, with several resolutions."
+    },
+    {
+        "path": "basics/viewscale_color_size.html",
+        "category": "Colours and scales",
+        "title": "View scale for the colour and the size",
+        "description": "One view scale combining the scales of the size and of the colour of circles, with a legend for each."
+    },
+    {
+        "path": "basics/stretching.html",
+        "category": "Colours and scales",
+        "title": "Stretching",
+        "description": "Logarithmic stretching of the values, over a background with boundaries and labels."
+    },
+    {
+        "path": "basics/blending_alpha.html",
+        "category": "Colours and scales",
+        "title": "Alpha and blending",
+        "description": "Semi-transparent cells over a WMS background."
+    },
+    {
+        "path": "basics/filter_color.html",
+        "category": "Colours and scales",
+        "title": "Filter colour",
+        "description": "A colour filter applied to the background layers."
+    },
+    {
         "path": "legends/colorLegend.html",
         "category": "Legends",
         "title": "Colour legend",
@@ -680,6 +596,90 @@
         "category": "Legends",
         "title": "Legend outside the map",
         "description": "A legend drawn in an element of the page, outside the map."
+    },
+    {
+        "path": "basics/background.html",
+        "category": "Background and other layers",
+        "title": "Background layer",
+        "description": "A tiled image background under the grid."
+    },
+    {
+        "path": "basics/background_gisco.html",
+        "category": "Background and other layers",
+        "title": "GISCO background",
+        "description": "The Eurostat GISCO tiles as background."
+    },
+    {
+        "path": "basics/background_WMS.html",
+        "category": "Background and other layers",
+        "title": "WMS background",
+        "description": "A background from a WMS service."
+    },
+    {
+        "path": "basics/background_image.html",
+        "category": "Background and other layers",
+        "title": "Image background",
+        "description": "A georeferenced image as background."
+    },
+    {
+        "path": "basics/boundaries.html",
+        "category": "Background and other layers",
+        "title": "Boundaries",
+        "description": "Boundaries from GeoJSON, styled by zoom level and line type."
+    },
+    {
+        "path": "basics/geojson.html",
+        "category": "Background and other layers",
+        "title": "GeoJSON layer",
+        "description": "Points, lines and polygons from a GeoJSON file."
+    },
+    {
+        "path": "basics/points.html",
+        "category": "Background and other layers",
+        "title": "Point layer",
+        "description": "Point locations drawn from a GeoJSON file."
+    },
+    {
+        "path": "basics/labels.html",
+        "category": "Background and other layers",
+        "title": "Labels",
+        "description": "Place names drawn by a label layer."
+    },
+    {
+        "path": "basics/labels_.html",
+        "category": "Background and other layers",
+        "title": "Labels on a background",
+        "description": "Place names over a background, in the ETRS89-LAEA projection."
+    },
+    {
+        "path": "basics/tooltip.html",
+        "category": "Interaction and embedding",
+        "title": "Tooltip",
+        "description": "Information about the cell under the mouse."
+    },
+    {
+        "path": "basics/events.html",
+        "category": "Interaction and embedding",
+        "title": "Events",
+        "description": "Reacting to the events of the map."
+    },
+    {
+        "path": "basics/buttons.html",
+        "category": "Interaction and embedding",
+        "title": "Zoom and fullscreen buttons",
+        "description": "Zoom buttons and a fullscreen button added to the map."
+    },
+    {
+        "path": "basics/limits.html",
+        "category": "Interaction and embedding",
+        "title": "Map limits",
+        "description": "The extent and the zoom levels of the map are limited."
+    },
+    {
+        "path": "basics/leaflet_gpu.html",
+        "category": "Interaction and embedding",
+        "title": "Inside a Leaflet map, on the GPU",
+        "description": "A grid inside a Leaflet map, drawn on the GPU: flick the map, and the grid keeps up with the basemap."
     },
     {
         "path": "demos/EUR_relief.html",

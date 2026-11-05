@@ -1,6 +1,6 @@
 {
     "name": "gridviz",
-    "version": "3.3.1",
+    "version": "3.4.0",
     "description": "Visualization tool for gridded statistics",
     "keywords": [
         "statistics",
@@ -46,6 +46,7 @@
         "test": "node --test \"test/*.test.js\"",
         "test:browser": "node test/browser/run.mjs",
         "test:gpu": "node test/browser/gpu.mjs",
+        "test:fullscreen": "node test/browser/fullscreen.mjs",
         "test:compat": "node test/browser/compat.mjs",
         "audit": "npm audit",
         "prepublishOnly": "npm audit && npm test",
