@@ -34,6 +34,8 @@ const BUILD_MARGIN = 0.4
 const LOAD_MARGIN = 0.6
 // How often tiles are asked for during a movement (ms)
 const LOAD_EVERY_MS = 100
+// A resolution a zoom is only passing through gets no requests: its tiles are asked for once it has lasted this long (ms). What was shown stays in the meantime.
+const SETTLE_MS = 200
 // Number of steps of the colour ramp of the styles with a continuous colour
 const RAMP_STEPS = 1024
 // Number of cells whose result stands for the view when deciding whether its tiles have to be coloured again
@@ -832,7 +834,8 @@ export class GPUGridRenderer {
     /** To call on each frame of a movement: asks for the tiles the movement is going to need. */
     moved() {
         if (!this._layers.size || performance.now() - this._loadedAt < LOAD_EVERY_MS) return
-        for (const entry of this._layers.values()) for (const item of entry.items) this._loadAhead(item.dataset)
+        const now = performance.now()
+        for (const entry of this._layers.values()) for (const item of entry.items) if (!item.since || now - item.since >= SETTLE_MS) this._loadAhead(item.dataset)
     }
 
     /** Draws now, on a frame of a movement. */
@@ -951,6 +954,7 @@ export class GPUGridRenderer {
                         drawn: false,
                         scaleCells: null,
                         needsScale: !!item.style.viewScale,
+                        since: performance.now(),
                     }
                 }
                 if (!this._drawItem(item, view, deadline)) unfinished = true
