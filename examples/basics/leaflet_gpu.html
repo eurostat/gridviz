@@ -1,0 +1,132 @@
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    body {
+        margin: 0;
+    }
+</style>
+<div id="map" style="height: 100vh; width: 100%"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js"></script>
+<script src="../../dist/gridviz.min.js"></script>
+<script>
+    // A gridviz map inside a Leaflet map, its grid drawn on the GPU: flick the map, and the grid keeps up with the basemap all through the glide.
+    // The grid and the Leaflet map must be in the same projection, here EPSG:3035.
+
+    //the Leaflet map, with a basemap of tiles
+    const resolutions = [156543.03392804097]
+    for (let i = 1; i < 20; i++) resolutions.push(resolutions[i - 1] / 2)
+    const crs = new L.Proj.CRS('EPSG:3035', '+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs', {
+        resolutions,
+        origin: [0, 6000000],
+        bounds: L.bounds([-1031235, -3364908], [8000000, 11736009]),
+    })
+    // Leaflet's zoom animation is a CSS transition, which the grid cannot follow: without it the basemap and the grid change zoom together
+    const leafletMap = L.map('map', { crs, center: [50, 10], zoom: 5, minZoom: 3, maxZoom: 13, zoomAnimation: false })
+    L.tileLayer('https://gisco-services.ec.europa.eu/maps/tiles/OSMPositronBackground/EPSG3035/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors, Eurostat GISCO',
+    }).addTo(leafletMap)
+
+    //a pane of the Leaflet map for the grid: it moves with the basemap, and passes the drags on to Leaflet
+    const pane = leafletMap.createPane('grid')
+    pane.style.zIndex = 399
+    pane.style.mixBlendMode = 'multiply'
+    const canvas = L.DomUtil.create('canvas', '', pane)
+
+    //the view of the Leaflet map, as gridviz needs it. A point of the grid is on the pixels of the Leaflet map at x * scaleX + offsetX, y * scaleY + offsetY.
+    const getView = () => {
+        const size = leafletMap.getSize()
+        const scale = crs.scale(leafletMap.getZoom())
+        const offset = crs.transformation.transform(L.point(0, 0), scale)
+        const unit = crs.transformation.transform(L.point(1, 1), scale)
+        const topLeft = leafletMap.getPixelOrigin().add(leafletMap.containerPointToLayerPoint([0, 0]))
+        return {
+            width: size.x,
+            height: size.y,
+            left: topLeft.x,
+            top: topLeft.y,
+            scaleX: unit.x - offset.x,
+            scaleY: unit.y - offset.y,
+            offsetX: offset.x,
+            offsetY: offset.y,
+            z: 1 / (unit.x - offset.x),
+        }
+    }
+
+    //the gridviz map. Leaflet moves it: no zoom of its own, and no tooltip during a movement
+    let moving = false
+    const size = leafletMap.getSize()
+    const center = crs.project(leafletMap.getCenter())
+    const map = new gridviz.Map(pane, {
+        canvas,
+        w: size.x,
+        h: size.y,
+        x: center.x,
+        y: center.y,
+        z: getView().z,
+        disableZoom: true,
+        transparentBackground: true,
+        legendContainer: document.createElement('div'),
+        tooltip: { parentElement: document.body },
+        hoverSuspended: () => moving,
+    })
+
+    //a layer, as on any other map
+    const dataset = new gridviz.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        (resolution) => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+    )
+    const style = new gridviz.SquareColorCategoryWebGLStyle({
+        code: (cell, resolution) => {
+            //no cell where there is no one
+            if (!+cell.TOT_P_2021) return undefined
+            const density = (1000000 * cell.TOT_P_2021) / (resolution * resolution)
+            return density > 1500 ? 'a' : density > 600 ? 'b' : density > 200 ? 'c' : density > 60 ? 'd' : density > 15 ? 'e' : 'f'
+        },
+        color: { a: '#993404', b: '#d95f0e', c: '#fe9929', d: '#fec44f', e: '#fee391', f: '#ffffd4' },
+    })
+    map.layers = [
+        new gridviz.GridLayer(dataset, [style], {
+            cellInfoHTML: (cell) => '<b>' + cell.TOT_P_2021 + '</b> inhabitants',
+        }),
+    ]
+
+    //the renderer: it asks where the view is, and tells when it has drawn. Its canvas is hidden until you show it, goes under the map's own, and is placed at each draw.
+    const renderer = new gridviz.GPUGridRenderer({
+        getView,
+        isMoving: () => moving,
+        onDrawn: ({ padX, padY }) => L.DomUtil.setPosition(renderer.canvas, leafletMap.containerPointToLayerPoint([-padX, -padY])),
+    })
+    pane.insertBefore(renderer.canvas, canvas)
+    renderer.canvas.style.display = ''
+    renderer.attach(map)
+
+    //the map's own canvas, with the rectangle of the cell under the pointer, goes on the view and the map is redrawn when Leaflet stops: the legends, the view scales and so on
+    const redraw = () => {
+        const size = leafletMap.getSize()
+        const center = crs.project(leafletMap.getCenter())
+        map.setSize(size.x, size.y)
+        L.DomUtil.setPosition(canvas, leafletMap.containerPointToLayerPoint([0, 0]))
+        map.setView(center.x, center.y, getView().z)
+        map.redrawNow()
+    }
+    leafletMap.on({
+        movestart: () => {
+            moving = true
+            map.clearHover()
+        },
+        //on each frame: the tiles the movement will need, and a draw
+        move: () => {
+            renderer.moved()
+            renderer.drawNow()
+        },
+        moveend: () => {
+            moving = false
+            redraw()
+        },
+        resize: redraw,
+    })
+    redraw()
+</script>

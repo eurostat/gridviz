@@ -90,6 +90,12 @@
         "description": "The extent and the zoom levels of the map are limited."
     },
     {
+        "path": "basics/leaflet_gpu.html",
+        "category": "Basics",
+        "title": "Inside a Leaflet map, on the GPU",
+        "description": "A grid inside a Leaflet map, drawn on the GPU: flick the map, and the grid keeps up with the basemap."
+    },
+    {
         "path": "basics/viewscale.html",
         "category": "Basics",
         "title": "View scale",
