@@ -1309,7 +1309,7 @@ When something else moves the map (a Leaflet map, for example), these are for yo
 
 See [this example](https://eurostat.github.io/gridviz/examples/basics/leaflet_gpu.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/leaflet_gpu.html)): a grid inside a Leaflet map. Flick the map to see the grid keep up with the basemap.
 
-**What it draws.** `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (all its shapes). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer: they get none of the benefit. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing and the map draws by itself.
+**What it draws.** `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (all its shapes), and `StrokeStyle` (squares and circles). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer: they get none of the benefit. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing and the map draws by itself.
 
 **What it costs.** Tiles take GPU memory (up to 256 MB by default, see `gpuBudgetBytes` below) and the page has one more canvas. During a movement, colour classes and circle sizes are not worked out again: that happens when the map stops, so they can change at that moment. You also have to tell the renderer where the view is, on each frame, as shown here.
 

@@ -40,6 +40,8 @@ const cases = {
     'triangles down': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_down', size: (c, r) => r * 0.9 })`,
     'triangles left': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_left', size: (c, r) => r * 0.9 })`,
     'triangles right': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: 'triangle_right', size: (c, r) => r * 0.9 })`,
+    'outlines of squares (StrokeStyle)': `new gridviz.StrokeStyle({ strokeColor: () => '#666', strokeWidth: (c, r, z) => z * 1.5 })`,
+    'outlines of circles (StrokeStyle)': `new gridviz.StrokeStyle({ strokeColor: () => '#c51b8a', shape: () => 'circle', size: (c, r) => r * 0.8, strokeWidth: (c, r, z) => z * 2 })`,
     'circles with a view scale (ShapeColorSizeStyle)': `new gridviz.ShapeColorSizeStyle({ color: '#238b45', shape: () => 'circle', viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => c.v, classNumber: 4, minSizePix: 3, maxSizeFactor: 0.9 }), size: (c, r, z, s) => s(c.v) })`,
 }
 
