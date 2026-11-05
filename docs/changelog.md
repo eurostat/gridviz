@@ -2,8 +2,18 @@
 
 ## Version 3
 
-### Next version
+### Version 3.3.0 (since 3.2.0)
 
+Nothing changes for a map that does not use what is new: `npm run test:compat` compares the examples of the gallery with the published version.
+
+-   New, opt-in: _GPUGridRenderer_ draws grid layers on the GPU, fast enough for each frame of a movement, for a map inside another map (see the reference, [A map inside another map](reference.md#a-map-inside-another-map)).
+-   New on _Map_: _setSize()_, _cancelRedraw()_, _getExtentGeo()_, _isDestroyed()_, so that a host needs no private field. The _tooltip_ of the map is public.
+-   Tests: `npm run test:gpu` compares what the renderer draws with what the map draws, and `npm run test:compat` compares a version with the published one before a release.
+
+### Version 3.2.0 (since 3.1.1)
+
+-   Faster hover on dense views: a tiled dataset finds the cell under the pointer from its tile.
+-   New: the _hoverSuspended_ option of _Map_, and _clearHover()_.
 -   Fix: on a touch screen, pressing a zoom button lit both buttons (the tap highlight of the browser on the container, and the hover color which stayed on the last button touched). Only the button pressed is lit now, and the zoom buttons are 48 pixels wide on a touch screen (unless the page sets `--gridviz-button-size`).
 -   Examples: the tooltips of about 60 examples were the list of the names of the columns of the data (`CNTR_ID: DE`, `TOT_P_2011`, `ind_snv`...). They now write the values for a reader (country names, labels, units). About 26 examples have sliders to play with the settings of their style (dot size, height, exponent of the stretching, opacity...).
 -   Documentation: audit of the reference. The options of the map (`legendContainer` was documented as `legendDivId`, `transparentBackground` as `transparentbackground`, the default selection color, and the missing `x`, `y`, `z`, `zoomExtent`, `centerExtent`, `digForTooltip`, `defaultGlobalCompositeOperation`, `w`, `h`), of the layers (`BackgroundLayer`, `GeoJSONLayer` and `LabelLayer` options), the view scale functions and the classifiers, the default parent of the tooltip (the map container), a broken link and the table of contents. The tutorial, which was a list of notes, is a tutorial.

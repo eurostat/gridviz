@@ -56,6 +56,11 @@ export class Map {
         /** @private @type {number|null} */
         this._redrawFrame = null
 
+        /**
+         * The renderer drawing the grid layers of this map on the GPU, if any: see GPUGridRenderer.attach().
+         * @type {import('./GPUGridRenderer.js').GPUGridRenderer|null} */
+        this.gpuRenderer = null
+
         //get container element
         this.container = container || document.getElementById('gridviz')
         if (!this.container) {
@@ -120,7 +125,6 @@ export class Map {
         if (!opts.tooltip.parentElement) opts.tooltip.parentElement = this.container
 
         /**
-         * @private
          * @type {Tooltip} */
         this.tooltip = new Tooltip(opts.tooltip)
 
@@ -257,6 +261,62 @@ export class Map {
     }
 
     /**
+     * Whether destroy() was called on this map.
+     * @returns {boolean}
+     */
+    isDestroyed() {
+        return !!this._destroyed
+    }
+
+    /**
+     * Sets the size of the map, in pixels, and of its canvases. For a map whose size is set by what it is in: the canvas is cleared, and redraw() is up to the caller.
+     * @param {number} w
+     * @param {number} h
+     * @returns {this}
+     */
+    setSize(w, h) {
+        this.w = w
+        this.h = h
+        this.geoCanvas.w = w
+        this.geoCanvas.h = h
+        this.geoCanvas.offscreenCanvas.width = w
+        this.geoCanvas.offscreenCanvas.height = h
+        this.geoCanvas.canvas.setAttribute('width', '' + w)
+        this.geoCanvas.canvas.setAttribute('height', '' + h)
+        return this
+    }
+
+    /**
+     * The geographical envelope of the last draw.
+     * @returns {import('./GeoCanvas.js').Envelope|undefined}
+     */
+    getExtentGeo() {
+        return this.geoCanvas.extGeo
+    }
+
+    /**
+     * Cancels the redraw scheduled by redraw(), if there is one.
+     * @returns {this}
+     */
+    cancelRedraw() {
+        if (this._redrawFrame) cancelAnimationFrame(this._redrawFrame)
+        this._redrawFrame = null
+        return this
+    }
+
+    /**
+     * Called by GPUGridRenderer.attach() and detach().
+     * @param {import('./GPUGridRenderer.js').GPUGridRenderer|null} renderer
+     * @returns {this}
+     * @package
+     */
+    setGPURenderer(renderer) {
+        this.gpuRenderer = renderer
+        this.geoCanvas.gpuRenderer = renderer
+        return this
+    }
+
+    /**
      * @protected
      * @returns {HTMLCanvasElement}
      */
@@ -309,6 +369,7 @@ export class Map {
      * animation frame however many times it's called before then.
      * @returns {this} */
     redraw() {
+        if (this.gpuRenderer && this.gpuRenderer.takesRedraw(this)) return this
         if (this.asyncRedraw) {
             if (!this._redrawFrame && !this._destroyed)
                 this._redrawFrame = requestAnimationFrame(() => {
@@ -328,6 +389,9 @@ export class Map {
         this._redrawFrame = null
         // a destroyed map can still be asked to redraw by a dataset it shared (see destroy)
         if (this._destroyed) return this
+
+        const gpuRenderer = this.gpuRenderer
+        if (gpuRenderer) gpuRenderer.beginRedraw(this)
 
         //remove legend elements: the legends themselves only, not what is inside them
         //(a legend keeps its content while one of its swatches is hovered, see Style.updateLegends)
@@ -399,6 +463,8 @@ export class Map {
 
         // the legends are in the container now
         if (this.onLegendUpdate && this.legend) this.onLegendUpdate(this.legend.node())
+
+        if (gpuRenderer) gpuRenderer.endRedraw(this)
 
         return this
     }
@@ -805,6 +871,7 @@ export class Map {
      * @memberof App
      */
     destroy() {
+        if (this.gpuRenderer) this.gpuRenderer.detach(this)
         this._destroyed = true
 
         // clear layers

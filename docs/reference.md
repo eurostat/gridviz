@@ -75,6 +75,7 @@
         -   [TernaryLegend](#ternarylegend)
         -   [VennLegend](#vennlegend)
     -   [Leaflet](#leaflet)
+    -   [A map inside another map](#a-map-inside-another-map)
     -   [Limit panning and zooming](#limit-panning-and-zooming)
     -   [Mixed resolution grids](#mixed-resolution-grids)
     -   [Alright?](#alright)
@@ -1285,6 +1286,50 @@ For this, the legend highlights all the styles of the layer it is in, not only t
 ## Leaflet
 
 Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
+
+## A map inside another map
+
+When something else moves the map (a Leaflet map, for example), these are for you. They all do nothing unless you use them.
+
+| Member of the map                 | What it does                                                                                                                                                |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hoverSuspended` (option)         | A function: while it returns true, no cell is looked up under the pointer and no tooltip or rectangle is shown.                                             |
+| `clearHover()`                    | Ends the hover: hides the tooltip and takes the rectangle off the map.                                                                                      |
+| `setSize(w, h)`                   | Sets the size of the map and of its canvases. The canvas is cleared: the redraw is up to you.                                                               |
+| `cancelRedraw()`                  | Cancels the redraw scheduled by `redraw()`, if there is one.                                                                                                |
+| `getExtentGeo()`                  | The geographical envelope of the last draw.                                                                                                                 |
+| `isDestroyed()`                   | Whether `destroy()` was called.                                                                                                                             |
+
+### Drawing grid layers on the GPU
+
+A map redraws a layer by running each style's code on every cell in view, which is too slow to do on each frame of a movement. With a `GPUGridRenderer`, each tile goes to the GPU once, when it comes in, and a draw only sets where the tiles are on the screen. It is opt-in: without it, a map draws as it always has.
+
+It draws `SquareColorCategoryWebGLStyle`, `SquareColorWebGLStyle` and `ShapeColorSizeStyle` (squares and circles). Other styles, and those with a `filterColor`, go on being drawn by the map, on its canvas, which should lie over the canvas of the renderer. Where there is no WebGL2 (`renderer.ok` is false), `attach` does nothing.
+
+```javascript
+const renderer = new gridviz.GPUGridRenderer({
+    // where the view is now: a point of the grid is on the screen at x * scaleX + offsetX - left, y * scaleY + offsetY - top
+    getView: () => ({ width, height, left, top, scaleX, scaleY, offsetX, offsetY, z }),
+    // whether the view is in the course of a movement
+    isMoving: () => moving,
+    // optional: the canvas has just been drawn. It covers the view and a margin on each side: put it there
+    onDrawn: ({ left, top, width, height, padX, padY }) => {},
+})
+container.prepend(renderer.canvas) // under the canvas of the map
+renderer.attach(map)
+
+// on each frame of a movement
+renderer.moved() // asks for the tiles the movement is going to need
+renderer.drawNow()
+
+// when the movement is over, or the view changes in another way
+renderer.redraw()
+
+// to go back
+renderer.detach(map)
+```
+
+Other options of the host: `canDraw()` to leave out a draw of a movement, `getGlide()` for what is left of a glide in pixels, to load tiles ahead of it, and `onContextRestored(gl)`. The second parameter of the constructor can set `gpuBudgetBytes`, how much of the GPU's memory the tiles can take (256 MB by default). `renderer.drawsAll(map)` tells if everything on the map is drawn on the GPU, and `renderer.snapshot()` gives the picture on a canvas of its own, for an export to an image.
 
 ## Limit panning and zooming
 

@@ -8,6 +8,7 @@ export { Style } from './core/Style.js'
 export { Layer } from './core/Layer.js'
 export { Dataset } from './core/Dataset.js'
 export { MultiResolutionDataset } from './core/MultiResolutionDataset.js'
+export { GPUGridRenderer } from './core/GPUGridRenderer.js'
 
 // export dataset types
 export { TiledGrid } from './dataset/TiledGrid.js'
