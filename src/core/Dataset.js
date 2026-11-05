@@ -121,6 +121,11 @@ export class Dataset {
         /** @type {number} */
         const r = this.getResolution()
 
+        // A tiled dataset, for the view: from the tile the position is in, with an index made once per tile. An index of the
+        // view cache would be made again after each redraw, for the first mouse move, which is too long on a dense view.
+        const inTile = this.cache && this.info && cells === this.getViewCache() ? this._cellFromTiles(posGeo) : false
+        if (inTile !== false) return inTile
+
         // Look the cell up in an index of the cells by grid position, built once per cell
         // list (the view cache is a new array after each redraw) instead of scanning every
         // cell on every mouse move.
@@ -154,6 +159,70 @@ export class Dataset {
             else return cell
         }
         return undefined
+    }
+
+    /**
+     * The cell at a position, from the indexes of the tiles.
+     *
+     * @param {{x:number,y:number}} posGeo
+     * @returns {Cell|undefined|false} false when the cells of a tile are not on the grid (the caller has to search them)
+     * @private
+     */
+    _cellFromTiles(posGeo) {
+        const { originPoint: po, resolutionGeo: r, tileSizeCell: s } = this.info
+        const fx = (posGeo.x - po.x) / r
+        const fy = (posGeo.y - po.y) / r
+        const ix = Math.floor(fx)
+        const iy = Math.floor(fy)
+        // a position on a cell's right/top edge also belongs to that cell (inclusive bounds): check the cells left of and
+        // below it too, which can be in another tile
+        for (const [dx, dy] of [
+            [0, 0],
+            [-1, 0],
+            [0, -1],
+            [-1, -1],
+        ]) {
+            if (dx && fx !== ix) continue
+            if (dy && fy !== iy) continue
+            const column = this.cache[Math.floor((ix + dx) / s)]
+            const tile = column && column[Math.floor((iy + dy) / s)]
+            if (!tile || !tile.cells) continue
+            const index = this._tileCellIndex(tile, r)
+            if (!index) return false
+            const cell = index.get(cellKey(ix + dx, iy + dy))
+            if (cell) return cell
+        }
+        return undefined
+    }
+
+    /**
+     * An index of the cells of a tile by their position on the grid from the origin of the tiling, or null when some cell
+     * isn't on it. Made once, the first time the pointer is over the tile.
+     *
+     * @param {{cells:Array.<Cell>, cellIndex?:Map<number, Cell>|null}} tile
+     * @param {number} r
+     * @returns {Map<number, Cell>|null}
+     * @private
+     */
+    _tileCellIndex(tile, r) {
+        if (tile.cellIndex !== undefined) return tile.cellIndex
+        const po = this.info.originPoint
+        const index = new Map()
+        for (const cell of tile.cells) {
+            const fx = (+cell.x - po.x) / r
+            const fy = (+cell.y - po.y) / r
+            const ix = Math.round(fx)
+            const iy = Math.round(fy)
+            if (Math.abs(fx - ix) > 1e-6 || Math.abs(fy - iy) > 1e-6) {
+                tile.cellIndex = null
+                return null
+            }
+            const key = cellKey(ix, iy)
+            // the first cell at a position wins, as in a search
+            if (!index.has(key)) index.set(key, cell)
+        }
+        tile.cellIndex = index
+        return index
     }
 
     /**

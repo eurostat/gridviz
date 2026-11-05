@@ -46,6 +46,13 @@ export class Map {
          * draws at once. Set it to false for redraw() to be synchronous, as it was before 3.1.0.
          * @type {boolean} */
         this.asyncRedraw = opts.asyncRedraw !== false
+
+        /**
+         * A function telling whether hovering is suspended: no cell is looked up under the pointer, and no tooltip or
+         * rectangle is shown, while it returns true. For a map inside another one, moved by something else (a drag of
+         * the Leaflet map, for example, during which the pointer is still on the canvas). See also clearHover().
+         * @type {(function():boolean)|undefined} */
+        this.hoverSuspended = opts.hoverSuspended
         /** @private @type {number|null} */
         this._redrawFrame = null
 
@@ -229,6 +236,24 @@ export class Map {
         //set default globalCompositeOperation
         this.defaultGlobalCompositeOperation =
             opts.defaultGlobalCompositeOperation || this.geoCanvas.ctx.globalCompositeOperation
+    }
+
+    /**
+     * Ends the hover, if there is one: hides the tooltip and takes the rectangle of the cell off the map.
+     * @returns {this}
+     */
+    clearHover() {
+        this.mouseOutHandler()
+        if (!this._focusedCell) return this
+        this._focusedCell = undefined
+        if (this.transparentBackground) {
+            this.geoCanvas.initCanvasTransform()
+            this.geoCanvas.ctx.clearRect(0, 0, this.w, this.h)
+            this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
+        } else {
+            this.redraw()
+        }
+        return this
     }
 
     /**
@@ -424,7 +449,7 @@ export class Map {
      * @param {{offsetX:number, offsetY:number, clientX:number, clientY:number}} e
      * @private */
     refocusCell(e) {
-        if (this.geoCanvas._isZooming) return
+        if (this.geoCanvas._isZooming || (this.hoverSuspended && this.hoverSuspended())) return
         const same = this.getCellFocusInfo(this.mousePositionGeo(e), false)
         if (!same) {
             // no cell here: nothing to show. Clear the hover which was, if any.
@@ -453,7 +478,7 @@ export class Map {
      * @returns {void} */
     focusCell(e, known) {
         // Don’t process hover events during active zoom
-        if (this.geoCanvas._isZooming) return;
+        if (this.geoCanvas._isZooming || (this.hoverSuspended && this.hoverSuspended())) return;
 
         // the mouse moved (or a redraw gave its cell, `known`): the info of the cells is asked again
         if (!known && !this._refocusing) {

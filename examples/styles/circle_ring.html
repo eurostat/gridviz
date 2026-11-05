@@ -31,8 +31,8 @@
         >
             Thickness of the ring, in cells: <b id="ringValue">0.15</b><br />
             <input type="range" id="ring" min="0.05" max="0.3" step="0.01" value="0.15" style="width: 250px" /><br />
-            Households of the largest circle: <b id="maxValue">10000</b><br />
-            <input type="range" id="max" min="2000" max="20000" step="500" value="10000" style="width: 250px" />
+            Households per km² of the largest circle: <b id="maxValue">8000</b><br />
+            <input type="range" id="max" min="1000" max="20000" step="500" value="8000" style="width: 250px" />
         </div>
 
         <script src="../../dist/gridviz.js"></script>
@@ -53,14 +53,21 @@
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 3763437,
                 y: 2891045,
-                z: 20,
-                zoomExtent: [20, 200],
+                z: 40,
+                zoomExtent: [5, 2000],
             }).addZoomButtons()
 
-            //define dataset: households in France (INSEE Filosofi)
-            const dataset = new gridviz.TiledGrid(
-                map,
-                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/1000m/',
+            //define dataset: households in France (INSEE Filosofi), tiled at several resolutions.
+            //The map shows the resolution which fits the zoom level.
+            const dataset = new gridviz.MultiResolutionDataset(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(
+                        map,
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/' +
+                            resolution +
+                            'm/'
+                    ),
                 {
                     preprocess: (c) => {
                         c.men = +c.men
@@ -70,9 +77,13 @@
                 }
             )
 
-            // The diameter of the circle: its area is proportional to the number of households.
+            // The diameter of the circle: its area is proportional to the number of households per km², so that
+            // the circles of the different resolutions are comparable.
             // The ring goes around the circle, so the largest circle leaves room for it in the cell.
-            const circleSize = (c, r) => (1 - 2 * settings.ring) * r * Math.sqrt(Math.min(1, c.men / settings.max))
+            const circleSize = (c, resolution) =>
+                (1 - 2 * settings.ring) *
+                resolution *
+                Math.sqrt(Math.min(1, c.men / (resolution / 1000) ** 2 / settings.max))
 
             // The circle
             const circle = new gridviz.ShapeColorSizeStyle({

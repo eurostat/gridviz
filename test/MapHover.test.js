@@ -506,3 +506,45 @@ test('in a shadow root, what is under the pointer is asked of the root of the ca
     map.geoCanvas.canvas.getRootNode = () => ({ elementFromPoint: () => ({ panel: true }) })
     assert.equal(map.pointerEvent(), null)
 })
+
+test('hovering does nothing while it is suspended, and comes back after', () => {
+    const { map, calls } = makeMap()
+    let suspended = true
+    map.hoverSuspended = () => suspended
+    map.focusCell(mouse)
+    map.refocusCell(mouse)
+    assert.equal(calls.length, 0, 'no rectangle')
+    assert.equal(map._hovering, false)
+    assert.equal(map.tooltip.shown, false)
+
+    suspended = false
+    map.focusCell(mouse)
+    assert.equal(calls.length, 1, 'the rectangle')
+    assert.equal(map._hovering, true)
+})
+
+test('clearHover ends the hover and takes the rectangle off the map', () => {
+    const { map, calls } = makeMap()
+    let copies = 0
+    map.transparentBackground = true
+    map.geoCanvas.ctx.drawImage = () => copies++
+    // (in a real map, made by the constructor)
+    map.mouseOutHandler = () => {
+        map._hovering = false
+        map.tooltip.hide()
+    }
+    map.focusCell(mouse)
+    assert.equal(calls.length, 1, 'the rectangle')
+    assert.equal(map.tooltip.shown, true)
+    const before = copies
+
+    map.clearHover()
+    assert.equal(map._hovering, false)
+    assert.equal(map.tooltip.shown, false)
+    assert.equal(map._focusedCell, undefined)
+    assert.equal(copies, before + 1, 'the map without the rectangle is copied back')
+
+    // nothing hovered: nothing to repaint
+    map.clearHover()
+    assert.equal(copies, before + 1)
+})
