@@ -5,7 +5,7 @@
 //     npm run test:compat -- --new=<file>       the bundle to test (default: one built from src/)
 //     npm run test:compat -- --only=<text>      only the examples with this text in their path
 //
-// For each example it compares the errors of the page, and the picture. A difference between two runs of the old bundle is noise (data still coming in, an animation): an
+// For each example it compares the errors of the page, and the picture: at rest, and after a drag, the wheel, a zoom button and the mouse on a cell. A difference between two runs of the old bundle is noise (data still coming in, an animation): an
 // example is only reported when the new bundle differs from the old by more than the old differs from itself. It needs the network.
 //
 // It needs Chrome (set CHROME_PATH if it is not found) and playwright-core (a dev dependency).
@@ -67,16 +67,35 @@ const open = async (example, bundle) => {
     const errors = []
     page.on('pageerror', (e) => errors.push(String(e).slice(0, 200)))
     let picture = null
+    let used = null
     try {
         await page.goto(base + example, { waitUntil: 'load', timeout: 40000 })
         await page.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {})
         await page.waitForTimeout(2500)
         picture = (await page.screenshot({ type: 'png' })).toString('base64')
+        // then used: a drag, the wheel, a zoom button if there is one, the mouse on a cell. The same gestures with both bundles
+        await page.mouse.move(500, 350)
+        await page.mouse.down()
+        await page.mouse.move(420, 310, { steps: 8 })
+        await page.mouse.up()
+        await page.waitForTimeout(300)
+        await page.mouse.wheel(0, -200)
+        await page.waitForTimeout(300)
+        await page.mouse.wheel(0, 100)
+        await page.waitForTimeout(300)
+        const button = await page.$('.gridviz-zoom-buttons button, .gridviz-zoom-button, [id*="zoom-buttons"] > *')
+        if (button) await button.click({ timeout: 1000 }).catch(() => {})
+        await page.mouse.move(520, 360)
+        await page.waitForTimeout(150)
+        await page.mouse.move(522, 362)
+        await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {})
+        await page.waitForTimeout(1500)
+        used = (await page.screenshot({ type: 'png' })).toString('base64')
     } catch (error) {
         errors.push('not opened: ' + String(error).slice(0, 120))
     }
     await context.close()
-    return { errors, picture }
+    return { errors, picture, used }
 }
 
 // the share of the pixels that differ, in a page of its own
@@ -112,15 +131,17 @@ const work = async () => {
     while (at < examples.length) {
         const example = examples[at++]
         const [before, after] = [await open(example, oldBundle), await open(example, newBundle)]
-        let diff = await differ(before.picture, after.picture)
+        // the larger difference: at rest, or after the gestures
+        const differAll = async (a, b) => Math.max(await differ(a.picture, b.picture), await differ(a.used, b.used))
+        let diff = await differAll(before, after)
         let noise = 0
         // differs: is that just the example? Once more with each bundle before calling it a difference
         if (diff > NOISE_MARGIN) {
             const again = await open(example, oldBundle)
-            noise = await differ(before.picture, again.picture)
+            noise = await differAll(before, again)
             if (diff > noise + NOISE_MARGIN) {
                 const retry = await open(example, newBundle)
-                diff = Math.min(diff, await differ(again.picture, retry.picture))
+                diff = Math.min(diff, await differAll(again, retry))
             }
         }
         const newErrors = after.errors.filter((e) => !before.errors.includes(e))
