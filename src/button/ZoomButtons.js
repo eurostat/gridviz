@@ -112,14 +112,18 @@ export class ZoomButtons extends Button {
 
     /* Zoom in */
     zoomIn(e) {
-        this.map.setZoom(this.map.getZoom() * (1 - this.delta)).redraw()
+        this.map.setZoom(this.map.getZoom() * (1 - this.delta))
+        this.map.geoCanvas.constrainView()
+        this.map.redraw()
         if (this.onZoom) this.onZoom(e)
         if (this.map.geoCanvas.onZoomFun) this.map.geoCanvas.onZoomFun(e)
     }
 
     /* Zoom out */
     zoomOut(e) {
-        this.map.setZoom(this.map.getZoom() * (1 + this.delta)).redraw()
+        this.map.setZoom(this.map.getZoom() * (1 + this.delta))
+        this.map.geoCanvas.constrainView()
+        this.map.redraw()
         if (this.onZoom) this.onZoom(e)
         if (this.map.geoCanvas.onZoomFun) this.map.geoCanvas.onZoomFun(e)
     }

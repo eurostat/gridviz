@@ -347,6 +347,128 @@ for (const example of hoverExamples) {
     await context.close()
 }
 
+// ---------- the limits of the view, on the example of the limits ----------
+
+const limitsTests = async () => {
+    console.log('\nbasics/limits.html: the limits of the view')
+    const check = (ok, msg) => (ok ? console.log('   ok   ' + msg) : fail(msg))
+    const near = (a, b, tolerance = 1) => Math.abs(a - b) <= tolerance
+    const { page, context, errors } = await openExample('examples/basics/limits.html')
+    const view = () => page.evaluate(() => ({ ...M.getView(), e: M.geoCanvas.updateExtentGeo(0) }))
+    const box = await page.evaluate(() => {
+        const r = M.geoCanvas.canvas.getBoundingClientRect()
+        return { x: r.x, y: r.y, w: r.width, h: r.height }
+    })
+    const cx = box.x + box.w / 2
+    const cy = box.y + box.h / 2
+    const wheel = async (dy, times) => {
+        for (let i = 0; i < times; i++) (await page.mouse.wheel(0, dy), await page.waitForTimeout(40))
+        await page.waitForTimeout(250)
+    }
+    const drag = async (x0, y0, x1, y1) => {
+        await page.mouse.move(x0, y0)
+        await page.mouse.down()
+        await page.mouse.move(x1, y1, { steps: 15 })
+    }
+    const inside = (v, [xMin, yMin, xMax, yMax]) =>
+        v.e.xMin >= xMin - 1 && v.e.yMin >= yMin - 1 && v.e.xMax <= xMax + 1 && v.e.yMax <= yMax + 1
+    const reset = (x, y, z, set) =>
+        page.evaluate(
+            ([x, y, z, set]) => {
+                M.setViewExtent(set.view)
+                M.setCenterExtent(set.center || [undefined, undefined, undefined, undefined])
+                M.setZoomExtent(set.zoom)
+                M.setView(x, y, z).redraw()
+            },
+            [x, y, z, set]
+        )
+    const viewExtent = [2500000, 1300000, 6500000, 5300000]
+    const zoom = [200, 3000]
+
+    // the view extent, zoomed out to the limit and dragged to a corner
+    await page.mouse.move(cx, cy)
+    await wheel(500, 8)
+    let v = await view()
+    check(near(v.z, 3000), `the wheel stops at the zoom limit (z=${v.z})`)
+    await page.evaluate(() => {
+        window.draws = 0
+        const o = M.redrawNow.bind(M)
+        M.redrawNow = () => (window.draws++, o())
+    })
+    await wheel(500, 3)
+    check((await page.evaluate(() => window.draws)) === 0, 'a wheel event beyond the zoom limit does not redraw')
+    await drag(box.x + 50, box.y + 50, box.x + box.w - 50, box.y + box.h - 50)
+    await page.mouse.up()
+    await page.waitForTimeout(300)
+    v = await view()
+    check(inside(v, viewExtent), `dragged to a corner, the view stays inside the extent (${Math.round(v.e.xMin)}, ${Math.round(v.e.yMax)})`)
+    check(near(v.e.xMin, viewExtent[0]) && near(v.e.yMax, viewExtent[3]), 'and it reaches the limit')
+
+    // wheeling out next to a limit
+    await reset(viewExtent[0] + (box.w / 2) * 500, 3000000, 500, { view: viewExtent, zoom })
+    await page.mouse.move(box.x + box.w - 20, cy)
+    await wheel(120, 3)
+    v = await view()
+    check(v.z > 500 && inside(v, viewExtent), `zooming out next to a limit, the view stays inside the extent (z=${Math.round(v.z)})`)
+
+    // a drag past the limit and back: the map stays under the pointer
+    for (const [name, set, xLimit] of [
+        ['viewExtent', { view: viewExtent, zoom }, viewExtent[2] - (box.w / 2) * 2000],
+        ['centerExtent', { center: [4000000, 2400000, 5000000, 3400000], zoom }, 5000000],
+    ]) {
+        await reset(xLimit - 200000, 2900000, 2000, set)
+        const x0 = box.x + box.w - 20
+        await drag(x0, cy, x0 - 300, cy) // 100 pixels are enough to reach the limit: 200 beyond it
+        const atLimit = await view()
+        check(near(atLimit.x, xLimit), `${name}: a drag stops at the limit (x=${Math.round(atLimit.x)})`)
+        await page.mouse.move(x0 - 150, cy, { steps: 8 })
+        const back = await view()
+        check(near(back.x, xLimit), `${name}: dragging back, the map waits for the pointer (x=${Math.round(back.x)})`)
+        await page.mouse.move(x0 - 50, cy, { steps: 8 })
+        const further = await view()
+        check(near(further.x, xLimit - 50 * 2000, 2), `${name}: then it follows the pointer (x=${Math.round(further.x)})`)
+        await page.mouse.up()
+        await page.waitForTimeout(250)
+    }
+
+    // the zoom buttons
+    await reset(4500000, 2900000, 1000, { view: viewExtent, zoom })
+    await page.evaluate(() => {
+        M.addZoomButtons()
+        for (let i = 0; i < 30; i++) M.zoomButtons.zoomOut()
+    })
+    v = await view()
+    check(near(v.z, 3000) && inside(v, viewExtent), `the zoom buttons stop at the zoom limit (z=${v.z})`)
+    await page.evaluate(() => {
+        for (let i = 0; i < 60; i++) M.zoomButtons.zoomIn()
+    })
+    check(near((await view()).z, 200), 'in both directions')
+
+    // the gestures start from the view set by the application: d3 does not know it
+    await reset(4500000, 2900000, 800, { zoom })
+    await page.waitForTimeout(250)
+    await page.mouse.move(box.x + 300, cy)
+    const under = () => page.evaluate(([x, y]) => [M.geoCanvas.pixToGeoX(x), M.geoCanvas.pixToGeoY(y)], [300, box.h / 2])
+    const g0 = await under()
+    await wheel(-120, 2)
+    const g1 = await under()
+    v = await view()
+    check(v.z < 800 && near(g0[0], g1[0], v.z * 2) && near(g0[1], g1[1], v.z * 2), 'without a limit of the position, the wheel zooms at the pointer, from a view set by setView')
+    await wheel(500, 8)
+    check(near((await view()).z, 3000), 'and the zoom limit holds after setView')
+
+    // nothing limits the position: a drag follows the pointer, far away
+    await reset(4500000, 2900000, 1000, { zoom })
+    await drag(box.x + box.w - 20, cy, box.x + 20, cy)
+    await page.mouse.up()
+    await page.waitForTimeout(250)
+    check(near((await view()).x, 4500000 + (box.w - 40) * 1000, 2), 'without a limit of the position, a drag is not limited')
+
+    if (errors.length) fail('page errors: ' + errors.join(' | '))
+    await context.close()
+}
+await limitsTests()
+
 if (all) {
     // every example of the gallery loads, with its real data, without error
     const gallery = JSON.parse(fs.readFileSync(path.join(root, 'examples', 'gallery.json'), 'utf8')).map((e) => e.path)

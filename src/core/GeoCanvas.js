@@ -8,7 +8,7 @@
  * @typedef {{x: number, y: number, z: number}} View */
 
 import { select } from 'd3-selection'
-import { zoom as d3zoom, zoomIdentity } from 'd3-zoom'
+import { zoom as d3zoom, zoomIdentity, zoomTransform } from 'd3-zoom'
 
 /**
  * A HTML canvas for geo data display, enhanced with zoom and pan capabilities.
@@ -82,9 +82,38 @@ export class GeoCanvas {
         //rely on d3 for zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
+
+            // How the d3 transform relates to the view, from its coordinates (t.invert of a pixel) to geo coordinates:
+            // x = frame.x + frame.s * xd3, y = frame.y - frame.s * yd3. The view can be set without d3 knowing (setView,
+            // setZoom, a host), so it is worked out again when a gesture starts.
+            const frame = { s: NaN, x: 0, y: 0 }
+            const syncFrame = () => {
+                const t = zoomTransform(this.canvas)
+                const s = this.view.z * t.k
+                if (!(s > 0)) return
+                // kept when it has not changed, so that the transform at the zoom limit stays exactly equal to the limit
+                // of d3, which ignores a wheel event that does not change the scale
+                if (!(Math.abs(s / frame.s - 1) < 1e-9)) frame.s = s
+                frame.x = this.view.x - (frame.s * (this.w * 0.5 - t.x)) / t.k
+                frame.y = this.view.y + (frame.s * (this.h * 0.5 - t.y)) / t.k
+                z.scaleExtent([frame.s / this.zoomExtent[1], frame.s / this.zoomExtent[0]])
+            }
+            const centerOf = (t) => [
+                frame.x + (frame.s * (this.w * 0.5 - t.x)) / t.k,
+                frame.y - (frame.s * (this.h * 0.5 - t.y)) / t.k,
+            ]
+
             const z = d3zoom()
                 // to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
+                // The limits are applied by d3, not to the view afterwards: the transform of d3 never goes beyond them, so
+                // a drag past a limit does not move the map until the pointer is back on the point it grabbed.
+                .constrain((t) => {
+                    if (!this._hasPositionLimit()) return t
+                    const [cx, cy] = centerOf(t)
+                    const [x, y] = this.constrainCenter(cx, cy, frame.s / t.k)
+                    return t.translate((cx - x) / frame.s, (y - cy) / frame.s)
+                })
                 .on('zoom', (e) => {
                     this._isZooming = true;
                     const t = e.transform
@@ -95,7 +124,7 @@ export class GeoCanvas {
                         const dy = tP.y - t.y
                         this.applyPan(dx * this.view.z, -dy * this.view.z)
                     } else {
-                        handleZoom(e, zoomFactor)
+                        handleZoom(e, zoomFactor, t)
                     }
                     tP = t
 
@@ -127,15 +156,29 @@ export class GeoCanvas {
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
 
                 })
+            const defaultFilter = z.filter()
+            z.filter((e) => {
+                const accepted = defaultFilter(e)
+                if (accepted) syncFrame()
+                return accepted
+            })
             // @ts-ignore
             z(select(this.canvas))
 
-            const handleZoom = (event, zoomFactor) => {
+            const handleZoom = (event, zoomFactor, t) => {
                 // cancel ongoing data requests
                 this.cancelCurrentRequests()
                 const se = event.sourceEvent
 
-                if (se instanceof WheelEvent) {
+                // with a limit of the position, what d3 constrained decides the center: the point under the pointer can not stay
+                if (this._hasPositionLimit() && (se instanceof WheelEvent || se instanceof TouchEvent)) {
+                    const [x, y] = centerOf(t)
+                    this.view.x = x
+                    this.view.y = y
+                    this.view.z = frame.s / t.k
+                    this.updateExtentGeo()
+                    this._drawZoomFrame()
+                } else if (se instanceof WheelEvent) {
                     //zoom at the mouse position
                     this.applyZoom(
                         zoomFactor,
@@ -175,6 +218,10 @@ export class GeoCanvas {
         /** @type {number|undefined} */
         this.yMax = opts.centerExtent ? opts.centerExtent[3] : undefined
 
+        /** The limits of what can be seen: [xMin, yMin, xMax, yMax]. The borders of the view stay inside.
+         *  @type {Array.<number>|undefined} */
+        this.viewExtent = opts.viewExtent
+
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
         this.zoomExtent = opts.zoomExtent || [0, Infinity]
@@ -189,15 +236,9 @@ export class GeoCanvas {
  * @param {number} dyGeo
  */
     applyPan(dxGeo = 0, dyGeo = 0) {
-        //ensures x/y extent
-        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
-        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
-        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
-
-        //pan
-        this.view.x += dxGeo
-        this.view.y += dyGeo
+        const [x, y] = this.constrainCenter(this.view.x + dxGeo, this.view.y + dyGeo)
+        this.view.x = x
+        this.view.y = y
         this.updateExtentGeo()
 
         if (this.canvasSave.c) {
@@ -214,8 +255,6 @@ export class GeoCanvas {
      * @param {number} yGeo The y geo position fixed in the screen.
      */
     applyZoom(f = 1, xGeo = this.view.x, yGeo = this.view.y) {
-        //TODO force geo extend to remain
-
         //trying to zoom in/out beyond limit
         if (this.zoomExtent[0] == this.view.z && f <= 1) return
         if (this.zoomExtent[1] == this.view.z && f >= 1) return
@@ -228,21 +267,64 @@ export class GeoCanvas {
         this.view.z *= f
 
         //compute pan
-        let dxGeo = (xGeo - this.view.x) * (1 - f)
-        let dyGeo = (yGeo - this.view.y) * (1 - f)
-
-        //ensures x/y extent
-        if (this.xMin != undefined && this.view.x + dxGeo < this.xMin) dxGeo = this.xMin - this.view.x
-        if (this.yMin != undefined && this.view.y + dyGeo < this.yMin) dyGeo = this.yMin - this.view.y
-        if (this.xMax != undefined && this.view.x + dxGeo > this.xMax) dxGeo = this.xMax - this.view.x
-        if (this.yMax != undefined && this.view.y + dyGeo > this.yMax) dyGeo = this.yMax - this.view.y
-
-        //pan
-        this.view.x += dxGeo
-        this.view.y += dyGeo
+        const [x, y] = this.constrainCenter(
+            this.view.x + (xGeo - this.view.x) * (1 - f),
+            this.view.y + (yGeo - this.view.y) * (1 - f)
+        )
+        this.view.x = x
+        this.view.y = y
         this.updateExtentGeo()
 
         this._drawZoomFrame(f, xGeo, yGeo)
+    }
+
+    /**
+     * The position of the center of a view that respects the limits of the position (centerExtent and viewExtent).
+     * Along an axis where the view is larger than viewExtent, the view is centered on it.
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z The zoom level of the view.
+     * @returns {Array.<number>} [x, y]
+     */
+    constrainCenter(x, y, z = this.view.z) {
+        const axis = (v, min, max, vMin, vMax, half) => {
+            if (vMin != undefined && vMax != undefined) {
+                if (vMax - vMin < 2 * half) return (vMin + vMax) * 0.5
+                v = Math.min(Math.max(v, vMin + half), vMax - half)
+            }
+            if (min != undefined && v < min) v = min
+            if (max != undefined && v > max) v = max
+            return v
+        }
+        const e = this.viewExtent || []
+        return [
+            axis(x, this.xMin, this.xMax, e[0], e[2], this.w * z * 0.5),
+            axis(y, this.yMin, this.yMax, e[1], e[3], this.h * z * 0.5),
+        ]
+    }
+
+    /**
+     * Brings the view back within the limits, after it was changed by setZoom or setView which do not apply them.
+     * @returns {this}
+     */
+    constrainView() {
+        this.view.z = Math.min(Math.max(this.view.z, this.zoomExtent[0]), this.zoomExtent[1])
+        const [x, y] = this.constrainCenter(this.view.x, this.view.y)
+        this.view.x = x
+        this.view.y = y
+        this.updateExtentGeo()
+        return this
+    }
+
+    /** @private @returns {boolean} */
+    _hasPositionLimit() {
+        return (
+            this.viewExtent != undefined ||
+            this.xMin != undefined ||
+            this.yMin != undefined ||
+            this.xMax != undefined ||
+            this.yMax != undefined
+        )
     }
 
     _drawZoomFrame() {
@@ -310,6 +392,15 @@ export class GeoCanvas {
     /** @returns {Array.<number|undefined>} */
     getCenterExtent() {
         return [this.xMin, this.yMin, this.xMax, this.yMax]
+    }
+
+    /** @param {Array.<number>|undefined} v [xMin, yMin, xMax, yMax] */
+    setViewExtent(v) {
+        this.viewExtent = v
+    }
+    /** @returns {Array.<number>|undefined} */
+    getViewExtent() {
+        return this.viewExtent
     }
 
     /** @param {Array.<number>} v */

@@ -168,6 +168,7 @@ new gridviz.Map(document.getElementById('map'), {
 | _opts_.**disableZoom**                     | boolean                  | false                     | Disables d3 pan and zoom when set to true.                                                                                                                                                                              |
 | _opts_.**zoomExtent**                      | [number, number]         | `[0, Infinity]`           | The smallest and the largest zoom level the user can reach (see [limits](#limit-panning-and-zooming)).                                                                                                                  |
 | _opts_.**centerExtent**                    | [xMin, yMin, xMax, yMax] | none                      | The limits of the position of the center of the map (see [limits](#limit-panning-and-zooming)).                                                                                                                         |
+| _opts_.**viewExtent**                      | [xMin, yMin, xMax, yMax] | none                      | The limits of what can be seen: the borders of the view stay inside (see [limits](#limit-panning-and-zooming)).                                                                                                         |
 | _opts_.**onZoomStartFun**                  | Function                 | null                      | Event handler for when a pan/zoom event is initiated.                                                                                                                                                                   |
 | _opts_.**onZoomFun**                       | Function                 | null                      | Event handler for when a pan/zoom event is occurring.                                                                                                                                                                   |
 | _opts_.**onZoomEndFun**                    | Function                 | null                      | Event handler for when a pan/zoom event has finished.                                                                                                                                                                   |
@@ -1322,7 +1323,6 @@ const renderer = new gridviz.GPUGridRenderer({
     onDrawn: ({ left, top, width, height, padX, padY }) => {},
 })
 container.prepend(renderer.canvas) // under the canvas of the map
-renderer.canvas.style.display = '' // it starts hidden
 renderer.attach(map)
 
 // on each frame of a movement
@@ -1336,11 +1336,25 @@ renderer.redraw()
 renderer.detach(map)
 ```
 
+In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`. Since 3.3.1, `attach` shows it.
+
 Other options of the host: `canDraw()` to leave out a draw of a movement, `getGlide()` for what is left of a glide in pixels, to load tiles ahead of it, and `onContextRestored(gl)`. The second parameter of the constructor can set `gpuBudgetBytes`, how much of the GPU's memory the tiles can take (256 MB by default). `renderer.drawsAll(map)` tells if everything on the map is drawn on the GPU, and `renderer.snapshot()` gives the picture on a canvas of its own, for an export to an image.
 
 ## Limit panning and zooming
 
-See [this example](https://eurostat.github.io/gridviz/examples/basics/limits.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/limits.html)) to limit the panning and zooming to some limit values, in order to prevent the user to move toward undesired positions and zoom levels. Note that the panning limit applies to the map center, not the map borders. The panning limit is specified as an array _[xMin, yMin, xMax, yMax]_.
+See [this example](https://eurostat.github.io/gridviz/examples/basics/limits.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/limits.html)) to limit the panning and zooming, in order to prevent the user from moving toward undesired positions and zoom levels.
+
+```javascript
+map.setZoomExtent([200, 3000]) // the smallest and the largest zoom level
+map.setViewExtent([2500000, 1300000, 6500000, 5300000]) // what can be seen: xMin, yMin, xMax, yMax
+```
+
+There are two ways to limit the position, both given as an array _[xMin, yMin, xMax, yMax]_:
+
+-   _viewExtent_ applies to the borders of the view: what is outside can not be seen. Where the view is larger than this extent (zoomed out, or on a large screen), it is centered on it: take a _zoomExtent_ which suits the extent if this must not happen.
+-   _centerExtent_ applies to the center of the map: the map can be panned until its center reaches the limit, and what can be seen beyond the limit depends on the zoom.
+
+These limits apply to the user's gestures and the zoom buttons. _setView()_ and _setZoom()_ do not apply them, so the application can place the view anywhere: the next gesture brings it back within the limits, and `map.geoCanvas.constrainView()` does it at once.
 
 ## Mixed resolution grids
 

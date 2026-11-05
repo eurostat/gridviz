@@ -1,12 +1,12 @@
 <div id="map" style="height: 100%; width: 100%"></div>
 
-<script src="../../dist/gridviz.js"></script>
+<script src="../../dist/gridviz.min.js"></script>
 <script>
     //define map
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
 
-    //define center extent: xmin, ymin, xmax, ymax
-    map.setCenterExtent([4000000, 2400000, 5000000, 3400000])
+    //limit what can be seen: xmin, ymin, xmax, ymax. The borders of the view stay inside.
+    map.setViewExtent([2500000, 1300000, 6500000, 5300000])
 
     //define zoom extent
     map.setZoomExtent([200, 3000])

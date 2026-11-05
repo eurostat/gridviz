@@ -275,7 +275,7 @@ export class GPUGridRenderer {
     // --- the grid layers -----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * From now on the grid layers of this map are drawn here, for what they can be. The host puts the canvas (renderer.canvas) under the map's own.
+     * From now on the grid layers of this map are drawn here, for what they can be. The host puts the canvas (renderer.canvas) under the map's own: it is shown while a map is attached.
      * @param {import('./Map.js').Map} map
      * @returns {this}
      */
@@ -283,6 +283,7 @@ export class GPUGridRenderer {
         if (!this.ok) return this
         if (!this._layers.has(map)) this._layers.set(map, { items: [], pending: null, only: false })
         map.setGPURenderer(this)
+        this.canvas.style.display = ''
         return this
     }
 
@@ -297,6 +298,7 @@ export class GPUGridRenderer {
         if (this._layers.size === 0) {
             if (this._raf) cancelAnimationFrame(this._raf)
             this._raf = null
+            this.canvas.style.display = 'none'
         } else {
             this.redraw()
         }

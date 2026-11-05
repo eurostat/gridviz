@@ -93,14 +93,13 @@
         }),
     ]
 
-    //the renderer: it asks where the view is, and tells when it has drawn. Its canvas is hidden until you show it, goes under the map's own, and is placed at each draw.
+    //the renderer: it asks where the view is, and tells when it has drawn. Its canvas goes under the map's own, and is placed at each draw.
     const renderer = new gridviz.GPUGridRenderer({
         getView,
         isMoving: () => moving,
         onDrawn: ({ padX, padY }) => L.DomUtil.setPosition(renderer.canvas, leafletMap.containerPointToLayerPoint([-padX, -padY])),
     })
     pane.insertBefore(renderer.canvas, canvas)
-    renderer.canvas.style.display = ''
     renderer.attach(map)
 
     //the map's own canvas, with the rectangle of the cell under the pointer, goes on the view and the map is redrawn when Leaflet stops: the legends, the view scales and so on

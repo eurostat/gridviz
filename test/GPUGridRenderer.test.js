@@ -156,14 +156,18 @@ test('takesRedraw: only for a map that is moving with all of it drawn on the GPU
 
 test('attach and detach set and clear the map, and do nothing where there is no WebGL2', () => {
     const renderer = makeRenderer({})
+    renderer.canvas = { style: { display: 'none' } }
     const map = { setGPURenderer(r) { this.gpuRenderer = r } }
     renderer.attach(map)
     assert.equal(map.gpuRenderer, renderer)
+    assert.equal(renderer.canvas.style.display, '', 'the canvas shows while a map is attached')
     renderer.detach(map)
     assert.equal(map.gpuRenderer, null)
+    assert.equal(renderer.canvas.style.display, 'none')
     assert.equal(renderer.drawsAll(map), false)
 
     renderer.ok = false
     renderer.attach(map)
     assert.equal(map.gpuRenderer, null)
+    assert.equal(renderer.canvas.style.display, 'none')
 })

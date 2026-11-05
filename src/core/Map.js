@@ -740,6 +740,20 @@ export class Map {
         return this
     }
 
+    /** @returns {Array.<number>|undefined} */
+    getViewExtent() {
+        return this.geoCanvas.getViewExtent()
+    }
+    /**
+     * Limits what the user can see: the borders of the view stay within this extent.
+     * @param {Array.<number>|undefined} val [xMin, yMin, xMax, yMax]
+     * @returns {this}
+     */
+    setViewExtent(val) {
+        this.geoCanvas.setViewExtent(val)
+        return this
+    }
+
     /** @returns {Array.<number>} */
     getZoomExtent() {
         return this.geoCanvas.getZoomExtent()
