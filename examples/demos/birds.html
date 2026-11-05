@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Birds of Britain and Ireland - Gridviz</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            #panel {
+                position: absolute;
+                left: 12px;
+                top: 12px;
+                width: 300px;
+                box-sizing: border-box;
+                max-height: calc(100% - 24px);
+                overflow: auto;
+                padding: 10px 12px;
+                border-radius: 5px;
+                background: #ffffffe6;
+                box-shadow: 0 2px 10px #00000080;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            #panel h1 {
+                margin: 0;
+                font-size: 18px;
+            }
+
+            #panel fieldset {
+                margin: 8px 0 0;
+                padding: 0;
+                border: 0;
+            }
+
+            #panel legend {
+                padding: 0;
+                font-weight: bold;
+            }
+
+            #panel label {
+                display: block;
+            }
+
+            #panel label.disabled {
+                color: #888;
+            }
+
+            #panel i {
+                color: #555;
+                font-size: 12px;
+            }
+
+            #panel p {
+                margin: 8px 0 0;
+                font-size: 12px;
+                line-height: 1.35;
+                color: #333;
+            }
+
+            @media (max-width: 600px) {
+                #panel {
+                    left: 6px;
+                    top: 6px;
+                    width: 178px;
+                    max-height: calc(100% - 100px);
+                    padding: 6px 8px;
+                    font-size: 12px;
+                    line-height: 1.3;
+                }
+
+                #panel h1 {
+                    font-size: 14px;
+                }
+
+                #panel i {
+                    display: none;
+                }
+
+                #panel p {
+                    font-size: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <div id="panel">
+            <h1>Birds of Britain and Ireland</h1>
+            <fieldset>
+                <legend>Species</legend>
+                <div id="species"></div>
+            </fieldset>
+            <fieldset>
+                <legend>Season</legend>
+                <label><input type="radio" name="season" value="b" checked /> Breeding (April to July)</label>
+                <label id="winter"><input type="radio" name="season" value="w" /> Winter (November to February)</label>
+            </fieldset>
+            <p>
+                Modelled relative abundance per 2 km square, 2007-2011: birds seen in an hour of observation, not a density.
+                Positions in Ireland are approximate.
+            </p>
+            <p>
+                Source:
+                <a href="https://doi.org/10.5281/zenodo.19204490" target="_blank" rel="noopener noreferrer">Bird Atlas 2007-11</a>
+                (BTO, BirdWatch Ireland, Scottish Ornithologists' Club).
+                <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>.
+            </p>
+        </div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            // the column of each species, and the value at the top of its color ramp: about the 99th percentile of the values of its two seasons
+            const species = [
+                { code: 'RK', name: 'Red Kite', latin: 'Milvus milvus', max: 3 },
+                { code: 'BZ', name: 'Buzzard', latin: 'Buteo buteo', max: 2 },
+                { code: 'KE', name: 'Kestrel', latin: 'Falco tinnunculus', max: 0.8 },
+                { code: 'RG', name: 'Red Grouse', latin: 'Lagopus scotica', max: 16 },
+                { code: 'RL', name: 'Red-legged Partridge', latin: 'Alectoris rufa', max: 6 },
+                { code: 'RP', name: 'Ring-necked Parakeet', latin: 'Psittacula krameria', max: 9 },
+                { code: 'CC', name: 'Carrion Crow', latin: 'Corvus corone', max: 17 },
+                // the winter values of the magpie are not usable: in the source, they are a copy of the breeding values
+                { code: 'MG', name: 'Magpie', latin: 'Pica pica', max: 7.5, breedingOnly: true },
+            ]
+
+            // the source warns that its model gives small values where a species is not present: under this value, it is considered absent
+            const presenceThreshold = 0.02
+
+            let current = species[0]
+            let season = 'b'
+            const value = (cell) => +cell[current.code + season]
+
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 150000,
+                y: 620000,
+                // the whole of the two islands in the window
+                z: Math.max(1350000 / window.innerHeight, 1000000 / window.innerWidth),
+                zoomExtent: [80, 4000],
+                viewExtent: [-1000000, -200000, 1150000, 1400000],
+                backgroundColor: '#0d0f16',
+            }).addZoomButtons()
+
+            const dataset = new gridviz.CSVGrid(map, '../../assets/csv/Britain_Ireland/bird_abundance_2km.csv', 2000)
+
+            // the land, where the species is absent as well
+            const landStyle = new gridviz.SquareColorWebGLStyle({ tFun: () => 0, colors: ['#2a2d38'] })
+
+            // the first colors of the ramp are too close to the color of the land
+            const color = (t) => d3.interpolateInferno(0.2 + 0.8 * t)
+
+            // a square root gives more of the ramp to the low values: a species is abundant in few places
+            const abundanceStyle = new gridviz.SquareColorWebGLStyle({
+                filter: (cell) => value(cell) >= presenceThreshold,
+                tFun: (cell) => Math.sqrt(value(cell) / current.max),
+                color,
+            })
+            abundanceStyle.legends = [
+                new gridviz.ColorLegend({
+                    title: 'Birds per hour of observation',
+                    colorScale: color,
+                    textScale: (t) => t * t * current.max,
+                    tickFormat: (v) => (v < 1 ? v.toFixed(2) : v.toFixed(1)),
+                    ticks: 5,
+                    width: Math.min(260, window.innerWidth - 60),
+                }),
+            ]
+
+            const gridLayer = new gridviz.GridLayer(dataset, [landStyle, abundanceStyle], {
+                cellInfoHTML: (cell) => {
+                    const v = value(cell)
+                    const seasonName = season === 'b' ? 'breeding season' : 'winter'
+                    if (v < presenceThreshold) return '<b>' + current.name + '</b><br />absent in ' + seasonName
+                    return '<b>' + current.name + '</b><br />' + v.toFixed(2) + ' birds per hour in ' + seasonName
+                },
+            })
+
+            const labelLayer = new gridviz.LabelLayer({
+                url: '../../assets/csv/Britain_Ireland/towns.csv',
+                preprocess: (label) => {
+                    label.x = +label.x
+                    label.y = +label.y
+                },
+                style: (label, z) => (label.rank == 1 || z < 1000 ? '13px Arial' : undefined),
+                textAlign: 'center',
+                dark: true,
+            })
+
+            map.layers = [gridLayer, labelLayer]
+
+            // the selection of the species and the season
+            const speciesDiv = document.getElementById('species')
+            for (const s of species) {
+                const label = document.createElement('label')
+                const input = document.createElement('input')
+                input.type = 'radio'
+                input.name = 'species'
+                input.value = s.code
+                input.checked = s === current
+                label.append(input, ' ' + s.name + ' ')
+                const latin = document.createElement('i')
+                latin.textContent = s.latin
+                label.append(latin)
+                speciesDiv.append(label)
+            }
+
+            const winterLabel = document.getElementById('winter')
+            const winterInput = winterLabel.querySelector('input')
+            const breedingInput = document.querySelector('input[name=season][value=b]')
+
+            document.getElementById('panel').addEventListener('change', (e) => {
+                if (e.target.name === 'species') current = species.find((s) => s.code === e.target.value)
+                if (e.target.name === 'season') season = e.target.value
+                if (current.breedingOnly && season === 'w') {
+                    season = 'b'
+                    breedingInput.checked = true
+                }
+                winterInput.disabled = !!current.breedingOnly
+                winterLabel.classList.toggle('disabled', !!current.breedingOnly)
+                map.redraw()
+            })
+        </script>
+    </body>
+</html>

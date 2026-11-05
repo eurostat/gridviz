@@ -40,6 +40,7 @@ Browse the [examples gallery](https://eurostat.github.io/gridviz/examples/) to s
 -   [**Norway** - 250m resolution - SSB](https://eurostat.github.io/gridviz/examples/demos/NO.html)
 -   [**Norway** - 20 years of population - SSB](https://eurostat.github.io/gridviz/examples/demos/NO_timeseries.html): by year, change between two years, time series, year of the maximum.
 -   [**Croatia** - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/demos/HR.html)
+-   [**Britain and Ireland** - birds - 2km resolution - Bird Atlas 2007-11](https://eurostat.github.io/gridviz/examples/demos/birds.html): abundance of eight species, by season
 -   [**Belgium** population](https://eurostat.github.io/gridviz/examples/basics/mixed_resolution_BE.html), as mixed resolution layer.
 
 ## Installation

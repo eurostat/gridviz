@@ -746,5 +746,11 @@
         "category": "Demos",
         "title": "Norway: 20 years of population",
         "description": "Population by year with a time slider, change between two years, time series, and year of the maximum."
+    },
+    {
+        "path": "demos/birds.html",
+        "category": "Demos",
+        "title": "Birds of Britain and Ireland",
+        "description": "Modelled abundance of eight bird species per 2 km square, in the breeding season and in winter."
     }
 ]
