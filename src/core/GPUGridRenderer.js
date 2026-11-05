@@ -454,6 +454,8 @@ export class GPUGridRenderer {
     _backdropOf(item, old) {
         const multi = item.gridLayer.dataset
         if (this._noBackdrop.has(item.style) || !multi || !multi.datasets || multi.datasets.length < 2 || !multi.resolutions) return null
+        // A dataset whose info has not come in has no resolution yet: any resolution would pass for coarser, and the finest, reaching so far around the view, is every tile of the grid
+        if (!(item.resolution > 0)) return null
         const at = multi.resolutions.findIndex((r) => r >= BACKDROP_FACTOR * item.resolution)
         if (at < 0) return null
         const dataset = multi.datasets[at]

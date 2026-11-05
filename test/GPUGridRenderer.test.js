@@ -238,3 +238,15 @@ test('a build in progress starts again if the tile or the colours have changed',
     assert.equal(batch.key, 'k2')
 })
 
+test('no stand-in for a dataset whose resolution is not known yet, and otherwise a coarser one', () => {
+    const renderer = makeRenderer({})
+    const datasets = [{ name: 100 }, { name: 1000 }, { name: 10000 }, { name: 100000 }]
+    const gridLayer = { dataset: { datasets, resolutions: [100, 1000, 10000, 100000] } }
+    const style = {}
+    // the info.json has not come in: before this, the finest resolution was asked for, all over the map
+    assert.equal(renderer._backdropOf({ style, gridLayer, dataset: datasets[2], resolution: 0, key: 'k' }), null)
+    assert.equal(renderer._backdropOf({ style, gridLayer, dataset: datasets[2], resolution: undefined, key: 'k' }), null)
+    const stand = renderer._backdropOf({ style, gridLayer, dataset: datasets[0], resolution: 100, key: 'k' })
+    assert.equal(stand.dataset, datasets[1])
+    assert.ok(stand.resolution >= 8 * 100)
+})
