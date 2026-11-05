@@ -88,8 +88,10 @@ export class GridLayer extends Layer {
             //set affin transform to draw with geographical coordinates
             geoCanvas.setCanvasTransform()
 
-            //draw with style
-            s.draw(dsc.getViewCache(), geoCanvas, dsc.getResolution())
+            //draw with style: on the GPU when the map has a renderer for that which can draw this style (see GPUGridRenderer)
+            const gpu = geoCanvas.gpuRenderer
+            if (gpu && gpu.accepts(s, this)) gpu.submit(s, dsc.getViewCache(), geoCanvas, dsc.getResolution(), this)
+            else s.draw(dsc.getViewCache(), geoCanvas, dsc.getResolution())
 
             //draw style filter
             if (s.filterColor) s.drawFilter(geoCanvas)

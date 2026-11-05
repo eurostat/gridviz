@@ -2,6 +2,19 @@
 
 ## Version 3
 
+### Version 3.3.0 (since 3.2.0)
+
+Nothing changes for a map that does not use what is new: `npm run test:compat` compares the examples of the gallery with the published version.
+
+-   New, opt-in: _GPUGridRenderer_ draws grid layers on the GPU, fast enough for each frame of a movement, for a map inside another map (see the reference, [A map inside another map](reference.md#a-map-inside-another-map)).
+-   New on _Map_: _setSize()_, _cancelRedraw()_, _getExtentGeo()_, _isDestroyed()_, so that a host needs no private field. The _tooltip_ of the map is public.
+-   Tests: `npm run test:gpu` compares what the renderer draws with what the map draws, and `npm run test:compat` compares a version with the published one before a release.
+
+### Version 3.2.0 (since 3.1.1)
+
+-   Faster hover on dense views: a tiled dataset finds the cell under the pointer from its tile.
+-   New: the _hoverSuspended_ option of _Map_, and _clearHover()_.
+
 ### Next version
 
 -   Fix: on a touch screen, pressing a zoom button lit both buttons (the tap highlight of the browser on the container, and the hover color which stayed on the last button touched). Only the button pressed is lit now, and the zoom buttons are 48 pixels wide on a touch screen (unless the page sets `--gridviz-button-size`).

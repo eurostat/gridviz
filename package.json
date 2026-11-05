@@ -1,6 +1,6 @@
 {
     "name": "gridviz",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "description": "Visualization tool for gridded statistics",
     "keywords": [
         "statistics",
@@ -43,6 +43,8 @@
         "build-prod": "webpack --config webpack.config.prod.cjs",
         "test": "node --test \"test/*.test.js\"",
         "test:browser": "node test/browser/run.mjs",
+        "test:gpu": "node test/browser/gpu.mjs",
+        "test:compat": "node test/browser/compat.mjs",
         "audit": "npm audit",
         "prepublishOnly": "npm audit && npm test",
         "format": "prettier --write ."
