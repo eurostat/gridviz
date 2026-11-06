@@ -757,6 +757,6 @@
         "path": "demos/ships.html",
         "category": "Demos",
         "title": "Ships of Europe",
-        "description": "Hours of cargo, tanker, fishing and passenger ships per 1 km square, in 2023 and 2019: main type and traffic as colour, pies, and change."
+        "description": "Hours of 13 ship types per 1 km square, 2017 to 2024: main type and traffic as colour, pies, one type, and change between two years."
     }
 ]

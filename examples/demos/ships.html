@@ -84,6 +84,22 @@
                 height: 14px;
             }
 
+            #panel select {
+                max-width: 170px;
+                font-size: 12px;
+            }
+
+            #year {
+                width: 100%;
+                margin: 2px 0;
+            }
+
+            #note {
+                font-size: 12px;
+                line-height: 1.3;
+                color: #a33;
+            }
+
             #keyTitle {
                 margin-top: 8px;
                 font-size: 12px;
@@ -125,20 +141,24 @@
             <h1>Ships of Europe</h1>
             <fieldset>
                 <legend>Show</legend>
-                <div id="views"></div>
+                <label><input type="radio" name="view" value="main" checked /> Main type, by brightness</label>
+                <label><input type="radio" name="view" value="pies" /> Share of each type, as pies</label>
+                <label><input type="radio" name="view" value="type" /> One type: <select id="type"></select></label>
             </fieldset>
             <fieldset>
-                <legend>Year</legend>
-                <label><input type="radio" name="period" value="23" checked /> 2023</label>
-                <label><input type="radio" name="period" value="19" /> 2019</label>
-                <label id="changeLabel"><input type="radio" name="period" value="change" /> Change, 2019 to 2023</label>
+                <legend>Year: <span id="yearLabel"></span></legend>
+                <input id="year" type="range" min="2017" max="2024" step="1" value="2023" />
+                <label id="compareLabel">
+                    <input id="compare" type="checkbox" /> Change since <select id="from"></select>
+                </label>
+                <div id="note"></div>
             </fieldset>
             <div id="keyTitle"></div>
             <table id="key"></table>
             <p id="about">
                 The time ships spend in each square, in hours per km² per month (yearly average). Only ships that broadcast
-                their position (AIS) are counted, and the reception of these signals varies over the years, so that a change is not
-                always a change in traffic. These are 4 of the 13 types of the source.
+                their position (AIS) are counted, and the reception of these signals varies over the years, so that a change is
+                not always a change in traffic.
             </p>
             <p>
                 Source:
@@ -158,50 +178,112 @@
             const dataURL = 'https://raw.githubusercontent.com/joewdavies/tiled-grids/main/vessels/'
 
             const background = '#10131c'
-            const types = [
-                { code: 'c', name: 'Cargo', color: '#56b4e9' },
-                { code: 't', name: 'Tanker', color: '#ff6a3d' },
-                { code: 'f', name: 'Fishing', color: '#2fc98a' },
-                { code: 'p', name: 'Passenger', color: '#f0e442' },
+            // the groups of the main type and of the pies, and the column of each of the 13 ship types of the source
+            const groups = [
+                { code: 'gc', name: 'Cargo', color: '#56b4e9', types: [{ code: 'c', name: 'Cargo' }] },
+                { code: 'gt', name: 'Tanker', color: '#ff6a3d', types: [{ code: 't', name: 'Tanker' }] },
+                { code: 'gf', name: 'Fishing', color: '#2fc98a', types: [{ code: 'f', name: 'Fishing' }] },
+                {
+                    code: 'gp',
+                    name: 'Passenger',
+                    color: '#f0e442',
+                    types: [
+                        { code: 'p', name: 'Passenger' },
+                        { code: 'h', name: 'High speed craft' },
+                    ],
+                },
+                {
+                    code: 'gl',
+                    name: 'Leisure',
+                    color: '#ff8ad4',
+                    types: [
+                        { code: 'a', name: 'Sailing' },
+                        { code: 'l', name: 'Pleasure craft' },
+                    ],
+                },
+                {
+                    code: 'gw',
+                    name: 'Work',
+                    color: '#b79cff',
+                    types: [
+                        { code: 's', name: 'Service' },
+                        { code: 'u', name: 'Tug and towing' },
+                        { code: 'd', name: 'Dredging, underwater' },
+                    ],
+                },
+                {
+                    code: 'go',
+                    name: 'Other',
+                    color: '#aab2c0',
+                    types: [
+                        { code: 'm', name: 'Military, law enforcement' },
+                        { code: 'o', name: 'Other' },
+                        { code: 'n', name: 'Unknown' },
+                    ],
+                },
             ]
+            const types = groups.flatMap((g) => g.types.map((t) => ({ ...t, group: g })))
+            const columns = types.map((t) => t.code)
+            // the types with a column per year in the table for the changes
+            const typesWithChange = ['c', 't', 'f', 'p']
+            const years = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+
             const minValue = 0.1 // the data have no cell under this value
             const maxValue = 300 // about the 99.9th percentile
-
-            const views = [
-                { code: 'main', name: 'Main type, by brightness' },
-                { code: 'pies', name: 'Share of each type, as pies', noChange: true },
-                ...types.map((t) => ({ code: t.code, name: t.name, type: t })),
-            ]
-
-            let view = views[0]
-            let period = '23' // or '19' or 'change'
-            const year = () => (period === 'change' ? '23' : period)
-
-            const total = (cell, y) => cell['c' + y] + cell['t' + y] + cell['f' + y] + cell['p' + y]
-            // the value of the type, or of the 4 types
-            const value = (cell, y) => (view.type ? cell[view.code + y] : total(cell, y))
             const log = (v) => Math.max(0, Math.min(1, Math.log(v / minValue) / Math.log(maxValue / minValue)))
+
+            let view = 'main' // or 'pies' or 'type'
+            let type = types[0]
+            let year = 2023
+            let from = 2019
+            let compare = false
+
+            const comparing = () => compare && view !== 'pies' && (view === 'main' || typesWithChange.includes(type.code))
 
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 3900000,
                 // on a narrow window, the zoom is at its limit: further north, the edge of the background is out of the view
                 y: window.innerWidth < 600 ? 3900000 : 3150000,
                 // Europe in the window
-                z: Math.max(3500000 / window.innerHeight, 5800000 / window.innerWidth),
+                z: Math.min(8000, Math.max(3500000 / window.innerHeight, 5800000 / window.innerWidth)),
                 zoomExtent: [50, 8000],
                 viewExtent: [-1100000, 0, 7300000, 7500000],
                 backgroundColor: background,
             }).addZoomButtons()
 
-            const columns = types.flatMap((t) => [t.code + '19', t.code + '23'])
-            const dataset = new gridviz.MultiResolutionDataset(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            // ---------- the data: a dataset per year, made when it is needed, and one for the changes ----------
+
+            // these cells have many values, and going through the years loads many tiles: they are kept in smaller number than by default
+            gridviz.TiledGrid.maxCachedCells = 500000
+
+            const datasetOfYear = (y) =>
+                new gridviz.MultiResolutionDataset(
+                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (resolution) =>
+                        new gridviz.TiledGrid(map, dataURL + y + '/' + resolution + 'm/', {
+                            worker: true,
+                            preprocess: (cell) => {
+                                // an empty value is a zero
+                                let total = 0
+                                for (const c of columns) total += cell[c] = +cell[c]
+                                cell.total = total
+                                for (const g of groups) {
+                                    let sum = 0
+                                    for (const t of g.types) sum += cell[t.code]
+                                    cell[g.code] = sum
+                                }
+                            },
+                        })
+                )
+
+            const yearColumns = years.flatMap((y) => ['a', ...typesWithChange].map((t) => t + ('' + y).slice(2)))
+            const changeDataset = new gridviz.MultiResolutionDataset(
+                [2000, 5000, 10000, 20000, 50000, 100000],
                 (resolution) =>
-                    new gridviz.TiledGrid(map, dataURL + resolution + 'm/', {
+                    new gridviz.TiledGrid(map, dataURL + 'change/' + resolution + 'm/', {
                         worker: true,
-                        // an empty value is a zero
                         preprocess: (cell) => {
-                            for (const c of columns) cell[c] = +cell[c]
+                            for (const c of yearColumns) cell[c] = +cell[c]
                         },
                     })
             )
@@ -215,46 +297,49 @@
                 return l
             }
             // from close to the background to the color, then a bit lighter
-            const levelColor = (type, l) =>
+            const levelColor = (group, l) =>
                 l < 3
-                    ? d3.interpolateRgb(background, type.color)(0.35 + (0.65 * l) / 3)
+                    ? d3.interpolateRgb(background, group.color)(0.35 + (0.65 * l) / 3)
                     : l === 3
-                      ? type.color
-                      : d3.interpolateRgb(type.color, 'white')(0.5)
+                      ? group.color
+                      : d3.interpolateRgb(group.color, 'white')(0.5)
 
             const mainColors = {}
-            for (const t of types) for (let l = 0; l < levels.length; l++) mainColors[t.code + l] = levelColor(t, l)
+            for (const g of groups) for (let l = 0; l < levels.length; l++) mainColors[g.code + l] = levelColor(g, l)
 
             const mainStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                visible: () => view.code === 'main' && period !== 'change',
-                filter: (cell) => total(cell, period) >= minValue,
+                visible: () => view === 'main',
+                filter: (cell) => cell.total >= minValue,
                 color: mainColors,
                 code: (cell) => {
-                    let main = types[0]
-                    for (const t of types) if (cell[t.code + period] > cell[main.code + period]) main = t
-                    return main.code + levelOf(total(cell, period))
+                    let main = groups[0]
+                    for (const g of groups) if (cell[g.code] > cell[main.code]) main = g
+                    return main.code + levelOf(cell.total)
                 },
             })
 
             // ---------- one type ----------
 
+            const legendWidth = Math.min(260, window.innerWidth - 60)
             const typeStyles = types.map((t) => {
                 const color = (x) =>
-                    x < 0.7 ? d3.interpolateRgb(background, t.color)(0.3 + x) : d3.interpolateRgb(t.color, 'white')((x - 0.7) * 2)
+                    x < 0.7
+                        ? d3.interpolateRgb(background, t.group.color)(0.3 + x)
+                        : d3.interpolateRgb(t.group.color, 'white')((x - 0.7) * 2)
                 const style = new gridviz.SquareColorWebGLStyle({
-                    visible: () => view === views.find((v) => v.type === t) && period !== 'change',
-                    filter: (cell) => cell[t.code + period] >= minValue,
-                    tFun: (cell) => log(cell[t.code + period]),
+                    visible: () => view === 'type' && type === t,
+                    filter: (cell) => cell[t.code] >= minValue,
+                    tFun: (cell) => log(cell[t.code]),
                     color,
                 })
                 style.legends = [
                     new gridviz.ColorLegend({
-                        title: t.name + ' ships, hours per km² per month',
+                        title: t.name + ', hours per km² per month',
                         colorScale: color,
                         textScale: (x) => minValue * Math.pow(maxValue / minValue, x),
                         tickFormat: (v) => (v < 1 ? v.toFixed(1) : v.toFixed(0)),
                         ticks: 5,
-                        width: Math.min(260, window.innerWidth - 60),
+                        width: legendWidth,
                     }),
                 ]
                 return style
@@ -262,57 +347,78 @@
 
             // ---------- the change between two years, from a quarter to four times ----------
 
+            const changeValue = (cell, y) => cell[(view === 'type' ? type.code : 'a') + ('' + y).slice(2)]
             const changeColor = d3.interpolateRgbBasis(['#3fc8ff', '#2c5f7c', '#3a3d47', '#9a5a2a', '#ffa23c'])
             const changeStyle = new gridviz.SquareColorWebGLStyle({
-                visible: () => period === 'change',
                 // over too little traffic, a ratio has no meaning
-                filter: (cell) => Math.max(value(cell, '19'), value(cell, '23')) >= 0.5,
+                filter: (cell) => Math.max(changeValue(cell, from), changeValue(cell, year)) >= 0.5,
                 tFun: (cell) => {
                     // a small value is added, for the cells with no traffic one of the years
-                    const r = Math.log2((value(cell, '23') + 0.05) / (value(cell, '19') + 0.05))
+                    const r = Math.log2((changeValue(cell, year) + 0.05) / (changeValue(cell, from) + 0.05))
                     return Math.max(0, Math.min(1, (r + 2) / 4))
                 },
                 color: changeColor,
             })
             changeStyle.legends = [
                 new gridviz.ColorLegend({
-                    title: 'Traffic in 2023, compared with 2019',
+                    title: 'Traffic, compared with the earlier year',
                     colorScale: changeColor,
                     textScale: (x) => Math.pow(2, 4 * x - 2),
                     tickFormat: (v) => (v < 1 ? '÷' + +(1 / v).toFixed(1) : '×' + +v.toFixed(1)),
                     ticks: 5,
-                    width: Math.min(260, window.innerWidth - 60),
+                    width: legendWidth,
                 }),
             ]
 
-            // ---------- the pies: the share of each type as the angle, the traffic as the size ----------
+            // ---------- the pies: the share of each group as the angle, the traffic as the size ----------
 
-            const pieColors = (y) => Object.fromEntries(types.map((t) => [t.code + y, t.color]))
             const pieStyle = new gridviz.CompositionStyle({
-                filter: (cell) => total(cell, year()) >= minValue,
-                color: pieColors(year()),
+                filter: (cell) => cell.total >= minValue,
+                color: Object.fromEntries(groups.map((g) => [g.code, g.color])),
                 type: () => 'piechart',
                 offsetAngle: () => 90,
-                size: (cell, resolution) => resolution * (0.2 + 0.8 * log(total(cell, year()))),
+                size: (cell, resolution) => resolution * (0.2 + 0.8 * log(cell.total)),
             })
 
             // ---------- the layers ----------
 
-            const hours = (v) => (v < 10 ? +v.toFixed(2) : Math.round(v)).toLocaleString('en')
+            const hours = (v) => (v < 10 ? +v.toFixed(1) : Math.round(v)).toLocaleString('en')
             const cellInfoHTML = (cell) => {
-                const row = (name, a, b) =>
-                    name + ': <b>' + hours(a) + '</b>' + (period === 'change' ? ' (2019: ' + hours(b) + ')' : '') + '<br />'
-                const y = year()
-                let html = '<div>Hours per km² per month, 20' + y + '</div>'
-                for (const t of types) html += row(t.name, cell[t.code + y], cell[t.code + '19'])
+                let html = '<div>' + year + ', hours per km² per month</div>'
+                for (const g of groups) if (cell[g.code] > 0) html += g.name + ': <b>' + hours(cell[g.code]) + '</b><br />'
+                if (view === 'type') html += '<div>' + type.name + ': <b>' + hours(cell[type.code]) + '</b></div>'
                 return html
             }
+            const changeInfoHTML = (cell) => {
+                const name = view === 'type' ? type.name : 'All types'
+                return (
+                    '<div>' + name + ', hours per km² per month</div>' +
+                    from + ': <b>' + hours(changeValue(cell, from)) + '</b><br />' +
+                    year + ': <b>' + hours(changeValue(cell, year)) + '</b>'
+                )
+            }
 
-            const squaresLayer = new gridviz.GridLayer(dataset, [mainStyle, ...typeStyles, changeStyle], {
+            const layersOfYear = {}
+            const yearsUsed = []
+            const maxYearsKept = 3
+            const squaresStyles = [mainStyle, ...typeStyles]
+            const layerOfYear = (y, pies) => {
+                const layers = (layersOfYear[y] = layersOfYear[y] || { dataset: datasetOfYear(y) })
+                // a dataset keeps the cells of its last view: only the last years used are kept, so that going through all the years stays light
+                yearsUsed.splice(0, yearsUsed.length, y, ...yearsUsed.filter((u) => u !== y))
+                for (const old of yearsUsed.splice(maxYearsKept)) delete layersOfYear[old]
+                const key = pies ? 'pies' : 'squares'
+                if (!layers[key])
+                    layers[key] = new gridviz.GridLayer(layers.dataset, pies ? [pieStyle] : squaresStyles, {
+                        minPixelsPerCell: pies ? 22 : 1.2,
+                        cellInfoHTML,
+                    })
+                return layers[key]
+            }
+            const changeLayer = new gridviz.GridLayer(changeDataset, [changeStyle], {
                 minPixelsPerCell: 1.2,
-                cellInfoHTML,
+                cellInfoHTML: changeInfoHTML,
             })
-            const piesLayer = new gridviz.GridLayer(dataset, [pieStyle], { minPixelsPerCell: 22, cellInfoHTML })
 
             const backgroundLayer = new gridviz.BackgroundLayer(
                 gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', { filterColor: () => '#000000c0' })
@@ -321,27 +427,22 @@
 
             // ---------- the panel ----------
 
-            const viewsDiv = document.getElementById('views')
-            for (const v of views) {
-                const label = document.createElement('label')
-                const input = document.createElement('input')
-                input.type = 'radio'
-                input.name = 'view'
-                input.value = v.code
-                input.checked = v === view
-                label.append(input, ' ' + v.name)
-                viewsDiv.append(label)
-            }
+            const element = (id) => document.getElementById(id)
 
-            const changeLabel = document.getElementById('changeLabel')
-            const changeInput = changeLabel.querySelector('input')
-            const keyTitle = document.getElementById('keyTitle')
-            const key = document.getElementById('key')
+            for (const g of groups) {
+                const optgroup = document.createElement('optgroup')
+                optgroup.label = g.name
+                for (const t of g.types) optgroup.append(new Option(t.name, t.code))
+                element('type').append(optgroup)
+            }
+            for (const y of years) element('from').append(new Option(y, y, y === from, y === from))
 
             function drawKey() {
+                const key = element('key')
+                const keyTitle = element('keyTitle')
                 key.replaceChildren()
                 keyTitle.textContent = ''
-                if (period === 'change' || view.type) return
+                if (comparing() || view === 'type') return
                 const row = (cells) => {
                     const tr = document.createElement('tr')
                     tr.append(...cells)
@@ -353,37 +454,43 @@
                     if (color) c.style.background = color
                     return c
                 }
-                if (view.code === 'pies') {
+                if (view === 'pies') {
                     keyTitle.textContent = 'The bigger the pie, the more traffic (logarithmic). Zoom in for more pies.'
-                    for (const t of types) key.append(row([cell('td', undefined, t.color), cell('th', t.name)]))
+                    for (const g of groups) key.append(row([cell('td', undefined, g.color), cell('th', g.name)]))
                     return
                 }
-                keyTitle.textContent = 'Hue: the main type. Brightness: the hours of the 4 types.'
-                const head = row([cell('th'), ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))])
-                key.append(head)
-                for (const t of types)
-                    key.append(row([cell('th', t.name), ...levels.map((_, l) => cell('td', undefined, levelColor(t, l)))]))
+                keyTitle.textContent = 'Hue: the main type. Brightness: the hours of all types.'
+                key.append(row([cell('th'), ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))]))
+                for (const g of groups)
+                    key.append(row([cell('th', g.name), ...levels.map((_, l) => cell('td', undefined, levelColor(g, l)))]))
             }
 
             function update() {
-                if (view.noChange && period === 'change') {
-                    period = '23'
-                    document.querySelector('input[name=period][value="23"]').checked = true
-                }
-                changeInput.disabled = !!view.noChange
-                changeLabel.classList.toggle('disabled', !!view.noChange)
-                pieStyle.color = pieColors(year())
-                map.layers = [backgroundLayer, view.code === 'pies' ? piesLayer : squaresLayer, labelLayer]
+                view = document.querySelector('input[name=view]:checked').value
+                type = types.find((t) => t.code === element('type').value)
+                year = +element('year').value
+                from = +element('from').value
+                compare = element('compare').checked
+
+                const canCompare = view === 'main' || (view === 'type' && typesWithChange.includes(type.code))
+                element('compare').disabled = !canCompare
+                element('from').disabled = !canCompare
+                element('compareLabel').classList.toggle('disabled', !canCompare)
+
+                element('yearLabel').textContent = comparing() ? from + ' to ' + year : year
+                const notes = []
+                if (compare && view === 'type' && !canCompare) notes.push('The change is for all types, or for cargo, tanker, fishing and passenger.')
+                if (year === 2024 || (comparing() && from === 2024))
+                    notes.push('2024 is not as dense: the source lost satellite data from June.')
+                element('note').textContent = notes.join(' ')
+
+                const layer = comparing() ? changeLayer : layerOfYear(year, view === 'pies')
+                map.layers = [backgroundLayer, layer, labelLayer]
                 drawKey()
                 map.redraw()
             }
 
-            document.getElementById('panel').addEventListener('change', (e) => {
-                if (e.target.name === 'view') view = views.find((v) => v.code === e.target.value)
-                if (e.target.name === 'period') period = e.target.value
-                update()
-            })
-
+            element('panel').addEventListener('input', update)
             update()
         </script>
     </body>
