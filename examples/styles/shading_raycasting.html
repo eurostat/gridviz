@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body>
+<body style="display: flex; flex-direction: column">
     <form id="form">
         <label for="cbHyps"><input type="checkbox" id="cbHyps" checked>Hypsometric tints</label>
         <br>
@@ -36,7 +36,7 @@
         <br>
         <label for="cbHD"><input type="checkbox" id="cbHD">HD (slow)</label>
     </form>
-    <div id="map" style="height: 600px; width: 900px"></div>
+    <div id="map" style="flex: 1; min-height: 0; width: 100%"></div>
 
     <script src="../../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>

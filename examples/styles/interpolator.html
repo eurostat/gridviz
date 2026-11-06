@@ -18,12 +18,12 @@
     </style>
 </head>
 
-<body>
+<body style="display: flex; flex-direction: column">
     <form id="form">
         <label>Interpolation resolution</label>
         <input type="range" min="1" max="25" value="5" step="1" id="sInterpScaleFactor" style="width: 200px" />
     </form>
-    <div id="map" style="height: 600px; width: 900px"></div>
+    <div id="map" style="flex: 1; min-height: 0; width: 100%"></div>
 
     <script src="../../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
