@@ -60,6 +60,14 @@
                 color: #333;
             }
 
+            #resolutionScale {
+                display: flex;
+                justify-content: space-between;
+                font-size: 11px;
+                line-height: 1;
+                color: #555;
+            }
+
             #key {
                 margin-top: 8px;
                 font-size: 11px;
@@ -89,7 +97,8 @@
                 font-size: 12px;
             }
 
-            #year {
+            #year,
+            #resolution {
                 width: 100%;
                 margin: 2px 0;
             }
@@ -98,6 +107,26 @@
                 font-size: 12px;
                 line-height: 1.3;
                 color: #a33;
+            }
+
+            #key label {
+                cursor: pointer;
+                white-space: nowrap;
+            }
+
+            #key input {
+                margin: 0 3px 0 0;
+                vertical-align: -2px;
+            }
+
+            /* a type which is hidden: its colours are not on the map any more */
+            #key tr.off td {
+                filter: grayscale(1) blur(1.5px);
+                opacity: 0.4;
+            }
+
+            #key tr.off label {
+                color: #888;
             }
 
             #keyTitle {
@@ -152,6 +181,11 @@
                     <input id="compare" type="checkbox" /> Change since <select id="from"></select>
                 </label>
                 <div id="note"></div>
+            </fieldset>
+            <fieldset>
+                <legend>Grid resolution: <span id="resolutionLabel"></span></legend>
+                <input id="resolution" type="range" min="0" max="100" step="1" />
+                <div id="resolutionScale"><span>Coarser</span><span>Finer</span></div>
             </fieldset>
             <div id="keyTitle"></div>
             <table id="key"></table>
@@ -237,6 +271,8 @@
             let year = 2023
             let from = 2019
             let compare = false
+            // the groups which are not shown by the main type
+            const hiddenGroups = new Set()
 
             const comparing = () => compare && view !== 'pies' && (view === 'main' || typesWithChange.includes(type.code))
 
@@ -249,16 +285,21 @@
                 zoomExtent: [50, 8000],
                 viewExtent: [-1100000, 0, 7300000, 7500000],
                 backgroundColor: background,
-            }).addZoomButtons()
+                onZoomFun: () => showResolution(),
+                onZoomEndFun: () => showResolution(),
+            }).addZoomButtons({ onZoom: () => showResolution() })
 
             // ---------- the data: a dataset per year, made when it is needed, and one for the changes ----------
 
             // these cells have many values, and going through the years loads many tiles: they are kept in smaller number than by default
             gridviz.TiledGrid.maxCachedCells = 500000
 
+            const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
+            const changeResolutions = resolutions.slice(1)
+
             const datasetOfYear = (y) =>
                 new gridviz.MultiResolutionDataset(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    resolutions,
                     (resolution) =>
                         new gridviz.TiledGrid(map, dataURL + y + '/' + resolution + 'm/', {
                             worker: true,
@@ -278,7 +319,7 @@
 
             const yearColumns = years.flatMap((y) => ['a', ...typesWithChange].map((t) => t + ('' + y).slice(2)))
             const changeDataset = new gridviz.MultiResolutionDataset(
-                [2000, 5000, 10000, 20000, 50000, 100000],
+                changeResolutions,
                 (resolution) =>
                     new gridviz.TiledGrid(map, dataURL + 'change/' + resolution + 'm/', {
                         worker: true,
@@ -307,14 +348,23 @@
             const mainColors = {}
             for (const g of groups) for (let l = 0; l < levels.length; l++) mainColors[g.code + l] = levelColor(g, l)
 
+            // the hours of the groups which are shown
+            const shownTotal = (cell) => {
+                if (hiddenGroups.size === 0) return cell.total
+                let total = 0
+                for (const g of groups) if (!hiddenGroups.has(g)) total += cell[g.code]
+                return total
+            }
+
             const mainStyle = new gridviz.SquareColorCategoryWebGLStyle({
                 visible: () => view === 'main',
-                filter: (cell) => cell.total >= minValue,
+                filter: (cell) => shownTotal(cell) >= minValue,
                 color: mainColors,
                 code: (cell) => {
-                    let main = groups[0]
-                    for (const g of groups) if (cell[g.code] > cell[main.code]) main = g
-                    return main.code + levelOf(cell.total)
+                    let main
+                    for (const g of groups)
+                        if (!hiddenGroups.has(g) && (!main || cell[g.code] > cell[main.code])) main = g
+                    return main.code + levelOf(shownTotal(cell))
                 },
             })
 
@@ -384,12 +434,18 @@
 
             const hours = (v) => (v < 10 ? +v.toFixed(1) : Math.round(v)).toLocaleString('en')
             const cellInfoHTML = (cell) => {
+                // no tooltip for a cell which is not on the map
+                if (view === 'main' && shownTotal(cell) < minValue) return undefined
+                if (view === 'type' && cell[type.code] < minValue) return undefined
                 let html = '<div>' + year + ', hours per km² per month</div>'
-                for (const g of groups) if (cell[g.code] > 0) html += g.name + ': <b>' + hours(cell[g.code]) + '</b><br />'
+                for (const g of groups)
+                    if (cell[g.code] > 0 && !(view === 'main' && hiddenGroups.has(g)))
+                        html += g.name + ': <b>' + hours(cell[g.code]) + '</b><br />'
                 if (view === 'type') html += '<div>' + type.name + ': <b>' + hours(cell[type.code]) + '</b></div>'
                 return html
             }
             const changeInfoHTML = (cell) => {
+                if (Math.max(changeValue(cell, from), changeValue(cell, year)) < 0.5) return undefined
                 const name = view === 'type' ? type.name : 'All types'
                 return (
                     '<div>' + name + ', hours per km² per month</div>' +
@@ -410,15 +466,11 @@
                 const key = pies ? 'pies' : 'squares'
                 if (!layers[key])
                     layers[key] = new gridviz.GridLayer(layers.dataset, pies ? [pieStyle] : squaresStyles, {
-                        minPixelsPerCell: pies ? 22 : 1.2,
                         cellInfoHTML,
                     })
                 return layers[key]
             }
-            const changeLayer = new gridviz.GridLayer(changeDataset, [changeStyle], {
-                minPixelsPerCell: 1.2,
-                cellInfoHTML: changeInfoHTML,
-            })
+            const changeLayer = new gridviz.GridLayer(changeDataset, [changeStyle], { cellInfoHTML: changeInfoHTML })
 
             const backgroundLayer = new gridviz.BackgroundLayer(
                 gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', { filterColor: () => '#000000c0' })
@@ -428,6 +480,27 @@
             // ---------- the panel ----------
 
             const element = (id) => document.getElementById(id)
+
+            // The grid resolution slider sets minPixelsPerCell: its position goes from 0, the coarsest, to 100, the finest.
+            // A pie needs more pixels than a square, so the pies have their own range, and their own position of the slider.
+            const cellSizes = {
+                squares: { finest: 1.2, coarsest: 40, position: 100 },
+                pies: { finest: 10, coarsest: 120, position: 68 },
+            }
+            const cellSize = () => cellSizes[view === 'pies' ? 'pies' : 'squares']
+            const minPixelsPerCell = () => {
+                const c = cellSize()
+                return c.coarsest * Math.pow(c.finest / c.coarsest, c.position / 100)
+            }
+
+            // the resolution shown at the current zoom: as MultiResolutionDataset chooses it
+            function showResolution() {
+                const shown = comparing() ? changeResolutions : resolutions
+                const z = map.getZoom()
+                const min = minPixelsPerCell()
+                const r = shown.find((r) => r / min >= z) || shown[shown.length - 1]
+                element('resolutionLabel').textContent = r / 1000 + ' km'
+            }
 
             for (const g of groups) {
                 const optgroup = document.createElement('optgroup')
@@ -459,10 +532,21 @@
                     for (const g of groups) key.append(row([cell('td', undefined, g.color), cell('th', g.name)]))
                     return
                 }
-                keyTitle.textContent = 'Hue: the main type. Brightness: the hours of all types.'
+                keyTitle.textContent = 'Hue: the main type of those ticked. Brightness: their hours.'
                 key.append(row([cell('th'), ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))]))
-                for (const g of groups)
-                    key.append(row([cell('th', g.name), ...levels.map((_, l) => cell('td', undefined, levelColor(g, l)))]))
+                for (const g of groups) {
+                    const label = document.createElement('label')
+                    const input = document.createElement('input')
+                    input.type = 'checkbox'
+                    input.checked = !hiddenGroups.has(g)
+                    input.dataset.group = g.code
+                    label.append(input, g.name)
+                    const name = cell('th')
+                    name.append(label)
+                    const tr = row([name, ...levels.map((_, l) => cell('td', undefined, levelColor(g, l)))])
+                    tr.classList.toggle('off', hiddenGroups.has(g))
+                    key.append(tr)
+                }
             }
 
             function update() {
@@ -484,13 +568,28 @@
                     notes.push('2024 is not as dense: the source lost satellite data from June.')
                 element('note').textContent = notes.join(' ')
 
+                element('resolution').value = cellSize().position
                 const layer = comparing() ? changeLayer : layerOfYear(year, view === 'pies')
+                layer.minPixelsPerCell = minPixelsPerCell()
                 map.layers = [backgroundLayer, layer, labelLayer]
+                showResolution()
                 drawKey()
                 map.redraw()
             }
 
-            element('panel').addEventListener('input', update)
+            element('panel').addEventListener('input', (e) => {
+                // a type of the key: only its row and the map change, so that the checkbox stays in place, and keeps the focus
+                if (e.target.dataset.group) {
+                    const g = groups.find((g) => g.code === e.target.dataset.group)
+                    if (e.target.checked) hiddenGroups.delete(g)
+                    else hiddenGroups.add(g)
+                    e.target.closest('tr').classList.toggle('off', !e.target.checked)
+                    map.redraw()
+                    return
+                }
+                if (e.target.id === 'resolution') cellSize().position = +e.target.value
+                update()
+            })
             update()
         </script>
     </body>
