@@ -250,3 +250,13 @@ test('no stand-in for a dataset whose resolution is not known yet, and otherwise
     assert.equal(stand.dataset, datasets[1])
     assert.ok(stand.resolution >= 8 * 100)
 })
+
+test('the backdrops option turns the stand-ins off', () => {
+    const datasets = [{ name: 100 }, { name: 1000 }]
+    const gridLayer = { dataset: { datasets, resolutions: [100, 1000] } }
+    const item = { style: {}, gridLayer, dataset: datasets[0], resolution: 100, key: 'k' }
+    assert.ok(makeRenderer({})._backdropOf(item))
+    const renderer = makeRenderer({})
+    renderer._noBackdrops = true
+    assert.equal(renderer._backdropOf(item), null)
+})

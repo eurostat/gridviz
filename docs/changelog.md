@@ -8,6 +8,8 @@
 -   New, opt-in: the _blendMode_ option of _VennLegend_, for a map whose colours do not mix by multiplication, on a dark background for example.
 -   New, opt-in: the _exactDotNumber_ option of _DotDensityStyle_, for _dotNumber_ dots exactly instead of one more, and the _filter_, _heightClass_ and _tanaka_ options of _LegoStyle.getCategory_, for bricks whose colour is a category and whose height is another variable.
 -   Fix: _TimeSeriesStyle_ took a value of the number 0 as no data, which broke the line (the text `'0'` of a CSV file was not affected).
+-   New, opt-in: the _backdrops_ option of _GPUGridRenderer_: `false` for no coarser resolution standing in during a movement where a layer's own tiles have not come in.
+-   Fix: _GPUGridRenderer_ put every cell of the tiles that came in during a movement in the last colour class when the map had last stopped where nothing was loaded yet: their view scale had been worked out from no cells.
 -   Examples: the ships demo has 14 views of its data, and uses both of these.
 
 ### Version 3.4.0 (since 3.3.0)

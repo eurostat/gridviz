@@ -1341,6 +1341,8 @@ renderer.detach(map)
 
 In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`, and a layer drawn before its info.json has come in can ask for every tile of the finest resolution: use 3.4.0 or later.
 
+Option of the renderer: `backdrops: false` for no coarser resolution standing in during a movement where a layer's own tiles have not come in (those places stay empty until they do).
+
 Other options of the host: `canDraw()` to leave out a draw of a movement, `getGlide()` for what is left of a glide in pixels, to load tiles ahead of it, and `onContextRestored(gl)`. The second parameter of the constructor can set `gpuBudgetBytes`, how much of the GPU's memory the tiles can take (256 MB by default). `renderer.drawsAll(map)` tells if everything on the map is drawn on the GPU, and `renderer.snapshot()` gives the picture on a canvas of its own, for an export to an image.
 
 ## Limit panning and zooming

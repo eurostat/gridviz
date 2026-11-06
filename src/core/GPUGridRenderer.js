@@ -238,11 +238,13 @@ function sampleOf(cells) {
 export class GPUGridRenderer {
     /**
      * @param {GPURendererHost} host The map this one is in.
-     * @param {{gpuBudgetBytes?:number}} [opts] gpuBudgetBytes: how much of the GPU's memory the tiles can take (256 MB by default).
+     * @param {{gpuBudgetBytes?:number, backdrops?:boolean}} [opts] gpuBudgetBytes: how much of the GPU's memory the tiles can take (256 MB by default).
+     * backdrops: false for no coarser resolution standing in where a layer's own tiles have not come in during a movement (true by default): those places stay empty until then.
      */
     constructor(host, opts = {}) {
         this.host = host
         this._budget = opts.gpuBudgetBytes || DEFAULT_GPU_BUDGET_BYTES
+        this._noBackdrops = opts.backdrops === false
         this._layers = new Map() // gridviz map -> { items, pending, only }
         this._batches = new WeakMap() // style -> dataset -> tile key -> batch
         this._jobs = new WeakMap() // the tile keys -> tile key -> what is being built
@@ -415,6 +417,9 @@ export class GPUGridRenderer {
         const viewScale = style.viewScale ? style.viewScale(cells, resolution, z) : undefined
         const dataset = gridLayer.getDataset(z)
         const item = { style, gridLayer, dataset, resolution, z, viewScale, scaleCells: cells, cells: cells.length }
+        // No cell of the view has come in (the map stopped where nothing is loaded yet): a view scale of nothing is no view scale, its classes are all NaN and every cell goes in the
+        // last one. A redraw corrects that, but none comes during a movement, so tiles that come in before it wait for one worked out from their own cells.
+        if (style.viewScale && !cells.length) item.needsScale = item.scaleWaitsForCells = true
         item.key = this._fingerprint(item, cells)
         entry.pending.push(item)
         style.updateLegends({ style, resolution, z, viewScale, cells })
@@ -455,7 +460,7 @@ export class GPUGridRenderer {
     // A coarser resolution of a layer, reaching beyond the view, for what a movement uncovers before its own tiles have come in. For a layer of several resolutions.
     _backdropOf(item, old) {
         const multi = item.gridLayer.dataset
-        if (this._noBackdrop.has(item.style) || !multi || !multi.datasets || multi.datasets.length < 2 || !multi.resolutions) return null
+        if (this._noBackdrops || this._noBackdrop.has(item.style) || !multi || !multi.datasets || multi.datasets.length < 2 || !multi.resolutions) return null
         // A dataset whose info has not come in has no resolution yet: any resolution would pass for coarser, and the finest, reaching so far around the view, is every tile of the grid
         if (!(item.resolution > 0)) return null
         const at = multi.resolutions.findIndex((r) => r >= BACKDROP_FACTOR * item.resolution)
@@ -954,6 +959,7 @@ export class GPUGridRenderer {
                         drawn: false,
                         scaleCells: null,
                         needsScale: !!item.style.viewScale,
+                        scaleWaitsForCells: false,
                         since: performance.now(),
                     }
                 }
@@ -1015,10 +1021,11 @@ export class GPUGridRenderer {
                     wanted.push(batch)
                 }
             })
-        } else {
+        } else if (!item.scaleWaitsForCells) {
             complete = false
             this._needsDrawAgain = true
         }
+        // (a layer with no cell in the view, like one over the sea, does not draw again on each frame for it: a tile that comes in asks for a draw)
         const pending = dataset.info === undefined && !dataset.cells ? true : !!(dataset.info && this._loading(dataset, viewExt))
         if (complete && !pending && item.under) item.under = null
         // The view is not all here: what was shown before, and what is known from further away, stand in for what is missing. Only there: never through the gaps
