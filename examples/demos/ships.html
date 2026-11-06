@@ -514,6 +514,7 @@
                     <legend>Map view</legend>
                     <div class="view-options">
                         <label><input type="radio" name="view" value="main" checked /><span>Main type</span></label>
+                        <label><input type="radio" name="view" value="blend" /><span>All types</span></label>
                         <label><input type="radio" name="view" value="pies" /><span>Type shares</span></label>
                         <label><input type="radio" name="view" value="type" /><span>One type</span></label>
                     </div>
@@ -898,6 +899,21 @@
                 return style
             })
 
+            // ---------- blend mode: all types combined with multiply blend mode ----------
+
+            const blendStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                visible: () => view === 'blend',
+                filter: (cell) => shownTotal(cell) >= minValue,
+                color: mainColors,
+                code: (cell) => {
+                    let main
+                    for (const g of groups)
+                        if (!hiddenGroups.has(g) && (!main || cell[g.code] > cell[main.code])) main = g
+                    return main.code + levelOf(shownTotal(cell))
+                },
+                blendOperation: () => 'multiply'
+            })
+
             // ---------- the change between two years, from a quarter to four times ----------
 
             const changeValue = (cell, y) => cell[(view === 'type' ? type.code : 'a') + ('' + y).slice(2)]
@@ -951,9 +967,9 @@
                 hours(value) +
                 '</b></div>'
             const cellInfoHTML = (cell, resolution) => {
-                if (view === 'main' && shownTotal(cell) < minValue) return undefined
+                if ((view === 'main' || view === 'blend') && shownTotal(cell) < minValue) return undefined
                 if (view === 'type' && cell[type.code] < minValue) return undefined
-                const total = view === 'main' ? shownTotal(cell) : cell.total
+                const total = (view === 'main' || view === 'blend') ? shownTotal(cell) : cell.total
                 const value = view === 'type' ? cell[type.code] : total
                 let html = tipHeader(view === 'type' ? type.name : 'Ship activity', year)
                 html += '<div class="tip-total">' + hours(value) + ' <small>h / km² / month</small></div>'
@@ -1017,7 +1033,7 @@
             const layersOfYear = {}
             const yearsUsed = []
             const maxYearsKept = 3
-            const squaresStyles = [mainStyle, ...typeStyles]
+            const squaresStyles = [mainStyle, blendStyle, ...typeStyles]
             const layerOfYear = (y, pies) => {
                 const layers = (layersOfYear[y] = layersOfYear[y] || { dataset: datasetOfYear(y) })
                 // a dataset keeps the cells of its last view: only the last years used are kept, so that going through all the years stays light
@@ -1232,7 +1248,7 @@
                 from = +element('from').value
                 compare = element('compare').checked
 
-                const canCompare = view === 'main' || (view === 'type' && typesWithChange.includes(type.code))
+                const canCompare = view === 'main' || view === 'blend' || (view === 'type' && typesWithChange.includes(type.code))
                 element('typePicker').hidden = view !== 'type'
                 element('compare').disabled = !canCompare
                 element('from').disabled = !canCompare
