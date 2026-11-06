@@ -680,7 +680,9 @@ export class Map {
 
             //get cell at mouse position
             /** @type {import('./Dataset.js').Cell|undefined} */
-            const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
+            const cell = layer.hoverReach
+                ? dsc.getNearestCellFromPosition(posGeo, dsc.getViewCache(), layer.hoverReach(dsc.getResolution(), z))
+                : dsc.getCellFromPosition(posGeo, dsc.getViewCache())
 
             // no cell found at theis position for this layer
             if (!cell)

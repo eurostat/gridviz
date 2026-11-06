@@ -240,11 +240,16 @@ export class GPUGridRenderer {
      * @param {GPURendererHost} host The map this one is in.
      * @param {{gpuBudgetBytes?:number, backdrops?:boolean}} [opts] gpuBudgetBytes: how much of the GPU's memory the tiles can take (256 MB by default).
      * backdrops: false for no coarser resolution standing in where a layer's own tiles have not come in during a movement (true by default): those places stay empty until then.
+     * softwareWebGL: false to leave a browser that draws WebGL on the CPU (no GPU, or a virtual desktop) to the map's 2D drawing (true by default), which is far faster there: ok is then false, and software true.
      */
     constructor(host, opts = {}) {
         this.host = host
         this._budget = opts.gpuBudgetBytes || DEFAULT_GPU_BUDGET_BYTES
         this._noBackdrops = opts.backdrops === false
+        this._noSoftwareWebGL = opts.softwareWebGL === false
+        /** Whether this browser draws WebGL on the CPU, as far as it tells. Known once the renderer is made, whatever its options.
+         * @type {boolean} */
+        this.software = false
         this._layers = new Map() // gridviz map -> { items, pending, only }
         this._batches = new WeakMap() // style -> dataset -> tile key -> batch
         this._jobs = new WeakMap() // the tile keys -> tile key -> what is being built
@@ -292,6 +297,11 @@ export class GPUGridRenderer {
     _initGL() {
         const gl = (this.gl = this.canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: true, antialias: true, depth: false, stencil: true }))
         if (!gl) return false
+        this.software = isSoftwareWebGL(gl)
+        if (this.software && this._noSoftwareWebGL) {
+            this.gl = null
+            return false
+        }
         this._cell = this._program(CELL_VS, CELL_FS)
         this._resolve = this._program(RESOLVE_VS, RESOLVE_FS)
         this._emptyVao = gl.createVertexArray()
@@ -773,6 +783,11 @@ export class GPUGridRenderer {
         batch.circles = circles
         batch.lastUsed = this._frame
         byTile.set(key, batch)
+        if (!item.isBackdrop) {
+            const counts = this._counters()
+            counts.tilesBuilt++
+            if (style.viewScale && !(item.scaleCells && item.scaleCells.length)) counts.tilesBuiltWithoutScaleCells++
+        }
         return batch
     }
 
@@ -1146,7 +1161,12 @@ export class GPUGridRenderer {
             this._noBackdrop.add(style)
             return
         }
-        if (batches.length) this._drawCells(batches, item, view, 1, false)
+        if (batches.length) {
+            const counts = this._counters()
+            counts.standInDraws++
+            counts.largestStandInPixels = Math.max(counts.largestStandInPixels, item.resolution / view.z)
+            this._drawCells(batches, item, view, 1, false)
+        }
     }
 
     _loading(dataset, ext) {
@@ -1269,6 +1289,20 @@ export class GPUGridRenderer {
         }
     }
 
+    _counters() {
+        if (!this._counts) this._counts = { tilesBuilt: 0, tilesBuiltWithoutScaleCells: 0, standInDraws: 0, largestStandInPixels: 0 }
+        return this._counts
+    }
+
+    /** What the renderer has done since it was made, to check or to report on it. Reading it costs nothing, and it is safe with a renderer that is not ok.
+     * tilesBuilt: tiles of a layer's own resolution made ready for the GPU. tilesBuiltWithoutScaleCells: those of them whose style has a view scale, built with no cell to work it out from.
+     * standInDraws: frames that drew a coarser resolution in place of tiles still to come, largestStandInPixels: the widest of their cells on the screen.
+     * tiles: the tiles on the GPU now, gpuBytes: the memory they take, layers: the maps attached.
+     * @returns {{ok:boolean,software:boolean,layers:number,tiles:number,gpuBytes:number,tilesBuilt:number,tilesBuiltWithoutScaleCells:number,standInDraws:number,largestStandInPixels:number}} */
+    stats() {
+        return { ok: !!this.ok, software: !!this.software, layers: this._layers.size, tiles: this._allBatches.size, gpuBytes: this._gpuBytes, ...this._counters() }
+    }
+
     /** The grid layers as they are now, on a canvas of their own: a WebGL canvas is empty once the page has been drawn. For an export to an image.
      * @returns {HTMLCanvasElement|null} */
     snapshot() {
@@ -1283,3 +1317,10 @@ export class GPUGridRenderer {
 }
 
 class UnsupportedShape extends Error {}
+
+/** Whether a WebGL context is drawn on the CPU, from the name its browser gives the renderer. A browser that hides the name is taken as not. */
+function isSoftwareWebGL(gl) {
+    const info = gl.getExtension('WEBGL_debug_renderer_info')
+    const name = gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER)
+    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(String(name))
+}

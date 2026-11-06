@@ -10,7 +10,10 @@
 -   Fix: _TimeSeriesStyle_ took a value of the number 0 as no data, which broke the line (the text `'0'` of a CSV file was not affected).
 -   New, opt-in: the _backdrops_ option of _GPUGridRenderer_: `false` for no coarser resolution standing in during a movement where a layer's own tiles have not come in.
 -   Fix: _GPUGridRenderer_ put every cell of the tiles that came in during a movement in the last colour class when the map had last stopped where nothing was loaded yet: their view scale had been worked out from no cells.
--   Examples: the ships demo has 14 views of its data, and uses both of these.
+-   New, opt-in: the _softwareWebGL_ option of _GPUGridRenderer_: `false` leaves a browser that draws WebGL on the CPU to the map's 2D drawing, which is far faster there. Its _software_ property says whether it does.
+-   New: _stats()_ of _GPUGridRenderer_ says what it has done, without reading its private fields.
+-   New, opt-in: the _hoverReach_ option of _GridLayer_ and _getNearestCellFromPosition()_ of _Dataset_, for cells drawn bigger than they are: the nearest cell within a distance of the mouse is the one hovered.
+-   Examples: the ships demo has 14 views of its data, and uses _maxCells_ and _blendMode_.
 
 ### Version 3.4.0 (since 3.3.0)
 

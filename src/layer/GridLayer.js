@@ -42,6 +42,12 @@ export class GridLayer extends Layer {
          * Set to 'none' to disable cell info.
          * @type {'none'|function(import("../core/Dataset").Cell, number):string} */
         this.cellInfoHTML = opts.cellInfoHTML || GridLayer.defaultCellInfoHTML
+
+        /**
+         * For cells drawn bigger than they are, such as points on a fine grid: how near to the middle of a cell, in geographic units, the mouse counts as over it, from the
+         * resolution and the zoom. The nearest cell within that distance is then the one hovered. By default, the cell under the mouse.
+         * @type {undefined|function(number, number):number} */
+        this.hoverReach = opts.hoverReach
     }
 
     /** */

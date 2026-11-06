@@ -79,6 +79,40 @@ export class Dataset {
     }
 
     /**
+     * Get the cell nearest to a position, from the middle of the cell, if one is within a distance. For cells drawn bigger than they are, such as points on a fine grid.
+     *
+     * @param {{x:number,y:number}} posGeo
+     * @param {Array.<Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
+     * @param {number} reach The distance, in geographic units.
+     * @returns {Cell|undefined}
+     */
+    getNearestCellFromPosition(posGeo, cells, reach) {
+        if (!cells || !cells.length) return undefined
+        const r = this.getResolution()
+        let best
+        let bestDistance = Infinity
+        const consider = (c) => {
+            const d = Math.hypot(+c.x + r / 2 - posGeo.x, +c.y + r / 2 - posGeo.y)
+            if (d <= reach && d < bestDistance) {
+                best = c
+                bestDistance = d
+            }
+        }
+        const index = this.cellIndex(cells, r)
+        if (index) {
+            const span = Math.ceil(reach / r) + 1
+            const ix = Math.floor((posGeo.x - index.ox) / r)
+            const iy = Math.floor((posGeo.y - index.oy) / r)
+            for (let dx = -span; dx <= span; dx++)
+                for (let dy = -span; dy <= span; dy++) {
+                    const c = index.cells.get(cellKey(ix + dx, iy + dy))
+                    if (c) consider(c)
+                }
+        } else cells.forEach(consider)
+        return best
+    }
+
+    /**
      * Get a cell under a given position, if any.
      *
      * @param {{x:number,y:number}} posGeo

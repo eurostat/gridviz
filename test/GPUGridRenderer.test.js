@@ -260,3 +260,14 @@ test('the backdrops option turns the stand-ins off', () => {
     renderer._noBackdrops = true
     assert.equal(renderer._backdropOf(item), null)
 })
+
+test('stats() answers on a renderer that has done nothing, and counts what is built', () => {
+    const renderer = makeRenderer({})
+    Object.assign(renderer, { _layers: new Map(), _allBatches: new Set(), _gpuBytes: 0 })
+    assert.deepEqual(renderer.stats(), { ok: true, software: false, layers: 0, tiles: 0, gpuBytes: 0, tilesBuilt: 0, tilesBuiltWithoutScaleCells: 0, standInDraws: 0, largestStandInPixels: 0 })
+    Object.assign(renderer, { gl: fakeGL(), _jobs: new WeakMap(), _colors: new Map() })
+    renderer._parseColor = () => [255, 0, 0, 255]
+    renderer._build({ style: shapeStyle(), resolution: 100, z: 10, key: 'k' }, 'a', { cells: cellsOfTile(10) }, new Map(), undefined)
+    assert.equal(renderer.stats().tilesBuilt, 1)
+    assert.equal(renderer.stats().tilesBuiltWithoutScaleCells, 0)
+})

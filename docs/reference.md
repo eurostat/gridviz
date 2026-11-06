@@ -252,6 +252,7 @@ new gridviz.GridLayer(dataset, [style], {
 
 | Option             | Type                                | Default                         | Description                                                                                                                                                  |
 | ------------------ | ----------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `hoverReach` | function(resolution, z):number | *undefined* | For cells drawn bigger than they are, such as points on a fine grid: how near to the middle of a cell, in geographic units, the mouse counts as over it. The nearest cell within that distance is the one hovered. By default, the cell under the mouse. |
 | `minPixelsPerCell` | number                              | `3`                             | With a multi-resolution dataset, the smallest size on the screen, in pixels, of the cells of the resolution shown. A higher value draws fewer, bigger cells. |
 | `cellInfoHTML`     | `function(cell):string` or `'none'` | the list of the cell properties | The text of the [tooltip](#tooltip) of a cell, as HTML. `'none'` for no tooltip.                                                                             |
 | `visible`          | boolean or `function(z)`            | `true`                          | Whether the layer is drawn, according to the zoom level.                                                                                                     |
@@ -1341,7 +1342,9 @@ renderer.detach(map)
 
 In version 3.3.0 only, the canvas stays hidden until you set `renderer.canvas.style.display = ''`, and a layer drawn before its info.json has come in can ask for every tile of the finest resolution: use 3.4.0 or later.
 
-Option of the renderer: `backdrops: false` for no coarser resolution standing in during a movement where a layer's own tiles have not come in (those places stay empty until they do).
+Options of the renderer: `backdrops: false` for no coarser resolution standing in during a movement where a layer's own tiles have not come in (those places stay empty until they do), and `softwareWebGL: false` to leave a browser that draws WebGL on the CPU to the map's 2D drawing, which is far faster there (`renderer.ok` is then false, and `renderer.software` true; a browser that hides the name of its renderer is taken as having a GPU).
+
+`renderer.stats()` says what it has done: `ok`, `software`, `layers`, `tiles`, `gpuBytes`, `tilesBuilt`, `tilesBuiltWithoutScaleCells`, `standInDraws` and `largestStandInPixels`.
 
 Other options of the host: `canDraw()` to leave out a draw of a movement, `getGlide()` for what is left of a glide in pixels, to load tiles ahead of it, and `onContextRestored(gl)`. The second parameter of the constructor can set `gpuBudgetBytes`, how much of the GPU's memory the tiles can take (256 MB by default). `renderer.drawsAll(map)` tells if everything on the map is drawn on the GPU, and `renderer.snapshot()` gives the picture on a canvas of its own, for an export to an image.
 
