@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ships of Europe - Gridviz</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            #panel {
+                position: absolute;
+                left: 12px;
+                top: 12px;
+                width: 300px;
+                box-sizing: border-box;
+                max-height: calc(100% - 24px);
+                overflow: auto;
+                padding: 10px 12px;
+                border-radius: 5px;
+                background: #ffffffe6;
+                box-shadow: 0 2px 10px #00000080;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            #panel h1 {
+                margin: 0;
+                font-size: 18px;
+            }
+
+            #panel fieldset {
+                margin: 8px 0 0;
+                padding: 0;
+                border: 0;
+            }
+
+            #panel legend {
+                padding: 0;
+                font-weight: bold;
+            }
+
+            #panel label {
+                display: block;
+            }
+
+            #panel label.disabled {
+                color: #888;
+            }
+
+            #panel p {
+                margin: 8px 0 0;
+                font-size: 12px;
+                line-height: 1.35;
+                color: #333;
+            }
+
+            #key {
+                margin-top: 8px;
+                font-size: 11px;
+                line-height: 1.2;
+                border-spacing: 1px;
+                border-collapse: separate;
+            }
+
+            #key th {
+                padding: 0 4px 0 0;
+                font-weight: normal;
+                text-align: left;
+            }
+
+            #key thead th {
+                padding: 0;
+                text-align: center;
+            }
+
+            #key td {
+                width: 30px;
+                height: 14px;
+            }
+
+            #keyTitle {
+                margin-top: 8px;
+                font-size: 12px;
+            }
+
+            @media (max-width: 600px) {
+                #panel {
+                    left: 6px;
+                    top: 6px;
+                    width: 190px;
+                    max-height: calc(100% - 100px);
+                    padding: 6px 8px;
+                    font-size: 12px;
+                    line-height: 1.3;
+                }
+
+                #panel h1 {
+                    font-size: 14px;
+                }
+
+                #panel p {
+                    font-size: 10px;
+                }
+
+                #key td {
+                    width: 18px;
+                }
+
+                #about {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+
+        <div id="panel">
+            <h1>Ships of Europe</h1>
+            <fieldset>
+                <legend>Show</legend>
+                <div id="views"></div>
+            </fieldset>
+            <fieldset>
+                <legend>Year</legend>
+                <label><input type="radio" name="period" value="23" checked /> 2023</label>
+                <label><input type="radio" name="period" value="19" /> 2019</label>
+                <label id="changeLabel"><input type="radio" name="period" value="change" /> Change, 2019 to 2023</label>
+            </fieldset>
+            <div id="keyTitle"></div>
+            <table id="key"></table>
+            <p id="about">
+                The time ships spend in each square, in hours per km² per month (yearly average). Only ships that broadcast
+                their position (AIS) are counted, and the reception of these signals varies over the years, so that a change is not
+                always a change in traffic. These are 4 of the 13 types of the source.
+            </p>
+            <p>
+                Source:
+                <a href="https://emodnet.ec.europa.eu/en/human-activities" target="_blank" rel="noopener noreferrer">EMODnet</a>
+                Human Activities, vessel density, created by Cogea.
+                <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
+                Squares under 0.1 h are left out, and the coarser squares are aggregated from those of 1 km.
+            </p>
+        </div>
+
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            const dataURL = 'https://raw.githubusercontent.com/joewdavies/tiled-grids/main/vessels/'
+
+            const background = '#10131c'
+            const types = [
+                { code: 'c', name: 'Cargo', color: '#56b4e9' },
+                { code: 't', name: 'Tanker', color: '#ff6a3d' },
+                { code: 'f', name: 'Fishing', color: '#2fc98a' },
+                { code: 'p', name: 'Passenger', color: '#f0e442' },
+            ]
+            const minValue = 0.1 // the data have no cell under this value
+            const maxValue = 300 // about the 99.9th percentile
+
+            const views = [
+                { code: 'main', name: 'Main type, by brightness' },
+                { code: 'pies', name: 'Share of each type, as pies', noChange: true },
+                ...types.map((t) => ({ code: t.code, name: t.name, type: t })),
+            ]
+
+            let view = views[0]
+            let period = '23' // or '19' or 'change'
+            const year = () => (period === 'change' ? '23' : period)
+
+            const total = (cell, y) => cell['c' + y] + cell['t' + y] + cell['f' + y] + cell['p' + y]
+            // the value of the type, or of the 4 types
+            const value = (cell, y) => (view.type ? cell[view.code + y] : total(cell, y))
+            const log = (v) => Math.max(0, Math.min(1, Math.log(v / minValue) / Math.log(maxValue / minValue)))
+
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 3900000,
+                // on a narrow window, the zoom is at its limit: further north, the edge of the background is out of the view
+                y: window.innerWidth < 600 ? 3900000 : 3150000,
+                // Europe in the window
+                z: Math.max(3500000 / window.innerHeight, 5800000 / window.innerWidth),
+                zoomExtent: [50, 8000],
+                viewExtent: [-1100000, 0, 7300000, 7500000],
+                backgroundColor: background,
+            }).addZoomButtons()
+
+            const columns = types.flatMap((t) => [t.code + '19', t.code + '23'])
+            const dataset = new gridviz.MultiResolutionDataset(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (resolution) =>
+                    new gridviz.TiledGrid(map, dataURL + resolution + 'm/', {
+                        worker: true,
+                        // an empty value is a zero
+                        preprocess: (cell) => {
+                            for (const c of columns) cell[c] = +cell[c]
+                        },
+                    })
+            )
+
+            // ---------- the main type, as the hue, and the traffic, as the brightness ----------
+
+            const levels = [0.1, 0.5, 2, 10, 50]
+            const levelOf = (v) => {
+                let l = 0
+                while (l < levels.length - 1 && v >= levels[l + 1]) l++
+                return l
+            }
+            // from close to the background to the color, then a bit lighter
+            const levelColor = (type, l) =>
+                l < 3
+                    ? d3.interpolateRgb(background, type.color)(0.35 + (0.65 * l) / 3)
+                    : l === 3
+                      ? type.color
+                      : d3.interpolateRgb(type.color, 'white')(0.5)
+
+            const mainColors = {}
+            for (const t of types) for (let l = 0; l < levels.length; l++) mainColors[t.code + l] = levelColor(t, l)
+
+            const mainStyle = new gridviz.SquareColorCategoryWebGLStyle({
+                visible: () => view.code === 'main' && period !== 'change',
+                filter: (cell) => total(cell, period) >= minValue,
+                color: mainColors,
+                code: (cell) => {
+                    let main = types[0]
+                    for (const t of types) if (cell[t.code + period] > cell[main.code + period]) main = t
+                    return main.code + levelOf(total(cell, period))
+                },
+            })
+
+            // ---------- one type ----------
+
+            const typeStyles = types.map((t) => {
+                const color = (x) =>
+                    x < 0.7 ? d3.interpolateRgb(background, t.color)(0.3 + x) : d3.interpolateRgb(t.color, 'white')((x - 0.7) * 2)
+                const style = new gridviz.SquareColorWebGLStyle({
+                    visible: () => view === views.find((v) => v.type === t) && period !== 'change',
+                    filter: (cell) => cell[t.code + period] >= minValue,
+                    tFun: (cell) => log(cell[t.code + period]),
+                    color,
+                })
+                style.legends = [
+                    new gridviz.ColorLegend({
+                        title: t.name + ' ships, hours per km² per month',
+                        colorScale: color,
+                        textScale: (x) => minValue * Math.pow(maxValue / minValue, x),
+                        tickFormat: (v) => (v < 1 ? v.toFixed(1) : v.toFixed(0)),
+                        ticks: 5,
+                        width: Math.min(260, window.innerWidth - 60),
+                    }),
+                ]
+                return style
+            })
+
+            // ---------- the change between two years, from a quarter to four times ----------
+
+            const changeColor = d3.interpolateRgbBasis(['#3fc8ff', '#2c5f7c', '#3a3d47', '#9a5a2a', '#ffa23c'])
+            const changeStyle = new gridviz.SquareColorWebGLStyle({
+                visible: () => period === 'change',
+                // over too little traffic, a ratio has no meaning
+                filter: (cell) => Math.max(value(cell, '19'), value(cell, '23')) >= 0.5,
+                tFun: (cell) => {
+                    // a small value is added, for the cells with no traffic one of the years
+                    const r = Math.log2((value(cell, '23') + 0.05) / (value(cell, '19') + 0.05))
+                    return Math.max(0, Math.min(1, (r + 2) / 4))
+                },
+                color: changeColor,
+            })
+            changeStyle.legends = [
+                new gridviz.ColorLegend({
+                    title: 'Traffic in 2023, compared with 2019',
+                    colorScale: changeColor,
+                    textScale: (x) => Math.pow(2, 4 * x - 2),
+                    tickFormat: (v) => (v < 1 ? '÷' + +(1 / v).toFixed(1) : '×' + +v.toFixed(1)),
+                    ticks: 5,
+                    width: Math.min(260, window.innerWidth - 60),
+                }),
+            ]
+
+            // ---------- the pies: the share of each type as the angle, the traffic as the size ----------
+
+            const pieColors = (y) => Object.fromEntries(types.map((t) => [t.code + y, t.color]))
+            const pieStyle = new gridviz.CompositionStyle({
+                filter: (cell) => total(cell, year()) >= minValue,
+                color: pieColors(year()),
+                type: () => 'piechart',
+                offsetAngle: () => 90,
+                size: (cell, resolution) => resolution * (0.2 + 0.8 * log(total(cell, year()))),
+            })
+
+            // ---------- the layers ----------
+
+            const hours = (v) => (v < 10 ? +v.toFixed(2) : Math.round(v)).toLocaleString('en')
+            const cellInfoHTML = (cell) => {
+                const row = (name, a, b) =>
+                    name + ': <b>' + hours(a) + '</b>' + (period === 'change' ? ' (2019: ' + hours(b) + ')' : '') + '<br />'
+                const y = year()
+                let html = '<div>Hours per km² per month, 20' + y + '</div>'
+                for (const t of types) html += row(t.name, cell[t.code + y], cell[t.code + '19'])
+                return html
+            }
+
+            const squaresLayer = new gridviz.GridLayer(dataset, [mainStyle, ...typeStyles, changeStyle], {
+                minPixelsPerCell: 1.2,
+                cellInfoHTML,
+            })
+            const piesLayer = new gridviz.GridLayer(dataset, [pieStyle], { minPixelsPerCell: 22, cellInfoHTML })
+
+            const backgroundLayer = new gridviz.BackgroundLayer(
+                gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', { filterColor: () => '#000000c0' })
+            )
+            const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true }))
+
+            // ---------- the panel ----------
+
+            const viewsDiv = document.getElementById('views')
+            for (const v of views) {
+                const label = document.createElement('label')
+                const input = document.createElement('input')
+                input.type = 'radio'
+                input.name = 'view'
+                input.value = v.code
+                input.checked = v === view
+                label.append(input, ' ' + v.name)
+                viewsDiv.append(label)
+            }
+
+            const changeLabel = document.getElementById('changeLabel')
+            const changeInput = changeLabel.querySelector('input')
+            const keyTitle = document.getElementById('keyTitle')
+            const key = document.getElementById('key')
+
+            function drawKey() {
+                key.replaceChildren()
+                keyTitle.textContent = ''
+                if (period === 'change' || view.type) return
+                const row = (cells) => {
+                    const tr = document.createElement('tr')
+                    tr.append(...cells)
+                    return tr
+                }
+                const cell = (tag, text, color) => {
+                    const c = document.createElement(tag)
+                    if (text !== undefined) c.textContent = text
+                    if (color) c.style.background = color
+                    return c
+                }
+                if (view.code === 'pies') {
+                    keyTitle.textContent = 'The bigger the pie, the more traffic (logarithmic). Zoom in for more pies.'
+                    for (const t of types) key.append(row([cell('td', undefined, t.color), cell('th', t.name)]))
+                    return
+                }
+                keyTitle.textContent = 'Hue: the main type. Brightness: the hours of the 4 types.'
+                const head = row([cell('th'), ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))])
+                key.append(head)
+                for (const t of types)
+                    key.append(row([cell('th', t.name), ...levels.map((_, l) => cell('td', undefined, levelColor(t, l)))]))
+            }
+
+            function update() {
+                if (view.noChange && period === 'change') {
+                    period = '23'
+                    document.querySelector('input[name=period][value="23"]').checked = true
+                }
+                changeInput.disabled = !!view.noChange
+                changeLabel.classList.toggle('disabled', !!view.noChange)
+                pieStyle.color = pieColors(year())
+                map.layers = [backgroundLayer, view.code === 'pies' ? piesLayer : squaresLayer, labelLayer]
+                drawKey()
+                map.redraw()
+            }
+
+            document.getElementById('panel').addEventListener('change', (e) => {
+                if (e.target.name === 'view') view = views.find((v) => v.code === e.target.value)
+                if (e.target.name === 'period') period = e.target.value
+                update()
+            })
+
+            update()
+        </script>
+    </body>
+</html>
