@@ -5,159 +5,401 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ships of Europe - Gridviz</title>
         <style>
+            :root {
+                color-scheme: dark;
+                --surface: #171e2b;
+                --line: #ffffff18;
+                --muted: #a6b4c8;
+                --accent: #7dd3fc;
+            }
+            * {
+                box-sizing: border-box;
+            }
             html,
             body {
                 height: 100%;
                 margin: 0;
                 overflow: hidden;
-                font-family: Arial, Helvetica, sans-serif;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                color: #edf4ff;
+                background: #10131c;
             }
-
             #panel {
                 position: absolute;
-                left: 12px;
-                top: 12px;
-                width: 300px;
-                box-sizing: border-box;
-                max-height: calc(100% - 24px);
+                z-index: 10;
+                left: 20px;
+                top: 20px;
+                width: 336px;
+                max-height: calc(100% - 40px);
                 overflow: auto;
-                padding: 10px 12px;
-                border-radius: 5px;
-                background: #ffffffe6;
-                box-shadow: 0 2px 10px #00000080;
-                font-size: 14px;
+                padding: 20px;
+                border: 1px solid var(--line);
+                border-radius: 18px;
+                background: #171e2bf5;
+                box-shadow: 0 16px 48px #0006;
+                scrollbar-width: thin;
+                font-size: 13px;
                 line-height: 1.5;
             }
-
-            #panel h1 {
-                margin: 0;
-                font-size: 18px;
+            .panel-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
             }
-
+            .eyebrow {
+                color: var(--accent);
+                text-transform: uppercase;
+                font-size: 10px;
+                letter-spacing: 0.16em;
+                font-weight: 700;
+            }
+            #panel h1 {
+                margin: 3px 0;
+                font-size: 24px;
+                letter-spacing: -0.04em;
+                line-height: 1.2;
+            }
+            .subtitle {
+                color: var(--muted);
+                margin: 8px 0 18px;
+                font-size: 12px;
+            }
+            #togglePanel {
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
+                border: 1px solid var(--line);
+                border-radius: 9px;
+                background: #ffffff08;
+                color: #edf4ff;
+                cursor: pointer;
+                font-size: 20px;
+            }
+            #panel.collapsed #panelBody {
+                display: none;
+            }
             #panel fieldset {
-                margin: 8px 0 0;
+                margin: 0 0 18px;
                 padding: 0;
                 border: 0;
+                min-width: 0;
             }
-
             #panel legend {
+                width: 100%;
+                margin-bottom: 8px;
                 padding: 0;
-                font-weight: bold;
+                color: var(--muted);
+                font-size: 11px;
+                font-weight: 650;
+                text-transform: uppercase;
+                letter-spacing: 0.07em;
             }
-
-            #panel label {
-                display: block;
-            }
-
-            #panel label.disabled {
-                color: #888;
-            }
-
-            #panel p {
-                margin: 8px 0 0;
+            #yearLabel,
+            #resolutionLabel {
+                float: right;
+                color: var(--accent);
+                font-variant-numeric: tabular-nums;
+                letter-spacing: 0;
+                text-transform: none;
                 font-size: 12px;
-                line-height: 1.35;
-                color: #333;
             }
-
-            #resolutionScale {
+            .view-options {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 4px;
+                padding: 4px;
+                background: #0b101a;
+                border-radius: 11px;
+            }
+            .view-options label {
+                position: relative;
+                cursor: pointer;
+            }
+            .view-options input {
+                position: absolute;
+                opacity: 0;
+                width: 1px;
+                height: 1px;
+            }
+            .view-options span {
+                display: block;
+                text-align: center;
+                padding: 9px 2px;
+                border-radius: 8px;
+                color: var(--muted);
+                font-size: 12px;
+            }
+            .view-options input:checked + span {
+                background: #2d4057;
+                color: #fff;
+                box-shadow: 0 2px 6px #0003;
+            }
+            .view-options input:focus-visible + span {
+                outline: 2px solid var(--accent);
+                outline-offset: 1px;
+            }
+            .type-picker {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                margin-top: 10px;
+                color: var(--muted);
+            }
+            [hidden] {
+                display: none !important;
+            }
+            #panel select {
+                max-width: 190px;
+                min-height: 34px;
+                padding: 4px 8px;
+                border: 1px solid #ffffff28;
+                border-radius: 7px;
+                background: #222d3e;
+                color: #edf4ff;
+                font: inherit;
+            }
+            #panel input {
+                accent-color: var(--accent);
+            }
+            #panel input[type='range'] {
+                display: block;
+                width: 100%;
+                height: 28px;
+                margin: 0;
+                cursor: pointer;
+            }
+            #panel input[type='checkbox'] {
+                width: 15px;
+                height: 15px;
+                margin: 0 6px 0 0;
+                vertical-align: -3px;
+                cursor: pointer;
+            }
+            #panel :focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 3px;
+            }
+            .scale {
                 display: flex;
                 justify-content: space-between;
-                font-size: 11px;
-                line-height: 1;
-                color: #555;
+                color: var(--muted);
+                font-size: 10px;
             }
-
+            #compareLabel {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                margin-top: 12px;
+            }
+            #compareLabel select {
+                margin-left: auto;
+            }
+            #panel label.disabled {
+                opacity: 0.5;
+            }
+            #note:empty {
+                display: none;
+            }
+            #note {
+                margin-top: 10px;
+                padding: 9px 10px;
+                background: #fbbf2410;
+                border-left: 2px solid #e9b659;
+                border-radius: 3px;
+                color: #f0cb88;
+                font-size: 11px;
+            }
+            #keyTitle {
+                padding-top: 15px;
+                border-top: 1px solid var(--line);
+                color: var(--muted);
+                font-size: 11px;
+            }
+            #keyTitle:empty {
+                display: none;
+            }
             #key {
-                margin-top: 8px;
+                width: 100%;
+                margin-top: 10px;
                 font-size: 11px;
-                line-height: 1.2;
-                border-spacing: 1px;
-                border-collapse: separate;
+                line-height: 1.4;
+                border-spacing: 2px 5px;
             }
-
+            #key:empty {
+                display: none;
+            }
             #key th {
-                padding: 0 4px 0 0;
-                font-weight: normal;
+                padding: 0 5px 0 0;
+                font-weight: 400;
                 text-align: left;
             }
-
-            #key thead th {
-                padding: 0;
-                text-align: center;
-            }
-
             #key td {
-                width: 30px;
-                height: 14px;
+                min-width: 23px;
+                height: 17px;
+                border-radius: 3px;
             }
-
-            #panel select {
-                max-width: 170px;
-                font-size: 12px;
-            }
-
-            #year,
-            #resolution {
-                width: 100%;
-                margin: 2px 0;
-            }
-
-            #note {
-                font-size: 12px;
-                line-height: 1.3;
-                color: #a33;
-            }
-
             #key label {
+                display: flex;
+                align-items: center;
                 cursor: pointer;
                 white-space: nowrap;
+                min-height: 25px;
             }
-
-            #key input {
-                margin: 0 3px 0 0;
-                vertical-align: -2px;
-            }
-
-            /* a type which is hidden: its colours are not on the map any more */
             #key tr.off td {
-                filter: grayscale(1) blur(1.5px);
-                opacity: 0.4;
+                filter: grayscale(1);
+                opacity: 0.2;
             }
-
             #key tr.off label {
-                color: #888;
+                color: var(--muted);
             }
-
-            #keyTitle {
-                margin-top: 8px;
+            #panel details {
+                margin-top: 15px;
+                padding-top: 12px;
+                border-top: 1px solid var(--line);
+                color: var(--muted);
+                font-size: 11px;
+            }
+            #panel summary {
+                cursor: pointer;
+                min-height: 26px;
+                color: #d3dfef;
+            }
+            #panel p {
+                margin: 8px 0;
+            }
+            #panel a {
+                color: var(--accent);
+                text-underline-offset: 3px;
+            }
+            .map-hint {
+                margin-top: 12px;
+                color: var(--muted);
+                font-size: 10px;
+            }
+            #gridviz-tooltip {
+                width: 270px;
+                max-width: calc(100vw - 24px) !important;
+                text-wrap: wrap !important;
+            }
+            #gridviz-legend {
+                --gridviz-legend-label-color: #d3dfef;
+                background: var(--surface) !important;
+                color: #edf4ff;
+                border: 1px solid var(--line) !important;
+                border-radius: 12px !important;
+                max-width: calc(100vw - 30px);
+            }
+            #gridviz-legend:empty {
+                display: none;
+            }
+            .gridviz-zoom-buttons {
+                --gridviz-button-color: #7dd3fc;
+                border-color: #ffffff25 !important;
+                background: var(--surface) !important;
+            }
+            .gridviz-zoom-button {
+                background: var(--surface) !important;
+                border-color: var(--line) !important;
+            }
+            .gridviz-zoom-button:hover {
+                background: #2d4057 !important;
+            }
+            .tip-heading {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                font-size: 13px;
+                font-weight: 650;
+            }
+            .tip-year {
+                padding: 3px 7px;
+                border-radius: 5px;
+                background: #7dd3fc18;
+                color: #7dd3fc;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+            .tip-unit {
+                margin: 3px 0 12px;
+                color: #a6b4c8;
+                font-size: 10px;
+            }
+            .tip-total {
+                margin: 8px 0 12px;
+                font-size: 27px;
+                font-weight: 650;
+                letter-spacing: -0.04em;
+                font-variant-numeric: tabular-nums;
+            }
+            .tip-total small {
+                font-size: 11px;
+                color: #a6b4c8;
+                font-weight: 400;
+                letter-spacing: 0;
+            }
+            .tip-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                padding: 5px 0;
                 font-size: 12px;
             }
-
+            .tip-name {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+            }
+            .tip-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+            .tip-row b {
+                font-variant-numeric: tabular-nums;
+                font-weight: 600;
+            }
+            .tip-bar {
+                display: flex;
+                height: 5px;
+                gap: 2px;
+                overflow: hidden;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            .tip-footer {
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px solid #ffffff18;
+                color: #a6b4c8;
+                font-size: 10px;
+            }
             @media (max-width: 600px) {
                 #panel {
-                    left: 6px;
-                    top: 6px;
-                    width: 190px;
-                    max-height: calc(100% - 100px);
-                    padding: 6px 8px;
-                    font-size: 12px;
-                    line-height: 1.3;
+                    left: 10px;
+                    top: 10px;
+                    width: min(310px, calc(100% - 65px));
+                    max-height: calc(100% - 90px);
+                    padding: 15px;
+                    border-radius: 14px;
                 }
-
                 #panel h1 {
-                    font-size: 14px;
+                    font-size: 21px;
                 }
-
-                #panel p {
-                    font-size: 10px;
+                #panel fieldset {
+                    margin-bottom: 14px;
                 }
-
+                #panel select {
+                    max-width: 155px;
+                }
                 #key td {
-                    width: 18px;
+                    min-width: 18px;
                 }
-
-                #about {
+                .map-hint {
                     display: none;
                 }
             }
@@ -167,40 +409,75 @@
         <div id="map" style="height: 100%; width: 100%"></div>
 
         <div id="panel">
-            <h1>Ships of Europe</h1>
-            <fieldset>
-                <legend>Show</legend>
-                <label><input type="radio" name="view" value="main" checked /> Main type, by brightness</label>
-                <label><input type="radio" name="view" value="pies" /> Share of each type, as pies</label>
-                <label><input type="radio" name="view" value="type" /> One type: <select id="type"></select></label>
-            </fieldset>
-            <fieldset>
-                <legend>Year: <span id="yearLabel"></span></legend>
-                <input id="year" type="range" min="2017" max="2024" step="1" value="2023" />
-                <label id="compareLabel">
-                    <input id="compare" type="checkbox" /> Change since <select id="from"></select>
-                </label>
-                <div id="note"></div>
-            </fieldset>
-            <fieldset>
-                <legend>Grid resolution: <span id="resolutionLabel"></span></legend>
-                <input id="resolution" type="range" min="0" max="100" step="1" />
-                <div id="resolutionScale"><span>Coarser</span><span>Finer</span></div>
-            </fieldset>
-            <div id="keyTitle"></div>
-            <table id="key"></table>
-            <p id="about">
-                The time ships spend in each square, in hours per km² per month (yearly average). Only ships that broadcast
-                their position (AIS) are counted, and the reception of these signals varies over the years, so that a change is
-                not always a change in traffic.
-            </p>
-            <p>
-                Source:
-                <a href="https://emodnet.ec.europa.eu/en/human-activities" target="_blank" rel="noopener noreferrer">EMODnet</a>
-                Human Activities, vessel density, created by Cogea.
-                <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
-                Squares under 0.1 h are left out, and the coarser squares are aggregated from those of 1 km.
-            </p>
+            <div class="panel-header">
+                <div>
+                    <div class="eyebrow">Maritime activity &middot; 2017&ndash;2024</div>
+                    <h1>Ships of Europe</h1>
+                </div>
+                <button
+                    id="togglePanel"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="panelBody"
+                    aria-label="Collapse map controls"
+                >
+                    &minus;
+                </button>
+            </div>
+            <div id="panelBody">
+                <p class="subtitle">Explore where Europe's ships spend their time.</p>
+                <fieldset>
+                    <legend>Map view</legend>
+                    <div class="view-options">
+                        <label><input type="radio" name="view" value="main" checked /><span>Main type</span></label>
+                        <label><input type="radio" name="view" value="pies" /><span>Type shares</span></label>
+                        <label><input type="radio" name="view" value="type" /><span>One type</span></label>
+                    </div>
+                    <label class="type-picker" id="typePicker" hidden
+                        >Ship type
+                        <select id="type"></select
+                    ></label>
+                </fieldset>
+                <fieldset>
+                    <legend>Year: <span id="yearLabel"></span></legend>
+                    <input id="year" aria-label="Year" type="range" min="2017" max="2024" step="1" value="2023" />
+                    <div class="scale"><span>2017</span><span>2024</span></div>
+                    <label id="compareLabel">
+                        <input id="compare" type="checkbox" /> Change since
+                        <select id="from" aria-label="Comparison baseline year"></select>
+                    </label>
+                    <div id="note" role="status"></div>
+                </fieldset>
+                <fieldset>
+                    <legend>Grid resolution: <span id="resolutionLabel"></span></legend>
+                    <input id="resolution" aria-label="Grid resolution" type="range" min="0" max="100" step="1" />
+                    <div id="resolutionScale" class="scale"><span>Coarser</span><span>Finer</span></div>
+                </fieldset>
+                <div id="keyTitle"></div>
+                <table id="key"></table>
+                <details>
+                    <summary>About the data & credits</summary>
+                    <p id="about">
+                        The time ships spend in each square, in hours per km² per month (yearly average). Only ships
+                        that broadcast their position (AIS) are counted, and the reception of these signals varies over
+                        the years, so that a change is not always a change in traffic.
+                    </p>
+                    <p>
+                        Source:
+                        <a
+                            href="https://emodnet.ec.europa.eu/en/human-activities"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >EMODnet</a
+                        >
+                        Human Activities, vessel density, created by Cogea.
+                        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer"
+                            >CC BY 4.0</a
+                        >. Squares under 0.1 h are left out, and the coarser squares are aggregated from those of 1 km.
+                    </p>
+                </details>
+                <div class="map-hint">Drag to explore &middot; Scroll to zoom &middot; Hover to inspect</div>
+            </div>
         </div>
 
         <script src="../../dist/gridviz.js"></script>
@@ -274,7 +551,8 @@
             // the groups which are not shown by the main type
             const hiddenGroups = new Set()
 
-            const comparing = () => compare && view !== 'pies' && (view === 'main' || typesWithChange.includes(type.code))
+            const comparing = () =>
+                compare && view !== 'pies' && (view === 'main' || typesWithChange.includes(type.code))
 
             const map = new gridviz.Map(document.getElementById('map'), {
                 x: 3900000,
@@ -285,6 +563,16 @@
                 zoomExtent: [50, 8000],
                 viewExtent: [-1100000, 0, 7300000, 7500000],
                 backgroundColor: background,
+                tooltip: {
+                    background: '#171e2bf5',
+                    color: '#edf4ff',
+                    padding: '16px',
+                    border: '1px solid #ffffff25',
+                    'border-radius': '12px',
+                    'box-shadow': '0 12px 40px #0008',
+                    fontSize: '12px',
+                    'font-family': 'system-ui, sans-serif',
+                },
                 onZoomFun: () => showResolution(),
                 onZoomEndFun: () => showResolution(),
             }).addZoomButtons({ onZoom: () => showResolution() })
@@ -342,8 +630,8 @@
                 l < 3
                     ? d3.interpolateRgb(background, group.color)(0.35 + (0.65 * l) / 3)
                     : l === 3
-                      ? group.color
-                      : d3.interpolateRgb(group.color, 'white')(0.5)
+                    ? group.color
+                    : d3.interpolateRgb(group.color, 'white')(0.5)
 
             const mainColors = {}
             for (const g of groups) for (let l = 0; l < levels.length; l++) mainColors[g.code + l] = levelColor(g, l)
@@ -433,24 +721,81 @@
             // ---------- the layers ----------
 
             const hours = (v) => (v < 10 ? +v.toFixed(1) : Math.round(v)).toLocaleString('en')
-            const cellInfoHTML = (cell) => {
-                // no tooltip for a cell which is not on the map
+            const tipHeader = (title, period) =>
+                '<div class="tip-heading">' +
+                title +
+                '<span class="tip-year">' +
+                period +
+                '</span></div>' +
+                '<div class="tip-unit">Hours per km² per month · yearly average</div>'
+            const tipRow = (name, value, color) =>
+                '<div class="tip-row"><span class="tip-name">' +
+                (color ? '<i class="tip-dot" style="background:' + color + '"></i>' : '') +
+                name +
+                '</span><b>' +
+                hours(value) +
+                '</b></div>'
+            const cellInfoHTML = (cell, resolution) => {
                 if (view === 'main' && shownTotal(cell) < minValue) return undefined
                 if (view === 'type' && cell[type.code] < minValue) return undefined
-                let html = '<div>' + year + ', hours per km² per month</div>'
-                for (const g of groups)
-                    if (cell[g.code] > 0 && !(view === 'main' && hiddenGroups.has(g)))
-                        html += g.name + ': <b>' + hours(cell[g.code]) + '</b><br />'
-                if (view === 'type') html += '<div>' + type.name + ': <b>' + hours(cell[type.code]) + '</b></div>'
-                return html
-            }
-            const changeInfoHTML = (cell) => {
-                if (Math.max(changeValue(cell, from), changeValue(cell, year)) < 0.5) return undefined
-                const name = view === 'type' ? type.name : 'All types'
+                const total = view === 'main' ? shownTotal(cell) : cell.total
+                const value = view === 'type' ? cell[type.code] : total
+                let html = tipHeader(view === 'type' ? type.name : 'Ship activity', year)
+                html += '<div class="tip-total">' + hours(value) + ' <small>h / km² / month</small></div>'
+                if (view !== 'type') {
+                    const shown = groups
+                        .filter((g) => cell[g.code] > 0 && !(view === 'main' && hiddenGroups.has(g)))
+                        .sort((a, b) => cell[b.code] - cell[a.code])
+                    html +=
+                        '<div class="tip-bar">' +
+                        shown
+                            .map(
+                                (g) =>
+                                    '<span style="width:' +
+                                    (100 * cell[g.code]) / total +
+                                    '%;background:' +
+                                    g.color +
+                                    '"></span>'
+                            )
+                            .join('') +
+                        '</div>'
+                    for (const g of shown) html += tipRow(g.name, cell[g.code], g.color)
+                } else {
+                    html +=
+                        '<div class="tip-unit">' +
+                        ((100 * value) / cell.total).toFixed(1) +
+                        '% of all ship activity in this cell</div>'
+                }
                 return (
-                    '<div>' + name + ', hours per km² per month</div>' +
-                    from + ': <b>' + hours(changeValue(cell, from)) + '</b><br />' +
-                    year + ': <b>' + hours(changeValue(cell, year)) + '</b>'
+                    html +
+                    '<div class="tip-footer">' +
+                    resolution / 1000 +
+                    ' km grid' +
+                    (view === 'main' && hiddenGroups.size ? ' · Selected types only' : '') +
+                    '</div>'
+                )
+            }
+            const changeInfoHTML = (cell, resolution) => {
+                const before = changeValue(cell, from)
+                const after = changeValue(cell, year)
+                if (Math.max(before, after) < 0.5) return undefined
+                const name = view === 'type' ? type.name : 'All ship types'
+                const change = before > 0 ? ((after - before) / before) * 100 : undefined
+                const changeText =
+                    change === undefined
+                        ? 'No baseline activity'
+                        : (change > 0 ? '+' : '') + change.toLocaleString('en', { maximumFractionDigits: 1 }) + '%'
+                return (
+                    tipHeader(name, from + ' → ' + year) +
+                    '<div class="tip-total">' +
+                    changeText +
+                    '</div>' +
+                    tipRow(from, before) +
+                    tipRow(year, after) +
+                    '<div class="tip-footer">' +
+                    resolution / 1000 +
+                    ' km grid · Change in recorded activity</div>' +
+                    (from === year ? '<div class="tip-footer">The same year is selected for both periods.</div>' : '')
                 )
             }
 
@@ -482,10 +827,12 @@
             const element = (id) => document.getElementById(id)
 
             // The grid resolution slider sets minPixelsPerCell: its position goes from 0, the coarsest, to 100, the finest.
-            // A pie needs more pixels than a square, so the pies have their own range, and their own position of the slider.
+            // Both ranges allow 1 km cells even at the maximum zoom of 8000 metres per pixel.
+            // Pies have their own coarser end and slider position.
+            // Start near the original pixel-size defaults; finer grids remain available on demand.
             const cellSizes = {
-                squares: { finest: 1.2, coarsest: 40, position: 100 },
-                pies: { finest: 10, coarsest: 120, position: 68 },
+                squares: { finest: 0.1, coarsest: 40, position: 58 },
+                pies: { finest: 0.1, coarsest: 120, position: 24 },
             }
             const cellSize = () => cellSizes[view === 'pies' ? 'pies' : 'squares']
             const minPixelsPerCell = () => {
@@ -500,7 +847,16 @@
                 const min = minPixelsPerCell()
                 const r = shown.find((r) => r / min >= z) || shown[shown.length - 1]
                 element('resolutionLabel').textContent = r / 1000 + ' km'
+                element('resolution').setAttribute('aria-valuetext', r / 1000 + ' kilometres')
             }
+
+            element('togglePanel').addEventListener('click', () => {
+                const collapsed = element('panel').classList.toggle('collapsed')
+                const button = element('togglePanel')
+                button.setAttribute('aria-expanded', String(!collapsed))
+                button.setAttribute('aria-label', collapsed ? 'Expand map controls' : 'Collapse map controls')
+                button.textContent = collapsed ? '+' : '\u2212'
+            })
 
             for (const g of groups) {
                 const optgroup = document.createElement('optgroup')
@@ -528,11 +884,12 @@
                     return c
                 }
                 if (view === 'pies') {
-                    keyTitle.textContent = 'The bigger the pie, the more traffic (logarithmic). Zoom in for more pies.'
+                    keyTitle.textContent =
+                        'Each slice shows a type’s share. Larger pies mean more activity (logarithmic scale).'
                     for (const g of groups) key.append(row([cell('td', undefined, g.color), cell('th', g.name)]))
                     return
                 }
-                keyTitle.textContent = 'Hue: the main type of those ticked. Brightness: their hours.'
+                keyTitle.textContent = 'Colour shows the main type; brighter means more activity. Toggle types below.'
                 key.append(row([cell('th'), ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))]))
                 for (const g of groups) {
                     const label = document.createElement('label')
@@ -557,13 +914,15 @@
                 compare = element('compare').checked
 
                 const canCompare = view === 'main' || (view === 'type' && typesWithChange.includes(type.code))
+                element('typePicker').hidden = view !== 'type'
                 element('compare').disabled = !canCompare
                 element('from').disabled = !canCompare
                 element('compareLabel').classList.toggle('disabled', !canCompare)
 
-                element('yearLabel').textContent = comparing() ? from + ' to ' + year : year
+                element('yearLabel').textContent = comparing() ? from + ' → ' + year : year
                 const notes = []
-                if (compare && view === 'type' && !canCompare) notes.push('The change is for all types, or for cargo, tanker, fishing and passenger.')
+                if (compare && view === 'type' && !canCompare)
+                    notes.push('The change is for all types, or for cargo, tanker, fishing and passenger.')
                 if (year === 2024 || (comparing() && from === 2024))
                     notes.push('2024 is not as dense: the source lost satellite data from June.')
                 element('note').textContent = notes.join(' ')
