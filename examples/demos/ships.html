@@ -106,11 +106,17 @@
             }
             .view-options {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(4, 1fr);
                 gap: 4px;
                 padding: 4px;
                 background: #0b101a;
                 border-radius: 11px;
+            }
+            .view-section {
+                grid-column: 1 / -1;
+                padding: 5px 4px 0;
+                color: var(--muted);
+                font-size: 10px;
             }
             .view-options label {
                 position: relative;
@@ -125,10 +131,14 @@
             .view-options span {
                 display: block;
                 text-align: center;
-                padding: 9px 2px;
+                padding: 7px 1px;
                 border-radius: 8px;
                 color: var(--muted);
-                font-size: 12px;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+            .view-options label:hover span {
+                color: #fff;
             }
             .view-options input:checked + span {
                 background: #2d4057;
@@ -227,18 +237,6 @@
                 color: var(--muted);
                 font-size: 10px;
             }
-            #compareLabel {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                margin-top: 8px;
-            }
-            #compareLabel select {
-                margin-left: auto;
-            }
-            #panel label.disabled {
-                opacity: 0.5;
-            }
             #note:empty {
                 display: none;
             }
@@ -278,19 +276,6 @@
                 color: var(--muted);
                 font-size: 11px;
             }
-            .bathymetry-controls {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 8px;
-                margin-top: 4px;
-            }
-            .bathymetry-controls > label:first-child {
-                display: flex;
-                align-items: center;
-                min-height: 28px;
-                cursor: pointer;
-            }
             #bathymetryOpacityValue {
                 color: var(--accent);
                 font-variant-numeric: tabular-nums;
@@ -318,6 +303,9 @@
                 padding: 0 5px 0 0;
                 font-weight: 400;
                 text-align: left;
+            }
+            #key th:first-child {
+                width: 100%;
             }
             #key td {
                 min-width: 23px;
@@ -374,6 +362,10 @@
                 border: 1px solid var(--line) !important;
                 border-radius: 12px !important;
                 max-width: calc(100vw - 30px);
+            }
+            /* the map adds the light of the circles: the Venn diagrams have to show the same mix */
+            #gridviz-legend .gridviz-legend--venn circle {
+                mix-blend-mode: plus-lighter !important;
             }
             #gridviz-legend:empty {
                 display: none;
@@ -512,20 +504,19 @@
                 <p class="subtitle">Explore where Europe's ships spend their time.</p>
                 <fieldset>
                     <legend>Map view</legend>
-                    <div class="view-options">
-                        <label><input type="radio" name="view" value="main" checked /><span>Main type</span></label>
-                        <label><input type="radio" name="view" value="blend" /><span>All types</span></label>
-                        <label><input type="radio" name="view" value="pies" /><span>Type shares</span></label>
-                        <label><input type="radio" name="view" value="type" /><span>One type</span></label>
-                    </div>
+                    <div class="view-options" id="viewOptions"></div>
                     <label class="type-picker" id="typePicker" hidden
                         >Ship type
                         <select id="type"></select
                     ></label>
+                    <label class="type-picker" id="changeTypePicker" hidden
+                        >Ship type
+                        <select id="changeType"></select
+                    ></label>
                 </fieldset>
                 <fieldset>
                     <legend>Year: <span id="yearLabel"></span></legend>
-                    <div class="year-controls">
+                    <div class="year-controls" id="yearControls">
                         <button
                             id="playYears"
                             type="button"
@@ -547,10 +538,10 @@
                             <div class="scale"><span>2017</span><span>2024</span></div>
                         </div>
                     </div>
-                    <label id="compareLabel">
-                        <input id="compare" type="checkbox" /> Change since
-                        <select id="from" aria-label="Comparison baseline year"></select>
-                    </label>
+                    <label class="type-picker" id="sinceLabel" hidden
+                        >Compared with
+                        <select id="from" aria-label="Comparison baseline year"></select
+                    ></label>
                     <div id="note" role="status"></div>
                 </fieldset>
                 <fieldset>
@@ -562,26 +553,15 @@
                 <fieldset>
                     <legend>Map layers</legend>
                     <div class="layer-toggles">
-                        <label style="display: none"
-                            ><input id="basemap" type="checkbox" style="display: none" checked /> Basemap</label
-                        >
                         <label><input id="placenames" type="checkbox" checked /> Place names</label>
-                    </div>
-                    <div class="bathymetry-controls">
                         <label><input id="bathymetry" type="checkbox" /> Bathymetry</label>
-                        <label class="opacity-label" for="bathymetryOpacity"
-                            >Opacity <span id="bathymetryOpacityValue">35%</span></label
-                        >
                     </div>
-                    <input
-                        id="bathymetryOpacity"
-                        aria-label="Bathymetry opacity"
-                        type="range"
-                        min="0"
-                        max="100"
-                        step="1"
-                        value="35"
-                    />
+                    <div id="bathymetryControls">
+                        <label class="opacity-label" for="bathymetryOpacity"
+                            >Bathymetry opacity <span id="bathymetryOpacityValue">35%</span></label
+                        >
+                        <input id="bathymetryOpacity" type="range" min="0" max="100" step="1" value="35" />
+                    </div>
                 </fieldset>
                 <div id="keyTitle"></div>
                 <table id="key"></table>
@@ -625,7 +605,7 @@
             const dataURL = 'https://raw.githubusercontent.com/joewdavies/tiled-grids/main/vessels/'
 
             const background = '#10131c'
-            // the groups of the main type and of the pies, and the column of each of the 13 ship types of the source
+            // the groups of the key and of the views by type, and the column of each of the 13 ship types of the source
             const groups = [
                 { code: 'gc', name: 'Cargo', color: '#56b4e9', types: [{ code: 'c', name: 'Cargo' }] },
                 { code: 'gt', name: 'Tanker', color: '#ff6a3d', types: [{ code: 't', name: 'Tanker' }] },
@@ -672,69 +652,45 @@
             const types = groups.flatMap((g) => g.types.map((t) => ({ ...t, group: g })))
             const columns = types.map((t) => t.code)
             // the types with a column per year in the table for the changes
-            const typesWithChange = ['c', 't', 'f', 'p']
+            const changeTypes = [
+                { code: 'a', name: 'All types' },
+                { code: 'c', name: 'Cargo' },
+                { code: 't', name: 'Tanker' },
+                { code: 'f', name: 'Fishing' },
+                { code: 'p', name: 'Passenger' },
+            ]
             const years = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+            // the source lost satellite data in 2024: a trend stops before it
+            const trendYears = years.slice(0, -1)
+            const yearColumn = (code, y) => code + ('' + y).slice(2)
 
             const minValue = 0.1 // the data have no cell under this value
             const maxValue = 300 // about the 99.9th percentile
             const log = (v) => Math.max(0, Math.min(1, Math.log(v / minValue) / Math.log(maxValue / minValue)))
 
-            let view = 'main' // or 'pies' or 'type'
+            // the state of the panel, read by the styles when they draw
+            let view // an entry of views
             let type = types[0]
+            let changeType = changeTypes[0]
             let year = 2023
             let from = 2019
-            let compare = false
-            // the groups which are not shown by the main type
             const hiddenGroups = new Set()
 
-            const comparing = () =>
-                compare && view !== 'pies' && (view === 'main' || typesWithChange.includes(type.code))
-
-            const viewParams = new URLSearchParams(window.location.search)
-            const viewParam = (name, fallback) => {
-                const raw = viewParams.get(name)
+            const element = (id) => document.getElementById(id)
+            const params = new URLSearchParams(window.location.search)
+            const numberParam = (name, fallback) => {
+                const raw = params.get(name)
                 if (raw === null || raw.trim() === '') return fallback
                 const value = Number(raw)
                 return Number.isFinite(value) ? value : fallback
             }
-            function saveViewToURL() {
-                const url = new URL(window.location.href)
-                const { x, y, z } = map.geoCanvas.view
-                url.searchParams.set('x', x.toFixed(2))
-                url.searchParams.set('y', y.toFixed(2))
-                url.searchParams.set('z', z.toFixed(4))
-                url.searchParams.set('view', view)
-                url.searchParams.set('type', type.code)
-                url.searchParams.set('year', year)
-                url.searchParams.set('from', from)
-                url.searchParams.set('compare', compare ? '1' : '0')
-                url.searchParams.set('squareDetail', cellSizes.squares.position)
-                url.searchParams.set('pieDetail', cellSizes.pies.position)
-                url.searchParams.set(
-                    'types',
-                    groups
-                        .filter((g) => !hiddenGroups.has(g))
-                        .map((g) => g.code)
-                        .join(',')
-                )
-                url.searchParams.set('panel', element('panel').classList.contains('collapsed') ? 'closed' : 'open')
-                url.searchParams.set('about', element('dataDetails').open ? '1' : '0')
-                url.searchParams.set('playing', yearTimer === null ? '0' : '1')
-                for (const id of ['basemap', 'placenames', 'bathymetry'])
-                    url.searchParams.set(id, element(id).checked ? '1' : '0')
-                url.searchParams.set('bathymetryOpacity', element('bathymetryOpacity').value)
-                window.history.replaceState(window.history.state, '', url)
-            }
 
-            const map = new gridviz.Map(document.getElementById('map'), {
-                x: viewParam('x', 3849990.40),
+            const map = new gridviz.Map(element('map'), {
+                x: numberParam('x', 3849990.4),
                 // Start farther north on narrow screens.
-                y: viewParam('y', window.innerWidth < 600 ? 3849990.40 : 3066317.27),
+                y: numberParam('y', window.innerWidth < 600 ? 3849990.4 : 3066317.27),
                 // Europe in the window
-                z: Math.max(
-                    50,
-                    Math.min(8000, viewParam('z', 2086.9426))
-                ),
+                z: Math.max(50, Math.min(8000, numberParam('z', 2086.9426))),
                 zoomExtent: [50, 8000],
                 backgroundColor: background,
                 tooltip: {
@@ -750,12 +706,12 @@
                 onZoomFun: () => showResolution(),
                 onZoomEndFun: () => {
                     showResolution()
-                    saveViewToURL()
+                    saveToURL()
                 },
             }).addZoomButtons({
                 onZoom: () => {
                     showResolution()
-                    saveViewToURL()
+                    saveToURL()
                 },
             })
 
@@ -771,7 +727,7 @@
             // requested tile area before downloading, including cells outside the viewport.
             class ShipsDataset extends gridviz.MultiResolutionDataset {
                 requestedDataset(z, minPixelsPerCell) {
-                    return super.getDataset(z, minPixelsPerCell)
+                    return super.getDataset(z, minPixelsPerCell * (view.zoomInFactor ? view.zoomInFactor(z) : 1))
                 }
 
                 getDataset(z, minPixelsPerCell) {
@@ -780,10 +736,6 @@
                     if (!extent) return this.datasets[this.datasets.length - 1]
                     for (let i = this.datasets.indexOf(requested); i < this.datasets.length; i++) {
                         const dataset = this.datasets[i]
-                        // Keep 2 km and 5 km squares available farther out without increasing
-                        // the budget for the much heavier 1 km overview.
-                        const budget =
-                            view === 'pies' ? 250000 : [2000, 5000].includes(this.resolutions[i]) ? 5000000 : 2000000
                         if (!dataset.info) continue
                         const tiles = dataset.getTilingEnvelope(extent)
                         const bounds = dataset.info.tilingBounds
@@ -795,7 +747,8 @@
                             0,
                             Math.min(tiles.yMax, bounds.yMax) - Math.max(tiles.yMin, bounds.yMin) + 1
                         )
-                        if (width * height * dataset.info.tileSizeCell ** 2 <= budget) return dataset
+                        if (width * height * dataset.info.tileSizeCell ** 2 <= view.detail.budget(this.resolutions[i]))
+                            return dataset
                     }
                     return this.datasets[this.datasets.length - 1]
                 }
@@ -821,17 +774,46 @@
                         })
                 )
 
-            const yearColumns = years.flatMap((y) => ['a', ...typesWithChange].map((t) => t + ('' + y).slice(2)))
+            // the sparklines show how a cell moves around its own level, whatever this level is
+            const trendColumn = (code, y) => 'r' + yearColumn(code, y)
             const changeDataset = new ShipsDataset(
                 changeResolutions,
                 (resolution) =>
                     new gridviz.TiledGrid(map, dataURL + 'change/' + resolution + 'm/', {
                         worker: true,
                         preprocess: (cell) => {
-                            for (const c of yearColumns) cell[c] = +cell[c]
+                            for (const { code } of changeTypes) {
+                                let sum = 0
+                                for (const y of years) cell[yearColumn(code, y)] = +cell[yearColumn(code, y)]
+                                for (const y of trendYears) sum += Math.log2(cell[yearColumn(code, y)] + 0.05)
+                                const mean = sum / trendYears.length
+                                for (const y of trendYears)
+                                    cell[trendColumn(code, y)] = Math.max(
+                                        -1.5,
+                                        Math.min(1.5, Math.log2(cell[yearColumn(code, y)] + 0.05) - mean)
+                                    )
+                            }
                         },
                     })
             )
+
+            // ---------- what a cell shows ----------
+
+            const shownGroups = () => groups.filter((g) => !hiddenGroups.has(g))
+            // the hours of the groups which are shown
+            const shownTotal = (cell) => {
+                if (hiddenGroups.size === 0) return cell.total
+                let total = 0
+                for (const g of groups) if (!hiddenGroups.has(g)) total += cell[g.code]
+                return total
+            }
+            const isShown = (cell) => shownTotal(cell) >= minValue
+            const mainGroup = (cell) => {
+                let main
+                for (const g of groups) if (!hiddenGroups.has(g) && (!main || cell[g.code] > cell[main.code])) main = g
+                return main
+            }
+            const shownColors = () => Object.fromEntries(shownGroups().map((g) => [g.code, g.color]))
 
             // ---------- the main type, as the hue, and the traffic, as the brightness ----------
 
@@ -852,36 +834,68 @@
             const mainColors = {}
             for (const g of groups) for (let l = 0; l < levels.length; l++) mainColors[g.code + l] = levelColor(g, l)
 
-            // the hours of the groups which are shown
-            const shownTotal = (cell) => {
-                if (hiddenGroups.size === 0) return cell.total
-                let total = 0
-                for (const g of groups) if (!hiddenGroups.has(g)) total += cell[g.code]
-                return total
-            }
-
             const mainStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                visible: () => view === 'main',
-                filter: (cell) => shownTotal(cell) >= minValue,
+                filter: isShown,
                 color: mainColors,
-                code: (cell) => {
-                    let main
-                    for (const g of groups)
-                        if (!hiddenGroups.has(g) && (!main || cell[g.code] > cell[main.code])) main = g
-                    return main.code + levelOf(shownTotal(cell))
-                },
+                code: (cell) => mainGroup(cell).code + levelOf(shownTotal(cell)),
+            })
+
+            // ---------- blend: the colours of all the groups, added up ----------
+
+            // Multiplying colours needs a light background: on this dark one it gives black. The screen operation is
+            // its counterpart, which adds light. Each group gives the cell a part of its colour, by its share of the traffic.
+            const blendAmount = (cell, g) => log(shownTotal(cell)) * Math.sqrt(cell[g.code] / shownTotal(cell))
+            const blendStyles = groups.map(
+                (g) =>
+                    new gridviz.SquareColorWebGLStyle({
+                        visible: () => !hiddenGroups.has(g),
+                        filter: (cell) => cell[g.code] > 0 && isShown(cell) && blendAmount(cell, g) > 0.01,
+                        tFun: (cell) => blendAmount(cell, g),
+                        color: (t) => d3.interpolateRgb('#000', g.color)(t),
+                        blendOperation: () => 'screen',
+                    })
+            )
+
+            // ---------- the Venn diagram: three groups of ships as nested circles, whose light adds up ----------
+
+            const vennGroups = [
+                { label: 'Freight', color: 'rgb(30,110,255)', value: (cell) => cell.gc + cell.gt },
+                { label: 'Fishing', color: 'rgb(40,220,70)', value: (cell) => cell.gf },
+                { label: 'People', color: 'rgb(255,40,60)', value: (cell) => cell.gp + cell.gl },
+            ]
+            const circleSize = (v, resolution) => (v < minValue ? 0 : resolution * (0.2 + 1.1 * log(v)))
+            const vennStyles = vennGroups.map(
+                (v) =>
+                    new gridviz.CircleColorSizeWebGLStyle({
+                        color: () => v.color,
+                        size: (cell, resolution) => circleSize(v.value(cell), resolution),
+                        blendOperation: () => 'lighter',
+                    })
+            )
+            vennStyles[0].legends = [
+                new gridviz.VennLegend({ title: 'Ships in each cell', items: vennGroups, radius: 34 }),
+            ]
+
+            // ---------- the pies: the share of each group as the angle, the traffic as the size ----------
+
+            const pieStyle = new gridviz.CompositionStyle({
+                filter: isShown,
+                color: shownColors(),
+                type: () => 'piechart',
+                offsetAngle: () => 90,
+                size: (cell, resolution) => resolution * (0.2 + 0.8 * log(shownTotal(cell))),
             })
 
             // ---------- one type ----------
 
             const legendWidth = Math.min(260, window.innerWidth - 60)
-            const typeStyles = types.map((t) => {
+            const typeStyles = {}
+            for (const t of types) {
                 const color = (x) =>
                     x < 0.7
                         ? d3.interpolateRgb(background, t.group.color)(0.3 + x)
                         : d3.interpolateRgb(t.group.color, 'white')((x - 0.7) * 2)
                 const style = new gridviz.SquareColorWebGLStyle({
-                    visible: () => view === 'type' && type === t,
                     filter: (cell) => cell[t.code] >= minValue,
                     tFun: (cell) => log(cell[t.code]),
                     color,
@@ -896,60 +910,343 @@
                         width: legendWidth,
                     }),
                 ]
-                return style
+                typeStyles[t.code] = style
+            }
+
+            // ---------- dots: a dot for some hours, in the colour of the group of its ships ----------
+
+            const dotStyles = groups.map(
+                (g) =>
+                    new gridviz.DotDensityStyle({
+                        visible: () => !hiddenGroups.has(g),
+                        filter: (cell) => cell[g.code] > 0 && isShown(cell),
+                        color: () => g.color,
+                        // the style draws one dot more than asked for. Rounding at random keeps the shares of the small groups right.
+                        dotNumber: (cell, resolution, z) => {
+                            const total = shownTotal(cell)
+                            const n = (0.6 * (resolution / z) ** 2 * log(total) * cell[g.code]) / total
+                            return Math.floor(n) + (Math.random() < n % 1 ? 1 : 0) - 1
+                        },
+                        dotSize: (resolution, z) => 1.4 * z,
+                        sigma: (resolution) => resolution * 0.45,
+                    })
+            )
+
+            // ---------- lego: the main type as the colour of the bricks, the traffic as the height of their steps ----------
+
+            const legoStyles = (() => {
+                const [fill, outline, studs] = gridviz.LegoStyle.getCategory(
+                    (cell) => mainGroup(cell).code,
+                    Object.fromEntries(groups.map((g) => [g.code, g.color])),
+                    { colDark: '#00000055', colBright: '#ffffff66' }
+                )
+                outline.strokeColor = () => '#00000033'
+                const steps = new gridviz.SideTanakaStyle({
+                    classifier: () => (cell) => 1 + levelOf(shownTotal(cell)),
+                    colorDark: '#000000b0',
+                    colorBright: '#ffffffa0',
+                    width: (side, step, resolution, z) => Math.min(resolution / 5, Math.abs(step) * 1.2 * z),
+                })
+                const styles = [fill, outline, steps, studs]
+                for (const s of styles) s.filter = isShown
+                // too small to be told apart from a certain zoom: then the colours and the steps do the work
+                const bigBricks = (z) => gridLayer().getDataset(z).getResolution() / z >= 6
+                outline.visible = studs.visible = bigBricks
+                return styles
+            })()
+
+            // ---------- pillars and fences: the traffic as the height ----------
+
+            const pillarStyle = new gridviz.PillarStyle({
+                filter: (cell) => shownTotal(cell) >= 1,
+                height: (cell, resolution, z) => 120 * z * log(shownTotal(cell)) ** 3,
+                width: (cell, resolution) => resolution * 0.4,
+                color: (cell) => mainGroup(cell).color,
+                outlineCol: background,
+                viewHeightFactor: 2,
+                shadowColor: '#00000088',
             })
 
-            // ---------- blend mode: all types combined with multiply blend mode ----------
+            const fenceStyle = new gridviz.IsoFenceStyle({
+                filter: isShown,
+                color: shownColors(),
+                height: (cell, resolution) => 2 * resolution * log(shownTotal(cell)) ** 1.5,
+                angle: 50,
+                cornerLineWidth: () => 0,
+            })
 
-            const blendStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                visible: () => view === 'blend',
-                filter: (cell) => shownTotal(cell) >= minValue,
-                color: mainColors,
-                code: (cell) => {
-                    let main
-                    for (const g of groups)
-                        if (!hiddenGroups.has(g) && (!main || cell[g.code] > cell[main.code])) main = g
-                    return main.code + levelOf(shownTotal(cell))
-                },
-                blendOperation: () => 'multiply'
+            // ---------- ridges: the traffic of all the ships, as the height of a line for each row of the grid ----------
+
+            const ridgeStyle = new gridviz.JoyPlotStyle({
+                filter: (cell) => cell.total >= minValue,
+                height: (cell, resolution, z) => (0.4 + 34 * log(cell.total) ** 3) * z,
+                lineColor: () => '#7dd3fc',
+                lineWidth: (y, ys, resolution, z) => 0.7 * z,
+                fillColor: () => '#10131ce0',
             })
 
             // ---------- the change between two years, from a quarter to four times ----------
 
-            const changeValue = (cell, y) => cell[(view === 'type' ? type.code : 'a') + ('' + y).slice(2)]
+            // the years compared by the view which is shown: the trends go over the whole period
+            const changeYears = () =>
+                view.allYears ? [trendYears[0], trendYears[trendYears.length - 1]] : [from, year]
+            const changeValue = (cell, y) => cell[yearColumn(changeType.code, y)]
+            // over too little traffic, a ratio has no meaning
+            const changeShown = (cell) => {
+                const [a, b] = changeYears()
+                return Math.max(changeValue(cell, a), changeValue(cell, b)) >= 0.5
+            }
+            // a small value is added, for the cells with no traffic one of the years
+            const changeLog = (cell) => {
+                const [a, b] = changeYears()
+                return Math.log2((changeValue(cell, b) + 0.05) / (changeValue(cell, a) + 0.05))
+            }
+            const changeT = (cell) => Math.max(0, Math.min(1, (changeLog(cell) + 2) / 4))
+            const changeTraffic = (cell) => {
+                const [a, b] = changeYears()
+                return log(Math.max(changeValue(cell, a), changeValue(cell, b)))
+            }
             const changeColor = d3.interpolateRgbBasis(['#ffa23c', '#9a5a2a', '#3a3d47', '#2c5f7c', '#3fc8ff'])
-            const changeStyle = new gridviz.SquareColorWebGLStyle({
-                // over too little traffic, a ratio has no meaning
-                filter: (cell) => Math.max(changeValue(cell, from), changeValue(cell, year)) >= 0.5,
-                tFun: (cell) => {
-                    // a small value is added, for the cells with no traffic one of the years
-                    const r = Math.log2((changeValue(cell, year) + 0.05) / (changeValue(cell, from) + 0.05))
-                    return Math.max(0, Math.min(1, (r + 2) / 4))
-                },
-                color: changeColor,
-            })
-            changeStyle.legends = [
-                new gridviz.ColorLegend({
-                    title: 'Traffic, compared with the earlier year',
-                    colorScale: changeColor,
+            // lines and arrows are thin, on a dark background: their ramp stays bright through the middle
+            const changeLineColor = d3.interpolateRgbBasis(['#ffa23c', '#d79a68', '#98a0b0', '#68aed2', '#3fc8ff'])
+            // their titles follow the years and the type which are chosen (see update)
+            const changeLegends = []
+            const changeLegend = (colorScale) => {
+                const legend = new gridviz.ColorLegend({
+                    colorScale,
                     textScale: (x) => Math.pow(2, 4 * x - 2),
                     tickFormat: (v) => (v < 1 ? '÷' + +(1 / v).toFixed(1) : '×' + +v.toFixed(1)),
                     ticks: 5,
                     width: legendWidth,
-                }),
-            ]
+                })
+                changeLegends.push(legend)
+                return legend
+            }
 
-            // ---------- the pies: the share of each group as the angle, the traffic as the size ----------
+            const changeStyle = new gridviz.SquareColorWebGLStyle({
+                filter: changeShown,
+                tFun: changeT,
+                color: changeColor,
+            })
+            changeStyle.legends = [changeLegend(changeColor)]
 
-            const pieStyle = new gridviz.CompositionStyle({
-                filter: (cell) => cell.total >= minValue,
-                color: Object.fromEntries(groups.map((g) => [g.code, g.color])),
-                type: () => 'piechart',
-                offsetAngle: () => 90,
-                size: (cell, resolution) => resolution * (0.2 + 0.8 * log(cell.total)),
+            // Arrows: a shaft and a head pointing the way the traffic went, and a flat dash for what hardly changed (under about 10%).
+            const isSteady = (cell) => Math.abs(changeLog(cell)) < 0.15
+            const shaftLength = (cell, resolution) =>
+                isSteady(cell) ? resolution * 0.4 : resolution * (0.2 + 0.2 * Math.min(2, Math.abs(changeLog(cell))))
+            const arrowColor = (cell) => changeLineColor(changeT(cell))
+            const arrowShaftStyle = new gridviz.SegmentStyle({
+                filter: changeShown,
+                color: arrowColor,
+                orientation: (cell) => (isSteady(cell) ? 0 : 90),
+                length: shaftLength,
+                width: (cell, resolution) => resolution * (0.06 + 0.14 * changeTraffic(cell)),
+                offset: (cell, resolution) =>
+                    isSteady(cell)
+                        ? { dx: 0, dy: 0 }
+                        : { dx: 0, dy: (-Math.sign(changeLog(cell)) * shaftLength(cell, resolution)) / 2 },
+            })
+            arrowShaftStyle.legends = [changeLegend(changeLineColor)]
+            const arrowHeadStyle = new gridviz.ShapeColorSizeStyle({
+                filter: (cell) => changeShown(cell) && !isSteady(cell),
+                color: arrowColor,
+                size: (cell, resolution) => resolution * (0.22 + 0.2 * changeTraffic(cell)),
+                shape: (cell) => (changeLog(cell) > 0 ? 'triangle_up' : 'triangle_down'),
             })
 
-            // ---------- the layers ----------
+            // Then and now: a circle for each year, whose light adds up to white where the traffic is the same.
+            const thenNowColors = ['rgb(255,128,0)', 'rgb(0,127,255)']
+            const thenNowStyles = thenNowColors.map(
+                (color, i) =>
+                    new gridviz.CircleColorSizeWebGLStyle({
+                        filter: changeShown,
+                        color: () => color,
+                        size: (cell, resolution) =>
+                            resolution * 1.35 * Math.min(1, (changeValue(cell, changeYears()[i]) / maxValue) ** 0.25),
+                        blendOperation: () => 'lighter',
+                    })
+            )
+            const thenNowLegend = new gridviz.VennLegend({
+                title: 'Traffic of each year',
+                items: thenNowColors.map((color) => ({ label: '', color })),
+                radius: 34,
+            })
+            thenNowStyles[0].legends = [thenNowLegend]
+
+            // Trends: a line for each cell over the years, around its own level.
+            const trendStyle = new gridviz.TimeSeriesStyle({
+                filter: changeShown,
+                // the default takes a value of 0 as no data
+                noData: (v) => v === undefined,
+                offsetX: (cell, resolution) => resolution * 0.08,
+                width: (cell, resolution) => resolution * 0.84,
+                height: (cell, resolution) => resolution * 0.8,
+                lineWidth: (cell, resolution, z) => z * (0.8 + 2.4 * changeTraffic(cell)),
+                color: arrowColor,
+            })
+            trendStyle.legends = [changeLegend(changeLineColor)]
+
+            // ---------- the views ----------
+
+            // How far the grid resolution slider can go (in pixels per cell), where it starts, and the most cells
+            // (as if the tiles were full) a view can load: the view goes coarser beyond it.
+            const webGLBudget = (resolution) => ([2000, 5000].includes(resolution) ? 5000000 : 2000000)
+            const squaresDetail = () => ({ finest: 0.1, coarsest: 40, position: 70, budget: webGLBudget })
+            const symbolsDetail = () => ({ finest: 0.1, coarsest: 120, position: 55, budget: () => 250000 })
+            // For the views drawn on the canvas: the cells they start with, in pixels. Their cost is in the cells which are
+            // really there, about a tenth of the budget at sea, and the slider can go finer down to a pixel.
+            const canvasDetail = (pixels, budget = 500000) => ({
+                finest: 1,
+                coarsest: 120,
+                position: Math.round((100 * Math.log(120 / pixels)) / Math.log(120)),
+                budget: () => budget,
+            })
+
+            // the swatches of a group in the key: only the main type has a scale with numbers
+            const mainSwatches = (g) => levels.map((_, l) => levelColor(g, l))
+            const blendSwatches = (g) => [0.2, 0.4, 0.6, 0.8, 1].map((t) => d3.interpolateRgb('#000', g.color)(t))
+            const colorSwatch = (g) => [g.color]
+
+            const viewSections = [
+                {
+                    title: 'Which ships',
+                    views: {
+                        main: {
+                            label: 'Main type',
+                            hint: 'The type with the most hours in each cell',
+                            styles: () => [mainStyle],
+                            detail: squaresDetail(),
+                            swatches: mainSwatches,
+                            levels: true,
+                            key: 'Colour shows the main type; brighter means more activity. Toggle types below.',
+                        },
+                        blend: {
+                            label: 'Blend',
+                            hint: 'The colours of all the types mixed by their share of the hours',
+                            styles: () => blendStyles,
+                            detail: squaresDetail(),
+                            swatches: blendSwatches,
+                            key: 'The colours of all the types add up in each cell, by their share: a mixed colour is a mix of ships. Brighter means more activity.',
+                        },
+                        pies: {
+                            label: 'Shares',
+                            hint: 'A pie chart of the types in each cell',
+                            styles: () => [pieStyle],
+                            detail: symbolsDetail(),
+                            swatches: colorSwatch,
+                            key: 'Each slice shows a type’s share. Larger pies mean more activity (logarithmic scale).',
+                        },
+                        venn: {
+                            label: 'Venn',
+                            hint: 'Freight, fishing and people as circles whose colours add up',
+                            styles: () => vennStyles,
+                            detail: symbolsDetail(),
+                            tip: vennGroups,
+                            key: 'Freight (cargo, tankers), fishing and people (passengers, leisure), each a circle sized by its traffic. Their colours add up where they share the sea: white has all three. Hover the diagram to isolate one.',
+                        },
+                    },
+                },
+                {
+                    title: 'How much traffic',
+                    views: {
+                        type: {
+                            label: 'One type',
+                            hint: 'The hours of one of the 13 types of the source',
+                            styles: () => [typeStyles[type.code]],
+                            detail: squaresDetail(),
+                            picker: 'typePicker',
+                        },
+                        dots: {
+                            label: 'Dots',
+                            hint: 'Dots coloured by type, denser where there is more traffic',
+                            styles: () => dotStyles,
+                            detail: symbolsDetail(),
+                            swatches: colorSwatch,
+                            key: 'More dots mean more activity (logarithmic scale); their colours are the types in the cell. They are placed at random.',
+                        },
+                        lego: {
+                            label: 'Lego',
+                            hint: 'Bricks coloured by the main type, in steps of traffic',
+                            styles: () => legoStyles,
+                            detail: canvasDetail(4.5),
+                            // fine bricks when zoomed out, and big ones with their studs when zoomed in
+                            zoomInFactor: (z) => Math.max(1, Math.min(3, 1500 / z)),
+                            swatches: colorSwatch,
+                            key: 'Bricks in the colour of the main type. The shaded steps between them climb with the traffic: 0.5, 2, 10 and 50 h.',
+                        },
+                        pillars: {
+                            label: 'Pillars',
+                            hint: 'A pillar for each cell, as tall as its traffic',
+                            styles: () => [pillarStyle],
+                            detail: canvasDetail(3.5),
+                            swatches: colorSwatch,
+                            key: 'Taller pillars mean more activity (logarithmic scale), from 1 h; the colour is the main type.',
+                        },
+                        fences: {
+                            label: 'Fences',
+                            hint: 'Walls along the edges of the cells, stacked by type',
+                            styles: () => [fenceStyle],
+                            detail: canvasDetail(15),
+                            swatches: colorSwatch,
+                            key: 'Taller walls mean more activity (logarithmic scale); the bands are the shares of the types.',
+                        },
+                        ridges: {
+                            label: 'Ridges',
+                            hint: 'A line for each row of the grid, rising with the traffic',
+                            styles: () => [ridgeStyle],
+                            detail: canvasDetail(2.4, 2000000),
+                            total: true,
+                            key: 'All the ships, as a line for each row of the grid: it rises with the activity (logarithmic scale).',
+                        },
+                    },
+                },
+                {
+                    title: 'What changed',
+                    views: {
+                        change: {
+                            label: 'Colour',
+                            hint: 'The traffic of a year against an earlier one, as a colour',
+                            styles: () => [changeStyle],
+                            detail: squaresDetail(),
+                            change: true,
+                            since: true,
+                        },
+                        arrows: {
+                            label: 'Arrows',
+                            hint: 'Arrows up where the traffic grew, down where it fell',
+                            styles: () => [arrowShaftStyle, arrowHeadStyle],
+                            detail: canvasDetail(15),
+                            change: true,
+                            since: true,
+                            key: 'Arrows point up where traffic grew and down where it fell; dashes are within about 10%. Thicker means busier.',
+                        },
+                        thennow: {
+                            label: 'Then & now',
+                            hint: 'A circle for each of two years: white where they match',
+                            styles: () => thenNowStyles,
+                            detail: canvasDetail(9),
+                            change: true,
+                            since: true,
+                            key: 'Each year is a circle sized by its traffic. They add up to white where the traffic is the same: orange remains where it fell, blue where it grew.',
+                        },
+                        trends: {
+                            label: 'Trends',
+                            hint: 'A small line chart of the years in each cell',
+                            styles: () => [trendStyle],
+                            detail: canvasDetail(15),
+                            change: true,
+                            allYears: true,
+                            key: 'A line for each cell from 2017 to 2023, around its own level: its colour is the change over the period, and thicker means busier. 2024 is left out, as the source lost data.',
+                        },
+                    },
+                },
+            ]
+            const views = {}
+            for (const section of viewSections)
+                for (const [id, v] of Object.entries(section.views)) views[id] = Object.assign(v, { id })
+            view = views.main
+
+            // ---------- the tooltip ----------
 
             const hours = (v) => (v < 10 ? +v.toFixed(1) : Math.round(v)).toLocaleString('en')
             const tipHeader = (title, period) =>
@@ -966,94 +1263,83 @@
                 '</span><b>' +
                 hours(value) +
                 '</b></div>'
-            const cellInfoHTML = (cell, resolution) => {
-                if ((view === 'main' || view === 'blend') && shownTotal(cell) < minValue) return undefined
-                if (view === 'type' && cell[type.code] < minValue) return undefined
-                const total = (view === 'main' || view === 'blend') ? shownTotal(cell) : cell.total
-                const value = view === 'type' ? cell[type.code] : total
-                let html = tipHeader(view === 'type' ? type.name : 'Ship activity', year)
-                html += '<div class="tip-total">' + hours(value) + ' <small>h / km² / month</small></div>'
-                if (view !== 'type') {
-                    const shown = groups
-                        .filter((g) => cell[g.code] > 0 && !(view === 'main' && hiddenGroups.has(g)))
-                        .sort((a, b) => cell[b.code] - cell[a.code])
-                    html +=
-                        '<div class="tip-bar">' +
-                        shown
-                            .map(
-                                (g) =>
-                                    '<span style="width:' +
-                                    (100 * cell[g.code]) / total +
-                                    '%;background:' +
-                                    g.color +
-                                    '"></span>'
-                            )
-                            .join('') +
-                        '</div>'
-                    for (const g of shown) html += tipRow(g.name, cell[g.code], g.color)
-                } else {
-                    html +=
-                        '<div class="tip-unit">' +
-                        ((100 * value) / cell.total).toFixed(1) +
-                        '% of all ship activity in this cell</div>'
-                }
+            const tipTotal = (text) => '<div class="tip-total">' + text + '</div>'
+            const tipValue = (value) => tipTotal(hours(value) + ' <small>h / km² / month</small>')
+            const tipFooter = (text) => '<div class="tip-footer">' + text + '</div>'
+
+            const typeInfoHTML = (cell, resolution) => {
+                const value = cell[type.code]
+                if (value < minValue) return undefined
                 return (
-                    html +
-                    '<div class="tip-footer">' +
-                    resolution / 1000 +
-                    ' km grid' +
-                    (view === 'main' && hiddenGroups.size ? ' · Selected types only' : '') +
-                    '</div>'
+                    tipHeader(type.name, year) +
+                    tipValue(value) +
+                    '<div class="tip-unit">' +
+                    ((100 * value) / cell.total).toFixed(1) +
+                    '% of all ship activity in this cell</div>' +
+                    tipFooter(resolution / 1000 + ' km grid')
                 )
             }
+            const groupsInfoHTML = (cell, resolution) => {
+                const usesToggles = !!view.swatches
+                const total = usesToggles ? shownTotal(cell) : cell.total
+                if (total < minValue) return undefined
+                const list = groups.filter((g) => cell[g.code] > 0 && !(usesToggles && hiddenGroups.has(g)))
+                list.sort((a, b) => cell[b.code] - cell[a.code])
+                const bar = list.map(
+                    (g) =>
+                        '<span style="width:' + (100 * cell[g.code]) / total + '%;background:' + g.color + '"></span>'
+                )
+                const rows = view.tip
+                    ? view.tip.map((v) => tipRow(v.label, v.value(cell), v.color))
+                    : list.map((g) => tipRow(g.name, cell[g.code], g.color))
+                return (
+                    tipHeader('Ship activity', year) +
+                    tipValue(total) +
+                    (view.tip ? '' : '<div class="tip-bar">' + bar.join('') + '</div>') +
+                    rows.join('') +
+                    tipFooter(
+                        resolution / 1000 +
+                            ' km grid' +
+                            (usesToggles && hiddenGroups.size ? ' · Selected types only' : '')
+                    )
+                )
+            }
+            const cellInfoHTML = (cell, resolution) =>
+                view === views.type ? typeInfoHTML(cell, resolution) : groupsInfoHTML(cell, resolution)
             const changeInfoHTML = (cell, resolution) => {
-                const before = changeValue(cell, from)
-                const after = changeValue(cell, year)
-                if (Math.max(before, after) < 0.5) return undefined
-                const name = view === 'type' ? type.name : 'All ship types'
+                if (!changeShown(cell)) return undefined
+                const [a, b] = changeYears()
+                const before = changeValue(cell, a)
+                const after = changeValue(cell, b)
                 const change = before > 0 ? ((after - before) / before) * 100 : undefined
                 const changeText =
                     change === undefined
                         ? 'No baseline activity'
                         : (change > 0 ? '+' : '') + change.toLocaleString('en', { maximumFractionDigits: 1 }) + '%'
+                const shownYears = view.allYears ? trendYears : [a, b]
                 return (
-                    tipHeader(name, from + ' → ' + year) +
-                    '<div class="tip-total">' +
-                    changeText +
-                    '</div>' +
-                    tipRow(from, before) +
-                    tipRow(year, after) +
-                    '<div class="tip-footer">' +
-                    resolution / 1000 +
-                    ' km grid · Change in recorded activity</div>' +
-                    (from === year ? '<div class="tip-footer">The same year is selected for both periods.</div>' : '')
+                    tipHeader(changeType.name, a + ' → ' + b) +
+                    tipTotal(changeText) +
+                    shownYears.map((y) => tipRow(y, changeValue(cell, y))).join('') +
+                    tipFooter(resolution / 1000 + ' km grid · Change in recorded activity') +
+                    (a === b ? tipFooter('The same year is selected for both periods.') : '')
                 )
             }
+
+            // ---------- the layers ----------
 
             const layersOfYear = {}
             const yearsUsed = []
             const maxYearsKept = 3
-            const squaresStyles = [mainStyle, blendStyle, ...typeStyles]
-            const layerOfYear = (y, pies) => {
-                const layers = (layersOfYear[y] = layersOfYear[y] || { dataset: datasetOfYear(y) })
+            const layerOfYear = (y) => {
                 // a dataset keeps the cells of its last view: only the last years used are kept, so that going through all the years stays light
                 yearsUsed.splice(0, yearsUsed.length, y, ...yearsUsed.filter((u) => u !== y))
                 for (const old of yearsUsed.splice(maxYearsKept)) delete layersOfYear[old]
-                const key = pies ? 'pies' : 'squares'
-                if (!layers[key])
-                    layers[key] = new gridviz.GridLayer(layers.dataset, pies ? [pieStyle] : squaresStyles, {
-                        cellInfoHTML,
-                    })
-                return layers[key]
+                return (layersOfYear[y] =
+                    layersOfYear[y] || new gridviz.GridLayer(datasetOfYear(y), [], { cellInfoHTML }))
             }
-            const changeLayer = new gridviz.GridLayer(changeDataset, [changeStyle], { cellInfoHTML: changeInfoHTML })
-
-            // const backgroundLayer = new gridviz.BackgroundLayer({
-            //     ...gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', {
-            //         filterColor: () => '#000000c0',
-            //     }),
-            //     visible: () => element('basemap').checked,
-            // })
+            const changeLayer = new gridviz.GridLayer(changeDataset, [], { cellInfoHTML: changeInfoHTML })
+            const gridLayer = () => map.layers.find((layer) => layer.dataset instanceof ShipsDataset)
 
             // EMODnet WMTS capabilities: LAEA uses northing/easting axis order;
             // Gridviz uses easting/northing. Scale denominator * 0.00028 gives m/pixel.
@@ -1067,10 +1353,7 @@
                         return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
                     return 'https://tiles.emodnet-bathymetry.eu/2020/baselayer/laea/' + z + '/' + x + '/' + y + '.png'
                 },
-                visible: () =>
-                    element('basemap').checked &&
-                    element('bathymetry').checked &&
-                    +element('bathymetryOpacity').value > 0,
+                visible: () => element('bathymetry').checked && +element('bathymetryOpacity').value > 0,
                 alpha: () => +element('bathymetryOpacity').value / 100,
             })
             const labelLayer = new gridviz.LabelLayer({
@@ -1080,53 +1363,68 @@
 
             // ---------- the panel ----------
 
-            const element = (id) => document.getElementById(id)
+            function saveToURL() {
+                const url = new URL(window.location.href)
+                const { x, y, z } = map.geoCanvas.view
+                const settings = {
+                    x: x.toFixed(2),
+                    y: y.toFixed(2),
+                    z: z.toFixed(4),
+                    view: view.id,
+                    type: type.code,
+                    changeType: changeType.code,
+                    year,
+                    from,
+                    detail: view.detail.position,
+                    types: shownGroups()
+                        .map((g) => g.code)
+                        .join(','),
+                    panel: element('panel').classList.contains('collapsed') ? 'closed' : 'open',
+                    about: element('dataDetails').open ? '1' : '0',
+                    playing: yearTimer === null ? '0' : '1',
+                    placenames: element('placenames').checked ? '1' : '0',
+                    bathymetry: element('bathymetry').checked ? '1' : '0',
+                    bathymetryOpacity: element('bathymetryOpacity').value,
+                }
+                for (const [name, value] of Object.entries(settings)) url.searchParams.set(name, value)
+                // the settings of the former versions of this page, once they are read
+                for (const name of ['compare', 'squareDetail', 'pieDetail', 'basemap']) url.searchParams.delete(name)
+                window.history.replaceState(window.history.state, '', url)
+            }
 
             function updateLayerControls() {
-                element('bathymetry').disabled = !element('basemap').checked
-                element('bathymetryOpacity').disabled = !element('basemap').checked || !element('bathymetry').checked
+                element('bathymetryControls').hidden = !element('bathymetry').checked
                 element('bathymetryOpacityValue').textContent = element('bathymetryOpacity').value + '%'
-                for (const id of ['bathymetry', 'bathymetryOpacity'])
-                    element(id).labels[0]?.classList.toggle('disabled', element(id).disabled)
             }
 
             // The grid resolution slider sets minPixelsPerCell: its position goes from 0, the coarsest, to 100, the finest.
-            // Both ranges allow 1 km cells even at the maximum zoom of 8000 metres per pixel.
-            // Pies have their own coarser end and slider position.
-            // Start with detailed squares and pies; the tile budget protects large views.
-            const cellSizes = {
-                squares: { finest: 0.1, coarsest: 40, position: 70 },
-                pies: { finest: 0.1, coarsest: 120, position: 55 },
-            }
-            const cellSize = () => cellSizes[view === 'pies' ? 'pies' : 'squares']
             const minPixelsPerCell = () => {
-                const c = cellSize()
-                return c.coarsest * Math.pow(c.finest / c.coarsest, c.position / 100)
+                const { coarsest, finest, position } = view.detail
+                return coarsest * Math.pow(finest / coarsest, position / 100)
             }
 
             // the resolution shown at the current zoom: as MultiResolutionDataset chooses it
             function showResolution() {
-                const z = map.getZoom()
-                const layer = map.layers.find((layer) => layer.dataset instanceof ShipsDataset)
+                const layer = gridLayer()
                 if (!layer) return
-                const selected = layer.getDataset(z)
-                const requested = layer.dataset.requestedDataset(z, layer.minPixelsPerCell)
-                const r = layer.dataset.resolutions[layer.dataset.datasets.indexOf(selected)]
-                const requestedResolution = layer.dataset.resolutions[layer.dataset.datasets.indexOf(requested)]
+                const z = map.getZoom()
+                const resolutionOf = (dataset) => layer.dataset.resolutions[layer.dataset.datasets.indexOf(dataset)]
+                const r = resolutionOf(layer.getDataset(z))
+                const requested = resolutionOf(layer.dataset.requestedDataset(z, layer.minPixelsPerCell))
                 element('resolutionLabel').textContent = r / 1000 + ' km'
                 element('resolution').setAttribute('aria-valuetext', r / 1000 + ' kilometres')
                 const notice = element('resolutionNotice')
                 notice.textContent =
-                    r === requestedResolution
+                    r === requested
                         ? 'Zoom in to reveal finer grid detail.'
-                        : 'Zoom in for ' + requestedResolution / 1000 + ' km detail (view limit).'
+                        : 'Zoom in for ' + requested / 1000 + ' km detail (view limit).'
                 notice.title =
-                    r === requestedResolution
+                    r === requested
                         ? notice.textContent
                         : 'Showing ' +
                           r / 1000 +
                           ' km to keep this view responsive. Zoom in for ' +
-                          requestedResolution / 1000 +
+                          requested / 1000 +
                           ' km detail.'
             }
 
@@ -1137,13 +1435,33 @@
                 const button = element('togglePanel')
                 button.setAttribute('aria-expanded', String(!collapsed))
                 button.setAttribute('aria-label', collapsed ? 'Expand map controls' : 'Collapse map controls')
-                button.textContent = collapsed ? '+' : '\u2212'
+                button.textContent = collapsed ? '+' : '−'
             }
             element('togglePanel').addEventListener('click', () => {
                 setPanelCollapsed(!element('panel').classList.contains('collapsed'))
-                saveViewToURL()
+                saveToURL()
             })
-            element('dataDetails').addEventListener('toggle', () => saveViewToURL())
+            element('dataDetails').addEventListener('toggle', () => saveToURL())
+
+            // the buttons of the views
+            for (const section of viewSections) {
+                const title = document.createElement('div')
+                title.className = 'view-section'
+                title.textContent = section.title
+                element('viewOptions').append(title)
+                for (const [id, v] of Object.entries(section.views)) {
+                    const label = document.createElement('label')
+                    label.title = v.hint
+                    const input = document.createElement('input')
+                    input.type = 'radio'
+                    input.name = 'view'
+                    input.value = id
+                    const text = document.createElement('span')
+                    text.textContent = v.label
+                    label.append(input, text)
+                    element('viewOptions').append(label)
+                }
+            }
 
             for (const g of groups) {
                 const optgroup = document.createElement('optgroup')
@@ -1151,6 +1469,7 @@
                 for (const t of g.types) optgroup.append(new Option(t.name, t.code))
                 element('type').append(optgroup)
             }
+            for (const t of changeTypes) element('changeType').append(new Option(t.name, t.code))
             for (const y of years) element('from').append(new Option(y, y, y === from, y === from))
             for (const y of years) element('yearTicks').append(document.createElement('span'))
 
@@ -1172,7 +1491,7 @@
                         element('year').value = years[(index + 1) % years.length]
                         update()
                     }, 1800)
-                if (save) saveViewToURL()
+                if (save) saveToURL()
             }
             setYearPlayback(false, false)
             element('playYears').addEventListener('click', () => setYearPlayback(yearTimer === null))
@@ -1193,12 +1512,19 @@
                 all.indeterminate = hiddenGroups.size > 0 && hiddenGroups.size < groups.length
             }
 
+            // the styles which go through a dictionary of colours follow the types which are shown
+            function groupsChanged() {
+                pieStyle.color = fenceStyle.color = shownColors()
+                syncAllGroups()
+                map.redraw()
+                saveToURL()
+            }
+
             function drawKey() {
                 const key = element('key')
-                const keyTitle = element('keyTitle')
                 key.replaceChildren()
-                keyTitle.textContent = ''
-                if (comparing() || view === 'type') return
+                element('keyTitle').textContent = view.key || ''
+                if (!view.swatches) return
                 const row = (cells) => {
                     const tr = document.createElement('tr')
                     tr.append(...cells)
@@ -1210,13 +1536,6 @@
                     if (color) c.style.background = color
                     return c
                 }
-                if (view === 'pies') {
-                    keyTitle.textContent =
-                        'Each slice shows a type’s share. Larger pies mean more activity (logarithmic scale).'
-                    for (const g of groups) key.append(row([cell('td', undefined, g.color), cell('th', g.name)]))
-                    return
-                }
-                keyTitle.textContent = 'Colour shows the main type; brighter means more activity. Toggle types below.'
                 const allLabel = document.createElement('label')
                 const allInput = document.createElement('input')
                 allInput.type = 'checkbox'
@@ -1224,7 +1543,8 @@
                 allLabel.append(allInput, 'All')
                 const allCell = cell('th')
                 allCell.append(allLabel)
-                key.append(row([allCell, ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))]))
+                const header = view.levels ? levels.map((l, i) => cell('th', i ? l : '<' + levels[1])) : []
+                key.append(row([allCell, ...header]))
                 syncAllGroups()
                 for (const g of groups) {
                     const label = document.createElement('label')
@@ -1235,48 +1555,55 @@
                     label.append(input, g.name)
                     const name = cell('th')
                     name.append(label)
-                    const tr = row([name, ...levels.map((_, l) => cell('td', undefined, levelColor(g, l)))])
+                    const tr = row([name, ...view.swatches(g).map((color) => cell('td', undefined, color))])
                     tr.classList.toggle('off', hiddenGroups.has(g))
                     key.append(tr)
                 }
             }
 
             function update() {
-                view = document.querySelector('input[name=view]:checked').value
+                view = views[document.querySelector('input[name=view]:checked').value]
                 type = types.find((t) => t.code === element('type').value)
+                changeType = changeTypes.find((t) => t.code === element('changeType').value)
                 year = +element('year').value
                 from = +element('from').value
-                compare = element('compare').checked
 
-                const canCompare = view === 'main' || view === 'blend' || (view === 'type' && typesWithChange.includes(type.code))
-                element('typePicker').hidden = view !== 'type'
-                element('compare').disabled = !canCompare
-                element('from').disabled = !canCompare
-                element('compareLabel').classList.toggle('disabled', !canCompare)
+                element('typePicker').hidden = view !== views.type
+                element('changeTypePicker').hidden = !view.change
+                element('sinceLabel').hidden = !view.since
+                element('yearControls').hidden = !!view.allYears
+                if (view.allYears) setYearPlayback(false, false)
 
-                element('yearLabel').textContent = comparing() ? from + ' → ' + year : year
-                const notes = []
-                if (compare && view === 'type' && !canCompare)
-                    notes.push('The change is for all types, or for cargo, tanker, fishing and passenger.')
-                if (year === 2024 || (comparing() && from === 2024))
-                    notes.push('2024 is not as dense: the source lost satellite data from June.')
-                element('note').textContent = notes.join(' ')
+                const [before, after] = changeYears()
+                const traffic = changeType.code === 'a' ? 'Traffic' : changeType.name + ' traffic'
+                for (const legend of changeLegends)
+                    legend.title = traffic + ' in ' + after + ', compared with ' + before
+                thenNowLegend.items[0].label = '' + from
+                thenNowLegend.items[1].label = '' + year
+                trendStyle.ts = trendYears.map((y) => trendColumn(changeType.code, y))
 
-                element('resolution').value = cellSize().position
-                const layer = comparing() ? changeLayer : layerOfYear(year, view === 'pies')
+                element('yearLabel').textContent = view.change ? changeYears().join(' → ') : year
+                element('note').textContent =
+                    !view.allYears && (year === 2024 || (view.since && from === 2024))
+                        ? '2024 is not as dense: the source lost satellite data from June.'
+                        : ''
+
+                element('resolution').value = view.detail.position
+                const layer = view.change ? changeLayer : layerOfYear(year)
+                layer.styles = view.styles()
                 layer.minPixelsPerCell = minPixelsPerCell()
                 map.layers = [bathymetryLayer, layer, labelLayer]
                 showResolution()
                 drawKey()
                 map.redraw()
-                saveViewToURL()
+                saveToURL()
             }
 
             element('panel').addEventListener('input', (e) => {
-                if (['basemap', 'placenames', 'bathymetry', 'bathymetryOpacity'].includes(e.target.id)) {
+                if (['placenames', 'bathymetry', 'bathymetryOpacity'].includes(e.target.id)) {
                     updateLayerControls()
                     map.redraw()
-                    saveViewToURL()
+                    saveToURL()
                     return
                 }
                 if (e.target.id === 'allGroups') {
@@ -1286,9 +1613,7 @@
                         input.checked = e.target.checked
                         input.closest('tr').classList.toggle('off', !input.checked)
                     }
-                    syncAllGroups()
-                    map.redraw()
-                    saveViewToURL()
+                    groupsChanged()
                     return
                 }
                 // a type of the key: only its row and the map change, so that the checkbox stays in place, and keeps the focus
@@ -1297,60 +1622,61 @@
                     if (e.target.checked) hiddenGroups.delete(g)
                     else hiddenGroups.add(g)
                     e.target.closest('tr').classList.toggle('off', !e.target.checked)
-                    syncAllGroups()
-                    map.redraw()
-                    saveViewToURL()
+                    groupsChanged()
                     return
                 }
                 if (e.target.id === 'resolution') {
                     // Keep the native range drag active: do not rewrite its value or rebuild
                     // the panel and layers on every pointer movement.
-                    cellSize().position = +e.target.value
-                    const layer = map.layers.find((layer) => layer.dataset instanceof ShipsDataset)
-                    layer.minPixelsPerCell = minPixelsPerCell()
+                    view.detail.position = +e.target.value
+                    gridLayer().minPixelsPerCell = minPixelsPerCell()
                     showResolution()
                     map.redraw()
-                    saveViewToURL()
+                    saveToURL()
                     return
                 }
                 update()
             })
-            // Restore controls before the first draw, including each style's saved slider position.
-            const savedView = viewParams.get('view')
-            for (const radio of document.querySelectorAll('input[name=view]'))
-                if (radio.value === savedView) radio.checked = true
-            const savedType = viewParams.get('type')
+
+            // Restore the controls before the first draw. In former links, the change was a checkbox beside the view.
+            const savedType = params.get('type')
+            const typeHasChange = changeTypes.some((t) => t.code === savedType)
             if (types.some((t) => t.code === savedType)) element('type').value = savedType
+            let savedView = params.get('view')
+            if (params.get('compare') === '1' && savedView !== 'pies') {
+                if (savedView === 'type' && typeHasChange) element('changeType').value = savedType
+                if (savedView !== 'type' || typeHasChange) savedView = 'change'
+            }
+            const savedChangeType = params.get('changeType')
+            if (changeTypes.some((t) => t.code === savedChangeType)) element('changeType').value = savedChangeType
+            if (!views[savedView]) savedView = 'main'
+            document.querySelector('input[name=view][value=' + savedView + ']').checked = true
             for (const [id, fallback] of [
                 ['year', year],
                 ['from', from],
             ]) {
-                const saved = viewParam(id, fallback)
+                const saved = numberParam(id, fallback)
                 if (years.includes(saved)) element(id).value = saved
             }
-            element('compare').checked = viewParams.get('compare') === '1'
-            for (const [name, setting] of [
-                ['squareDetail', cellSizes.squares],
-                ['pieDetail', cellSizes.pies],
-            ]) {
-                const saved = viewParam(name, setting.position)
-                if (Number.isInteger(saved) && saved >= 0 && saved <= 100) setting.position = saved
-            }
-            if (viewParams.has('types')) {
-                const savedGroups = viewParams.get('types').split(',')
-                if (viewParams.get('types') === '' || groups.some((g) => savedGroups.includes(g.code)))
+            const savedDetail = numberParam('detail', -1)
+            if (Number.isInteger(savedDetail) && savedDetail >= 0 && savedDetail <= 100)
+                views[savedView].detail.position = savedDetail
+            if (params.has('types')) {
+                const savedGroups = params.get('types').split(',')
+                if (params.get('types') === '' || groups.some((g) => savedGroups.includes(g.code)))
                     for (const g of groups) if (!savedGroups.includes(g.code)) hiddenGroups.add(g)
+                pieStyle.color = fenceStyle.color = shownColors()
             }
-            setPanelCollapsed(viewParams.get('panel') === 'closed')
-            element('dataDetails').open = viewParams.get('about') === '1'
-            for (const id of ['basemap', 'placenames']) element(id).checked = viewParams.get(id) !== '0'
-            element('bathymetry').checked = viewParams.get('bathymetry') === '1'
-            const savedOpacity = viewParam('bathymetryOpacity', 35)
+            setPanelCollapsed(params.get('panel') === 'closed')
+            element('dataDetails').open = params.get('about') === '1'
+            element('placenames').checked = params.get('placenames') !== '0'
+            element('bathymetry').checked = params.get('bathymetry') === '1'
+            const savedOpacity = numberParam('bathymetryOpacity', 35)
             if (Number.isInteger(savedOpacity) && savedOpacity >= 0 && savedOpacity <= 100)
                 element('bathymetryOpacity').value = savedOpacity
             updateLayerControls()
             update()
-            if (viewParams.get('playing') === '1') setYearPlayback(true)
+            if (params.get('playing') === '1') setYearPlayback(true)
         </script>
     </body>
 </html>
