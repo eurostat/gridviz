@@ -2,6 +2,14 @@
 
 ## Version 3
 
+### Version 3.5.0 (since 3.4.0)
+
+-   New, opt-in: the _maxCells_ option of _MultiResolutionDataset_ limits what a view can load from a tiled dataset, by going to a coarser resolution before anything is downloaded, with _getRequestedDataset()_ for the resolution the zoom asks for. See the reference, [Datasets](reference.md#datasets).
+-   New, opt-in: the _blendMode_ option of _VennLegend_, for a map whose colours do not mix by multiplication, on a dark background for example.
+-   New, opt-in: the _exactDotNumber_ option of _DotDensityStyle_, for _dotNumber_ dots exactly instead of one more, and the _filter_, _heightClass_ and _tanaka_ options of _LegoStyle.getCategory_, for bricks whose colour is a category and whose height is another variable.
+-   Fix: _TimeSeriesStyle_ took a value of the number 0 as no data, which broke the line (the text `'0'` of a CSV file was not affected).
+-   Examples: the ships demo has 14 views of its data, and uses both of these.
+
 ### Version 3.4.0 (since 3.3.0)
 
 -   Faster _GPUGridRenderer_ during a movement: tiles are built a little on each frame, view scales are worked out from a sample, and a frame only draws when a tile is finished. A resolution a zoom only passes through gets no tile requests. On a slowed laptop profile, in the most demanding test of a layer of circles: 38 to 63 frames per second.

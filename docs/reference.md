@@ -208,7 +208,7 @@ For better efficiency, it is recommended to use multi-resolution tiled parquet d
 | `JSGrid`                 | `new gridviz.JSGrid(resolution, cells, opts)`                     | The cells, as an array of JavaScript objects with a `x` and a `y` property. Option: `mixedResolution`.                                                      |
 | `CSVGrid`                | `new gridviz.CSVGrid(map, url, resolution, opts)`                 | A CSV file with a `x` and a `y` column, and the values of the cells. Options: `preprocess`, `delimiter`.                                                    |
 | `TiledGrid`              | `new gridviz.TiledGrid(map, url, opts)`                           | A folder of CSV tiles, in the [tiled grid format](tiledformat.md). Options: `preprocess`, `onlyDrawWhenAllTilesReady`.                                      |
-| `MultiResolutionDataset` | `new gridviz.MultiResolutionDataset(resolutions, datasets, opts)` | Several datasets, one for each resolution: `datasets` is an array of datasets, or a function which makes the dataset of a resolution. Option: `preprocess`. |
+| `MultiResolutionDataset` | `new gridviz.MultiResolutionDataset(resolutions, datasets, opts)` | Several datasets, one for each resolution: `datasets` is an array of datasets, or a function which makes the dataset of a resolution. Options: `preprocess`, `maxCells`. |
 
 ```javascript
 const dataset = new gridviz.MultiResolutionDataset(
@@ -227,6 +227,7 @@ const dataset = new gridviz.MultiResolutionDataset(
 -   `mixedResolution` is a function of a cell which returns its own resolution, for a grid whose cells do not all have the same size (see [mixed resolution grids](#mixed-resolution-grids)). It is an option of every dataset class.
 -   `preprocess` is called once for each cell, when it is loaded. It can change the cell (to convert or compute values), and it removes the cell by returning `false`.
 -   A layer with a multi-resolution dataset shows the finest resolution whose cells are at least `minPixelsPerCell` pixels wide at the current zoom (see [GridLayer](#gridlayer)).
+-   The zoom alone does not say how much a view will load: a fine resolution on a large view can ask for more tiles than a browser tab can hold. The option `maxCells` of `MultiResolutionDataset` limits this: when the tiles of the view could hold more cells than `maxCells`, the next coarser resolution within the limit is shown. It is a number, or a function of the resolution. It is counted before anything is downloaded, as if the tiles were full, so a grid with empty parts holds far fewer cells than the limit (about 6% in one case over sea): choose it from what your styles can draw. Datasets which are not tiled are not limited, and there is no limit by default. `getRequestedDataset(z, minPixelsPerCell)` gives the dataset the zoom asks for without the limit, to tell the reader that a finer resolution is there.
 -   With the option `worker: true`, `TiledGrid` fetches and parses its CSV tiles in a web worker, so that a map being panned does not stand still while a tile is read. The cells are the same as without it. It falls back on the main thread where workers cannot run. Its requests do not go through a wrapper of `window.fetch`: `TiledGrid.onTileRequest = (dataset, xT, yT) => done` tells of them, and `done` (optional) is called when the tile has come in.
 -   A tile which could not be loaded is not asked for again at each redraw: never when it does not exist (404), and again after `TiledGrid.retryFailedAfterMs` milliseconds (30000 by default) for any other failure. With `onlyDrawWhenAllTilesReady: true`, the map is drawn only when all the tiles of the view are there.
 -   Parquet tiles are supported by the [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/), with `TiledParquetGrid`.
@@ -577,7 +578,7 @@ This style shows the stroke of each cell with different colors, widths, shapes a
 
 ### Dot density style
 
-Class: `gridviz.DotDensityStyle`. Options: `dotNumber`, `color`, `dotSize`, `sigma`, plus the options common to all the styles.
+Class: `gridviz.DotDensityStyle`. Options: `dotNumber`, `exactDotNumber`, `color`, `dotSize`, `sigma`, plus the options common to all the styles. By default a cell has one dot more than `dotNumber`, so every cell has at least one. With `exactDotNumber: true` it has `dotNumber` dots, none for 0, and a number with decimals is rounded at random so that small numbers stay right on average.
 
 [![dot density style](img/styles/dotdensity.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html)
 [![dot density style](img/styles/dotdensity_random.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity_random.html)
@@ -794,7 +795,7 @@ The breaks are fixed: unlike with `tFun`, the minimum and maximum are not taken 
 
 ### Lego category style
 
-Class: `gridviz.LegoStyle`, with `gridviz.LegoStyle.getCategory(code, color, opts)`: `code` is a function of a cell which returns its category and `color` the color of each category.
+Class: `gridviz.LegoStyle`, with `gridviz.LegoStyle.getCategory(code, color, opts)`: `code` is a function of a cell which returns its category and `color` the color of each category. Options: `colDark`, `colBright`, `filter`, and `heightClass`, a function of a cell returning the height of its bricks as a whole number, for a second variable: shaded steps are drawn between different heights, and `tanaka` gives more options for them (see the [Tanaka style](#tanaka-style)).
 
 [![lego style](img/styles/lego_category.png)](https://eurostat.github.io/gridviz/examples/styles/lego_category.html)
 
@@ -1274,6 +1275,7 @@ styles[0].legends = [
 | `items`   | array of `{label, color}` | -                       | The two or three variables. The label is written beside the circle (on the left, on the right and below, for the first, second and third one). The color is the one the style which draws the variable uses. Required. |
 | `radius`  | number                    | `45`                    | The radius of the circles, in pixels.                                                                                                                                                                                  |
 | `opacity` | number                    | `1`                     | The opacity of the circles, within [0,1].                                                                                                                                                                              |
+| `blendMode` | string                  | `'multiply'`            | How the circles mix, as a CSS `mix-blend-mode`. It should match the `blendOperation` of the styles: `'multiply'` on a light map, `'plus-lighter'` (for `'lighter'`) or `'screen'` on a dark one, where multiplying gives black. |
 | `styles`  | array of styles           | the styles of the layer | The styles which are highlighted when the diagram is hovered, which should be the ones which draw the variables.                                                                                                       |
 
 The common options of the legends (`title`, `labelFontSize`, `titleFontSize`, `padding`, `className`, `interactive`...) can be used too.

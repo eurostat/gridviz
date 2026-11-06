@@ -59,3 +59,13 @@ test('every style gives the cells of the view to its legends, so that a legend m
     assert.ok(styles >= 15, 'the styles with legends were found: ' + styles)
     assert.deepEqual(missing, [])
 })
+
+test('a Venn legend multiplies its circles by default, and can mix them otherwise', async () => {
+    const { VennLegend } = await import('../src/legend/VennLegend.js')
+    const items = [
+        { label: 'a', color: 'red' },
+        { label: 'b', color: 'blue' },
+    ]
+    assert.equal(new VennLegend({ items }).blendMode, 'multiply')
+    assert.equal(new VennLegend({ items, blendMode: 'plus-lighter' }).blendMode, 'plus-lighter')
+})

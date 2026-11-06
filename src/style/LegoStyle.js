@@ -9,7 +9,6 @@ import { Style } from '../core/Style.js'
 import { classifier as clFun, colorClassifier as cclFun } from '../utils/scale.js'
 import { SideTanakaStyle } from './SideTanakaStyle.js'
 
-
 /**
  * @module style
  * @author Julien Gaffuri
@@ -40,7 +39,7 @@ export class LegoStyle {
 
         //make classifier
         const classifier = clFun(breaks)
-        const classifier2 = cell => classifier(value(cell))
+        const classifier2 = (cell) => classifier(value(cell))
         //make colors table
         const colorsDict = {}
         for (let i = 0; i < colors.length; i++) colorsDict[i + ''] = colors[i]
@@ -77,8 +76,10 @@ export class LegoStyle {
     /**
      * @param {function(import('../core/Dataset.js').Cell):string} code
      * @param {object} color
-     * @param {object} opts
-     * @returns {Array.<Style>}
+     * @param {{colDark?:string, colBright?:string, filter?:function(import('../core/Dataset.js').Cell):boolean, heightClass?:function(import('../core/Dataset.js').Cell):number, tanaka?:object}} opts
+     * filter: the cells to show. heightClass: a function returning the height of the bricks of a cell, as a whole number: shaded steps are drawn between different heights.
+     * tanaka: more options for these steps (see SideTanakaStyle).
+     * @returns {Array.<Style>} The styles of the fill, of the outlines, of the steps if there is a heightClass, and of the studs.
      */
     static getCategory(code, color, opts) {
         opts = opts || {}
@@ -87,11 +88,21 @@ export class LegoStyle {
         opts.colBright = opts.colBright || '#aaa'
 
         //
-        const s = new SquareColorCategoryWebGLStyle({ code: code, color: color })
+        const filter = opts.filter
+        const s = new SquareColorCategoryWebGLStyle({ code: code, color: color, filter: filter })
         //style to show limits between pieces
-        const sst = new StrokeStyle({ strokeColor: () => '#666', strokeWidth: (c, r, z) => 0.2 * z })
+        const sst = new StrokeStyle({ strokeColor: () => '#666', strokeWidth: (c, r, z) => 0.2 * z, filter: filter })
+        const top = new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright, filter: filter })
 
-        return [s, sst, new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
+        if (!opts.heightClass) return [s, sst, top]
+        const steps = new SideTanakaStyle({
+            colorDark: opts.colDark,
+            colorBright: opts.colBright,
+            ...opts.tanaka,
+            classifier: () => opts.heightClass,
+            filter: filter,
+        })
+        return [s, sst, steps, top]
     }
 }
 

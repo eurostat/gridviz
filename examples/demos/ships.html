@@ -363,10 +363,6 @@
                 border-radius: 12px !important;
                 max-width: calc(100vw - 30px);
             }
-            /* the map adds the light of the circles: the Venn diagrams have to show the same mix */
-            #gridviz-legend .gridviz-legend--venn circle {
-                mix-blend-mode: plus-lighter !important;
-            }
             #gridviz-legend:empty {
                 display: none;
             }
@@ -723,36 +719,15 @@
             const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
             const changeResolutions = resolutions.slice(1)
 
-            // The tile cache limit excludes recently used and visible tiles. Bound the entire
-            // requested tile area before downloading, including cells outside the viewport.
+            // Some views ask for bigger cells when zoomed in.
             class ShipsDataset extends gridviz.MultiResolutionDataset {
-                requestedDataset(z, minPixelsPerCell) {
-                    return super.getDataset(z, minPixelsPerCell * (view.zoomInFactor ? view.zoomInFactor(z) : 1))
-                }
-
-                getDataset(z, minPixelsPerCell) {
-                    const requested = this.requestedDataset(z, minPixelsPerCell)
-                    const extent = map.geoCanvas.extGeo
-                    if (!extent) return this.datasets[this.datasets.length - 1]
-                    for (let i = this.datasets.indexOf(requested); i < this.datasets.length; i++) {
-                        const dataset = this.datasets[i]
-                        if (!dataset.info) continue
-                        const tiles = dataset.getTilingEnvelope(extent)
-                        const bounds = dataset.info.tilingBounds
-                        const width = Math.max(
-                            0,
-                            Math.min(tiles.xMax, bounds.xMax) - Math.max(tiles.xMin, bounds.xMin) + 1
-                        )
-                        const height = Math.max(
-                            0,
-                            Math.min(tiles.yMax, bounds.yMax) - Math.max(tiles.yMin, bounds.yMin) + 1
-                        )
-                        if (width * height * dataset.info.tileSizeCell ** 2 <= view.detail.budget(this.resolutions[i]))
-                            return dataset
-                    }
-                    return this.datasets[this.datasets.length - 1]
+                getRequestedDataset(z, minPixelsPerCell) {
+                    const factor = view.zoomInFactor ? view.zoomInFactor(z) : 1
+                    return super.getRequestedDataset(z, minPixelsPerCell * factor)
                 }
             }
+            // The tile cache limit excludes recently used and visible tiles: the limit applies to all the tiles of the view.
+            const maxCells = (resolution) => view.detail.budget(resolution)
 
             const datasetOfYear = (y) =>
                 new ShipsDataset(
@@ -771,7 +746,8 @@
                                     cell[g.code] = sum
                                 }
                             },
-                        })
+                        }),
+                    { maxCells }
                 )
 
             // the sparklines show how a cell moves around its own level, whatever this level is
@@ -794,7 +770,8 @@
                                     )
                             }
                         },
-                    })
+                    }),
+                { maxCells }
             )
 
             // ---------- what a cell shows ----------
@@ -873,7 +850,12 @@
                     })
             )
             vennStyles[0].legends = [
-                new gridviz.VennLegend({ title: 'Ships in each cell', items: vennGroups, radius: 34 }),
+                new gridviz.VennLegend({
+                    title: 'Ships in each cell',
+                    items: vennGroups,
+                    radius: 34,
+                    blendMode: 'plus-lighter',
+                }),
             ]
 
             // ---------- the pies: the share of each group as the angle, the traffic as the size ----------
@@ -921,11 +903,11 @@
                         visible: () => !hiddenGroups.has(g),
                         filter: (cell) => cell[g.code] > 0 && isShown(cell),
                         color: () => g.color,
-                        // the style draws one dot more than asked for. Rounding at random keeps the shares of the small groups right.
+                        // exact, so that the small groups keep their share
+                        exactDotNumber: true,
                         dotNumber: (cell, resolution, z) => {
                             const total = shownTotal(cell)
-                            const n = (0.6 * (resolution / z) ** 2 * log(total) * cell[g.code]) / total
-                            return Math.floor(n) + (Math.random() < n % 1 ? 1 : 0) - 1
+                            return (0.6 * (resolution / z) ** 2 * log(total) * cell[g.code]) / total
                         },
                         dotSize: (resolution, z) => 1.4 * z,
                         sigma: (resolution) => resolution * 0.45,
@@ -935,20 +917,23 @@
             // ---------- lego: the main type as the colour of the bricks, the traffic as the height of their steps ----------
 
             const legoStyles = (() => {
-                const [fill, outline, studs] = gridviz.LegoStyle.getCategory(
+                const styles = gridviz.LegoStyle.getCategory(
                     (cell) => mainGroup(cell).code,
                     Object.fromEntries(groups.map((g) => [g.code, g.color])),
-                    { colDark: '#00000055', colBright: '#ffffff66' }
+                    {
+                        colDark: '#00000055',
+                        colBright: '#ffffff66',
+                        filter: isShown,
+                        heightClass: (cell) => 1 + levelOf(shownTotal(cell)),
+                        tanaka: {
+                            colorDark: '#000000b0',
+                            colorBright: '#ffffffa0',
+                            width: (side, step, resolution, z) => Math.min(resolution / 5, Math.abs(step) * 1.2 * z),
+                        },
+                    }
                 )
+                const [, outline, , studs] = styles
                 outline.strokeColor = () => '#00000033'
-                const steps = new gridviz.SideTanakaStyle({
-                    classifier: () => (cell) => 1 + levelOf(shownTotal(cell)),
-                    colorDark: '#000000b0',
-                    colorBright: '#ffffffa0',
-                    width: (side, step, resolution, z) => Math.min(resolution / 5, Math.abs(step) * 1.2 * z),
-                })
-                const styles = [fill, outline, steps, studs]
-                for (const s of styles) s.filter = isShown
                 // too small to be told apart from a certain zoom: then the colours and the steps do the work
                 const bigBricks = (z) => gridLayer().getDataset(z).getResolution() / z >= 6
                 outline.visible = studs.visible = bigBricks
@@ -1070,14 +1055,13 @@
                 title: 'Traffic of each year',
                 items: thenNowColors.map((color) => ({ label: '', color })),
                 radius: 34,
+                blendMode: 'plus-lighter',
             })
             thenNowStyles[0].legends = [thenNowLegend]
 
             // Trends: a line for each cell over the years, around its own level.
             const trendStyle = new gridviz.TimeSeriesStyle({
                 filter: changeShown,
-                // the default takes a value of 0 as no data
-                noData: (v) => v === undefined,
                 offsetX: (cell, resolution) => resolution * 0.08,
                 width: (cell, resolution) => resolution * 0.84,
                 height: (cell, resolution) => resolution * 0.8,
@@ -1410,7 +1394,7 @@
                 const z = map.getZoom()
                 const resolutionOf = (dataset) => layer.dataset.resolutions[layer.dataset.datasets.indexOf(dataset)]
                 const r = resolutionOf(layer.getDataset(z))
-                const requested = resolutionOf(layer.dataset.requestedDataset(z, layer.minPixelsPerCell))
+                const requested = resolutionOf(layer.dataset.getRequestedDataset(z, layer.minPixelsPerCell))
                 element('resolutionLabel').textContent = r / 1000 + ' km'
                 element('resolution').setAttribute('aria-valuetext', r / 1000 + ' kilometres')
                 const notice = element('resolutionNotice')

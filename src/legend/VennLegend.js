@@ -5,7 +5,7 @@ import { Legend } from '../core/Legend.js'
 
 /**
  * A legend for the colors of a map which shows two or three variables as overlapping layers, one color for each,
- * blended by multiplication. It is a Venn diagram: a circle for each variable, in its color, and the colors of the overlaps are the mix of the colors
+ * blended by multiplication by default (blendMode for another mix, on a dark map for example). It is a Venn diagram: a circle for each variable, in its color, and the colors of the overlaps are the mix of the colors
  * of the circles.
  *
  * It is interactive, like the other legends: when the pointer is over a part of the diagram, only the cells drawn in the color(s) of the circles
@@ -36,6 +36,7 @@ export class VennLegend extends Legend {
      * @param {Array.<{label:string, color:string}>} opts.items The two or three variables: the label shown beside its circle, and its color. The color should be the one the style which draws the variable uses (it is matched with it to highlight the cells).
      * @param {number} [opts.radius] The radius of the circles, in pixels. Default: 45.
      * @param {number} [opts.opacity] The opacity of the circles, within [0,1]. Default: 1.
+     * @param {string} [opts.blendMode] How the circles mix, as a CSS mix-blend-mode. It should match the blend operation of the map: 'multiply' on a light map, 'plus-lighter' (for 'lighter') or 'screen' on a dark one. Default: 'multiply'.
      * @param {Array.<import('../core/Style.js').Style>} [opts.styles] The styles to highlight, which draw the variables. Default: all the styles of the layer of the legend.
      */
     constructor(opts) {
@@ -55,6 +56,10 @@ export class VennLegend extends Legend {
         /** The opacity of the circles.
          * @type {number} */
         this.opacity = opts.opacity === undefined ? 1 : opts.opacity
+
+        /** How the circles mix, as a CSS mix-blend-mode.
+         * @type {string} */
+        this.blendMode = opts.blendMode || 'multiply'
 
         /**
          * The styles to highlight, if not the ones of the layer.
@@ -145,7 +150,7 @@ export class VennLegend extends Legend {
                 .attr('r', R)
                 .style('fill', item.color)
                 .style('fill-opacity', this.opacity)
-                .style('mix-blend-mode', 'multiply')
+                .style('mix-blend-mode', this.blendMode)
                 .style('transition', 'opacity 0.1s')
         )
 

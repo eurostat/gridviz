@@ -22,6 +22,11 @@ export class DotDensityStyle extends Style {
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
         this.dotNumber = opts.dotNumber || ((cell, resolution) => resolution / 100) //(c,r,z,vs) => {}
 
+        /** False by default: for the maps made with it, a cell has one dot more than dotNumber, and any cell has at least one.
+         * True for dotNumber dots exactly, none for 0. A number with decimals is rounded at random, so that small numbers stay right on average.
+         * @type {boolean} */
+        this.exactDotNumber = opts.exactDotNumber || false
+
         /** The color of the dots. Same color for all dots within a cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.color = opts.color || (() => '#FF5733') //(c,r,z,vs) => {}
@@ -61,6 +66,12 @@ export class DotDensityStyle extends Style {
 
         const ctx = geoCanvas.offscreenCtx
 
+        //the last index of the dots of a cell: the loops below go from 0 to it, included
+        const lastDot = (cell) => {
+            const n = this.dotNumber(cell, resolution, z, viewScale)
+            return this.exactDotNumber ? Math.floor(n) + (Math.random() < n % 1 ? 1 : 0) - 1 : n
+        }
+
         if (checkWebGLSupport()) {
             //the shared webgl canvas (one context for all styles, instead of a new one per draw)
             const cvWGL = getSharedWebGLCanvas(geoCanvas.w, geoCanvas.h)
@@ -84,7 +95,7 @@ export class DotDensityStyle extends Style {
                 if (!col || col === 'none') continue
 
                 //number of dots
-                const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
+                const dotNumber = lastDot(cell)
 
                 //get offset
                 const offset = this.offset(cell, resolution, z)
@@ -117,7 +128,7 @@ export class DotDensityStyle extends Style {
                 ctx.fillStyle = col
 
                 //number of dots
-                const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
+                const dotNumber = lastDot(cell)
 
                 //get offset
                 const offset = this.offset(cell, resolution, z)
