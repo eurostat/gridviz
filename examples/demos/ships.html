@@ -32,7 +32,7 @@
                 width: 336px;
                 max-height: calc(100% - 40px);
                 overflow: auto;
-                padding: 20px;
+                padding: 18px;
                 border: 1px solid var(--line);
                 border-radius: 18px;
                 background: #171e2bf5;
@@ -80,14 +80,14 @@
                 display: none;
             }
             #panel fieldset {
-                margin: 0 0 18px;
+                margin: 0 0 14px;
                 padding: 0;
                 border: 0;
                 min-width: 0;
             }
             #panel legend {
                 width: 100%;
-                margin-bottom: 8px;
+                margin-bottom: 6px;
                 padding: 0;
                 color: var(--muted);
                 font-size: 11px;
@@ -231,7 +231,7 @@
                 display: flex;
                 align-items: center;
                 gap: 4px;
-                margin-top: 12px;
+                margin-top: 8px;
             }
             #compareLabel select {
                 margin-left: auto;
@@ -251,15 +251,52 @@
                 color: #f0cb88;
                 font-size: 11px;
             }
-            #resolutionNotice {
-                margin: 8px 0 0;
+            #panel #resolutionNotice {
+                margin: 4px 0 0;
                 color: var(--muted);
                 font-size: 11px;
-                height: 4.5em;
-                overflow: auto;
+                height: 1.5em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .layer-toggles {
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+            }
+            .layer-toggles label {
+                display: flex;
+                align-items: center;
+                min-height: 28px;
+                cursor: pointer;
+            }
+            .opacity-label {
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                color: var(--muted);
+                font-size: 11px;
+            }
+            .bathymetry-controls {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                margin-top: 4px;
+            }
+            .bathymetry-controls > label:first-child {
+                display: flex;
+                align-items: center;
+                min-height: 28px;
+                cursor: pointer;
+            }
+            #bathymetryOpacityValue {
+                color: var(--accent);
+                font-variant-numeric: tabular-nums;
             }
             #keyTitle {
-                padding-top: 15px;
+                padding-top: 12px;
                 border-top: 1px solid var(--line);
                 color: var(--muted);
                 font-size: 11px;
@@ -269,10 +306,10 @@
             }
             #key {
                 width: 100%;
-                margin-top: 10px;
+                margin-top: 6px;
                 font-size: 11px;
                 line-height: 1.4;
-                border-spacing: 2px 5px;
+                border-spacing: 2px 3px;
             }
             #key:empty {
                 display: none;
@@ -521,6 +558,30 @@
                     <div id="resolutionScale" class="scale"><span>Coarser</span><span>Finer</span></div>
                     <p id="resolutionNotice" role="status">Zoom in to reveal finer grid detail.</p>
                 </fieldset>
+                <fieldset>
+                    <legend>Map layers</legend>
+                    <div class="layer-toggles">
+                        <label style="display: none"
+                            ><input id="basemap" type="checkbox" style="display: none" checked /> Basemap</label
+                        >
+                        <label><input id="placenames" type="checkbox" checked /> Place names</label>
+                    </div>
+                    <div class="bathymetry-controls">
+                        <label><input id="bathymetry" type="checkbox" /> Bathymetry</label>
+                        <label class="opacity-label" for="bathymetryOpacity"
+                            >Opacity <span id="bathymetryOpacityValue">35%</span></label
+                        >
+                    </div>
+                    <input
+                        id="bathymetryOpacity"
+                        aria-label="Bathymetry opacity"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value="35"
+                    />
+                </fieldset>
                 <div id="keyTitle"></div>
                 <table id="key"></table>
                 <details id="dataDetails">
@@ -542,6 +603,12 @@
                         <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer"
                             >CC BY 4.0</a
                         >. Squares under 0.1 h are left out, and the coarser squares are aggregated from those of 1 km.
+                    </p>
+                    <p>
+                        Bathymetry:
+                        <a href="https://tiles.emodnet-bathymetry.eu/" target="_blank" rel="noopener noreferrer"
+                            >EMODnet Bathymetry</a
+                        >, world base layer (2020), incorporating EMODnet and GEBCO data.
                     </p>
                 </details>
                 <div class="map-hint">Drag to explore &middot; Scroll to zoom &middot; Hover to inspect</div>
@@ -652,17 +719,20 @@
                 url.searchParams.set('panel', element('panel').classList.contains('collapsed') ? 'closed' : 'open')
                 url.searchParams.set('about', element('dataDetails').open ? '1' : '0')
                 url.searchParams.set('playing', yearTimer === null ? '0' : '1')
+                for (const id of ['basemap', 'placenames', 'bathymetry'])
+                    url.searchParams.set(id, element(id).checked ? '1' : '0')
+                url.searchParams.set('bathymetryOpacity', element('bathymetryOpacity').value)
                 window.history.replaceState(window.history.state, '', url)
             }
 
             const map = new gridviz.Map(document.getElementById('map'), {
-                x: viewParam('x', 3900000),
+                x: viewParam('x', 3849990.40),
                 // Start farther north on narrow screens.
-                y: viewParam('y', window.innerWidth < 600 ? 3900000 : 3150000),
+                y: viewParam('y', window.innerWidth < 600 ? 3849990.40 : 3066317.27),
                 // Europe in the window
                 z: Math.max(
                     50,
-                    Math.min(8000, viewParam('z', Math.max(3500000 / window.innerHeight, 5800000 / window.innerWidth)))
+                    Math.min(8000, viewParam('z', 2086.9426))
                 ),
                 zoomExtent: [50, 8000],
                 backgroundColor: background,
@@ -962,14 +1032,47 @@
             }
             const changeLayer = new gridviz.GridLayer(changeDataset, [changeStyle], { cellInfoHTML: changeInfoHTML })
 
-            const backgroundLayer = new gridviz.BackgroundLayer(
-                gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', { filterColor: () => '#000000c0' })
-            )
-            const labelLayer = new gridviz.LabelLayer(gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true }))
+            // const backgroundLayer = new gridviz.BackgroundLayer({
+            //     ...gridviz_eurostat.giscoBackgroundLayer('GreyEarth', 7, 'EPSG3035', {
+            //         filterColor: () => '#000000c0',
+            //     }),
+            //     visible: () => element('basemap').checked,
+            // })
+
+            // EMODnet WMTS capabilities: LAEA uses northing/easting axis order;
+            // Gridviz uses easting/northing. Scale denominator * 0.00028 gives m/pixel.
+            const bathymetryResolutions = Array.from({ length: 9 }, (_, z) => 33508.30078125 / 2 ** z)
+            const bathymetryLayer = new gridviz.BackgroundLayer({
+                origin: [-605551.336, 7369716.256],
+                resolutions: bathymetryResolutions,
+                urlFun: (x, y, z) => {
+                    const rows = Math.ceil(8226562.5 / (256 * bathymetryResolutions[z]))
+                    if (x < 0 || y < 0 || x >= 2 ** z || y >= rows)
+                        return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+                    return 'https://tiles.emodnet-bathymetry.eu/2020/baselayer/laea/' + z + '/' + x + '/' + y + '.png'
+                },
+                visible: () =>
+                    element('basemap').checked &&
+                    element('bathymetry').checked &&
+                    +element('bathymetryOpacity').value > 0,
+                alpha: () => +element('bathymetryOpacity').value / 100,
+            })
+            const labelLayer = new gridviz.LabelLayer({
+                ...gridviz_eurostat.getEuronymeLabelLayer('EUR', 20, { dark: true }),
+                visible: () => element('placenames').checked,
+            })
 
             // ---------- the panel ----------
 
             const element = (id) => document.getElementById(id)
+
+            function updateLayerControls() {
+                element('bathymetry').disabled = !element('basemap').checked
+                element('bathymetryOpacity').disabled = !element('basemap').checked || !element('bathymetry').checked
+                element('bathymetryOpacityValue').textContent = element('bathymetryOpacity').value + '%'
+                for (const id of ['bathymetry', 'bathymetryOpacity'])
+                    element(id).labels[0]?.classList.toggle('disabled', element(id).disabled)
+            }
 
             // The grid resolution slider sets minPixelsPerCell: its position goes from 0, the coarsest, to 100, the finest.
             // Both ranges allow 1 km cells even at the maximum zoom of 8000 metres per pixel.
@@ -1000,6 +1103,10 @@
                 notice.textContent =
                     r === requestedResolution
                         ? 'Zoom in to reveal finer grid detail.'
+                        : 'Zoom in for ' + requestedResolution / 1000 + ' km detail (view limit).'
+                notice.title =
+                    r === requestedResolution
+                        ? notice.textContent
                         : 'Showing ' +
                           r / 1000 +
                           ' km to keep this view responsive. Zoom in for ' +
@@ -1142,7 +1249,7 @@
                 element('resolution').value = cellSize().position
                 const layer = comparing() ? changeLayer : layerOfYear(year, view === 'pies')
                 layer.minPixelsPerCell = minPixelsPerCell()
-                map.layers = [backgroundLayer, layer, labelLayer]
+                map.layers = [bathymetryLayer, layer, labelLayer]
                 showResolution()
                 drawKey()
                 map.redraw()
@@ -1150,6 +1257,12 @@
             }
 
             element('panel').addEventListener('input', (e) => {
+                if (['basemap', 'placenames', 'bathymetry', 'bathymetryOpacity'].includes(e.target.id)) {
+                    updateLayerControls()
+                    map.redraw()
+                    saveViewToURL()
+                    return
+                }
                 if (e.target.id === 'allGroups') {
                     hiddenGroups.clear()
                     if (!e.target.checked) for (const g of groups) hiddenGroups.add(g)
@@ -1214,6 +1327,12 @@
             }
             setPanelCollapsed(viewParams.get('panel') === 'closed')
             element('dataDetails').open = viewParams.get('about') === '1'
+            for (const id of ['basemap', 'placenames']) element(id).checked = viewParams.get(id) !== '0'
+            element('bathymetry').checked = viewParams.get('bathymetry') === '1'
+            const savedOpacity = viewParam('bathymetryOpacity', 35)
+            if (Number.isInteger(savedOpacity) && savedOpacity >= 0 && savedOpacity <= 100)
+                element('bathymetryOpacity').value = savedOpacity
+            updateLayerControls()
             update()
             if (viewParams.get('playing') === '1') setYearPlayback(true)
         </script>
