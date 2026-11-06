@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gridviz bivariate choropleth: temperature and precipitation</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+                font-family: Helvetica, Arial, sans-serif;
+            }
+            #panel {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                font-size: 13px;
+                color: #444;
+                background: #fffe;
+                padding: 14px 16px 10px;
+                border-radius: 6px;
+                box-shadow: 0 1px 6px #0003;
+            }
+            #title {
+                padding-bottom: 10px;
+                margin-bottom: 6px;
+                border-bottom: 1px solid #ddd;
+            }
+            #title h1 {
+                margin: 0;
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 1.15;
+                letter-spacing: -0.01em;
+                color: #222;
+            }
+            #title p {
+                margin: 4px 0 0;
+                font-size: 13px;
+                color: #666;
+            }
+            #legend {
+                display: block;
+                margin: 0 auto;
+            }
+            #legend text {
+                font-size: 10px;
+                fill: #444;
+            }
+            #legend .axis {
+                font-size: 12px;
+                font-weight: 700;
+                fill: #222;
+            }
+            #legend rect {
+                cursor: pointer;
+                outline: none;
+            }
+            #legend rect:hover,
+            #legend rect:focus {
+                stroke: #111;
+                stroke-width: 2;
+            }
+            #source {
+                position: absolute;
+                bottom: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 12px;
+                color: #444;
+                background: #fffc;
+                padding: 2px 6px;
+                text-align: center;
+            }
+            @media (max-width: 600px) {
+                #panel {
+                    top: 6px;
+                    left: 6px;
+                    padding: 8px 10px 4px;
+                }
+                #title h1 {
+                    font-size: 16px;
+                }
+                #title p {
+                    font-size: 11px;
+                }
+                #legend {
+                    width: 170px;
+                    height: 170px;
+                }
+                #source {
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    transform: none;
+                    font-size: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map" style="height: 100%; width: 100%"></div>
+        <div id="panel">
+            <div id="title">
+                <h1>Climate of Europe</h1>
+                <p>Annual mean temperature and precipitation</p>
+            </div>
+            <svg
+                id="legend"
+                width="240"
+                height="240"
+                viewBox="0 0 240 240"
+                role="img"
+                aria-label="Colour legend: precipitation and temperature, in 5 classes each"
+            ></svg>
+        </div>
+        <div id="source">
+            Five classes of each variable, with as many cells in each | Data: WorldClim 2.1, 1970-2000 (CC-BY 4.0) |
+            Background: Eurostat/GISCO
+        </div>
+
+        <script src="../../../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.0.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            // Bivariate choropleth: each cell has one colour, for its class of precipitation and its class of temperature.
+            // The colours are those of https://observablehq.com/@joewdavies/bivariate-map-with-plot : a mix of blues (precipitation) and oranges (temperature).
+
+            //the resolutions of the map, in m. One CSV file per resolution, in this folder (see prepare_bivariate.py).
+            const RESOLUTIONS = [10000, 20000, 50000]
+            //the number of classes of each variable
+            const N = 5
+            //the limits of the classes: quintiles of the cells of 10 km, printed by prepare_bivariate.py. They are the same at all resolutions, so that a place keeps its colour when zooming.
+            const PRECIPITATION_LIMITS = [538, 612, 700, 884]
+            const TEMPERATURE_LIMITS = [5.5, 8, 9.6, 11.9]
+            const classOf = (limits, v) => {
+                let i = 0
+                while (i < limits.length && v >= limits[i]) i++
+                return i
+            }
+
+            //the colours: a formula close to the multiply blend mode, made a bit more lively
+            const mixblend = (blue, orange) => {
+                const a = d3.rgb(blue)
+                const b = d3.rgb(orange)
+                const l = Math.min(250, b.r + b.g + b.b)
+                a.r *= b.r / l
+                a.g *= b.g / l
+                a.b *= b.b / l
+                return a.formatHex()
+            }
+            const blues = d3.schemeBlues[N + 1].slice(0, -1)
+            const oranges = d3.schemeOranges[N + 1].slice(0, -1)
+            //the colour of each code: precipitation class * N + temperature class
+            const COLORS = {}
+            for (let p = 0; p < N; p++) for (let t = 0; t < N; t++) COLORS[N * p + t] = mixblend(blues[p], oranges[t])
+
+            //the map
+            const map = new gridviz.Map(document.getElementById('map'), {
+                x: 4500000,
+                y: 2650000,
+                z: 4000,
+                tooltip: { maxWidth: 'none' },
+            }).addZoomButtons()
+
+            //the land, as in the climate map with nested circles
+            const COUNTRIES =
+                'AL AT BA BE BG CH CY CZ DE DK EE EL ES FI FR HR HU IE IS IT LI LT LU LV ME MK MT NL NO PL PT RO RS SE SI SK TR UA UK MD'.split(
+                    ' '
+                )
+            const land = new gridviz.GeoJSONLayer({
+                url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2024/3035/20M/cntrg.json',
+                preprocess: (f) => COUNTRIES.includes(f.properties.id),
+                fillStyle: () => '#e6e6e6',
+                strokeStyle: () => null,
+            })
+            const boundaries = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
+
+            const dataset = new gridviz.MultiResolutionDataset(
+                RESOLUTIONS,
+                (r) => new gridviz.CSVGrid(map, 'bivariate_' + r + '.csv', r),
+                {
+                    preprocess: (c) => {
+                        c.t = +c.t
+                        c.p = +c.p
+                        c.code = N * classOf(PRECIPITATION_LIMITS, c.p) + classOf(TEMPERATURE_LIMITS, c.t)
+                    },
+                }
+            )
+
+            //the class hovered on the legend: only its cells are shown
+            let hovered = null
+            const style = new gridviz.SquareColorCategoryWebGLStyle({
+                filter: (c) => hovered === null || c.code === hovered,
+                code: (c) => '' + c.code,
+                color: COLORS,
+            })
+
+            const gridLayer = new gridviz.GridLayer(dataset, [style], {
+                minPixelsPerCell: 1,
+                cellInfoHTML: (c) =>
+                    `<div style="display:flex;align-items:center;gap:8px;white-space:nowrap">` +
+                    `<span style="width:22px;height:22px;flex:none;border-radius:3px;background:${
+                        COLORS[c.code]
+                    };box-shadow:0 0 0 1px #0003 inset"></span>` +
+                    `<span>Temperature: <b>${c.t.toFixed(1)} °C</b><br />Precipitation: <b>${c.p.toLocaleString(
+                        'en'
+                    )} mm</b></span></div>`,
+            })
+            map.layers = [land, gridLayer, boundaries]
+
+            // The legend: a diamond, as in the Observable notebook. Precipitation grows to the top right, temperature to the bottom right.
+            const svg = document.getElementById('legend')
+            const SVG_NS = 'http://www.w3.org/2000/svg'
+            const add = (parent, name, attributes, text) => {
+                const e = document.createElementNS(SVG_NS, name)
+                for (const k in attributes) e.setAttribute(k, attributes[k])
+                if (text !== undefined) e.textContent = text
+                parent.append(e)
+                return e
+            }
+            const CELL = 29
+            const SIDE = N * CELL
+            const diamond = add(svg, 'g', {
+                transform: `translate(120 120) rotate(-45) translate(${-SIDE / 2} ${-SIDE / 2})`,
+            })
+            for (let p = 0; p < N; p++)
+                for (let t = 0; t < N; t++) {
+                    const code = N * p + t
+                    const rect = add(diamond, 'rect', {
+                        x: p * CELL,
+                        y: t * CELL,
+                        width: CELL,
+                        height: CELL,
+                        fill: COLORS[code],
+                        tabindex: 0,
+                        'aria-label': 'Precipitation class ' + (p + 1) + ', temperature class ' + (t + 1),
+                    })
+                    const show = (value) => () => {
+                        hovered = value
+                        map.redraw()
+                    }
+                    rect.addEventListener('mouseenter', show(code))
+                    rect.addEventListener('mouseleave', show(null))
+                    rect.addEventListener('focus', show(code))
+                    rect.addEventListener('blur', show(null))
+                }
+            //the limits of the classes, along the two sides, then the names of the variables
+            PRECIPITATION_LIMITS.forEach((v, i) =>
+                add(diamond, 'text', { x: (i + 1) * CELL, y: -4, 'text-anchor': 'middle' }, v)
+            )
+            TEMPERATURE_LIMITS.forEach((v, i) =>
+                add(
+                    diamond,
+                    'text',
+                    { transform: `translate(-4 ${(i + 1) * CELL}) rotate(90)`, 'text-anchor': 'middle' },
+                    v
+                )
+            )
+            add(diamond, 'text', { class: 'axis', x: SIDE, y: -16, 'text-anchor': 'end' }, 'Precipitation, mm →')
+            add(
+                diamond,
+                'text',
+                { class: 'axis', transform: `translate(-16 ${SIDE}) rotate(90)`, 'text-anchor': 'end' },
+                'Temperature, °C →'
+            )
+        </script>
+    </body>
+</html>

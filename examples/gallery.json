@@ -115,6 +115,13 @@
         "group": "Square color category WebGL"
     },
     {
+        "path": "test/venn/climate/bivariate.html",
+        "category": "Styles",
+        "title": "Bivariate choropleth: climate",
+        "description": "Annual mean temperature and precipitation of Europe, in 5 classes each, with a mix of oranges and blues.",
+        "group": "Square color category WebGL"
+    },
+    {
         "path": "styles/circlecolorsize_webgl.html",
         "category": "Styles",
         "group": "Circle color size WebGL",
