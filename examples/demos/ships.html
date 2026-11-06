@@ -170,6 +170,46 @@
                 margin: 0;
                 cursor: pointer;
             }
+            .year-controls {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .year-track {
+                flex: 1;
+                min-width: 0;
+            }
+            #playYears {
+                display: grid;
+                place-items: center;
+                flex-shrink: 0;
+                width: 36px;
+                height: 36px;
+                padding: 0;
+                border: 1px solid #ffffff28;
+                border-radius: 9px;
+                background: #222d3e;
+                color: var(--accent);
+                cursor: pointer;
+            }
+            #playYears:hover {
+                background: #2d4057;
+            }
+            #playYears svg {
+                width: 16px;
+                height: 16px;
+                fill: currentColor;
+            }
+            .year-ticks {
+                display: flex;
+                justify-content: space-between;
+                margin: 0 8px 3px;
+            }
+            .year-ticks span {
+                width: 1px;
+                height: 4px;
+                background: var(--muted);
+            }
             #panel input[type='checkbox'] {
                 width: 15px;
                 height: 15px;
@@ -447,8 +487,28 @@
                 </fieldset>
                 <fieldset>
                     <legend>Year: <span id="yearLabel"></span></legend>
-                    <input id="year" aria-label="Year" type="range" min="2017" max="2024" step="1" value="2023" />
-                    <div class="scale"><span>2017</span><span>2024</span></div>
+                    <div class="year-controls">
+                        <button
+                            id="playYears"
+                            type="button"
+                            aria-label="Play years"
+                            aria-pressed="false"
+                            title="Play years"
+                        ></button>
+                        <div class="year-track">
+                            <input
+                                id="year"
+                                aria-label="Year"
+                                type="range"
+                                min="2017"
+                                max="2024"
+                                step="1"
+                                value="2023"
+                            />
+                            <div id="yearTicks" class="year-ticks" aria-hidden="true"></div>
+                            <div class="scale"><span>2017</span><span>2024</span></div>
+                        </div>
+                    </div>
                     <label id="compareLabel">
                         <input id="compare" type="checkbox" /> Change since
                         <select id="from" aria-label="Comparison baseline year"></select>
@@ -463,7 +523,7 @@
                 </fieldset>
                 <div id="keyTitle"></div>
                 <table id="key"></table>
-                <details>
+                <details id="dataDetails">
                     <summary>About the data & credits</summary>
                     <p id="about">
                         The time ships spend in each square, in hours per km² per month (yearly average). Only ships
@@ -575,6 +635,23 @@
                 url.searchParams.set('x', x.toFixed(2))
                 url.searchParams.set('y', y.toFixed(2))
                 url.searchParams.set('z', z.toFixed(4))
+                url.searchParams.set('view', view)
+                url.searchParams.set('type', type.code)
+                url.searchParams.set('year', year)
+                url.searchParams.set('from', from)
+                url.searchParams.set('compare', compare ? '1' : '0')
+                url.searchParams.set('squareDetail', cellSizes.squares.position)
+                url.searchParams.set('pieDetail', cellSizes.pies.position)
+                url.searchParams.set(
+                    'types',
+                    groups
+                        .filter((g) => !hiddenGroups.has(g))
+                        .map((g) => g.code)
+                        .join(',')
+                )
+                url.searchParams.set('panel', element('panel').classList.contains('collapsed') ? 'closed' : 'open')
+                url.searchParams.set('about', element('dataDetails').open ? '1' : '0')
+                url.searchParams.set('playing', yearTimer === null ? '0' : '1')
                 window.history.replaceState(window.history.state, '', url)
             }
 
@@ -628,11 +705,14 @@
 
                 getDataset(z, minPixelsPerCell) {
                     const requested = this.requestedDataset(z, minPixelsPerCell)
-                    const budget = view === 'pies' ? 250000 : 2000000
                     const extent = map.geoCanvas.extGeo
                     if (!extent) return this.datasets[this.datasets.length - 1]
                     for (let i = this.datasets.indexOf(requested); i < this.datasets.length; i++) {
                         const dataset = this.datasets[i]
+                        // Keep 2 km and 5 km squares available farther out without increasing
+                        // the budget for the much heavier 1 km overview.
+                        const budget =
+                            view === 'pies' ? 250000 : [2000, 5000].includes(this.resolutions[i]) ? 5000000 : 2000000
                         if (!dataset.info) continue
                         const tiles = dataset.getTilingEnvelope(extent)
                         const bounds = dataset.info.tilingBounds
@@ -751,7 +831,7 @@
             // ---------- the change between two years, from a quarter to four times ----------
 
             const changeValue = (cell, y) => cell[(view === 'type' ? type.code : 'a') + ('' + y).slice(2)]
-            const changeColor = d3.interpolateRgbBasis(['#3fc8ff', '#2c5f7c', '#3a3d47', '#9a5a2a', '#ffa23c'])
+            const changeColor = d3.interpolateRgbBasis(['#ffa23c', '#9a5a2a', '#3a3d47', '#2c5f7c', '#3fc8ff'])
             const changeStyle = new gridviz.SquareColorWebGLStyle({
                 // over too little traffic, a ratio has no meaning
                 filter: (cell) => Math.max(changeValue(cell, from), changeValue(cell, year)) >= 0.5,
@@ -896,7 +976,7 @@
             // Pies have their own coarser end and slider position.
             // Start with detailed squares and pies; the tile budget protects large views.
             const cellSizes = {
-                squares: { finest: 0.1, coarsest: 40, position: 65 },
+                squares: { finest: 0.1, coarsest: 40, position: 70 },
                 pies: { finest: 0.1, coarsest: 120, position: 55 },
             }
             const cellSize = () => cellSizes[view === 'pies' ? 'pies' : 'squares']
@@ -929,13 +1009,18 @@
 
             map.onLegendUpdate = () => showResolution()
 
-            element('togglePanel').addEventListener('click', () => {
-                const collapsed = element('panel').classList.toggle('collapsed')
+            function setPanelCollapsed(collapsed) {
+                element('panel').classList.toggle('collapsed', collapsed)
                 const button = element('togglePanel')
                 button.setAttribute('aria-expanded', String(!collapsed))
                 button.setAttribute('aria-label', collapsed ? 'Expand map controls' : 'Collapse map controls')
                 button.textContent = collapsed ? '+' : '\u2212'
+            }
+            element('togglePanel').addEventListener('click', () => {
+                setPanelCollapsed(!element('panel').classList.contains('collapsed'))
+                saveViewToURL()
             })
+            element('dataDetails').addEventListener('toggle', () => saveViewToURL())
 
             for (const g of groups) {
                 const optgroup = document.createElement('optgroup')
@@ -944,6 +1029,46 @@
                 element('type').append(optgroup)
             }
             for (const y of years) element('from').append(new Option(y, y, y === from, y === from))
+            for (const y of years) element('yearTicks').append(document.createElement('span'))
+
+            let yearTimer = null
+            function setYearPlayback(playing, save = true) {
+                window.clearInterval(yearTimer)
+                yearTimer = null
+                const button = element('playYears')
+                button.setAttribute('aria-pressed', String(playing))
+                button.setAttribute('aria-label', playing ? 'Pause years' : 'Play years')
+                button.title = playing ? 'Pause years' : 'Play years'
+                button.innerHTML =
+                    '<svg viewBox="0 0 16 16" aria-hidden="true">' +
+                    (playing ? '<path d="M3 2h4v12H3zm6 0h4v12H9z"/>' : '<path d="M4 2l10 6-10 6z"/>') +
+                    '</svg>'
+                if (playing)
+                    yearTimer = window.setInterval(() => {
+                        const index = years.indexOf(+element('year').value)
+                        element('year').value = years[(index + 1) % years.length]
+                        update()
+                    }, 1800)
+                if (save) saveViewToURL()
+            }
+            setYearPlayback(false, false)
+            element('playYears').addEventListener('click', () => setYearPlayback(yearTimer === null))
+            // Manual slider adjustments should not compete with an animation update.
+            for (const id of ['year', 'resolution']) {
+                for (const event of ['pointerdown', 'keydown'])
+                    element(id).addEventListener(event, () => setYearPlayback(false))
+            }
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) setYearPlayback(false)
+            })
+            window.addEventListener('pagehide', () => setYearPlayback(false, false))
+
+            function syncAllGroups() {
+                const all = element('allGroups')
+                if (!all) return
+                all.checked = hiddenGroups.size === 0
+                all.indeterminate = hiddenGroups.size > 0 && hiddenGroups.size < groups.length
+            }
 
             function drawKey() {
                 const key = element('key')
@@ -969,7 +1094,15 @@
                     return
                 }
                 keyTitle.textContent = 'Colour shows the main type; brighter means more activity. Toggle types below.'
-                key.append(row([cell('th'), ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))]))
+                const allLabel = document.createElement('label')
+                const allInput = document.createElement('input')
+                allInput.type = 'checkbox'
+                allInput.id = 'allGroups'
+                allLabel.append(allInput, 'All')
+                const allCell = cell('th')
+                allCell.append(allLabel)
+                key.append(row([allCell, ...levels.map((l, i) => cell('th', i ? l : '<' + levels[1]))]))
+                syncAllGroups()
                 for (const g of groups) {
                     const label = document.createElement('label')
                     const input = document.createElement('input')
@@ -1013,16 +1146,31 @@
                 showResolution()
                 drawKey()
                 map.redraw()
+                saveViewToURL()
             }
 
             element('panel').addEventListener('input', (e) => {
+                if (e.target.id === 'allGroups') {
+                    hiddenGroups.clear()
+                    if (!e.target.checked) for (const g of groups) hiddenGroups.add(g)
+                    for (const input of element('key').querySelectorAll('input[data-group]')) {
+                        input.checked = e.target.checked
+                        input.closest('tr').classList.toggle('off', !input.checked)
+                    }
+                    syncAllGroups()
+                    map.redraw()
+                    saveViewToURL()
+                    return
+                }
                 // a type of the key: only its row and the map change, so that the checkbox stays in place, and keeps the focus
                 if (e.target.dataset.group) {
                     const g = groups.find((g) => g.code === e.target.dataset.group)
                     if (e.target.checked) hiddenGroups.delete(g)
                     else hiddenGroups.add(g)
                     e.target.closest('tr').classList.toggle('off', !e.target.checked)
+                    syncAllGroups()
                     map.redraw()
+                    saveViewToURL()
                     return
                 }
                 if (e.target.id === 'resolution') {
@@ -1033,12 +1181,41 @@
                     layer.minPixelsPerCell = minPixelsPerCell()
                     showResolution()
                     map.redraw()
+                    saveViewToURL()
                     return
                 }
                 update()
             })
+            // Restore controls before the first draw, including each style's saved slider position.
+            const savedView = viewParams.get('view')
+            for (const radio of document.querySelectorAll('input[name=view]'))
+                if (radio.value === savedView) radio.checked = true
+            const savedType = viewParams.get('type')
+            if (types.some((t) => t.code === savedType)) element('type').value = savedType
+            for (const [id, fallback] of [
+                ['year', year],
+                ['from', from],
+            ]) {
+                const saved = viewParam(id, fallback)
+                if (years.includes(saved)) element(id).value = saved
+            }
+            element('compare').checked = viewParams.get('compare') === '1'
+            for (const [name, setting] of [
+                ['squareDetail', cellSizes.squares],
+                ['pieDetail', cellSizes.pies],
+            ]) {
+                const saved = viewParam(name, setting.position)
+                if (Number.isInteger(saved) && saved >= 0 && saved <= 100) setting.position = saved
+            }
+            if (viewParams.has('types')) {
+                const savedGroups = viewParams.get('types').split(',')
+                if (viewParams.get('types') === '' || groups.some((g) => savedGroups.includes(g.code)))
+                    for (const g of groups) if (!savedGroups.includes(g.code)) hiddenGroups.add(g)
+            }
+            setPanelCollapsed(viewParams.get('panel') === 'closed')
+            element('dataDetails').open = viewParams.get('about') === '1'
             update()
-            saveViewToURL()
+            if (viewParams.get('playing') === '1') setYearPlayback(true)
         </script>
     </body>
 </html>
