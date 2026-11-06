@@ -130,11 +130,9 @@
             // Bivariate choropleth: each cell has one colour, for its class of precipitation and its class of temperature.
             // The colours are those of https://observablehq.com/@joewdavies/bivariate-map-with-plot : a mix of blues (precipitation) and oranges (temperature).
 
-            //the resolutions of the map, in m. One CSV file per resolution, in this folder (see prepare_bivariate.py).
-            const RESOLUTIONS = [10000, 20000, 50000]
             //the number of classes of each variable
             const N = 5
-            //the limits of the classes: quintiles of the cells of 10 km, printed by prepare_bivariate.py. They are the same at all resolutions, so that a place keeps its colour when zooming.
+            //the limits of the classes: quintiles of the cells, printed by prepare_bivariate.py
             const PRECIPITATION_LIMITS = [538, 612, 700, 884]
             const TEMPERATURE_LIMITS = [5.5, 8, 9.6, 11.9]
             const classOf = (limits, v) => {
@@ -180,17 +178,14 @@
             })
             const boundaries = new gridviz.GeoJSONLayer(gridviz_eurostat.getEurostatBoundariesLayer())
 
-            const dataset = new gridviz.MultiResolutionDataset(
-                RESOLUTIONS,
-                (r) => new gridviz.CSVGrid(map, 'bivariate_' + r + '.csv', r),
-                {
-                    preprocess: (c) => {
-                        c.t = +c.t
-                        c.p = +c.p
-                        c.code = N * classOf(PRECIPITATION_LIMITS, c.p) + classOf(TEMPERATURE_LIMITS, c.t)
-                    },
-                }
-            )
+            //one CSV file of 10 km cells, the finest of the data, at all zoom levels (see prepare_bivariate.py)
+            const dataset = new gridviz.CSVGrid(map, 'bivariate_10000.csv', 10000, {
+                preprocess: (c) => {
+                    c.t = +c.t
+                    c.p = +c.p
+                    c.code = N * classOf(PRECIPITATION_LIMITS, c.p) + classOf(TEMPERATURE_LIMITS, c.t)
+                },
+            })
 
             //the class hovered on the legend: only its cells are shown
             let hovered = null
@@ -201,7 +196,6 @@
             })
 
             const gridLayer = new gridviz.GridLayer(dataset, [style], {
-                minPixelsPerCell: 1,
                 cellInfoHTML: (c) =>
                     `<div style="display:flex;align-items:center;gap:8px;white-space:nowrap">` +
                     `<span style="width:22px;height:22px;flex:none;border-radius:3px;background:${
