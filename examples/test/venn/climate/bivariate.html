@@ -88,7 +88,7 @@
                 }
                 #legend {
                     width: 170px;
-                    height: 170px;
+                    height: 150px;
                 }
                 #source {
                     left: 0;
@@ -110,8 +110,8 @@
             <svg
                 id="legend"
                 width="240"
-                height="240"
-                viewBox="0 0 240 240"
+                height="212"
+                viewBox="0 0 240 212"
                 role="img"
                 aria-label="Colour legend: precipitation and temperature, in 5 classes each"
             ></svg>
@@ -213,7 +213,7 @@
             })
             map.layers = [land, gridLayer, boundaries]
 
-            // The legend: a diamond, as in the Observable notebook. Precipitation grows to the top right, temperature to the bottom right.
+            // The legend: a diamond, as in the Observable notebook. Both variables start from the bottom corner: precipitation grows to the top right, temperature to the top left.
             const svg = document.getElementById('legend')
             const SVG_NS = 'http://www.w3.org/2000/svg'
             const add = (parent, name, attributes, text) => {
@@ -223,17 +223,20 @@
                 parent.append(e)
                 return e
             }
-            const CELL = 29
+            const CELL = 27
             const SIDE = N * CELL
+            //the distance of the names of the variables from the sides of the diamond
+            const AXIS_OFFSET = 34
+            //drawn as a square with the lowest classes at its bottom left, then turned so that this corner is at the bottom
             const diamond = add(svg, 'g', {
-                transform: `translate(120 120) rotate(-45) translate(${-SIDE / 2} ${-SIDE / 2})`,
+                transform: `translate(120 100) rotate(-45) translate(${-SIDE / 2} ${-SIDE / 2})`,
             })
             for (let p = 0; p < N; p++)
                 for (let t = 0; t < N; t++) {
                     const code = N * p + t
                     const rect = add(diamond, 'rect', {
                         x: p * CELL,
-                        y: t * CELL,
+                        y: (N - 1 - t) * CELL,
                         width: CELL,
                         height: CELL,
                         fill: COLORS[code],
@@ -249,24 +252,42 @@
                     rect.addEventListener('focus', show(code))
                     rect.addEventListener('blur', show(null))
                 }
-            //the limits of the classes, along the two sides, then the names of the variables
+            //the limits of the classes, along the two lower sides, then the names of the variables
             PRECIPITATION_LIMITS.forEach((v, i) =>
-                add(diamond, 'text', { x: (i + 1) * CELL, y: -4, 'text-anchor': 'middle' }, v)
+                add(
+                    diamond,
+                    'text',
+                    {
+                        transform: `translate(${(i + 1) * CELL} ${SIDE + 4}) rotate(90)`,
+                        'dominant-baseline': 'middle',
+                    },
+                    v
+                )
             )
             TEMPERATURE_LIMITS.forEach((v, i) =>
                 add(
                     diamond,
                     'text',
-                    { transform: `translate(-4 ${(i + 1) * CELL}) rotate(90)`, 'text-anchor': 'middle' },
+                    {
+                        x: -4,
+                        y: SIDE - (i + 1) * CELL,
+                        'text-anchor': 'end',
+                        'dominant-baseline': 'middle',
+                    },
                     v
                 )
             )
-            add(diamond, 'text', { class: 'axis', x: SIDE, y: -16, 'text-anchor': 'end' }, 'Precipitation, mm →')
             add(
                 diamond,
                 'text',
-                { class: 'axis', transform: `translate(-16 ${SIDE}) rotate(90)`, 'text-anchor': 'end' },
-                'Temperature, °C →'
+                { class: 'axis', x: SIDE, y: SIDE + AXIS_OFFSET, 'text-anchor': 'end' },
+                'Precipitation, mm →'
+            )
+            add(
+                diamond,
+                'text',
+                { class: 'axis', transform: `translate(${-AXIS_OFFSET} 0) rotate(90)` },
+                '← Temperature, °C'
             )
         </script>
     </body>
