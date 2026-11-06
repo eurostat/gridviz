@@ -211,6 +211,13 @@
                 color: #f0cb88;
                 font-size: 11px;
             }
+            #resolutionNotice {
+                margin: 8px 0 0;
+                color: var(--muted);
+                font-size: 11px;
+                height: 4.5em;
+                overflow: auto;
+            }
             #keyTitle {
                 padding-top: 15px;
                 border-top: 1px solid var(--line);
@@ -452,6 +459,7 @@
                     <legend>Grid resolution: <span id="resolutionLabel"></span></legend>
                     <input id="resolution" aria-label="Grid resolution" type="range" min="0" max="100" step="1" />
                     <div id="resolutionScale" class="scale"><span>Coarser</span><span>Finer</span></div>
+                    <p id="resolutionNotice" role="status">Zoom in to reveal finer grid detail.</p>
                 </fieldset>
                 <div id="keyTitle"></div>
                 <table id="key"></table>
@@ -554,14 +562,32 @@
             const comparing = () =>
                 compare && view !== 'pies' && (view === 'main' || typesWithChange.includes(type.code))
 
+            const viewParams = new URLSearchParams(window.location.search)
+            const viewParam = (name, fallback) => {
+                const raw = viewParams.get(name)
+                if (raw === null || raw.trim() === '') return fallback
+                const value = Number(raw)
+                return Number.isFinite(value) ? value : fallback
+            }
+            function saveViewToURL() {
+                const url = new URL(window.location.href)
+                const { x, y, z } = map.geoCanvas.view
+                url.searchParams.set('x', x.toFixed(2))
+                url.searchParams.set('y', y.toFixed(2))
+                url.searchParams.set('z', z.toFixed(4))
+                window.history.replaceState(window.history.state, '', url)
+            }
+
             const map = new gridviz.Map(document.getElementById('map'), {
-                x: 3900000,
-                // on a narrow window, the zoom is at its limit: further north, the edge of the background is out of the view
-                y: window.innerWidth < 600 ? 3900000 : 3150000,
+                x: viewParam('x', 3900000),
+                // Start farther north on narrow screens.
+                y: viewParam('y', window.innerWidth < 600 ? 3900000 : 3150000),
                 // Europe in the window
-                z: Math.min(8000, Math.max(3500000 / window.innerHeight, 5800000 / window.innerWidth)),
+                z: Math.max(
+                    50,
+                    Math.min(8000, viewParam('z', Math.max(3500000 / window.innerHeight, 5800000 / window.innerWidth)))
+                ),
                 zoomExtent: [50, 8000],
-                viewExtent: [-1100000, 0, 7300000, 7500000],
                 backgroundColor: background,
                 tooltip: {
                     background: '#171e2bf5',
@@ -574,8 +600,16 @@
                     'font-family': 'system-ui, sans-serif',
                 },
                 onZoomFun: () => showResolution(),
-                onZoomEndFun: () => showResolution(),
-            }).addZoomButtons({ onZoom: () => showResolution() })
+                onZoomEndFun: () => {
+                    showResolution()
+                    saveViewToURL()
+                },
+            }).addZoomButtons({
+                onZoom: () => {
+                    showResolution()
+                    saveViewToURL()
+                },
+            })
 
             // ---------- the data: a dataset per year, made when it is needed, and one for the changes ----------
 
@@ -585,8 +619,39 @@
             const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
             const changeResolutions = resolutions.slice(1)
 
+            // The tile cache limit excludes recently used and visible tiles. Bound the entire
+            // requested tile area before downloading, including cells outside the viewport.
+            class ShipsDataset extends gridviz.MultiResolutionDataset {
+                requestedDataset(z, minPixelsPerCell) {
+                    return super.getDataset(z, minPixelsPerCell)
+                }
+
+                getDataset(z, minPixelsPerCell) {
+                    const requested = this.requestedDataset(z, minPixelsPerCell)
+                    const budget = view === 'pies' ? 250000 : 2000000
+                    const extent = map.geoCanvas.extGeo
+                    if (!extent) return this.datasets[this.datasets.length - 1]
+                    for (let i = this.datasets.indexOf(requested); i < this.datasets.length; i++) {
+                        const dataset = this.datasets[i]
+                        if (!dataset.info) continue
+                        const tiles = dataset.getTilingEnvelope(extent)
+                        const bounds = dataset.info.tilingBounds
+                        const width = Math.max(
+                            0,
+                            Math.min(tiles.xMax, bounds.xMax) - Math.max(tiles.xMin, bounds.xMin) + 1
+                        )
+                        const height = Math.max(
+                            0,
+                            Math.min(tiles.yMax, bounds.yMax) - Math.max(tiles.yMin, bounds.yMin) + 1
+                        )
+                        if (width * height * dataset.info.tileSizeCell ** 2 <= budget) return dataset
+                    }
+                    return this.datasets[this.datasets.length - 1]
+                }
+            }
+
             const datasetOfYear = (y) =>
-                new gridviz.MultiResolutionDataset(
+                new ShipsDataset(
                     resolutions,
                     (resolution) =>
                         new gridviz.TiledGrid(map, dataURL + y + '/' + resolution + 'm/', {
@@ -606,7 +671,7 @@
                 )
 
             const yearColumns = years.flatMap((y) => ['a', ...typesWithChange].map((t) => t + ('' + y).slice(2)))
-            const changeDataset = new gridviz.MultiResolutionDataset(
+            const changeDataset = new ShipsDataset(
                 changeResolutions,
                 (resolution) =>
                     new gridviz.TiledGrid(map, dataURL + 'change/' + resolution + 'm/', {
@@ -829,10 +894,10 @@
             // The grid resolution slider sets minPixelsPerCell: its position goes from 0, the coarsest, to 100, the finest.
             // Both ranges allow 1 km cells even at the maximum zoom of 8000 metres per pixel.
             // Pies have their own coarser end and slider position.
-            // Start near the original pixel-size defaults; finer grids remain available on demand.
+            // Start with detailed squares and pies; the tile budget protects large views.
             const cellSizes = {
-                squares: { finest: 0.1, coarsest: 40, position: 58 },
-                pies: { finest: 0.1, coarsest: 120, position: 24 },
+                squares: { finest: 0.1, coarsest: 40, position: 65 },
+                pies: { finest: 0.1, coarsest: 120, position: 55 },
             }
             const cellSize = () => cellSizes[view === 'pies' ? 'pies' : 'squares']
             const minPixelsPerCell = () => {
@@ -842,13 +907,27 @@
 
             // the resolution shown at the current zoom: as MultiResolutionDataset chooses it
             function showResolution() {
-                const shown = comparing() ? changeResolutions : resolutions
                 const z = map.getZoom()
-                const min = minPixelsPerCell()
-                const r = shown.find((r) => r / min >= z) || shown[shown.length - 1]
+                const layer = map.layers.find((layer) => layer.dataset instanceof ShipsDataset)
+                if (!layer) return
+                const selected = layer.getDataset(z)
+                const requested = layer.dataset.requestedDataset(z, layer.minPixelsPerCell)
+                const r = layer.dataset.resolutions[layer.dataset.datasets.indexOf(selected)]
+                const requestedResolution = layer.dataset.resolutions[layer.dataset.datasets.indexOf(requested)]
                 element('resolutionLabel').textContent = r / 1000 + ' km'
                 element('resolution').setAttribute('aria-valuetext', r / 1000 + ' kilometres')
+                const notice = element('resolutionNotice')
+                notice.textContent =
+                    r === requestedResolution
+                        ? 'Zoom in to reveal finer grid detail.'
+                        : 'Showing ' +
+                          r / 1000 +
+                          ' km to keep this view responsive. Zoom in for ' +
+                          requestedResolution / 1000 +
+                          ' km detail.'
             }
+
+            map.onLegendUpdate = () => showResolution()
 
             element('togglePanel').addEventListener('click', () => {
                 const collapsed = element('panel').classList.toggle('collapsed')
@@ -946,10 +1025,20 @@
                     map.redraw()
                     return
                 }
-                if (e.target.id === 'resolution') cellSize().position = +e.target.value
+                if (e.target.id === 'resolution') {
+                    // Keep the native range drag active: do not rewrite its value or rebuild
+                    // the panel and layers on every pointer movement.
+                    cellSize().position = +e.target.value
+                    const layer = map.layers.find((layer) => layer.dataset instanceof ShipsDataset)
+                    layer.minPixelsPerCell = minPixelsPerCell()
+                    showResolution()
+                    map.redraw()
+                    return
+                }
                 update()
             })
             update()
+            saveViewToURL()
         </script>
     </body>
 </html>
