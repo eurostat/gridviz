@@ -13,6 +13,8 @@
 -   New, opt-in: the _softwareWebGL_ option of _GPUGridRenderer_: `false` leaves a browser that draws WebGL on the CPU to the map's 2D drawing, which is far faster there. Its _software_ property says whether it does.
 -   New: _stats()_ of _GPUGridRenderer_ says what it has done, without reading its private fields.
 -   New, opt-in: the _hoverReach_ option of _GridLayer_ and _getNearestCellFromPosition()_ of _Dataset_, for cells drawn bigger than they are: the nearest cell within a distance of the mouse is the one hovered.
+-   Fix: _GPUGridRenderer_ never drew a large dataset of one file (_CSVGrid_), such as one of 100,000 cells: its build, cut short at the end of each frame's time, started again from nothing on the next (since 3.4.0). A built one-file dataset is also no longer built again on each draw.
+-   Fix: on a touch screen, after a tap on a cell, its tooltip and rectangle came back at the place of the tap after every pan or zoom with the fingers: the mouse events a browser makes from a tap were taken for the mouse being there. Only a mouse or a pen now sets where the pointer is, and a touch forgets it. A touch anywhere in the page also ends the hover: a scroll of a panel or a drag elsewhere left the tooltip on the screen, as it makes no mouse event. A tap on a cell still shows its tooltip. Nothing changes with a mouse.
 -   Examples: the ships demo has 14 views of its data, and uses _maxCells_ and _blendMode_.
 
 ### Version 3.4.0 (since 3.3.0)

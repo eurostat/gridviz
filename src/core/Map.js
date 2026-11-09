@@ -169,17 +169,29 @@ export class Map {
         /** The last position of the mouse in the page. The canvas does not get the mouse events while the map is dragged or
          * scrolled (the zoom of the canvas takes them), so this one is listened to in the window: the map shows the hover again
          * where the mouse is when a redraw ends the pan or the zoom.
+         * Only a mouse or a pen sets it. A finger is not left on the screen: the mouse events a browser makes from a tap would
+         * otherwise bring the tooltip back at the place of the tap after every later pan or zoom with the fingers. A touch forgets it.
          * @private
          * @type {{clientX:number, clientY:number}|null} */
         this._pointer = null
         this._pointerHandler = (e) => {
-            this._pointer = { clientX: e.clientX, clientY: e.clientY }
+            const touch = e.pointerType === 'touch' || e.type === 'touchstart'
+            if (!touch) {
+                this._pointer = { clientX: e.clientX, clientY: e.clientY }
+                return
+            }
+            this._pointer = null
+            // A touch, anywhere in the page, ends the hover: a finger has no hover, and a scroll of a panel or a drag makes no mouse event that would
+            // take the tooltip away. A tap on a cell shows it again, from the mouse events the browser makes of the tap.
+            if (e.type !== 'pointermove') this.clearHover()
         }
         // the mouse left the page
         this._pointerLeaveHandler = (e) => {
             if (!e.relatedTarget) this._pointer = null
         }
-        for (const type of ['mousemove', 'mousedown', 'wheel'])
+        /** @private */
+        this._pointerTypes = typeof PointerEvent !== 'undefined' ? ['pointermove', 'pointerdown', 'wheel'] : ['mousemove', 'mousedown', 'wheel', 'touchstart']
+        for (const type of this._pointerTypes)
             window.addEventListener(type, this._pointerHandler, { capture: true, passive: true })
         window.addEventListener('mouseout', this._pointerLeaveHandler, { capture: true, passive: true })
         const scheduleFocus = (e) => {
@@ -905,7 +917,7 @@ export class Map {
         this._resizeObserver = null
 
         // remove event listeners, from the window and from the canvas they were added to
-        for (const type of ['mousemove', 'mousedown', 'wheel'])
+        for (const type of this._pointerTypes)
             window.removeEventListener(type, this._pointerHandler, { capture: true })
         window.removeEventListener('mouseout', this._pointerLeaveHandler, { capture: true })
         this.geoCanvas.canvas.removeEventListener('mouseover', this.mouseOverHandler)

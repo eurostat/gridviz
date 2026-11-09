@@ -526,7 +526,7 @@ export class GPUGridRenderer {
     // The tiles of a dataset with cells in an envelope. A dataset of one file is one tile.
     _tiles(dataset, ext, visit) {
         if (dataset.cells) {
-            if (dataset.cells.length) visit('all', { cells: dataset.cells })
+            if (dataset.cells.length) visit('all', this._wholeTile(dataset))
             return
         }
         if (!dataset.cache || !dataset.info) return
@@ -541,6 +541,15 @@ export class GPUGridRenderer {
                 if (tile && tile.cells && tile.cells.length) visit(x + '/' + y, tile)
             }
         }
+    }
+
+    // The one tile of a dataset of one file: the same object for as long as its cells are, so that a build cut short by a deadline goes on where it stopped on the next draw,
+    // and a built batch is not built again. A new object on each draw started a large file again from nothing each time, and it was never drawn.
+    _wholeTile(dataset) {
+        if (!this._wholeTiles) this._wholeTiles = new WeakMap()
+        let tile = this._wholeTiles.get(dataset)
+        if (!tile || tile.cells !== dataset.cells) this._wholeTiles.set(dataset, (tile = { cells: dataset.cells }))
+        return tile
     }
 
     _batchMap(style, dataset) {

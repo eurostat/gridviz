@@ -57,11 +57,21 @@ const bundle = (() => {
     return fs.readFileSync(path.join(dir, 'gridviz.js'))
 })()
 
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.png': 'image/png', '.csv': 'text/csv' }
+const types = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.json': 'application/json',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.csv': 'text/csv',
+}
 const server = createServer((req, res) => {
     const file = path.join(root, decodeURIComponent(req.url.split('?')[0]))
-    if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return res.writeHead(404).end()
-    res.writeHead(200, { 'content-type': types[path.extname(file)] || 'application/octet-stream' }).end(fs.readFileSync(file))
+    if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory())
+        return res.writeHead(404).end()
+    res.writeHead(200, { 'content-type': types[path.extname(file)] || 'application/octet-stream' }).end(
+        fs.readFileSync(file)
+    )
 })
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
 const base = `http://127.0.0.1:${server.address().port}/`
@@ -76,10 +86,12 @@ const browser = await chromium.launch({
 
 // ---------- a page of an example, with the bundle we test ----------
 
-const openExample = async (example, needMap = true) => {
-    const context = await browser.newContext({ viewport: { width: 1200, height: 800 } })
+const openExample = async (example, needMap = true, contextOptions = { viewport: { width: 1200, height: 800 } }) => {
+    const context = await browser.newContext(contextOptions)
     // the bundle of the page is replaced by the one we test
-    await context.route(/\/gridviz(\.min)?\.js(\?.*)?$/, (r) => r.fulfill({ body: bundle, contentType: 'application/javascript' }))
+    await context.route(/\/gridviz(\.min)?\.js(\?.*)?$/, (r) =>
+        r.fulfill({ body: bundle, contentType: 'application/javascript' })
+    )
     // the maps of the page: found when they redraw
     await context.addInitScript(() => {
         window.__maps = []
@@ -169,7 +181,9 @@ const openExample = async (example, needMap = true) => {
             // 'none') shows the cell hovered, with a filter which the cellInfoHTML of the data layer sets for each cell, and
             // asks for a redraw
             issue174: () => {
-                const dataLayer = [...map.layers].reverse().find((l) => l.getDataset && typeof l.cellInfoHTML === 'function')
+                const dataLayer = [...map.layers]
+                    .reverse()
+                    .find((l) => l.getDataset && typeof l.cellInfoHTML === 'function')
                 const strokeStyle = new gridviz.StrokeStyle({
                     strokeWidth: (c, r, z) => 4 * z,
                     strokeColor: () => 'white',
@@ -179,7 +193,11 @@ const openExample = async (example, needMap = true) => {
                 const strokeLayer = new gridviz.GridLayer(dataLayer.dataset, [strokeStyle])
                 strokeLayer.cellInfoHTML = 'none'
                 const saved = map.layers
-                map.layers = [...saved.slice(0, saved.indexOf(dataLayer)), strokeLayer, ...saved.slice(saved.indexOf(dataLayer))]
+                map.layers = [
+                    ...saved.slice(0, saved.indexOf(dataLayer)),
+                    strokeLayer,
+                    ...saved.slice(saved.indexOf(dataLayer)),
+                ]
                 const original = dataLayer.cellInfoHTML
                 dataLayer.cellInfoHTML = (cell, r) => {
                     const html = original(cell, r)
@@ -221,7 +239,10 @@ const hover = async (page, hook) => {
         const loop = () => {
             requestAnimationFrame(loop)
             // the frames of the pointer on a cell, which has rested for 100 ms (the rectangle follows it by a frame or two)
-            setTimeout(() => window.on && performance.now() - window.lastMove > 100 && window.frames.push(window.hasRect()), 0)
+            setTimeout(
+                () => window.on && performance.now() - window.lastMove > 100 && window.frames.push(window.hasRect()),
+                0
+            )
         }
         if (!window.looping) {
             window.looping = true
@@ -238,7 +259,10 @@ const hover = async (page, hook) => {
             const x = box.x + box.w * fx
             const y = box.y + box.h * fy
             await page.mouse.move(x, y, { steps: 2 })
-            const on = await page.evaluate(([x, y]) => ((window.lastMove = performance.now()), (window.on = window.cellAt(x, y))), [x, y])
+            const on = await page.evaluate(
+                ([x, y]) => ((window.lastMove = performance.now()), (window.on = window.cellAt(x, y))),
+                [x, y]
+            )
             if (on) onCells++
             await page.waitForTimeout(120)
         }
@@ -275,10 +299,11 @@ const gesture = async (page, kind, hook) => {
     await page.mouse.move(target[0] - 3, target[1] - 3)
     await page.mouse.move(target[0], target[1], { steps: 3 })
     await page.waitForTimeout(700)
-    if (kind === 'scroll') for (let i = 0; i < 3; i++) (await page.mouse.wheel(0, -120), await page.waitForTimeout(90))
+    if (kind === 'scroll') for (let i = 0; i < 3; i++) await page.mouse.wheel(0, -120), await page.waitForTimeout(90)
     else {
         await page.mouse.down()
-        for (let i = 1; i <= 6; i++) (await page.mouse.move(target[0] + i * 5, target[1] + i * 3), await page.waitForTimeout(30))
+        for (let i = 1; i <= 6; i++)
+            await page.mouse.move(target[0] + i * 5, target[1] + i * 3), await page.waitForTimeout(30)
         await page.mouse.up()
         target = [target[0] + 30, target[1] + 18]
     }
@@ -322,14 +347,24 @@ for (const example of hoverExamples) {
     }
     const { page, context, errors } = t
     const baseline = await hover(page, 'none')
-    console.log(`   no hook     ${baseline.onCells} positions on a cell, ${baseline.frames} frames, missing ${baseline.missingPct}%`)
-    if (baseline.onCells < 5 || baseline.frames < 50) fail('too few cells under the pointer to test (' + baseline.onCells + ')')
+    console.log(
+        `   no hook     ${baseline.onCells} positions on a cell, ${baseline.frames} frames, missing ${baseline.missingPct}%`
+    )
+    if (baseline.onCells < 5 || baseline.frames < 50)
+        fail('too few cells under the pointer to test (' + baseline.onCells + ')')
     for (const hook of ['info', 'move', 'issue174']) {
         const r = await hover(page, hook)
-        console.log(`   ${hook.padEnd(11)} ${r.onCells} positions on a cell, ${r.frames} frames, missing ${r.missingPct}%, redraws at rest ${r.resting}`)
+        console.log(
+            `   ${hook.padEnd(11)} ${r.onCells} positions on a cell, ${r.frames} frames, missing ${
+                r.missingPct
+            }%, redraws at rest ${r.resting}`
+        )
         if (r.missingPct > baseline.missingPct + maxMissingOverBaseline)
-            fail(`${hook}: the rectangle is missing in ${r.missingPct}% of the frames (${baseline.missingPct}% without hook)`)
-        if (r.resting > maxRestingRedraws) fail(`${hook}: ${r.resting} redraws in 1 s with the pointer at rest (a loop?)`)
+            fail(
+                `${hook}: the rectangle is missing in ${r.missingPct}% of the frames (${baseline.missingPct}% without hook)`
+            )
+        if (r.resting > maxRestingRedraws)
+            fail(`${hook}: ${r.resting} redraws in 1 s with the pointer at rest (a loop?)`)
     }
     for (const kind of ['scroll', 'pan'])
         for (const hook of ['none', 'info', 'issue174']) {
@@ -338,9 +373,13 @@ for (const example of hoverExamples) {
                 console.log(`   ${kind} (${hook}): skipped, ${r.skipped}`)
                 continue
             }
-            console.log(`   ${kind} (${hook}): cell under the pointer ${r.cell}, rectangle ${r.rect}, cursor ${r.cursor}, tooltip ${r.tooltip}`)
-            if (r.cell && !r.rect) fail(`${kind} (${hook}): no rectangle on the cell under the pointer once the gesture is over`)
-            if (r.cell && !(r.tooltip > 0.5)) fail(`${kind} (${hook}): no tooltip for the cell under the pointer once the gesture is over`)
+            console.log(
+                `   ${kind} (${hook}): cell under the pointer ${r.cell}, rectangle ${r.rect}, cursor ${r.cursor}, tooltip ${r.tooltip}`
+            )
+            if (r.cell && !r.rect)
+                fail(`${kind} (${hook}): no rectangle on the cell under the pointer once the gesture is over`)
+            if (r.cell && !(r.tooltip > 0.5))
+                fail(`${kind} (${hook}): no tooltip for the cell under the pointer once the gesture is over`)
             if (r.cell && r.cursor !== 'pointer') fail(`${kind} (${hook}): the cursor is '${r.cursor}' over a cell`)
         }
     if (errors.length) fail('page errors: ' + errors.join(' | '))
@@ -362,7 +401,7 @@ const limitsTests = async () => {
     const cx = box.x + box.w / 2
     const cy = box.y + box.h / 2
     const wheel = async (dy, times) => {
-        for (let i = 0; i < times; i++) (await page.mouse.wheel(0, dy), await page.waitForTimeout(40))
+        for (let i = 0; i < times; i++) await page.mouse.wheel(0, dy), await page.waitForTimeout(40)
         await page.waitForTimeout(250)
     }
     const drag = async (x0, y0, x1, y1) => {
@@ -401,7 +440,10 @@ const limitsTests = async () => {
     await page.mouse.up()
     await page.waitForTimeout(300)
     v = await view()
-    check(inside(v, viewExtent), `dragged to a corner, the view stays inside the extent (${Math.round(v.e.xMin)}, ${Math.round(v.e.yMax)})`)
+    check(
+        inside(v, viewExtent),
+        `dragged to a corner, the view stays inside the extent (${Math.round(v.e.xMin)}, ${Math.round(v.e.yMax)})`
+    )
     check(near(v.e.xMin, viewExtent[0]) && near(v.e.yMax, viewExtent[3]), 'and it reaches the limit')
 
     // wheeling out next to a limit
@@ -409,7 +451,10 @@ const limitsTests = async () => {
     await page.mouse.move(box.x + box.w - 20, cy)
     await wheel(120, 3)
     v = await view()
-    check(v.z > 500 && inside(v, viewExtent), `zooming out next to a limit, the view stays inside the extent (z=${Math.round(v.z)})`)
+    check(
+        v.z > 500 && inside(v, viewExtent),
+        `zooming out next to a limit, the view stays inside the extent (z=${Math.round(v.z)})`
+    )
 
     // a drag past the limit and back: the map stays under the pointer
     for (const [name, set, xLimit] of [
@@ -426,7 +471,10 @@ const limitsTests = async () => {
         check(near(back.x, xLimit), `${name}: dragging back, the map waits for the pointer (x=${Math.round(back.x)})`)
         await page.mouse.move(x0 - 50, cy, { steps: 8 })
         const further = await view()
-        check(near(further.x, xLimit - 50 * 2000, 2), `${name}: then it follows the pointer (x=${Math.round(further.x)})`)
+        check(
+            near(further.x, xLimit - 50 * 2000, 2),
+            `${name}: then it follows the pointer (x=${Math.round(further.x)})`
+        )
         await page.mouse.up()
         await page.waitForTimeout(250)
     }
@@ -448,12 +496,16 @@ const limitsTests = async () => {
     await reset(4500000, 2900000, 800, { zoom })
     await page.waitForTimeout(250)
     await page.mouse.move(box.x + 300, cy)
-    const under = () => page.evaluate(([x, y]) => [M.geoCanvas.pixToGeoX(x), M.geoCanvas.pixToGeoY(y)], [300, box.h / 2])
+    const under = () =>
+        page.evaluate(([x, y]) => [M.geoCanvas.pixToGeoX(x), M.geoCanvas.pixToGeoY(y)], [300, box.h / 2])
     const g0 = await under()
     await wheel(-120, 2)
     const g1 = await under()
     v = await view()
-    check(v.z < 800 && near(g0[0], g1[0], v.z * 2) && near(g0[1], g1[1], v.z * 2), 'without a limit of the position, the wheel zooms at the pointer, from a view set by setView')
+    check(
+        v.z < 800 && near(g0[0], g1[0], v.z * 2) && near(g0[1], g1[1], v.z * 2),
+        'without a limit of the position, the wheel zooms at the pointer, from a view set by setView'
+    )
     await wheel(500, 8)
     check(near((await view()).z, 3000), 'and the zoom limit holds after setView')
 
@@ -462,12 +514,140 @@ const limitsTests = async () => {
     await drag(box.x + box.w - 20, cy, box.x + 20, cy)
     await page.mouse.up()
     await page.waitForTimeout(250)
-    check(near((await view()).x, 4500000 + (box.w - 40) * 1000, 2), 'without a limit of the position, a drag is not limited')
+    check(
+        near((await view()).x, 4500000 + (box.w - 40) * 1000, 2),
+        'without a limit of the position, a drag is not limited'
+    )
 
     if (errors.length) fail('page errors: ' + errors.join(' | '))
     await context.close()
 }
 await limitsTests()
+
+// ---------- a phone: the tooltip of a tap does not come back after a pan or a zoom with the fingers ----------
+
+const touchTests = async () => {
+    const example = hoverExamples[0]
+    console.log(`\n${example}, on a phone: the tooltip is for a tap, not for a pan or a zoom`)
+    const check = (ok, msg) => (ok ? console.log('   ok   ' + msg) : fail(msg))
+    const { page, context, errors } = await openExample('examples/' + example, true, {
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 2,
+        hasTouch: true,
+        isMobile: true,
+    })
+    const cdp = await context.newCDPSession(page)
+    const touch = (type, points) =>
+        cdp.send('Input.dispatchTouchEvent', { type, touchPoints: points.map(([x, y], id) => ({ x, y, id })) })
+    const opacity = () => page.evaluate(() => +getComputedStyle(M.tooltip.tooltip.node()).opacity)
+    // the highest opacity of the tooltip on any frame, from now on
+    const watch = () =>
+        page.evaluate(() => {
+            window.maxTip = 0
+            if (window.watching) return
+            window.watching = true
+            const frame = () => {
+                window.maxTip = Math.max(window.maxTip, +getComputedStyle(M.tooltip.tooltip.node()).opacity)
+                requestAnimationFrame(frame)
+            }
+            requestAnimationFrame(frame)
+        })
+    const box = await page.evaluate(() => {
+        const r = M.geoCanvas.canvas.getBoundingClientRect()
+        return { x: r.x, y: r.y, w: r.width, h: r.height }
+    })
+    const findCell = async () => {
+        for (let dy = 0; dy < 200; dy += 10)
+            for (let dx = -120; dx < 120; dx += 8) {
+                const x = box.x + box.w / 2 + dx
+                const y = box.y + box.h / 2 + dy
+                if (await page.evaluate(([x, y]) => window.cellAt(x, y), [x, y])) return [x, y]
+            }
+    }
+    let target = await findCell()
+    if (!target) return fail('no cell to tap')
+    const tap = async () => {
+        await touch('touchStart', [target])
+        await page.waitForTimeout(50)
+        await touch('touchEnd', [])
+        let tip = 0
+        for (let t = 0; t < 1500 && tip < 0.5; t += 100) await page.waitForTimeout(100), (tip = await opacity())
+        return tip
+    }
+    const clear = async () => {
+        await page.evaluate(() => M.clearHover())
+        await page.waitForTimeout(500)
+    }
+    const settle = () => page.waitForTimeout(2500)
+
+    // a tap on a cell shows its tooltip: without it, the checks below would pass with no tooltip at all
+    check((await tap()) > 0.5, 'a tap on a cell shows its tooltip')
+
+    // a drag with one finger, from somewhere else
+    await clear()
+    await watch()
+    let p = [box.x + box.w * 0.8, box.y + box.h * 0.3]
+    await touch('touchStart', [p])
+    for (let i = 0; i < 15; i++)
+        (p = [p[0] - 12, p[1] + 4]), await touch('touchMove', [p]), await page.waitForTimeout(16)
+    await touch('touchEnd', [])
+    await settle()
+    check(
+        (await page.evaluate(() => window.maxTip)) < 0.05,
+        'after a tap, a pan with a finger does not bring a tooltip back'
+    )
+
+    // a pinch, after another tap
+    await tap()
+    await clear()
+    await watch()
+    let a = [box.x + box.w / 2 - 40, box.y + box.h * 0.3]
+    let b = [box.x + box.w / 2 + 40, box.y + box.h * 0.3]
+    await touch('touchStart', [a])
+    await touch('touchStart', [a, b])
+    for (let i = 0; i < 15; i++)
+        (a = [a[0] - 4, a[1]]), (b = [b[0] + 4, b[1]]), await touch('touchMove', [a, b]), await page.waitForTimeout(16)
+    await touch('touchEnd', [])
+    await settle()
+    check((await page.evaluate(() => window.maxTip)) < 0.05, 'after a tap, a pinch does not bring a tooltip back')
+
+    // a panel of the page over the map, scrolled with a finger: it makes no mouse event, and the tooltip must go all the same
+    await clear()
+    await page.evaluate(() => {
+        const panel = document.createElement('div')
+        panel.id = 'touch-panel'
+        panel.style.cssText =
+            'position:fixed;left:0;right:0;bottom:0;height:200px;overflow:auto;background:white;z-index:10000'
+        panel.innerHTML = '<div style="height:1000px">a panel</div>'
+        document.body.appendChild(panel)
+    })
+    target = await findCell()
+    if (!target) return fail('no cell to tap')
+    check((await tap()) > 0.5, 'a tap on a cell shows its tooltip, again')
+    let q = [box.x + box.w / 2, box.y + box.h - 60]
+    await touch('touchStart', [q])
+    for (let i = 0; i < 10; i++) (q = [q[0], q[1] - 8]), await touch('touchMove', [q]), await page.waitForTimeout(16)
+    await touch('touchEnd', [])
+    await page.waitForTimeout(800)
+    check((await opacity()) < 0.05, 'a scroll of a panel with a finger hides the tooltip')
+    await page.evaluate(() => document.getElementById('touch-panel').remove())
+
+    // a mouse still has its hover back after a redraw (the pointer is known again once the mouse moves)
+    await clear()
+    target = await findCell()
+    if (!target) return fail('no cell for the mouse')
+    await page.mouse.move(target[0] - 2, target[1] - 2)
+    await page.mouse.move(target[0], target[1], { steps: 2 })
+    await page.waitForTimeout(400)
+    await page.evaluate(() => M.redrawNow())
+    let tip = 0
+    for (let t = 0; t < 1500 && tip < 0.5; t += 100) await page.waitForTimeout(100), (tip = await opacity())
+    check(tip > 0.5, 'a mouse over a cell still has its tooltip after a redraw')
+
+    if (errors.length) fail('page errors: ' + errors.join(' | '))
+    await context.close()
+}
+await touchTests()
 
 if (all) {
     // every example of the gallery loads, with its real data, without error
@@ -480,7 +660,9 @@ if (all) {
             try {
                 const { page, context, errors } = await openExample('examples/' + example, false)
                 // the examples which use another version of gridviz, from a CDN, have no map to find
-                console.log(`   ${errors.length ? 'FAIL' : 'ok  '} ${example}${errors.length ? ': ' + errors.join(' | ') : ''}`)
+                console.log(
+                    `   ${errors.length ? 'FAIL' : 'ok  '} ${example}${errors.length ? ': ' + errors.join(' | ') : ''}`
+                )
                 if (errors.length) failures++
                 await context.close()
             } catch (e) {

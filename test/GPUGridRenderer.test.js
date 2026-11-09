@@ -238,6 +238,46 @@ test('a build in progress starts again if the tile or the colours have changed',
     assert.equal(batch.key, 'k2')
 })
 
+// A dataset of one file (CSVGrid) is one tile. If it were a new tile on every draw, a build left unfinished at a deadline would start again from nothing on the next:
+// a file of 100,000 cells was never drawn, a slice of 8 ms at a time.
+test('a dataset of one file is the same tile on every draw, and its build goes on where it stopped', () => {
+    const renderer = makeRenderer({})
+    Object.assign(renderer, { gl: fakeGL(), _jobs: new WeakMap(), _allBatches: new Set(), _gpuBytes: 0, _colors: new Map() })
+    renderer._parseColor = () => [255, 0, 0, 255]
+    const dataset = { cells: cellsOfTile(1000) }
+    const tileOf = () => {
+        let tile
+        renderer._tiles(dataset, null, (key, t) => (tile = t))
+        return tile
+    }
+    const first = tileOf()
+    assert.equal(tileOf(), first)
+    assert.equal(first.cells, dataset.cells)
+
+    const item = { style: shapeStyle(), resolution: 100, z: 10, key: 'k' }
+    const byTile = new Map()
+    const now = performance.now
+    let calls = 0
+    performance.now = () => (calls++ === 0 ? -1 : Infinity)
+    assert.equal(renderer._build(item, 'all', tileOf(), byTile, undefined, 0), null)
+    performance.now = now
+    let read = 0
+    const reader = renderer._cellReader.bind(renderer)
+    renderer._cellReader = (it) => {
+        const r = reader(it)
+        return (c, out) => (read++, r(c, out))
+    }
+    const batch = renderer._build(item, 'all', tileOf(), byTile, undefined)
+    assert.equal(read, 0, 'the build went on with the reader it had, and did not start again')
+    assert.equal(batch.count, 1000)
+    assert.equal(batch.tile, tileOf(), 'a built batch is fresh on the next draw')
+
+    // new cells for the dataset: a new tile
+    dataset.cells = cellsOfTile(10)
+    assert.notEqual(tileOf(), first)
+    assert.equal(tileOf().cells.length, 10)
+})
+
 test('no stand-in for a dataset whose resolution is not known yet, and otherwise a coarser one', () => {
     const renderer = makeRenderer({})
     const datasets = [{ name: 100 }, { name: 1000 }, { name: 10000 }, { name: 100000 }]
