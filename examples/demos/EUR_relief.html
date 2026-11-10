@@ -31,7 +31,7 @@
             <label for="radio_joyplot"><input type="radio" id="radio_joyplot" name="rdreliefstyle"
                     value="joyplot">Joyplot</label><br>
             <hr>
-            <div style="display: none;">
+            <div>
                 <label>Relief smoothing (slow)</label>
                 <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
                 <br>
@@ -96,9 +96,9 @@
         </form>
     </div>
 
-    <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz@3.5.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.1.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.2.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@3.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3.2.4"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale@4.0.2"></script>
@@ -296,14 +296,14 @@
             // define smoothing function
             const sr = +document.getElementById('sReliefSmoothing').value
             let smoothingFunction = sr > 0 ?
-                (styles) => new gridviz_smoothing.KernelSmoothingStyle({
+                (styles) => [new gridviz_smoothing.KernelSmoothingStyle({
                     value: (cell) => +cell.v,
                     smoothedProperty: "v",
                     sigma: (r, z) => sr * r / 2, //r + sr * z, // in geo unit - sr is in screen pixel
                     resolutionSmoothed: (hd && rsty == "hyps" ? (r, z) => Math.ceil(z) : (r, z) => r),
-                    filterSmoothed: (value) => value > 0.05,
+                    filterSmoothed: Number.isFinite,
                     styles: styles
-                })
+                })]
                 : styles => styles
 
             // set layers
@@ -316,34 +316,40 @@
             const reliefStyles = []
 
             // hypsometric tints
+            const adj = document.getElementById("cbHypssea").checked
+            const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
+            const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff)
+            const classNumber = +document.getElementById('sReliefNb').value
+            const adaptive = document.getElementById("cbHypsDyn").checked
+            const fixedMin = adj && seaLevel ? seaLevel : 0
+            const fixedBreaks = Array.from(
+                { length: classNumber - 1 },
+                (_, i) => fixedMin + (3000 - fixedMin) * (i + 1) / (classNumber - 1)
+            )
+            const fixedClassifier = gridviz.classifier(fixedBreaks)
+            const getHypsometricClassifier = (cells) => {
+                if (!adaptive) return fixedClassifier
+                if (quantile)
+                    return gridviz.viewScaleQuantileClassifer({
+                        valueFunction: (c) => c.v,
+                        classNumber: classNumber,
+                    })(cells)
+                const [min, max] = d3.extent(cells, (c) => c.v)
+                const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
+                const breaks = Array.from({ length: classNumber - 1 }, (_, i) => {
+                    const t = scaleRelief((i + 1) / classNumber)
+                    return min_ + (max - min_) * t
+                })
+                return gridviz.classifier(breaks)
+            }
             if (rsty == "hyps") {
-                const adj = document.getElementById("cbHypssea").checked
-                const scaleReliefCoeff = 3 + 0.3 * +document.getElementById('sReliefExageration').value
-                const scaleRelief = gridviz.logarithmicScale(scaleReliefCoeff) //exponentialScale logarithmicScale
-                const classNumber = document.getElementById('sReliefNb').value
-
                 const colors = []
                 const colorRamp = ramps[document.getElementById("hypscol").value]
                 for (let i = 0; i <= (classNumber - 1); i++) colors.push(colorRamp(i / (classNumber - 1)))
 
-                const adaptive = document.getElementById("cbHypsDyn").checked
                 if (adaptive) {
                     const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                        viewScale: quantile ? gridviz.viewScaleQuantileClassifer({
-                            valueFunction: (c) => c.v,
-                            classNumber: classNumber,
-                        }) :
-                            cells => {
-                                [min, max] = d3.extent(cells, c => c.v)
-                                const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                                const breaks = []
-                                for (let i = 1; i < classNumber; i++) {
-                                    let t = i / classNumber
-                                    t = scaleRelief(t)
-                                    breaks.push(min_ + (max - min_) * t)
-                                }
-                                return gridviz.classifier(breaks)
-                            },
+                        viewScale: (cells) => getHypsometricClassifier(cells),
                         code: (c, r, z, classifier) => classifier(c.v),
                         color: { ...colors },
                     })
@@ -360,17 +366,13 @@
                     hypsoStyle.legends = [legend]
                     reliefStyles.push(hypsoStyle)
                 } else {
-                    const breaks = []
-                    const min = adj && seaLevel ? seaLevel : 0
                     for (let i = 0; i < classNumber; i++) {
                         colors.push(d3.interpolateRdYlGn(1 - i / (classNumber - 1)))
-                        if (i > 0) breaks.push(min + (3000 - min) * i / (classNumber - 1))
                     }
-                    const classifierHyps = gridviz.classifier(breaks)
 
                     //hypso style
                     const hypsoStyle = new gridviz.SquareColorCategoryWebGLStyle({
-                        code: (c) => classifierHyps(c.v),
+                        code: (c) => fixedClassifier(c.v),
                         color: { ...colors },
                     })
 
@@ -383,24 +385,9 @@
             // tanaka style
             if (rsty == "hyps" && document.getElementById("cbTanaka").checked) {
                 const tanakaStyle = new gridviz.SideTanakaStyle({
-                    classifier: quantile ? cells => {
-                        const classifier = gridviz.viewScaleQuantileClassifer({
-                            valueFunction: (c) => c.v,
-                            classNumber: classNumber,
-                        })(cells)
-                        return c => classifier(c.v)
-                    } : cells => {
-                        // return a function which for each cell returns its class number
-                        [min, max] = d3.extent(cells, c => c.v)
-                        const min_ = adj ? Math.max(min, seaLevel) : min < 0 ? 0 : min
-                        const breaks = []
-                        for (let i = 1; i < classNumber; i++) {
-                            let t = i / classNumber
-                            t = scaleRelief(t)
-                            breaks.push(min_ + (max - min_) * t)
-                        }
-                        const cs = gridviz.classifier(breaks)
-                        return c => cs(c.v)
+                    classifier: (cells) => {
+                        const classifier = getHypsometricClassifier(cells)
+                        return (c) => classifier(c.v)
                     },
                     diamond: shadingDiamond,
                 })
