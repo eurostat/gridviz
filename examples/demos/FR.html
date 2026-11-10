@@ -103,6 +103,7 @@
         </div>
 
         <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.2.1"></script>
         <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -121,11 +122,15 @@
 
             //create datasets, indexed by geo, theme and year
             const ds = {}
-            const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/'
+            const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/parquet/'
             const dataset = (geo, theme, year, preprocess) =>
                 new gridviz.MultiResolutionDataset(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) => new gridviz.TiledGrid(map, baseURL + geo + '/' + theme + '/' + year + '/' + r + 'm/'),
+                    (r) =>
+                        new gviz_par.TiledParquetGrid(
+                            map,
+                            baseURL + geo + '/' + theme + '/' + year + '/' + r + 'm/'
+                        ),
                     { preprocess: preprocess }
                 )
             for (let geo of ['met', 'reun', 'mart']) {
