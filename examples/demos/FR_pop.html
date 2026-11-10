@@ -118,6 +118,7 @@
         </div>
 
         <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.2.1"></script>
         <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@3.0.3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
@@ -159,9 +160,9 @@
                 new gridviz.MultiResolutionDataset(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
                     (r) =>
-                        new gridviz.TiledGrid(
+                        new gviz_par.TiledParquetGrid(
                             map,
-                            'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/' +
+                            'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/parquet/' +
                                 geo +
                                 '/ts_ind/' +
                                 r +
