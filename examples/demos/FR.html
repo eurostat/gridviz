@@ -25,7 +25,7 @@
             "
         >
             <span style="font-size: 1.25em">
-                <div id="layer">
+                <div>
                     Année:
                     <select id="year">
                         <option value="2015">2015</option>
@@ -34,48 +34,31 @@
                         <option value="2021" selected>2021</option>
                     </select>
                     <br />
-                    <span style="font-size: 1.25em; font-weight: bold">Population</span><br />
-                    <input type="radio" name="layer" id="pop" value="pop" checked />
-                    <label for="pop">Population totale</label>
-                    <br />
-                    <input type="radio" name="layer" id="popAge" value="popAge" />
-                    <label for="popAge">Par âge</label>
-                    <input type="radio" name="layer" id="popAge3" value="popAge3" />
-                    <label for="popAge3">Par âge (3 groupes)</label>
-                    <br />
-                    <input type="radio" name="layer" id="ageR" value="ageR" />
-                    <label for="ageR">Equilibre jeunes/âgés</label>
-                    <br />
-                    <input type="radio" name="layer" id="income" value="income" />
-                    <label for="income">Revenus</label>
-                    <input type="radio" name="layer" id="poverty" value="poverty" />
-                    <label for="poverty">Pauvreté</label>
-                    <br />
-                    <span style="font-size: 1.25em; font-weight: bold">Ménages</span><br />
-                    <input type="radio" name="layer" id="men_size" value="men_size" />
-                    <label for="men_size">Taille</label>
-                    <input type="radio" name="layer" id="men_mono" value="men_mono" />
-                    <label for="men_mono">Monoparental</label>
-                    <br />
-                    <span style="font-size: 1.25em; font-weight: bold">Logement</span><br />
-                    <input type="radio" name="layer" id="men_owner" value="men_owner" />
-                    <label for="men_owner">Propriétaires</label>
-                    <br />
-                    <input type="radio" name="layer" id="men_house_surf" value="men_house_surf" />
-                    <label for="men_house_surf">Surface</label>
-                    <br />
-                    <input type="radio" name="layer" id="men_house_collective" value="men_house_collective" />
-                    <label for="men_house_collective">Maison / logement collectif</label>
-                    <br />
-                    <input type="radio" name="layer" id="log_age" value="log_age" />
-                    <label for="log_age">Par année de construction</label>
-                    <br />
-                    Logement social:
-                    <br />
-                    <input type="radio" name="layer" id="log_soc_nb" value="log_soc_nb" />
-                    <label for="log_soc_nb">Nombre</label>
-                    <input type="radio" name="layer" id="log_soc_per" value="log_soc_per" />
-                    <label for="log_soc_per">Pourcentage</label>
+                    Couche:
+                    <select id="layer" name="layer">
+                        <optgroup label="Population">
+                            <option value="pop" selected>Population totale</option>
+                            <option value="popAge">Par âge</option>
+                            <option value="popAge3">Par âge (3 groupes)</option>
+                            <option value="ageR">Equilibre jeunes/âgés</option>
+                            <option value="income">Revenus</option>
+                            <option value="poverty">Pauvreté</option>
+                        </optgroup>
+                        <optgroup label="Ménages">
+                            <option value="men_size">Taille</option>
+                            <option value="men_mono">Monoparental</option>
+                        </optgroup>
+                        <optgroup label="Logement">
+                            <option value="men_owner">Propriétaires</option>
+                            <option value="men_house_surf">Surface</option>
+                            <option value="men_house_collective">Maison / logement collectif</option>
+                            <option value="log_age">Par année de construction</option>
+                        </optgroup>
+                        <optgroup label="Logement social">
+                            <option value="log_soc_nb">Nombre</option>
+                            <option value="log_soc_per">Pourcentage</option>
+                        </optgroup>
+                    </select>
                 </div>
                 <hr />
                 Géo:
@@ -241,7 +224,7 @@
             //
             const update = () => {
                 //read GUI selection
-                const layCode = document.querySelector('input[name="layer"]:checked').value
+                const layCode = document.querySelector('#layer').value
                 const year = document.querySelector('#year').value
                 const geo = document.querySelector('#geo').value
 
@@ -848,8 +831,8 @@
             //select layer and geography from URL
             let ls = gridviz.getParameterByName('lay')
             if (ls) {
-                const b = document.querySelector('#' + ls)
-                if (b) b.checked = true
+                const layerSelect = document.querySelector('#layer')
+                if (Array.from(layerSelect.options).some((option) => option.value === ls)) layerSelect.value = ls
             }
             ls = gridviz.getParameterByName('geo')
             if (ls) document.querySelector('#geo').value = ls
