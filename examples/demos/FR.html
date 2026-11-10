@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <title>INSEE Filosofi données carroyées en carte</title>
+        <title>Carte INSEE Filosofi données carroyées</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -37,15 +37,22 @@
                 top: 0;
                 z-index: 1;
                 display: flex;
-                min-height: 36px;
+                min-height: 50px;
                 align-items: center;
-                justify-content: flex-end;
+                justify-content: space-between;
                 gap: 12px;
-                padding: 4px 12px;
+                padding: 8px 14px;
                 background: #fff;
                 color: #173247;
                 cursor: pointer;
                 list-style: none;
+            }
+
+            .panel-title {
+                font-size: 0.95rem;
+                font-weight: 700;
+                letter-spacing: 0.01em;
+                line-height: 1.25;
             }
 
             .control-panel summary::-webkit-details-marker {
@@ -54,9 +61,17 @@
 
             .control-panel summary::after {
                 content: '+';
-                color: #41647a;
-                font-size: 1.4rem;
-                font-weight: 400;
+                display: grid;
+                width: 28px;
+                height: 28px;
+                flex: 0 0 28px;
+                place-items: center;
+                border: 1px solid #d5dee5;
+                border-radius: 50%;
+                background: #f5f8fa;
+                color: #176b87;
+                font-size: 1.2rem;
+                font-weight: 500;
             }
 
             .control-panel[open] summary::after {
@@ -64,8 +79,8 @@
             }
 
             .panel-content {
-                max-height: calc(min(72vh, 620px) - 36px);
-                max-height: calc(min(72dvh, 620px) - 36px);
+                max-height: calc(min(72vh, 620px) - 50px);
+                max-height: calc(min(72dvh, 620px) - 50px);
                 overflow-y: auto;
                 padding: 0 16px 14px;
                 overscroll-behavior: contain;
@@ -172,8 +187,8 @@
                 }
 
                 .panel-content {
-                    max-height: calc(min(56vh, 460px) - 36px);
-                    max-height: calc(min(56dvh, 460px) - 36px);
+                    max-height: calc(min(56vh, 460px) - 50px);
+                    max-height: calc(min(56dvh, 460px) - 50px);
                 }
             }
 
@@ -192,8 +207,8 @@
                 }
 
                 .panel-content {
-                    max-height: calc(80vh - 36px);
-                    max-height: calc(80dvh - 36px);
+                    max-height: calc(80vh - 50px);
+                    max-height: calc(80dvh - 50px);
                 }
             }
         </style>
@@ -203,16 +218,10 @@
         <div id="viz-container" style="height: 100%; width: 100%"></div>
 
         <details class="control-panel" open>
-            <summary aria-label="Afficher ou masquer les contrôles"></summary>
+            <summary aria-label="Afficher ou masquer les contrôles">
+                <span class="panel-title">Statistiques carroyées INSEE Filosofi</span>
+            </summary>
             <div class="panel-content">
-                <label class="control-field" for="geo">
-                    Territoire
-                    <select id="geo">
-                        <option value="met" selected>France métropolitaine</option>
-                        <option value="reun">Réunion</option>
-                        <option value="mart">Martinique</option>
-                    </select>
-                </label>
                 <label class="control-field" for="layer">
                     Indicateur
                     <select id="layer" name="layer">
@@ -247,6 +256,14 @@
                         <option value="2017">2017</option>
                         <option value="2019">2019</option>
                         <option value="2021" selected>2021</option>
+                    </select>
+                </label>
+                <label class="control-field" for="geo">
+                    Territoire
+                    <select id="geo">
+                        <option value="met" selected>France métropolitaine</option>
+                        <option value="reun">Réunion</option>
+                        <option value="mart">Martinique</option>
                     </select>
                 </label>
                 <fieldset class="map-options">
