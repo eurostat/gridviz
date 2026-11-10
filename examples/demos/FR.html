@@ -2,39 +2,221 @@
 <html lang="en" style="height: 100%">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <title>INSEE Filosofi données carroyées en carte</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                height: 100%;
+                overflow: hidden;
+                font-family: Arial, Helvetica, sans-serif;
+                color: #172b3a;
+            }
+
+            .control-panel {
+                position: absolute;
+                z-index: 2;
+                top: max(12px, env(safe-area-inset-top));
+                left: max(12px, env(safe-area-inset-left));
+                width: min(390px, calc(100vw - 24px));
+                max-height: min(72vh, 620px);
+                max-height: min(72dvh, 620px);
+                overflow: hidden;
+                border: 1px solid #d5dee5;
+                border-radius: 14px;
+                background: #fff;
+                box-shadow: 0 8px 28px #17324726;
+            }
+
+            .control-panel summary {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+                display: flex;
+                min-height: 54px;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 16px;
+                background: #fff;
+                color: #173247;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: 700;
+                list-style: none;
+            }
+
+            .control-panel summary::-webkit-details-marker {
+                display: none;
+            }
+
+            .control-panel summary::after {
+                content: '+';
+                color: #41647a;
+                font-size: 1.4rem;
+                font-weight: 400;
+            }
+
+            .control-panel[open] summary::after {
+                content: '−';
+            }
+
+            .panel-content {
+                max-height: calc(min(72vh, 620px) - 54px);
+                max-height: calc(min(72dvh, 620px) - 54px);
+                overflow-y: auto;
+                padding: 0 16px 14px;
+                overscroll-behavior: contain;
+            }
+
+            .control-field {
+                display: block;
+                margin-top: 12px;
+                color: #405563;
+                font-size: 0.8rem;
+                font-weight: 700;
+            }
+
+            .control-field select {
+                display: block;
+                width: 100%;
+                min-height: 44px;
+                margin-top: 5px;
+                padding: 8px 34px 8px 10px;
+                border: 1px solid #c5d0d8;
+                border-radius: 8px;
+                background: #fff;
+                color: #172b3a;
+                font: inherit;
+                font-size: 0.95rem;
+            }
+
+            .map-options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px 12px;
+                margin: 14px 0 0;
+                padding: 8px 0 0;
+                border: 0;
+                border-top: 1px solid #e6ebef;
+            }
+
+            .map-options legend {
+                padding: 0;
+                color: #405563;
+                font-size: 0.8rem;
+                font-weight: 700;
+            }
+
+            .map-options label {
+                display: inline-flex;
+                min-height: 40px;
+                align-items: center;
+                gap: 7px;
+                color: #273f4e;
+                font-size: 0.88rem;
+            }
+
+            .map-options input {
+                width: 18px;
+                height: 18px;
+                margin: 0;
+                accent-color: #176b87;
+            }
+
+            .source-link {
+                display: inline-block;
+                margin-top: 10px;
+                color: #176b87;
+                font-size: 0.82rem;
+                text-decoration-thickness: 1px;
+                text-underline-offset: 2px;
+            }
+
+            .attribution {
+                position: absolute;
+                right: max(8px, env(safe-area-inset-right));
+                bottom: max(8px, env(safe-area-inset-bottom));
+                z-index: 1;
+                padding: 3px 6px;
+                border-radius: 4px;
+                background: #ffffffdc;
+                font-size: 0.75rem;
+            }
+
+            .attribution a {
+                color: #176b87;
+                text-decoration: none;
+            }
+
+            :focus-visible {
+                outline: 3px solid #1684a4;
+                outline-offset: 2px;
+            }
+
+            @media (max-width: 600px) {
+                .control-panel {
+                    top: auto;
+                    right: max(12px, env(safe-area-inset-right));
+                    bottom: max(12px, env(safe-area-inset-bottom));
+                    left: max(12px, env(safe-area-inset-left));
+                    width: auto;
+                    max-height: min(56vh, 460px);
+                    max-height: min(56dvh, 460px);
+                }
+
+                .attribution {
+                    bottom: calc(max(12px, env(safe-area-inset-bottom)) + min(56dvh, 460px) + 8px);
+                }
+
+                .panel-content {
+                    max-height: calc(min(56vh, 460px) - 54px);
+                    max-height: calc(min(56dvh, 460px) - 54px);
+                }
+            }
+
+            @media (max-height: 480px) and (max-width: 900px) {
+                .control-panel {
+                    top: max(8px, env(safe-area-inset-top));
+                    right: auto;
+                    bottom: auto;
+                    left: max(8px, env(safe-area-inset-left));
+                    max-height: 80vh;
+                    max-height: 80dvh;
+                }
+
+                .attribution {
+                    bottom: max(8px, env(safe-area-inset-bottom));
+                }
+
+                .panel-content {
+                    max-height: calc(80vh - 54px);
+                    max-height: calc(80dvh - 54px);
+                }
+            }
+        </style>
     </head>
 
-    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+    <body>
         <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-        <div
-            style="
-                position: absolute;
-                left: 20px;
-                top: 20px;
-                width: auto;
-                height: auto;
-                padding: 10px;
-                border: 0px;
-                border-radius: 5px;
-                background: #ffffffcc;
-                line-height: 1.6;
-                box-shadow: 5px 5px 5px grey;
-            "
-        >
-            <span style="font-size: 1.25em">
-                <div>
-                    Année:
-                    <select id="year">
-                        <option value="2015">2015</option>
-                        <option value="2017">2017</option>
-                        <option value="2019">2019</option>
-                        <option value="2021" selected>2021</option>
+        <details class="control-panel" open>
+            <summary>Carte Filosofi <span>Filtres</span></summary>
+            <div class="panel-content">
+                <label class="control-field" for="geo">
+                    Territoire
+                    <select id="geo">
+                        <option value="met" selected>France métropolitaine</option>
+                        <option value="reun">Réunion</option>
+                        <option value="mart">Martinique</option>
                     </select>
-                    <br />
-                    Couche:
+                </label>
+                <label class="control-field" for="layer">
+                    Indicateur
                     <select id="layer" name="layer">
                         <optgroup label="Population">
                             <option value="pop" selected>Population totale</option>
@@ -59,31 +241,31 @@
                             <option value="log_soc_per">Pourcentage</option>
                         </optgroup>
                     </select>
-                </div>
-                <hr />
-                Géo:
-                <select id="geo">
-                    <option value="met" selected>France métropolitaine</option>
-                    <option value="reun">Réunion</option>
-                    <option value="mart">Martinique</option>
-                </select>
-                <br />
-                <input type="checkbox" id="label" checked />
-                <label for="label">Noms villes</label>
-                <input type="checkbox" id="boundary" checked />
-                <label for="boundary">Limites adm.</label>
-                <input type="checkbox" id="background" checked />
-                <label for="background">Fond</label>
-                <hr />
-                Source:
+                </label>
+                <label class="control-field" for="year">
+                    Année
+                    <select id="year">
+                        <option value="2015">2015</option>
+                        <option value="2017">2017</option>
+                        <option value="2019">2019</option>
+                        <option value="2021" selected>2021</option>
+                    </select>
+                </label>
+                <fieldset class="map-options">
+                    <legend>Afficher</legend>
+                    <label for="label"><input type="checkbox" id="label" checked /> Noms des villes</label>
+                    <label for="boundary"><input type="checkbox" id="boundary" checked /> Limites admin.</label>
+                    <label for="background"><input type="checkbox" id="background" checked /> Fond</label>
+                </fieldset>
                 <a
+                    class="source-link"
                     href="https://www.insee.fr/fr/statistiques/8735243"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >INSEE - Filosofi - 200m</a
+                    >Source : INSEE, Filosofi — carreaux de 200 m</a
                 >
-            </span>
-        </div>
+            </div>
+        </details>
 
         <script src="https://cdn.jsdelivr.net/npm/gridviz@3.5.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet@1.2.1"></script>
@@ -841,18 +1023,7 @@
             map.setViewFromURL()
         </script>
 
-        <div
-            style="
-                position: absolute;
-                right: 0px;
-                bottom: 0px;
-                width: auto;
-                height: auto;
-                padding: 1px;
-                border: 0px;
-                background: #ffffffcc;
-            "
-        >
+        <div class="attribution">
             <span style="font-size: 0.8em"
                 ><a href="https://github.com/eurostat/gridviz" style="text-decoration: none">GridViz</a> | ©
                 <a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span
