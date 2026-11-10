@@ -31,7 +31,8 @@
                 <select id="year">
                     <option value="2015">2015</option>
                     <option value="2017">2017</option>
-                    <option value="2019" selected>2019</option>
+                    <option value="2019">2019</option>
+                    <option value="2021" selected>2021</option>
                 </select>
             </div>
             <hr />
@@ -89,7 +90,7 @@
                 )
 
             //define datasets
-            const datasets = { 2015: getDataset(2015), 2017: getDataset(2017), 2019: getDataset(2019) }
+            const datasets = { 2015: getDataset(2015), 2017: getDataset(2017), 2019: getDataset(2019), 2021: getDataset(2021) }
 
             //define ternary classifier
             const ternaryColorClassifier = gridviz.ternaryColorClassifier(
