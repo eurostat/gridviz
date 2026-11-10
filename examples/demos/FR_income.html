@@ -89,6 +89,23 @@
             .setZoomExtent([3, 1500])
             .addZoomButtons()
 
+        let initializing = true
+        const updateURL = () => {
+            if (initializing) return
+            const url = new URL(window.location.href)
+            url.searchParams.set('lay', document.querySelector('input[name="layer"]:checked').value)
+            url.searchParams.set('year', document.querySelector('#year').value)
+            url.searchParams.set('geo', document.querySelector('#geo').value)
+            for (const id of ['label', 'boundary', 'background'])
+                url.searchParams.set(id, String(document.querySelector('#' + id).checked))
+            const view = map.getView()
+            url.searchParams.set('x', String(view.x))
+            url.searchParams.set('y', String(view.y))
+            url.searchParams.set('z', String(view.z))
+            window.history.replaceState(window.history.state, '', url.toString())
+        }
+        map.geoCanvas.onZoomEndFun = updateURL
+
         //income datasets, indexed by geo region and year
         const dsurl = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/parquet/'
         const incDataset = {}
@@ -464,6 +481,7 @@
 
             //redraw
             map.redraw()
+            updateURL()
         }
 
         //
@@ -572,19 +590,41 @@
         // show/hide background
         document.querySelector('#background').addEventListener('change', update)
 
-        //select layer from URL
-        let ls = gridviz.getParameterByName('lay')
-        if (ls) {
-            const b = document.querySelector('#' + ls)
-            if (b) b.checked = true
+        //select GUI state from URL
+        const params = new URLSearchParams(window.location.search)
+        const layer = params.get('lay') ?? params.get('layer')
+        if (layer != null) {
+            const input = Array.from(document.querySelectorAll('input[name="layer"]')).find(
+                (option) => option.value === layer
+            )
+            if (input) input.checked = true
         }
-        //select geo from URL
-        ls = gridviz.getParameterByName('geo')
-        if (ls) document.querySelector('#geo').value = ls
+        const setSelectFromURL = (selector, value) => {
+            const element = document.querySelector(selector)
+            if (value != null && Array.from(element.options).some((option) => option.value === value))
+                element.value = value
+        }
+        setSelectFromURL('#year', params.get('year'))
+        setSelectFromURL('#geo', params.get('geo'))
+        for (const id of ['label', 'boundary', 'background']) {
+            const value = params.get(id)
+            if (value === 'true' || value === '1') document.querySelector('#' + id).checked = true
+            else if (value === 'false' || value === '0') document.querySelector('#' + id).checked = false
+        }
 
         //initialise
         updateGeo()
-        map.setViewFromURL()
+        const view = map.getView()
+        const coordinate = (key) => {
+            const value = params.get(key)
+            if (value == null || value.trim() === '') return undefined
+            const number = Number(value)
+            return Number.isFinite(number) ? number : undefined
+        }
+        const zoom = coordinate('z')
+        map.setView(coordinate('x') ?? view.x, coordinate('y') ?? view.y, zoom > 0 ? zoom : view.z)
+        initializing = false
+        updateURL()
     </script>
 
     <div style="
