@@ -4,97 +4,434 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Relief in Europe</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: #233447;
+            background: #dce5eb;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-panel {
+            position: fixed;
+            z-index: 2;
+            top: max(14px, env(safe-area-inset-top));
+            left: max(14px, env(safe-area-inset-left));
+            display: flex;
+            width: min(340px, calc(100vw - 28px));
+            max-height: min(82vh, 760px);
+            max-height: min(82dvh, 760px);
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #d5dee6;
+            border-radius: 14px;
+            background: #ffffffed;
+            box-shadow: 0 12px 34px #1a304026;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            font-size: 13px;
+        }
+
+        .control-panel > summary {
+            position: relative;
+            display: flex;
+            min-height: 52px;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 14px;
+            color: #fff;
+            background: #18384c;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .control-panel > summary::-webkit-details-marker,
+        .control-section > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .control-panel > summary::after {
+            content: "−";
+            display: grid;
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
+            place-items: center;
+            border: 1px solid #ffffff55;
+            border-radius: 50%;
+            font-size: 17px;
+        }
+
+        .control-panel:not([open]) > summary::after {
+            content: "+";
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 650;
+            letter-spacing: 0.01em;
+        }
+
+        .panel-caption {
+            margin-left: auto;
+            color: #d1e0e9;
+            font-size: 11px;
+        }
+
+        .control-form {
+            display: grid;
+            gap: 10px;
+            min-height: 0;
+            padding: 12px;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-color: #b7c5cf transparent;
+            scrollbar-width: thin;
+        }
+
+        .control-section {
+            min-width: 0;
+            margin: 0;
+            padding: 10px;
+            border: 1px solid #dce4e9;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        fieldset.control-section legend {
+            padding: 0 5px;
+            color: #526676;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .control-section > summary {
+            display: flex;
+            min-height: 24px;
+            align-items: center;
+            justify-content: space-between;
+            color: #526676;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            list-style: none;
+            text-transform: uppercase;
+        }
+
+        .control-section > summary::after {
+            content: "+";
+            font-size: 15px;
+        }
+
+        .control-section[open] > summary::after {
+            content: "−";
+        }
+
+        .style-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .choice {
+            display: flex;
+            min-height: 36px;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 9px;
+            border: 1px solid #dce4e9;
+            border-radius: 8px;
+            background: #f7f9fa;
+            cursor: pointer;
+        }
+
+        .choice:has(input:checked) {
+            border-color: #287c8e;
+            background: #eaf5f6;
+            color: #155c6a;
+            font-weight: 600;
+        }
+
+        .control-panel input[type="checkbox"],
+        .control-panel input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 16px;
+            margin: 0;
+            accent-color: #287c8e;
+        }
+
+        .range-control {
+            display: grid;
+            gap: 5px;
+            margin-top: 9px;
+            color: #344a5b;
+        }
+
+        .range-control > span {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        output {
+            color: #687b89;
+            font-size: 11px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            min-height: 24px;
+            margin: 0;
+            accent-color: #287c8e;
+            cursor: pointer;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 4px;
+            color: #344a5b;
+        }
+
+        select {
+            width: 100%;
+            min-height: 36px;
+            padding: 6px 30px 6px 9px;
+            border: 1px solid #cbd6dd;
+            border-radius: 7px;
+            background: #fff;
+            color: inherit;
+            font: inherit;
+        }
+
+        .check-row {
+            display: flex;
+            min-height: 34px;
+            align-items: center;
+            gap: 8px;
+            color: #344a5b;
+            cursor: pointer;
+        }
+
+        .section-content {
+            padding-top: 6px;
+        }
+
+        .nested-controls {
+            margin: 2px 0 8px 24px;
+            padding: 2px 9px 9px;
+            border-left: 2px solid #dce8eb;
+        }
+
+        .dependent-controls {
+            width: 100%;
+        }
+
+        .layer-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 8px;
+        }
+
+        .control-panel :focus-visible {
+            outline: 3px solid #3b9eb1;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .control-panel {
+                top: auto;
+                right: max(8px, env(safe-area-inset-right));
+                bottom: max(8px, env(safe-area-inset-bottom));
+                left: max(8px, env(safe-area-inset-left));
+                width: auto;
+                max-height: min(64vh, 560px);
+                max-height: min(64dvh, 560px);
+                border-radius: 13px;
+            }
+
+            .control-panel > summary {
+                min-height: 48px;
+                padding: 8px 12px;
+            }
+
+            .control-form {
+                gap: 8px;
+                padding: 9px;
+            }
+
+            .control-section {
+                padding: 9px;
+            }
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .control-panel,
+            .control-panel > summary {
+                transition: box-shadow 140ms ease, background-color 140ms ease;
+            }
+        }
+    </style>
 </head>
 
-<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+<body>
 
-    <div id="map" style="height: 100%; width: 100%"></div>
+    <div id="map"></div>
 
-    <div id="control" style="
-                font-size: 0.9em;
-                position: absolute;
-                left: 10px;
-                top: 10px;
-                width: auto;
-                height: auto;
-                padding: 5px;
-                border: 0px;
-                border-radius: 5px;
-                background: #ffffffcc;
-                line-height: 1.6;
-                box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
-            ">
-        <form id="form">
-            Relief:
-            <label for="radio_hyps"><input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps"
-                    checked>Hypsometric tints</label>
-            <label for="radio_joyplot"><input type="radio" id="radio_joyplot" name="rdreliefstyle"
-                    value="joyplot">Joyplot</label><br>
-            <hr>
-            <div>
-                <label>Relief smoothing (slow)</label>
-                <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" style="width: 200px" />
-                <br>
-            </div>
-
-            <div id="hyps_div">
-                Hypsometric tints <select id="hypscol"></select><br>
-                <label>Hypsometric tints number</label>
-                <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" style="width: 200px" />
-                <br>
-                <label for="cbHypsDyn"><input type="checkbox" id="cbHypsDyn">Adjust hypsometric colors to min/max on
-                    map</label>
-                <br>
-                <div id="refexhyps">
-                    <label>Relief exageration<input type="range" min="-15" max="15" value="0" step="1"
-                            id="sReliefExageration" style="width: 200px" /></label>
+    <details id="control" class="control-panel" open>
+        <summary>
+            <span class="panel-title">European relief</span>
+            <span class="panel-caption">Map settings</span>
+        </summary>
+        <form id="form" class="control-form">
+            <fieldset class="control-section">
+                <legend>Relief style</legend>
+                <div class="style-choices">
+                    <label class="choice" for="radio_hyps">
+                        <input type="radio" id="radio_hyps" name="rdreliefstyle" value="hyps" checked />
+                        <span>Hypsometric</span>
+                    </label>
+                    <label class="choice" for="radio_joyplot">
+                        <input type="radio" id="radio_joyplot" name="rdreliefstyle" value="joyplot" />
+                        <span>Joyplot</span>
+                    </label>
                 </div>
-                <br>
-                <label for="cbHypssea"><input type="checkbox" id="cbHypssea">Adjust hypsometric colors to sea level
-                    rise</label>
-                <br>
-                <label for="cbTanaka"><input type="checkbox" id="cbTanaka">Tanaka style (slow)</label>
+                <label class="range-control" for="sReliefSmoothing">
+                    <span>Smoothing <output id="smoothingValue" for="sReliefSmoothing">Off</output></span>
+                    <input type="range" min="0" max="10" value="0" step="0.25" id="sReliefSmoothing" />
+                </label>
+                <label class="check-row" for="cbHD">
+                    <input type="checkbox" id="cbHD" />
+                    <span>High detail (slower)</span>
+                </label>
+            </fieldset>
+
+            <div id="hyps_div" class="dependent-controls">
+                <label class="field-label" for="hypscol">Color palette</label>
+                <select id="hypscol"></select>
+                <label class="range-control" for="sReliefNb">
+                    <span>Color classes <output id="classCountValue" for="sReliefNb">20</output></span>
+                    <input type="range" min="2" max="50" value="20" step="1" id="sReliefNb" />
+                </label>
+                <label class="check-row" for="cbHypsDyn">
+                    <input type="checkbox" id="cbHypsDyn" />
+                    <span>Adapt colors to visible terrain</span>
+                </label>
+                <div id="refexhyps">
+                    <label class="range-control" for="sReliefExageration">
+                        <span>Terrain contrast <output id="reliefContrastValue" for="sReliefExageration">0</output></span>
+                        <input type="range" min="-15" max="15" value="0" step="1" id="sReliefExageration" />
+                    </label>
+                </div>
             </div>
 
-            <div id="joyplot_div" style="display: none;">
-                <label>Relief exageration</label>
-                <input type="range" min="1" max="20" value="10" step="1" id="sReliefExagerationJP"
-                    style="width: 200px" />
+            <div id="joyplot_div" class="dependent-controls" style="display: none;">
+                <label class="range-control" for="sReliefExagerationJP">
+                    <span>Terrain height <output id="joyplotHeightValue" for="sReliefExagerationJP">10</output></span>
+                    <input type="range" min="1" max="20" value="10" step="1" id="sReliefExagerationJP" />
+                </label>
             </div>
-            <br>
-            <label for="cbHillshading"><input type="checkbox" id="cbHillshading">Hillshading (slow)</label>
 
-            <br>
-            <label for="cbHillshadingRay"><input type="checkbox" id="cbHillshadingRay">Hillshading raycasting
-                (slow)</label>
-            <div id="rc_div" style="border: solid black 1px; padding: 1px;">
-                <label>Sun ray azimuth</label>
-                <input type="range" min="0" max="6.3" value="2.4" step="0.05" id="sunrayAzimuth" style="width: 200px" />
-                <br>
-                <label>Sun altitude</label>
-                <input type="range" min="0.005" max="0.7" value="0.15" step="0.01" id="sunrayAltitude"
-                    style="width: 200px" />
-                <br>
-                <label>Sun light opacity</label>
-                <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha" style="width: 200px" />
-            </div>
-            <br>
-            <label for="cbHD"><input type="checkbox" id="cbHD">HD (very slow)</label>
-            <br>
-            <label>Sea level rise: <span id="lbSeaLevel">0 m</span><input type="range" id="sSeaLevel" min="0" max="100"
-                    step="1" value="0" style="width:200px;"></label>
-            <hr>
-            <label for="cbLabels"><input type="checkbox" id="cbLabels" checked>City names</label>
-            <br>
-            <label for="cbPopulation"><input type="checkbox" id="cbPopulation" checked>Population dots</label>
-            <br>
-            <label for="cbBoundaries"><input type="checkbox" id="cbBoundaries" checked>Boundaries</label>
-            <br>
-            <label for="cbRoads"><input type="checkbox" id="cbRoads">Roads</label>
-            <br>
-            <label for="cbCLC"><input type="checkbox" id="cbCLC" checked>Inland waters</label>
+            <details class="control-section">
+                <summary>Lighting</summary>
+                <div class="section-content">
+                    <label class="check-row" for="cbHillshading">
+                        <input type="checkbox" id="cbHillshading" />
+                        <span>Hillshading</span>
+                    </label>
+                    <label class="check-row" for="cbHillshadingRay">
+                        <input type="checkbox" id="cbHillshadingRay" />
+                        <span>Directional light</span>
+                    </label>
+                    <label class="check-row" for="cbTanaka">
+                        <input type="checkbox" id="cbTanaka" />
+                        <span>Tanaka contours</span>
+                    </label>
+                    <div id="rc_div" class="nested-controls">
+                        <label class="range-control" for="sunrayAzimuth">
+                            <span>Light direction</span>
+                            <input type="range" min="0" max="6.3" value="2.4" step="0.05" id="sunrayAzimuth" />
+                        </label>
+                        <label class="range-control" for="sunrayAltitude">
+                            <span>Light height</span>
+                            <input type="range" min="0.005" max="0.7" value="0.15" step="0.01" id="sunrayAltitude" />
+                        </label>
+                        <label class="range-control" for="sunrayAlpha">
+                            <span>Light opacity</span>
+                            <input type="range" min="0" max="1" value="0.33" step="0.01" id="sunrayAlpha" />
+                        </label>
+                    </div>
+                </div>
+            </details>
+
+            <details class="control-section">
+                <summary>Sea level</summary>
+                <div class="section-content">
+                    <label class="range-control" for="sSeaLevel">
+                        <span>Sea level rise <output id="lbSeaLevel">0 m</output></span>
+                        <input type="range" id="sSeaLevel" min="0" max="100" step="1" value="0" />
+                    </label>
+                    <label class="check-row" for="cbHypssea">
+                        <input type="checkbox" id="cbHypssea" />
+                        <span>Adjust colors for sea level</span>
+                    </label>
+                </div>
+            </details>
+
+            <details class="control-section">
+                <summary>Map details</summary>
+                <div class="layer-options">
+                    <label class="check-row" for="cbLabels">
+                        <input type="checkbox" id="cbLabels" checked />
+                        <span>City names</span>
+                    </label>
+                    <label class="check-row" for="cbPopulation">
+                        <input type="checkbox" id="cbPopulation" checked />
+                        <span>Population</span>
+                    </label>
+                    <label class="check-row" for="cbBoundaries">
+                        <input type="checkbox" id="cbBoundaries" checked />
+                        <span>Boundaries</span>
+                    </label>
+                    <label class="check-row" for="cbRoads">
+                        <input type="checkbox" id="cbRoads" />
+                        <span>Roads</span>
+                    </label>
+                    <label class="check-row" for="cbCLC">
+                        <input type="checkbox" id="cbCLC" checked />
+                        <span>Water</span>
+                    </label>
+                </div>
+            </details>
         </form>
-    </div>
+    </details>
 
     <script src="https://cdn.jsdelivr.net/npm/gridviz@3.5.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@2.2.2"></script>
@@ -292,6 +629,11 @@
 
         const updateControlVisibility = (settings) => {
             document.getElementById('lbSeaLevel').textContent = settings.seaLevel + ' m'
+            document.getElementById('smoothingValue').textContent =
+                settings.smoothing > 0 ? settings.smoothing.toString() : 'Off'
+            document.getElementById('classCountValue').textContent = settings.classNumber.toString()
+            document.getElementById('reliefContrastValue').textContent = settings.reliefExaggeration.toString()
+            document.getElementById('joyplotHeightValue').textContent = settings.joyplotExaggeration.toString()
             document.getElementById('hyps_div').style.display =
                 settings.reliefStyle === 'hyps' ? 'inline-block' : 'none'
             document.getElementById('joyplot_div').style.display =
