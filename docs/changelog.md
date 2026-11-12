@@ -2,6 +2,8 @@
 
 ## Version 3
 
+-   Fix (unreleased): _PillarStyle_ caps heights at half the camera height and skips invalid geometry, preventing the perspective singularity and extreme shadows from sending non-finite or enormous drawing coordinates to Canvas. Ordinary pillars below the cap are unchanged.
+
 ### Version 3.5.0 (since 3.4.0)
 
 -   New, opt-in: the _maxCells_ option of _MultiResolutionDataset_ limits what a view can load from a tiled dataset, by going to a coarser resolution before anything is downloaded, with _getRequestedDataset()_ for the resolution the zoom asks for. See the reference, [Datasets](reference.md#datasets).

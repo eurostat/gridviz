@@ -75,6 +75,17 @@ export class PillarStyle extends Style {
         const cvy = geoCanvas.view.y + this.viewSY * geoCanvas.h * z
         //get view height
         const H = this.viewHeightFactor * (geoCanvas.w + geoCanvas.h) * 0.5 * z
+        if (!Number.isFinite(H) || H <= 0 || !Number.isFinite(cvx) || !Number.isFinite(cvy)) return
+
+        // The perspective projection divides by H - height. At the camera plane it
+        // becomes infinite; near it, Canvas can receive enormous segments and hang
+        // the browser's rasterizer. Bound both the pillar and its shadow, before drawing.
+        const maxHeight = H * 0.5
+        const safeHeight = (cell) => {
+            const value = this.height ? this.height(cell, resolution, z, viewScale) : undefined
+            return Number.isFinite(value) && value > 0 ? Math.min(value, maxHeight) : 0
+        }
+        cells = cells.filter((cell) => Number.isFinite(cell.x) && Number.isFinite(cell.y))
 
         //sort cells by y and x
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
@@ -92,11 +103,11 @@ export class PillarStyle extends Style {
             //width
             /** @type {number|undefined} */
             const wG = this.width ? this.width(cell, resolution, z, viewScale) : undefined
-            if (!wG || wG < 0) continue
+            if (!Number.isFinite(wG) || wG <= 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(cell, resolution, z, viewScale) : undefined
+            const hG = safeHeight(cell)
             if (!hG || hG < 0) continue
 
             //get offset
@@ -110,6 +121,7 @@ export class PillarStyle extends Style {
             const cx = cell.x + resolution / 2
             const cy = cell.y + resolution / 2
             const ls = hG * this.shadowFactor
+            if (!Number.isFinite(ls) || !Number.isFinite(this.shadowDirection)) continue
 
             //draw segment
             ctx.beginPath()
@@ -140,11 +152,11 @@ export class PillarStyle extends Style {
             //width
             /** @type {number|undefined} */
             const wG = this.width ? this.width(cell, resolution, z, viewScale) : undefined
-            if (!wG || wG < 0) continue
+            if (!Number.isFinite(wG) || wG <= 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(cell, resolution, z, viewScale) : undefined
+            const hG = safeHeight(cell)
             if (!hG || hG < 0) continue
 
             //get offset
@@ -159,8 +171,9 @@ export class PillarStyle extends Style {
             const dx = cx - cvx,
                 dy = cy - cvy
             const a = Math.atan2(dy, dx)
-            const D = Math.sqrt(dx * dx + dy * dy)
-            const d = (D * hG) / (H - hG)
+            const D = Math.hypot(dx, dy)
+            const d = D * (hG / (H - hG))
+            if (!Number.isFinite(d) || !Number.isFinite(cx + d * Math.cos(a)) || !Number.isFinite(cy + d * Math.sin(a))) continue
 
             if (simple) {
                 //draw segment

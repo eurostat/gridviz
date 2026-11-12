@@ -598,6 +598,8 @@ Class: `gridviz.PillarStyle`. Options: `height`, `color`, `width`, `simple`, `vi
 
 This style shows the grid cells as 3D pillars or, with changeable height, width and color.
 
+Pillar heights are capped at half the camera height, keeping the perspective denominator away from zero. Non-finite or non-positive heights and widths, invalid cell coordinates and invalid camera geometry are skipped. This also bounds shadow lengths when a height callback returns extreme values; ordinary pillars below the cap keep their existing appearance.
+
 -   See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar.html)).
 -   See [this basic example with simple style](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar_simple.html)).
 
