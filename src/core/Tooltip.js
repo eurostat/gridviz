@@ -128,35 +128,47 @@ export class Tooltip {
     }
     /**
      * @function ensureTooltipInsideContainer
-     * @description Prevents the tooltip from overflowing out of the App container (ensures that the tooltip is inside the gridviz container)
+     * @description Keeps the tooltip inside its parent element (the gridviz container): to the right of the pointer, or to
+     * its left when it does not fit there. When it fits on neither side on one line, it wraps onto several lines on the
+     * side with more room. Positions are relative to the parent element.
      * @param {MouseEvent} event
      * @param {DOMRect} parentRect
      * @param {HTMLElement} tooltipNode
      */
     ensureTooltipInsideContainer(event, parentRect, tooltipNode) {
-        let node = tooltipNode
-        let parentWidth = parentRect.width
-        let parentHeight = parentRect.height
+        const node = tooltipNode
+        const parentWidth = parentRect.width
+        const parentHeight = parentRect.height
+        const mouseX = event.clientX - parentRect.left
 
-        // Ensure tooltip doesn't go beyond the right edge
-        if (node.offsetLeft + node.clientWidth > parentWidth) {
-            let left = event.clientX - node.clientWidth - this.xOffset
-            node.style.left = left + 'px'
+        // start from one line, as wide as the content up to maxWidth
+        node.style.maxWidth = this.maxWidth
+        node.style.setProperty('text-wrap', 'nowrap')
+        let left = tooltipLeft(mouseX, node.offsetWidth, parentWidth, this.xOffset)
+        if (left === undefined) {
+            // too wide for both sides of the pointer: wrap it within the wider side
+            const { side, room } = tooltipRoom(mouseX, parentWidth, this.xOffset)
+            const cs = getComputedStyle(node)
+            const frame =
+                parseFloat(cs.paddingLeft) +
+                parseFloat(cs.paddingRight) +
+                parseFloat(cs.borderLeftWidth) +
+                parseFloat(cs.borderRightWidth)
+            node.style.setProperty('text-wrap', 'wrap')
+            node.style.maxWidth = Math.max(0, room - (cs.boxSizing === 'border-box' ? 0 : frame)) + 'px'
+            left = side === 'right' ? mouseX + this.xOffset : mouseX - this.xOffset - node.offsetWidth
+            left = Math.max(0, Math.min(left, parentWidth - node.offsetWidth))
         }
+        node.style.left = left + 'px'
 
         // Ensure tooltip doesn't go beyond the bottom edge
-        if (node.offsetTop + node.clientHeight > parentHeight) {
-            node.style.top = parentHeight - node.clientHeight + 'px'
+        if (node.offsetTop + node.offsetHeight > parentHeight) {
+            node.style.top = parentHeight - node.offsetHeight + 'px'
         }
 
         // Ensure tooltip doesn't go above the top edge
         if (node.offsetTop < 0) {
             node.style.top = 0 + 'px'
-        }
-
-        // Ensure tooltip doesn't go beyond the left edge
-        if (node.offsetLeft < 0) {
-            node.style.left = 0 + 'px'
         }
     }
 
@@ -188,4 +200,34 @@ export class Tooltip {
         this.tooltip.attr(k, v)
         return this
     }
+}
+
+/**
+ * Where a tooltip of a given width goes, relative to its container: to the right of the pointer, or to its left when it
+ * does not fit there.
+ * @param {number} mouseX The pointer, from the left of the container, in pixels.
+ * @param {number} width The width of the tooltip.
+ * @param {number} containerWidth
+ * @param {number} xOffset The gap between the pointer and the tooltip.
+ * @returns {number|undefined} The left of the tooltip, or undefined when it fits on neither side.
+ */
+export function tooltipLeft(mouseX, width, containerWidth, xOffset) {
+    const right = mouseX + xOffset
+    if (right + width <= containerWidth) return right
+    const left = mouseX - xOffset - width
+    if (left >= 0) return left
+    return undefined
+}
+
+/**
+ * The side of the pointer with more room for a tooltip, and that room in pixels.
+ * @param {number} mouseX The pointer, from the left of the container, in pixels.
+ * @param {number} containerWidth
+ * @param {number} xOffset The gap between the pointer and the tooltip.
+ * @returns {{side:'left'|'right', room:number}}
+ */
+export function tooltipRoom(mouseX, containerWidth, xOffset) {
+    const right = containerWidth - mouseX - xOffset
+    const left = mouseX - xOffset
+    return right >= left ? { side: 'right', room: Math.max(0, right) } : { side: 'left', room: Math.max(0, left) }
 }
