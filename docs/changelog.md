@@ -2,6 +2,10 @@
 
 ## Version 3
 
+### Next version
+
+-   Fix: the tooltip disappeared near the right edge of a map that is not at the left of the page: moved to the left of the pointer, it was placed from the left of the window rather than of the map, so outside the map. And a tooltip too wide for either side of the pointer now wraps onto several lines on the wider side, instead of being cut.
+
 ### Version 3.5.0 (since 3.4.0)
 
 -   New, opt-in: the _maxCells_ option of _MultiResolutionDataset_ limits what a view can load from a tiled dataset, by going to a coarser resolution before anything is downloaded, with _getRequestedDataset()_ for the resolution the zoom asks for. See the reference, [Datasets](reference.md#datasets).
