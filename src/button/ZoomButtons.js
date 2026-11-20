@@ -11,10 +11,14 @@ export class ZoomButtons extends Button {
      * @param {Object} opts
      */
     constructor(opts) {
+        const delta = opts.delta || 0.2
+        if (opts.reciprocalZoom === true && !(delta > 0 && delta < 1))
+            throw new RangeError('reciprocalZoom requires delta between 0 and 1')
         super(opts)
 
         this.onZoom = opts.onZoom // custom user event handler
-        this.delta = opts.delta || 0.2
+        this.delta = delta
+        this.reciprocalZoom = opts.reciprocalZoom === true
         this.div.classed('gridviz-zoom-buttons', true)
 
         // Create zoom in button
@@ -42,6 +46,14 @@ export class ZoomButtons extends Button {
         // Set common styles for buttons
         const buttons = [this.zoomInBtn, this.zoomOutBtn]
         buttons.forEach((btn, index) => {
+            btn.tabIndex = 0
+            btn.setAttribute('role', 'button')
+            btn.setAttribute('aria-label', index === 0 ? 'Zoom in' : 'Zoom out')
+            btn.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return
+                e.preventDefault()
+                btn.click()
+            })
             btn.style.alignItems = 'center'
             btn.style.justifyContent = 'center'
             btn.style.display = 'flex'
@@ -121,7 +133,7 @@ export class ZoomButtons extends Button {
 
     /* Zoom out */
     zoomOut(e) {
-        this.map.setZoom(this.map.getZoom() * (1 + this.delta))
+        this.map.setZoom(this.map.getZoom() * (this.reciprocalZoom ? 1 / (1 - this.delta) : 1 + this.delta))
         this.map.geoCanvas.constrainView()
         this.map.redraw()
         if (this.onZoom) this.onZoom(e)

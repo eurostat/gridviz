@@ -4,3 +4,4 @@
 - `Map._pointer` (the hover given back after a redraw) comes from pointer events filtered by `pointerType`: a browser's mouse events from a tap would leave a phantom pointer that brings the tooltip back after every touch pan.
 - A touch `pointerdown` anywhere also calls `clearHover()`: scrolls and drags make no mouse events, so nothing else would hide the tooltip. `test:browser` checks both on a phone.
 - D3's double-tap zoom comes from a `touchend` with no active touches: use its transform, not `targetTouches`, for the view. A redraw during a gesture must replace its canvas snapshot or the next gesture frame shows stale tiles.
+- The optional touch glide is a separate d3 zoom transition; new gestures and map `setView`/`setZoom` interrupt it. D3's default zoom interpolation changes scale even for a pan, so the glide uses linear interpolation. It must not start after a pinch or when reduced motion is requested.

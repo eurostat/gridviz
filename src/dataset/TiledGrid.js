@@ -78,7 +78,10 @@ export class TiledGrid extends Dataset {
             // marked before the request, so the redraws that happen while it's under way
             // don't request it again
             this.infoLoadingStatus = 'loading'
+            const request = { dataset: this, kind: 'info', url: this.url + 'info.json' }
+            if (this.map?._beginGridLoad) this.map._beginGridLoad(request)
             ;(async () => {
+                let error
                 try {
                     const data = await json(this.url + 'info.json')
                     this.info = data
@@ -87,10 +90,13 @@ export class TiledGrid extends Dataset {
                     // all the resolutions of a multi-resolution dataset load their info at
                     // once: only the one currently shown needs a redraw
                     if (this.isShown()) this.map.redraw()
-                } catch (error) {
+                } catch (err) {
                     //mark as failed
                     this.infoLoadingStatus = 'failed'
+                    error = err
                 }
+                if (this.map?._endGridLoad)
+                    this.map._endGridLoad(request, this.infoLoadingStatus === 'loaded' ? 'loaded' : 'error', error)
             })()
         }
         // (no redraw for a failed info.json: every redraw would ask again - an endless loop)
@@ -180,6 +186,20 @@ export class TiledGrid extends Dataset {
 
                 // Mark tile as loading
                 this.cache[xT][yT] = 'loading'
+                const span = this.info.resolutionGeo * this.info.tileSizeCell
+                const x = this.info.originPoint.x + span * xT
+                const y = this.info.originPoint.y + span * yT
+                const request = {
+                    dataset: this,
+                    kind: 'tile',
+                    url: `${this.url}${xT}/${yT}.csv`,
+                    tile: { x: xT, y: yT },
+                    extent: { xMin: x, xMax: x + span, yMin: y, yMax: y + span },
+                    worker: this.worker,
+                }
+                if (this.map?._beginGridLoad) this.map._beginGridLoad(request)
+                let outcome = 'loaded'
+                let failure
 
                 tilePromises.push(
                     this.loadTile(xT, yT, signal).then(
@@ -193,9 +213,11 @@ export class TiledGrid extends Dataset {
                             this.checkAndRedraw(tile, isLastTile)
                         },
                         (error) => {
+                            failure = error
                             if (error && error.name === 'AbortError') {
                                 // cancelled, not failed: the next request loads it
                                 delete this.cache[xT][yT]
+                                outcome = 'cancelled'
                                 return
                             }
                             // Most of the time a tile that fails is one the server doesn't have (the tiles of a grid are
@@ -207,6 +229,7 @@ export class TiledGrid extends Dataset {
                                 failed: now(),
                                 missing: /^(404|410)\b/.test(error && error.message),
                             }
+                            outcome = this.cache[xT][yT].missing ? 'missing' : 'error'
                             // it changes nothing on the map, except when it was waited for to draw
                             if (
                                 this.onlyDrawWhenAllTilesReady &&
@@ -215,7 +238,9 @@ export class TiledGrid extends Dataset {
                             )
                                 this.map.redraw()
                         }
-                    )
+                    ).finally(() => {
+                        if (this.map?._endGridLoad) this.map._endGridLoad(request, outcome, failure)
+                    })
                 )
             }
         }

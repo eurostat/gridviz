@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { GeoCanvas } from '../src/core/GeoCanvas.js'
+import { ZoomButtons } from '../src/button/ZoomButtons.js'
 
 // what the vertex shader computes, with 32 bits floats like the GPU: clip = mat * (pos, 1), for the x of a position
 const gpuClipX = (mat, x) => {
@@ -12,6 +13,27 @@ const canvas = (z) => ({ w: 1000, h: 700, view: { x: 3764000, y: 2891000, z: z }
 
 const limited = (props) => ({ w: 1000, h: 500, view: { x: 0, y: 0, z: 10 }, ...props })
 const constrain = (cv, x, y, z) => GeoCanvas.prototype.constrainCenter.call(cv, x, y, z)
+
+test('zoom buttons keep their old steps unless reciprocal zoom is requested', () => {
+    let z = 100
+    const buttons = {
+        delta: 0.2,
+        map: {
+            getZoom: () => z,
+            setZoom: (value) => { z = value },
+            redraw() {},
+            geoCanvas: { constrainView() {} },
+        },
+    }
+    ZoomButtons.prototype.zoomIn.call(buttons)
+    ZoomButtons.prototype.zoomOut.call(buttons)
+    assert.equal(z, 96)
+    z = 100
+    buttons.reciprocalZoom = true
+    ZoomButtons.prototype.zoomIn.call(buttons)
+    ZoomButtons.prototype.zoomOut.call(buttons)
+    assert.equal(z, 100)
+})
 
 test('without a limit, the position is unchanged', () => {
     assert.deepEqual(constrain(limited({}), 123, -456), [123, -456])

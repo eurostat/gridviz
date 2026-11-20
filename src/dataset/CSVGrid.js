@@ -51,7 +51,10 @@ export class CSVGrid extends Dataset {
 
         //load data
         this.infoLoadingStatus = 'loading'
+        const request = { dataset: this, kind: 'csv', url: this.url }
+        if (this.map?._beginGridLoad) this.map._beginGridLoad(request)
         ;(async () => {
+            let error
             try {
                 const data = await dsv(this.delimiter, this.url)
 
@@ -80,11 +83,14 @@ export class CSVGrid extends Dataset {
                 if (this.map) this.map.redraw()
 
                 this.infoLoadingStatus = 'loaded'
-            } catch (error) {
+            } catch (err) {
                 //mark as failed
                 this.infoLoadingStatus = 'failed'
                 this.cells = []
+                error = err
             }
+            if (this.map?._endGridLoad)
+                this.map._endGridLoad(request, this.infoLoadingStatus === 'loaded' ? 'loaded' : 'error', error)
         })()
 
         return this

@@ -4,6 +4,9 @@
 
 ### Next version
 
+-   New, opt-in: maps can redraw during gestures (`redrawDuringMovement`), glide after a touch flick (`touchInertia`, respecting reduced motion), and support keyboard panning and zooming (`keyboardNavigation`). Zoom buttons can use reversible steps with `reciprocalZoom`; their existing steps remain the default. The buttons can also be reached and activated by keyboard.
+-   New: `onGridLoad` and `getGridLoading()` expose grid metadata, tile and CSV request lifecycles to a host, without adding an indicator. Dataset extensions can use `beginGridLoad()` to participate. See [grid loading events](reference.md#grid-loading-events).
+-   The ships demo starts with a compact panel on mobile and opts into these interaction improvements.
 -   Fix: double-tapping a map on a touch screen could make the view blank, and a double-click did not zoom. Touch zooms now follow the gesture even when the map is offset on the page or the pinch moves.
 -   Fix: tiles that arrived during a pan or zoom could flicker back out until the gesture ended: subsequent frames now keep the latest redraw.
 -   Fix: the tooltip disappeared near the right edge of a map that is not at the left of the page: moved to the left of the pointer, it was placed from the left of the window rather than of the map, so outside the map. And a tooltip too wide for either side of the pointer now wraps onto several lines on the wider side, instead of being cut.

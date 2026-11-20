@@ -462,6 +462,10 @@
                 #panel h1 {
                     font-size: 21px;
                 }
+                #togglePanel {
+                    width: 44px;
+                    height: 44px;
+                }
                 #panel fieldset {
                     margin-bottom: 14px;
                 }
@@ -688,6 +692,9 @@
                 // Europe in the window
                 z: Math.max(50, Math.min(8000, numberParam('z', 2086.9426))),
                 zoomExtent: [50, 8000],
+                redrawDuringMovement: true,
+                touchInertia: true,
+                keyboardNavigation: true,
                 backgroundColor: background,
                 tooltip: {
                     background: '#171e2bf5',
@@ -705,6 +712,7 @@
                     saveToURL()
                 },
             }).addZoomButtons({
+                reciprocalZoom: true,
                 onZoom: () => {
                     showResolution()
                     saveToURL()
@@ -1651,7 +1659,9 @@
                     for (const g of groups) if (!savedGroups.includes(g.code)) hiddenGroups.add(g)
                 pieStyle.color = fenceStyle.color = shownColors()
             }
-            setPanelCollapsed(params.get('panel') === 'closed')
+            setPanelCollapsed(
+                params.has('panel') ? params.get('panel') === 'closed' : window.matchMedia('(max-width: 600px)').matches
+            )
             element('dataDetails').open = params.get('about') === '1'
             element('placenames').checked = params.get('placenames') !== '0'
             element('bathymetry').checked = params.get('bathymetry') === '1'

@@ -12,6 +12,13 @@ import { FullscreenButton } from '../button/FullscreenButton.js'
 import { select } from 'd3-selection'
 
 /**
+ * @typedef {{dataset:import('./Dataset.js').Dataset, kind:'info'|'tile'|'csv', url:string,
+ * tile?:{x:number,y:number}, extent?:import('./GeoCanvas.js').Envelope, worker?:boolean}} GridLoadRequest
+ * @typedef {{phase:'start'|'end', request:GridLoadRequest, pendingCount:number, map:Map,
+ * outcome?:'loaded'|'missing'|'cancelled'|'error', error?:*}} GridLoadEvent
+ */
+
+/**
  * Tells a cell from another across redraws, which can make the cells again: by position and resolution.
  * @param {{cell:{x:any,y:any},resolution:number}} focus
  * @returns {string} */
@@ -38,6 +45,14 @@ export class Map {
          * @type {Array.<import("./Layer.js").Layer>}
          * */
         this.layers = opts.layers || []
+
+        /**
+         * Called when a grid request starts or finishes. See getGridLoading().
+         * @type {(function(GridLoadEvent):void)|undefined}
+         */
+        this.onGridLoad = opts.onGridLoad
+        /** @private @type {Set<GridLoadRequest>} */
+        this._gridRequests = new Set()
 
         /**
          * When true (the default), redraw() schedules one redraw for the next animation frame
@@ -237,6 +252,35 @@ export class Map {
             this.tooltip.hide()
         }
 
+        if (opts.keyboardNavigation && !opts.disableZoom) {
+            const canvas = this.geoCanvas.canvas
+            canvas.tabIndex = 0
+            if (!canvas.hasAttribute('aria-label'))
+                canvas.setAttribute('aria-label', 'Map. Use arrow keys to pan and plus or minus to zoom.')
+            this._keyboardHandler = (e) => {
+                if (e.altKey || e.ctrlKey || e.metaKey) return
+                const pan = 80 * this.getZoom()
+                const view = this.getView()
+                let { x, y, z } = view
+                if (e.key === 'ArrowLeft') x -= pan
+                else if (e.key === 'ArrowRight') x += pan
+                else if (e.key === 'ArrowUp') y += pan
+                else if (e.key === 'ArrowDown') y -= pan
+                else if (e.key === '+' || e.key === '=') z *= 0.8
+                else if (e.key === '-' || e.key === '_') z /= 0.8
+                else return
+                e.preventDefault()
+                if (this.geoCanvas.stopInertia) this.geoCanvas.stopInertia()
+                if (this.geoCanvas.onZoomStartFun) this.geoCanvas.onZoomStartFun(e)
+                this.setView(x, y, z)
+                this.geoCanvas.constrainView()
+                this.redraw()
+                if (this.geoCanvas.onZoomFun) this.geoCanvas.onZoomFun(e)
+                if (this.geoCanvas.onZoomEndFun) this.geoCanvas.onZoomEndFun(e)
+            }
+            canvas.addEventListener('keydown', this._keyboardHandler)
+        }
+
         //for mouse over
         /**
          * @private
@@ -278,6 +322,50 @@ export class Map {
      */
     isDestroyed() {
         return !!this._destroyed
+    }
+
+    /**
+     * Grid requests currently in flight, including requests outside the current view.
+     * @returns {GridLoadRequest[]}
+     */
+    getGridLoading() {
+        return Array.from(this._gridRequests)
+    }
+
+    /**
+     * Register a grid request made by a dataset extension. Call the returned function once it ends.
+     * @param {GridLoadRequest} request
+     * @returns {function('loaded'|'missing'|'cancelled'|'error', *):void}
+     */
+    beginGridLoad(request) {
+        this._beginGridLoad(request)
+        return (outcome, error) => this._endGridLoad(request, outcome, error)
+    }
+
+    /** @private @param {GridLoadRequest} request */
+    _beginGridLoad(request) {
+        if (this._destroyed) return
+        this._gridRequests.add(request)
+        if (this.onGridLoad) {
+            const callback = this.onGridLoad
+            const event = { phase: 'start', request, pendingCount: this._gridRequests.size, map: this }
+            queueMicrotask(() => callback(event))
+        }
+    }
+
+    /**
+     * @private
+     * @param {GridLoadRequest} request
+     * @param {'loaded'|'missing'|'cancelled'|'error'} outcome
+     * @param {*} [error]
+     */
+    _endGridLoad(request, outcome, error) {
+        if (!this._gridRequests.delete(request)) return
+        if (this.onGridLoad) {
+            const callback = this.onGridLoad
+            const event = { phase: 'end', request, outcome, error, pendingCount: this._gridRequests.size, map: this }
+            queueMicrotask(() => callback(event))
+        }
     }
 
     /**
@@ -724,6 +812,7 @@ export class Map {
      * @param {number|undefined} z
      */
     setView(x, y, z = undefined) {
+        if (this.geoCanvas.stopInertia) this.geoCanvas.stopInertia()
         this.geoCanvas.view.x = x
         this.geoCanvas.view.y = y
         if (z != undefined) this.geoCanvas.view.z = z
@@ -741,6 +830,7 @@ export class Map {
     }
     /** @param {number} z @returns {this} */
     setZoom(z) {
+        if (this.geoCanvas.stopInertia) this.geoCanvas.stopInertia()
         this.geoCanvas.view.z = z
         return this
     }
@@ -810,6 +900,7 @@ export class Map {
             y: opts?.y,
             onZoom: opts?.onZoom,
             delta: opts?.delta || 0.2,
+            reciprocalZoom: opts?.reciprocalZoom,
         })
 
         return this
@@ -902,6 +993,8 @@ export class Map {
     destroy() {
         if (this.gpuRenderer) this.gpuRenderer.detach(this)
         this._destroyed = true
+        this.geoCanvas.onZoomStartFun = this.geoCanvas.onZoomFun = this.geoCanvas.onZoomEndFun = undefined
+        if (this.geoCanvas.stopInertia) this.geoCanvas.stopInertia()
 
         // clear layers
         this.layers = []
@@ -924,6 +1017,7 @@ export class Map {
         this.geoCanvas.canvas.removeEventListener('mouseover', this.mouseOverHandler)
         this.geoCanvas.canvas.removeEventListener('mousemove', this.mouseMoveHandler)
         this.geoCanvas.canvas.removeEventListener('mouseout', this.mouseOutHandler)
+        if (this._keyboardHandler) this.geoCanvas.canvas.removeEventListener('keydown', this._keyboardHandler)
 
         // remove canvas
         this.geoCanvas.canvas.remove()

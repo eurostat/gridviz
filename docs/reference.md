@@ -166,6 +166,10 @@ new gridviz.Map(document.getElementById('map'), {
 | _opts_.**backgroundColor**                 | string                   | `'white'`                 | The background color of the canvas when _transparentBackground_ is false.                                                                                                                                               |
 | _opts_.**defaultGlobalCompositeOperation** | string                   | the one of the canvas     | The blend operation of the layers and styles which do not set their own (see [transparency](#transparency)).                                                                                                            |
 | _opts_.**disableZoom**                     | boolean                  | false                     | Disables d3 pan and zoom when set to true.                                                                                                                                                                              |
+| _opts_.**redrawDuringMovement**           | boolean                  | false                     | Redraw during gestures, at most about every 120 ms, so newly exposed grid tiles can load and appear before the gesture ends. Can cost more drawing time.                                                               |
+| _opts_.**touchInertia**                   | boolean                  | false                     | A one-finger flick continues briefly after release, within the position limits. Disabled when the user requests reduced motion.                                                                                        |
+| _opts_.**keyboardNavigation**             | boolean                  | false                     | Makes the map canvas focusable: arrow keys pan, and plus and minus zoom. Disabled with `disableZoom`.                                                                                                                     |
+| _opts_.**onGridLoad**                     | Function                 | undefined                 | Receives grid request start and end events; see [grid loading events](#grid-loading-events). Does not add an indicator.                                                                                                |
 | _opts_.**zoomExtent**                      | [number, number]         | `[0, Infinity]`           | The smallest and the largest zoom level the user can reach (see [limits](#limit-panning-and-zooming)).                                                                                                                  |
 | _opts_.**centerExtent**                    | [xMin, yMin, xMax, yMax] | none                      | The limits of the position of the center of the map (see [limits](#limit-panning-and-zooming)).                                                                                                                         |
 | _opts_.**viewExtent**                      | [xMin, yMin, xMax, yMax] | none                      | The limits of what can be seen: the borders of the view stay inside (see [limits](#limit-panning-and-zooming)).                                                                                                         |
@@ -230,6 +234,24 @@ const dataset = new gridviz.MultiResolutionDataset(
 -   The zoom alone does not say how much a view will load: a fine resolution on a large view can ask for more tiles than a browser tab can hold. The option `maxCells` of `MultiResolutionDataset` limits this: when the tiles of the view could hold more cells than `maxCells`, the next coarser resolution within the limit is shown. It is a number, or a function of the resolution. It is counted before anything is downloaded, as if the tiles were full, so a grid with empty parts holds far fewer cells than the limit (about 6% in one case over sea): choose it from what your styles can draw. Datasets which are not tiled are not limited, and there is no limit by default. `getRequestedDataset(z, minPixelsPerCell)` gives the dataset the zoom asks for without the limit, to tell the reader that a finer resolution is there.
 -   With the option `worker: true`, `TiledGrid` fetches and parses its CSV tiles in a web worker, so that a map being panned does not stand still while a tile is read. The cells are the same as without it. It falls back on the main thread where workers cannot run. Its requests do not go through a wrapper of `window.fetch`: `TiledGrid.onTileRequest = (dataset, xT, yT) => done` tells of them, and `done` (optional) is called when the tile has come in.
 -   A tile which could not be loaded is not asked for again at each redraw: never when it does not exist (404), and again after `TiledGrid.retryFailedAfterMs` milliseconds (30000 by default) for any other failure. With `onlyDrawWhenAllTilesReady: true`, the map is drawn only when all the tiles of the view are there.
+
+### Grid loading events
+
+Set `onGridLoad` on a map, in its options or afterwards, to receive events for `TiledGrid` metadata and tiles and `CSVGrid` files. It works with and without the tile worker. Gridviz adds no loading indicator; the host can use the events to make its own.
+
+```javascript
+const map = new gridviz.Map(container, {
+    onGridLoad: ({ phase, request, outcome, pendingCount }) => {
+        console.log(phase, request.kind, outcome, pendingCount)
+    },
+})
+```
+
+Each event has `phase` (`'start'` or `'end'`), the same `request` object at both ends, `map`, and `pendingCount` captured when the event occurred. A request has `dataset`, `kind` (`'info'`, `'tile'` or `'csv'`) and `url`; a tile also has `tile: {x, y}`, its geographic `extent`, and `worker`, indicating that worker loading was enabled (it can still fall back to the main thread). An end event has `outcome`: `'loaded'`, `'missing'` (a tile answered 404 or 410), `'cancelled'` or `'error'`, and `error` when applicable. Some servers do not expose HTTP status through CORS, so a missing tile can instead report an error.
+
+Events go to the map passed to the dataset's constructor and are delivered in microtasks. Requests already started still report their end after the map is destroyed; new requests are not tracked on a destroyed map. A shared dataset does not report to other maps. `map.getGridLoading()` gives the current in-flight requests; neither it nor `pendingCount` is limited to the visible area. A host can compare a tile's extent and dataset with the current view and layers, and update that decision on zoom/pan too. A request can end before the corresponding redraw is displayed. Cached data produce no new request events; labels, GeoJSON and background imagery are not included. `TiledGrid.onTileRequest` still works as before.
+
+Dataset extensions can participate by calling `const finish = map.beginGridLoad(request)` before starting a request, then `finish(outcome, error)` when it ends. `finish` is safe to call more than once. Extensions that also support older gridviz versions should check that `beginGridLoad` exists. The [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/) can report its tiled requests this way.
 -   Parquet tiles are supported by the [gridviz-parquet extension](https://github.com/eurostat/gridviz-parquet/), with `TiledParquetGrid`.
 
 ### Layers
@@ -982,7 +1004,7 @@ const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 290
     .addFullscreenButton()
 ```
 
--   `addZoomButtons({ id, class, x, y, onZoom, delta })`: the two buttons "+" and "−". `delta` is the change of zoom at each click (0.2 by default), and `onZoom` a function called after it. By default the buttons are 10 pixels from the right and from the top.
+-   `addZoomButtons({ id, class, x, y, onZoom, delta, reciprocalZoom })`: the two buttons "+" and "−". `delta` is the change of zoom at each click (0.2 by default), and `onZoom` a function called after it. With `reciprocalZoom: true` and `0 < delta < 1`, zooming in and back out returns to the same zoom, unless a limit intervenes. The old asymmetric steps remain the default. By default the buttons are 10 pixels from the right and from the top.
 -   `addFullscreenButton({ id, class, x, y })`: by default 10 pixels from the right and 90 pixels from the top.
 -   `x` and `y` are the distances, in pixels, of the button from the left and from the top of the map. `class` adds your own CSS classes.
 -   On a touch screen, the zoom buttons are bigger (48 pixels), unless the page sets `--gridviz-button-size` itself, and only the button which is pressed is lit, not both. The hover color is for the mouse.
@@ -1353,6 +1375,7 @@ Other options of the host: `canDraw()` to leave out a draw of a movement, `getGl
 See [this example](https://eurostat.github.io/gridviz/examples/basics/limits.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/limits.html)) to limit the panning and zooming, in order to prevent the user from moving toward undesired positions and zoom levels.
 
 The map can be dragged, zoomed with the wheel or double-clicked; on a touch screen, drag, pinch or double-tap it.
+Opt in to `keyboardNavigation` for arrow-key panning and plus/minus zooming while the canvas is focused. A keyboard action calls the map's zoom callbacks with the keyboard event. With `touchInertia`, a flick's glide is a separate pan: the zoom start and end callbacks also run for it. A new gesture, `setView()` or `setZoom()` interrupts it.
 
 ```javascript
 map.setZoomExtent([200, 3000]) // the smallest and the largest zoom level

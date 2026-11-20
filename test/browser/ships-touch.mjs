@@ -80,7 +80,8 @@ try {
         null,
         { timeout: 60000 }
     )
-    await page.locator('#togglePanel').click()
+    const panelInitiallyOpen = (await page.locator('#togglePanel').getAttribute('aria-expanded')) === 'true'
+    if (panelInitiallyOpen) await page.locator('#togglePanel').click()
     const cdp = await context.newCDPSession(page)
     const touch = (type, points) =>
         cdp.send('Input.dispatchTouchEvent', {
@@ -96,6 +97,152 @@ try {
         console.log(`${ok ? 'ok' : 'FAIL'} ${message}`)
         if (!ok) failed = true
     }
+    check(!panelInitiallyOpen, 'mobile controls start collapsed')
+    await page.evaluate(() => {
+        window.gridEvents = []
+        M.onGridLoad = (event) =>
+            window.gridEvents.push({
+                phase: event.phase,
+                kind: event.request.kind,
+                outcome: event.outcome,
+            })
+    })
+    let drag = [box.x + box.w * 0.77, box.y + box.h * 0.6]
+    await touch('touchStart', [drag])
+    drag = [drag[0] - 160, drag[1]]
+    await touch('touchMove', [drag])
+    await page.waitForTimeout(5000)
+    const held = await page.evaluate(() => {
+        const cv = M.geoCanvas.canvas
+        const data = cv.getContext('2d').getImageData(cv.width - 120, 160, 120, 500).data
+        let background = 0
+        for (let i = 0; i < data.length; i += 4)
+            if (data[i] === 16 && data[i + 1] === 19 && data[i + 2] === 28) background++
+        return { background: background / (data.length / 4), events: window.gridEvents }
+    })
+    check(
+        held.background < 0.95,
+        `newly exposed map is drawn while the finger is held (${Math.round(held.background * 100)}% background)`
+    )
+    check(
+        held.events.some((event) => event.phase === 'start' && event.kind === 'tile'),
+        'tile loading events are raised during the pan'
+    )
+    check(
+        held.events.some((event) => event.phase === 'end' && event.kind === 'tile' && event.outcome === 'loaded'),
+        'tile completion is reported during the pan'
+    )
+    await touch('touchEnd', [])
+    await page.waitForTimeout(500)
+
+    // A flick glides only after release; the next gesture can interrupt it.
+    let flick = [box.x + box.w * 0.8, box.y + box.h * 0.6]
+    await touch('touchStart', [flick])
+    for (let i = 0; i < 4; i++) {
+        flick = [flick[0] - 20, flick[1]]
+        await touch('touchMove', [flick])
+        await page.waitForTimeout(20)
+    }
+    await touch('touchEnd', [])
+    const atRelease = await page.evaluate(() => ({ ...M.getView() }))
+    await page.waitForTimeout(500)
+    const afterFlick = await page.evaluate(() => ({ ...M.getView() }))
+    check(afterFlick.x > atRelease.x + atRelease.z, 'a touch flick continues after release')
+    check(Math.abs(afterFlick.z - atRelease.z) < atRelease.z * 1e-9, 'a glide pans without changing zoom')
+
+    flick = [box.x + box.w * 0.8, box.y + box.h * 0.6]
+    await touch('touchStart', [flick])
+    for (let i = 0; i < 4; i++) {
+        flick = [flick[0] - 20, flick[1]]
+        await touch('touchMove', [flick])
+        await page.waitForTimeout(20)
+    }
+    await touch('touchEnd', [])
+    await page.waitForTimeout(60)
+    await touch('touchStart', [flick])
+    const interrupted = await page.evaluate(() => ({ ...M.getView() }))
+    await page.waitForTimeout(300)
+    const heldStill = await page.evaluate(() => ({ ...M.getView() }))
+    check(Math.abs(interrupted.x - heldStill.x) < interrupted.z * 0.1, 'a new touch stops the glide')
+    await touch('touchEnd', [])
+    await page.waitForTimeout(300)
+
+    flick = [box.x + box.w * 0.8, box.y + box.h * 0.6]
+    await touch('touchStart', [flick])
+    for (let i = 0; i < 4; i++) {
+        flick = [flick[0] - 20, flick[1]]
+        await touch('touchMove', [flick])
+        await page.waitForTimeout(20)
+    }
+    await touch('touchEnd', [])
+    await page.waitForTimeout(60)
+    const programmed = await page.evaluate(() => {
+        const { x, y, z } = M.getView()
+        M.setView(x + 10000, y, z).redraw()
+        return { ...M.getView() }
+    })
+    await page.waitForTimeout(500)
+    const afterProgrammed = await page.evaluate(() => ({ ...M.getView() }))
+    check(Math.abs(programmed.x - afterProgrammed.x) < programmed.z * 0.1, 'setView interrupts a glide')
+
+    const limit = await page.evaluate(() => {
+        const { x, y, z } = M.getView()
+        M.setCenterExtent([x - 200 * z, y - 200 * z, x + 30 * z, y + 200 * z])
+        return x + 30 * z
+    })
+    flick = [box.x + box.w * 0.8, box.y + box.h * 0.6]
+    await touch('touchStart', [flick])
+    for (let i = 0; i < 4; i++) {
+        flick = [flick[0] - 20, flick[1]]
+        await touch('touchMove', [flick])
+        await page.waitForTimeout(20)
+    }
+    await touch('touchEnd', [])
+    await page.waitForTimeout(600)
+    const bounded = await page.evaluate(() => ({ ...M.getView() }))
+    check(bounded.x <= limit + bounded.z * 0.01, 'touch panning and glide respect position limits')
+    await page.evaluate(() => M.setCenterExtent([undefined, undefined, undefined, undefined]))
+
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    flick = [box.x + box.w * 0.8, box.y + box.h * 0.6]
+    await touch('touchStart', [flick])
+    for (let i = 0; i < 4; i++) {
+        flick = [flick[0] - 20, flick[1]]
+        await touch('touchMove', [flick])
+        await page.waitForTimeout(20)
+    }
+    await touch('touchEnd', [])
+    const reducedStart = await page.evaluate(() => ({ ...M.getView() }))
+    await page.waitForTimeout(500)
+    const reducedEnd = await page.evaluate(() => ({ ...M.getView() }))
+    check(Math.abs(reducedStart.x - reducedEnd.x) < reducedStart.z * 0.1, 'reduced motion disables the glide')
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+
+    // Keyboard users can reach both controls and return to the same zoom.
+    const zoomBefore = await page.evaluate(() => M.getZoom())
+    await page.locator('#map canvas').first().focus()
+    await page.keyboard.press('Tab')
+    check(
+        await page.locator('.gridviz-zoom-button--in').evaluate((el) => document.activeElement === el),
+        'zoom in is keyboard focusable'
+    )
+    await page.keyboard.press('Enter')
+    const zoomIn = await page.evaluate(() => M.getZoom())
+    check(zoomIn < zoomBefore, 'Enter activates zoom in')
+    await page.locator('.gridviz-zoom-button--out').focus()
+    check(
+        await page.locator('.gridviz-zoom-button--out').evaluate((el) => document.activeElement === el),
+        'zoom out is keyboard focusable'
+    )
+    await page.keyboard.press('Space')
+    const zoomAfter = await page.evaluate(() => M.getZoom())
+    check(Math.abs(zoomAfter - zoomBefore) < zoomBefore * 1e-9, 'keyboard zoom in and out return to the same zoom')
+    await page.locator('#map canvas').first().focus()
+    const beforeKey = await page.evaluate(() => ({ ...M.getView() }))
+    await page.keyboard.press('ArrowRight')
+    const afterKey = await page.evaluate(() => ({ ...M.getView() }))
+    check(afterKey.x > beforeKey.x, 'arrow keys pan the focused map')
+
     const before = await page.evaluate(([x, y]) => {
         const cv = M.geoCanvas,
             r = cv.canvas.getBoundingClientRect()
@@ -184,7 +331,14 @@ try {
         'an offset map follows both fingers of a moving pinch'
     )
     await touch('touchEnd', [])
+    const pinchEnd = await page.evaluate(() => ({ ...M.getView() }))
     await page.waitForTimeout(600)
+    const afterPinch = await page.evaluate(() => ({ ...M.getView() }))
+    check(
+        Math.abs(pinchEnd.x - afterPinch.x) < pinchEnd.z * 0.1 &&
+            Math.abs(pinchEnd.y - afterPinch.y) < pinchEnd.z * 0.1,
+        'a pinch does not start a glide'
+    )
     await page.evaluate(() => M.setCenterExtent([0, 0, 10000000, 10000000]))
     const limitedBefore = await page.evaluate(() => M.getZoom())
     for (let i = 0; i < 2; i++) {
@@ -198,6 +352,14 @@ try {
     check(
         Number.isFinite(limitedAfter.x) && Number.isFinite(limitedAfter.y) && limitedAfter.z < limitedBefore * 0.6,
         'double tap also zooms with a position limit'
+    )
+    await page.goto(`http://127.0.0.1:${server.address().port}/examples/demos/ships.html?panel=open`, {
+        waitUntil: 'load',
+        timeout: 60000,
+    })
+    check(
+        (await page.locator('#togglePanel').getAttribute('aria-expanded')) === 'true',
+        'a shared link can explicitly open the mobile panel'
     )
     check(!errors.length, 'no page errors: ' + errors.join(' | '))
     await context.close()

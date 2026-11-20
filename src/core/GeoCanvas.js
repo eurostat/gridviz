@@ -82,6 +82,9 @@ export class GeoCanvas {
         //rely on d3 for zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
+            let lastProgressiveDraw = -Infinity
+            let touchPan = false
+            let touchSamples = []
 
             // How the d3 transform relates to the view, from its coordinates (t.invert of a pixel) to geo coordinates:
             // x = frame.x + frame.s * xd3, y = frame.y - frame.s * yd3. The view can be set without d3 knowing (setView,
@@ -118,6 +121,16 @@ export class GeoCanvas {
                     this._isZooming = true;
                     const t = e.transform
                     const zoomFactor = tP.k / t.k
+                    if (touchPan && e.sourceEvent?.type === 'touchmove') {
+                        if (e.sourceEvent.touches.length !== 1 || zoomFactor !== 1) {
+                            touchPan = false
+                            touchSamples = []
+                        } else {
+                            const now = performance.now()
+                            touchSamples.push({ x: t.x, y: t.y, time: now })
+                            touchSamples = touchSamples.filter((sample) => now - sample.time <= 120)
+                        }
+                    }
                     if (zoomFactor == 1) {
                         //pan
                         const dx = tP.x - t.x
@@ -129,12 +142,19 @@ export class GeoCanvas {
                     tP = t
 
                     if (this.onZoomFun) this.onZoomFun(e)
+                    if (opts.redrawDuringMovement && performance.now() - lastProgressiveDraw >= 120) {
+                        lastProgressiveDraw = performance.now()
+                        this.redraw()
+                    }
                 })
                 .on('start', (e) => {
                     // start of zoom event
                     // show grabbing during pan/zoom
                     try { this.canvas.style.cursor = 'grabbing' } catch (err) { }
                     this._isZooming = true;
+                    touchPan = !!(opts.touchInertia && e.sourceEvent?.type === 'touchstart' && e.sourceEvent.touches.length === 1)
+                    touchSamples = touchPan ? [{ x: e.transform.x, y: e.transform.y, time: performance.now() }] : []
+                    lastProgressiveDraw = -Infinity
                     // save the current canvas state to keep onscreen during pan/zoom before redrawing
                     this._saveSnapshot()
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
@@ -146,17 +166,58 @@ export class GeoCanvas {
                     this._isZooming = false;
                     this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
+                    const endedView = { ...this.view }
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
 
+                    if (
+                        touchPan && e.sourceEvent?.type === 'touchend' && touchSamples.length > 1 &&
+                        this.canvas.isConnected && this.view.x === endedView.x &&
+                        this.view.y === endedView.y && this.view.z === endedView.z &&
+                        performance.now() - touchSamples[touchSamples.length - 1].time < 100 &&
+                        !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+                    ) {
+                        const first = touchSamples[0]
+                        const last = touchSamples[touchSamples.length - 1]
+                        const elapsed = last.time - first.time
+                        const vx = (last.x - first.x) / elapsed
+                        const vy = (last.y - first.y) / elapsed
+                        const speed = Math.hypot(vx, vy)
+                        if (elapsed > 0 && speed > 0.15) {
+                            const duration = Math.min(500, speed * 300)
+                            const distance = Math.min(200, speed * duration * 0.5)
+                            const t = zoomTransform(this.canvas)
+                            this._gliding = true
+                            select(this.canvas).transition().duration(duration).call(
+                                z.translateBy, (vx / speed * distance) / t.k, (vy / speed * distance) / t.k
+                            )
+                        }
+                    } else {
+                        this._gliding = false
+                    }
                 })
+            const interpolateZoom = z.interpolate()
+            z.interpolate((a, b) => {
+                if (!this._gliding) return interpolateZoom(a, b)
+                return (t) => a.map((v, i) => v + (b[i] - v) * t)
+            })
             const defaultFilter = z.filter()
             z.filter((e) => {
                 const accepted = defaultFilter(e)
+                if (accepted && this._gliding) this.stopInertia()
+                if (e.type === 'touchstart' && e.touches.length > 1) {
+                    touchPan = false
+                    touchSamples = []
+                }
                 if (accepted) syncFrame()
                 return accepted
             })
             // @ts-ignore
             z(select(this.canvas))
+            this.stopInertia = () => {
+                const gliding = this._gliding
+                this._gliding = false
+                if (gliding) select(this.canvas).interrupt()
+            }
 
             const handleZoom = (t) => {
                 // cancel ongoing data requests
