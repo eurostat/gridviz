@@ -6,6 +6,7 @@
 | `npm run test:browser` | Hover on 5 examples, and the view limits on `basics/limits.html`. `--all`: also loads every gallery example. `--lib=<file>`: a built bundle | Chrome, network |
 | `npm run test:compat` | Every gallery example, old bundle against new, at rest: it does not move the maps. `--only=<text>`: matching paths. `--old=<file>` (default the latest on npm), `--new=<file>` | Chrome, network |
 | `npm run test:gpu` | `GPUGridRenderer` against the map's own drawing. `--lib=<file>`: a built bundle | Chrome |
+| `node test/browser/ships-touch.mjs` | Double-tap and redraw during a touch pan on the ships demo; `--lib=<file>` tests another bundle | Chrome, network |
 
 - The browser tests build their own bundle from `src/`, so no `npm run build` is needed first. Set `CHROME_PATH` if Chrome is not found.
 - Browser and integration checks use real data: drive the gallery examples in `examples/` with their real datasets, and compare against a baseline without the change. Fake canvases are only for unit tests of pure logic.

@@ -124,7 +124,7 @@ export class GeoCanvas {
                         const dy = tP.y - t.y
                         this.applyPan(dx * this.view.z, -dy * this.view.z)
                     } else {
-                        handleZoom(e, zoomFactor, t)
+                        handleZoom(t)
                     }
                     tP = t
 
@@ -136,14 +136,7 @@ export class GeoCanvas {
                     try { this.canvas.style.cursor = 'grabbing' } catch (err) { }
                     this._isZooming = true;
                     // save the current canvas state to keep onscreen during pan/zoom before redrawing
-                    this.canvasSave.c = document.createElement('canvas')
-                    this.canvasSave.c.setAttribute('width', '' + this.w)
-                    this.canvasSave.c.setAttribute('height', '' + this.h)
-                    this.canvasSave.c.getContext('2d')?.drawImage(this.canvas, 0, 0)
-                    this.canvasSave.dx = 0
-                    this.canvasSave.dy = 0
-                    this.canvasSave.f = 1
-                    this.canvasSave.view = { x: this.view.x, y: this.view.y, z: this.view.z }
+                    this._saveSnapshot()
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
                 .on('end', (e) => {
@@ -165,46 +158,17 @@ export class GeoCanvas {
             // @ts-ignore
             z(select(this.canvas))
 
-            const handleZoom = (event, zoomFactor, t) => {
+            const handleZoom = (t) => {
                 // cancel ongoing data requests
                 this.cancelCurrentRequests()
-                const se = event.sourceEvent
-
-                // with a limit of the position, what d3 constrained decides the center: the point under the pointer can not stay
-                if (this._hasPositionLimit() && (se instanceof WheelEvent || se instanceof TouchEvent)) {
-                    const [x, y] = centerOf(t)
-                    this.view.x = x
-                    this.view.y = y
-                    this.view.z = frame.s / t.k
-                    this.updateExtentGeo()
-                    this._drawZoomFrame()
-                } else if (se instanceof WheelEvent) {
-                    //zoom at the mouse position
-                    this.applyZoom(
-                        zoomFactor,
-                        // @ts-ignore
-                        this.pixToGeoX(se.offsetX),
-                        // @ts-ignore
-                        this.pixToGeoY(se.offsetY)
-                    )
-                } else if (se instanceof TouchEvent) {
-                    //compute average position of the touches
-                    let tx = 0,
-                        ty = 0
-                    for (let tt of se.targetTouches) {
-                        tx += tt.clientX
-                        ty += tt.clientY
-                    }
-                    tx /= se.targetTouches.length
-                    ty /= se.targetTouches.length
-
-                    // Adjust for container's offset
-                    // tx -= containerRect.left
-                    // ty -= containerRect.top
-
-                    //zoom at this average position
-                    this.applyZoom(zoomFactor, this.pixToGeoX(tx), this.pixToGeoY(ty))
-                }
+                // d3's transform includes the anchor and translation, even for a double tap's
+                // touchend (which has no active touches) or a pinch whose midpoint moves.
+                const [x, y] = centerOf(t)
+                this.view.x = x
+                this.view.y = y
+                this.view.z = frame.s / t.k
+                this.updateExtentGeo()
+                this._drawZoomFrame()
             }
         }
 
@@ -330,6 +294,15 @@ export class GeoCanvas {
     _drawZoomFrame() {
         // zoom in on the current canvas state
         if (this.canvasSave.c) this._drawSnapshot()
+    }
+
+    /** @private */
+    _saveSnapshot() {
+        const c = this.canvasSave.c || document.createElement('canvas')
+        c.width = this.w
+        c.height = this.h
+        c.getContext('2d').drawImage(this.canvas, 0, 0)
+        this.canvasSave = { c, dx: 0, dy: 0, f: 1, view: { ...this.view } }
     }
 
     /**

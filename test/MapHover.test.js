@@ -37,6 +37,7 @@ const makeMap = (opts = {}) => {
         initCanvasTransform() {},
         setCanvasTransform() {},
         clear() {},
+        _saveSnapshot() {},
         updateExtentGeo() {},
         pixToGeoX: (p) => p,
         pixToGeoY: (p) => p,

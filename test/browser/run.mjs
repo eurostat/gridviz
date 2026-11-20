@@ -506,6 +506,16 @@ const limitsTests = async () => {
         v.z < 800 && near(g0[0], g1[0], v.z * 2) && near(g0[1], g1[1], v.z * 2),
         'without a limit of the position, the wheel zooms at the pointer, from a view set by setView'
     )
+    await reset(4500000, 2900000, 800, { zoom })
+    const dblBefore = await under()
+    await page.mouse.dblclick(box.x + 300, cy)
+    await page.waitForTimeout(500)
+    const dblAfter = await under()
+    v = await view()
+    check(
+        near(v.z, 400, 1) && near(dblBefore[0], dblAfter[0], v.z * 2) && near(dblBefore[1], dblAfter[1], v.z * 2),
+        'double click zooms in at the pointer'
+    )
     await wheel(500, 8)
     check(near((await view()).z, 3000), 'and the zoom limit holds after setView')
 

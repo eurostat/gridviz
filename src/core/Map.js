@@ -451,6 +451,7 @@ export class Map {
         // one drawImage call: draw the offscreen canvas to the main canvas
         this.geoCanvas.initCanvasTransform()
         this.geoCanvas.ctx.drawImage(this.geoCanvas.offscreenCanvas, 0, 0)
+        if (this.geoCanvas._isZooming) this.geoCanvas._saveSnapshot()
 
         this.canvasSave = null
         // the canvas holds no focus rectangle any more

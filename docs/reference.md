@@ -1352,6 +1352,8 @@ Other options of the host: `canDraw()` to leave out a draw of a movement, `getGl
 
 See [this example](https://eurostat.github.io/gridviz/examples/basics/limits.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/basics/limits.html)) to limit the panning and zooming, in order to prevent the user from moving toward undesired positions and zoom levels.
 
+The map can be dragged, zoomed with the wheel or double-clicked; on a touch screen, drag, pinch or double-tap it.
+
 ```javascript
 map.setZoomExtent([200, 3000]) // the smallest and the largest zoom level
 map.setViewExtent([2500000, 1300000, 6500000, 5300000]) // what can be seen: xMin, yMin, xMax, yMax

@@ -4,6 +4,8 @@
 
 ### Next version
 
+-   Fix: double-tapping a map on a touch screen could make the view blank, and a double-click did not zoom. Touch zooms now follow the gesture even when the map is offset on the page or the pinch moves.
+-   Fix: tiles that arrived during a pan or zoom could flicker back out until the gesture ended: subsequent frames now keep the latest redraw.
 -   Fix: the tooltip disappeared near the right edge of a map that is not at the left of the page: moved to the left of the pointer, it was placed from the left of the window rather than of the map, so outside the map. And a tooltip too wide for either side of the pointer now wraps onto several lines on the wider side, instead of being cut.
 
 ### Version 3.5.0 (since 3.4.0)
