@@ -11,6 +11,7 @@ Context for agents (and people) working on gridviz, split by area. Read only the
 | Working on datasets (`TiledGrid`, `CSVGrid`, tiles) or the ships demo data | [datasets.md](datasets.md) |
 | Working on styles, legends or view scale functions | [styles-and-legends.md](styles-and-legends.md) |
 | Working on `examples/` pages or the examples site | [examples.md](examples.md) |
+| Changing a style, dataset class, default or pitfall that users rely on | [skills/gridviz/SKILL.md](../../skills/gridviz/SKILL.md): the guide for agents that *use* gridviz. Update it too, and keep it short, linking to `reference.md` for detail |
 
 ## Adding to these files
 
